@@ -1,0 +1,26 @@
+[remap]
+
+importer="2d_array_texture"
+type="CompressedTexture2DArray"
+uid="uid://c4aigkamoayhv"
+path="res://.godot/imported/M8Scene.exr-7be30f57b9092657f5c8a18460dcdce8.ctexarray"
+metadata={
+"vram_texture": false
+}
+
+[deps]
+
+source_file="res://M8Scene.exr"
+dest_files=["res://.godot/imported/M8Scene.exr-7be30f57b9092657f5c8a18460dcdce8.ctexarray"]
+
+[params]
+
+compress/mode=3
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/hdr_compression=1
+compress/channel_pack=1
+mipmaps/generate=false
+mipmaps/limit=-1
+slices/horizontal=1
+slices/vertical=1

@@ -1,0 +1,47 @@
+[gd_scene load_steps=5 format=3 uid="uid://b265ke8cr3dgr"]
+
+[ext_resource type="Script" path="res://Main.gd" id="1_ma4h6"]
+[ext_resource type="Shader" path="res://PostProcess.gdshader" id="1_tjung"]
+[ext_resource type="PackedScene" uid="uid://c5nukah6hnr2w" path="res://M8Scene.tscn" id="2_umnut"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pe34f"]
+shader = ExtResource("1_tjung")
+shader_parameter/effect = -1.0
+shader_parameter/effect_scale = 1.0
+shader_parameter/crop = 1.0
+shader_parameter/warp_amount = 0.51
+shader_parameter/border_alpha = 0.0
+shader_parameter/ca_amount = 0.045
+shader_parameter/vignette_intensity = 1.35
+shader_parameter/vignette_opacity = 0.144
+shader_parameter/vignette_rgb = Color(1, 1, 1, 1)
+
+[node name="Main" type="CenterContainer"]
+custom_minimum_size = Vector2(1280, 960)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ma4h6")
+visualizer_ca_amount = 0.5
+visualizer_brightness_amount = 0.25
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+layout_mode = 2
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(1280, 960)
+render_target_update_mode = 4
+
+[node name="M8Scene" parent="SubViewportContainer/SubViewport" instance=ExtResource("2_umnut")]
+unique_name_in_owner = true
+
+[node name="ColorRect" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_pe34f")
+custom_minimum_size = Vector2(1280, 960)
+layout_mode = 2
+
+[node name="AudioInputMonitor" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true

@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://c3jnqasyp0fya"]
+
+[ext_resource type="Texture2D" uid="uid://cl7ngqlo1cv1j" path="res://OBSSpoutReceiverTexture.tres" id="1_rj2yk"]
+
+[node name="M8ScreenViewport" type="SubViewport"]
+handle_input_locally = false
+size = Vector2i(640, 480)
+render_target_update_mode = 4
+
+[node name="TextureRect" type="TextureRect" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("1_rj2yk")
