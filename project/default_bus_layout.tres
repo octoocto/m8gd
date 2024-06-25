@@ -1,0 +1,16 @@
+[gd_resource type="AudioBusLayout" load_steps=2 format=3 uid="uid://dbuaji3p66l62"]
+
+[sub_resource type="AudioEffectSpectrumAnalyzer" id="AudioEffectSpectrumAnalyzer_e5840"]
+resource_name = "SpectrumAnalyzer"
+buffer_length = 0.5
+
+[resource]
+bus/0/volume_db = 0.0694828
+bus/1/name = &"Analyzer"
+bus/1/solo = false
+bus/1/mute = false
+bus/1/bypass_fx = false
+bus/1/volume_db = -0.130497
+bus/1/send = &"Master"
+bus/1/effect/0/effect = SubResource("AudioEffectSpectrumAnalyzer_e5840")
+bus/1/effect/0/enabled = true

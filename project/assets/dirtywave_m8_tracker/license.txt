@@ -1,0 +1,8 @@
+Model Information:
+* title:	Dirtywave M8 Tracker
+* source:	https://sketchfab.com/3d-models/dirtywave-m8-tracker-05ba530f902e4474b0e01ae2750eec3c
+* author:	David Junghanns (https://sketchfab.com/davidju)
+
+Model License:
+* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
+* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works

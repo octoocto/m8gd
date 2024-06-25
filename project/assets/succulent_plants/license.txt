@@ -1,0 +1,11 @@
+Model Information:
+* title:	Succulent plants
+* source:	https://sketchfab.com/3d-models/succulent-plants-ea9a2df2a598410f9f63ba9380795f92
+* author:	uniko (https://sketchfab.com/uniko)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Succulent plants" (https://sketchfab.com/3d-models/succulent-plants-ea9a2df2a598410f9f63ba9380795f92) by uniko (https://sketchfab.com/uniko) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

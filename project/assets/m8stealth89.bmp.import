@@ -1,0 +1,16 @@
+[remap]
+
+importer="bitmap"
+type="BitMap"
+uid="uid://botpclf0ncph7"
+path="res://.godot/imported/m8stealth89.bmp-81773385a5cea15b948e095695fa3c6c.res"
+
+[deps]
+
+source_file="res://assets/m8stealth89.bmp"
+dest_files=["res://.godot/imported/m8stealth89.bmp-81773385a5cea15b948e095695fa3c6c.res"]
+
+[params]
+
+create_from=0
+threshold=0.5

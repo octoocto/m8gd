@@ -1,0 +1,283 @@
+#pragma once
+
+#include "utilities.hpp"
+#include <cstdio>
+#include <libserialport.h>
+
+// max amount of bytes that can be received in one read
+#define RX_BUFFER_SIZE 1024
+
+// max amount of bytes that can be stored in one command
+#define CMD_BUFFER_SIZE 1024
+
+// max zero-byte reads before automatically disconnecting
+#define MAX_ZERO_READS 1024
+
+// #define M8_SP_BAUD_RATE 115200
+#define M8_SP_BAUD_RATE 9600
+#define M8_SP_DATA_BITS 8
+#define M8_SP_PARITY SP_PARITY_NONE
+#define M8_SP_STOP_BITS 1
+#define M8_SP_FLOWCONTROL SP_FLOWCONTROL_NONE
+
+namespace libm8
+{
+	const uint16_t M8_USB_VID = 0x16C0;
+	const uint16_t M8_USB_PID = 0x048A;
+
+	const uint16_t RES_MODEL_01[] = {320, 240};
+	const uint16_t RES_MODEL_02[] = {480, 320};
+
+	enum HardwareModel
+	{
+		MODEL_HEADLESS = 0,
+		MODEL_BETA = 1,
+		MODEL_01 = 2,
+		MODEL_02 = 3
+	};
+
+	enum CommandRX
+	{
+		DRAW_RECT = 0xFE,
+		DRAW_RECT_SIZE = 12,
+
+		DRAW_CHAR = 0xFD,
+		DRAW_CHAR_SIZE = 12,
+
+		DRAW_OSC = 0xFC,
+		DRAW_OSC_SIZE_MIN = 1 + 3,
+		DRAW_OSC_SIZE_MAX = 1 + 3 + 480,
+
+		KEY_PRESS = 0xFB,
+		KEY_PRESS_SIZE = 3,
+
+		SYSTEM_INFO = 0xFF,
+		SYSTEM_INFO_SIZE = 6,
+	};
+
+	enum CommandTX
+	{
+		TX_CONTROL_KEYS = 'C',	 // [1]: field of key states
+		TX_KEYJAZZ = 'K',		 // [1]: note, [2]: velocity
+		TX_ENABLE_DISPLAY = 'E', // no args
+		TX_RESET_DISPLAY = 'R',	 // no args
+		TX_DISCONNECT = 'D',	 // no args
+		TX_THEME_COLOR = 'S'	 // [1]: index [234]: rgb
+	};
+
+	enum SLIPSpecialBytes
+	{
+		SLIP_END = 0xC0,
+		SLIP_ESC = 0xDB,
+		SLIP_ESC_END = 0xDC,
+		SLIP_ESC_ESC = 0xDD,
+	};
+
+	enum Error
+	{
+		OK = 0,
+		// command reader errors
+		ERR_CMD_BUFFER_OVERFLOW = 1,		 // tried to add more bytes than RX_BUFFER_SIZE
+		ERR_CMD_HANDLER_NOT_IMPLEMENTED = 2, // function not overriden correctly
+		ERR_CMD_HANDLER_INVALID_SIZE = 3,	 // read a command with an invalid size
+		ERR_CMD_HANDLER_INVALID_CMD = 4,	 // read a command not recognized
+		// read() errors
+		ERR_SLIP_INVALID_ESCAPED_CHAR = 5,
+		// libserialport errors
+		ERR_SP_INVALID_ARGS = 6,
+		ERR_SP_FAILED = 7,
+		ERR_SP_MEM = 8,
+		ERR_SP_NOT_SUPPORTED = 9,
+		// connect() errors
+		ERR_DEVICE_NOT_FOUND = 10,
+		// general errors
+		ERR_NOT_CONNECTED = 11,
+	};
+
+	static Error sp_to_m8(sp_return code)
+	{
+		switch (code)
+		{
+		case SP_ERR_ARG:
+			return ERR_SP_INVALID_ARGS;
+		case SP_ERR_FAIL:
+			return ERR_SP_FAILED;
+		case SP_ERR_MEM:
+			return ERR_SP_MEM;
+		case SP_ERR_SUPP:
+			return ERR_SP_NOT_SUPPORTED;
+		default:
+			return OK;
+		}
+	}
+
+	static int sp_check(int result)
+	{
+		char *error_msg;
+
+		switch (result)
+		{
+		case SP_ERR_ARG:
+			printerr("libserialport: invalid argument");
+			break;
+		case SP_ERR_FAIL:
+			error_msg = sp_last_error_message();
+			printerr("libserialport: failed: %s", error_msg);
+			sp_free_error_message(error_msg);
+			break;
+		case SP_ERR_SUPP:
+			printerr("libserialport: not supported");
+			break;
+		case SP_ERR_MEM:
+			printerr("libserialport: could not allocate memory");
+			break;
+		case SP_OK:
+		default:
+			break;
+		}
+		return result;
+	}
+
+	static bool is_m8_serial_port(sp_port *port)
+	{
+		int usb_vid, usb_pid;
+		sp_get_port_usb_vid_pid(port, &usb_vid, &usb_pid);
+		return usb_vid == M8_USB_VID && usb_pid == M8_USB_PID;
+	}
+
+	static uint16_t decode_u16(uint8_t *data, uint8_t start)
+	{
+		return data[start] | (uint16_t)data[start + 1] << 8;
+	}
+
+	class Client
+	{
+	private:
+		sp_port *m8_port = nullptr;
+
+		uint8_t rx_buffer[RX_BUFFER_SIZE] = {0}; // raw data buffer
+
+		uint8_t cmd_buffer[CMD_BUFFER_SIZE] = {0}; // decoded data buffer
+		uint32_t cmd_size = 0;
+
+		Error last_error;
+
+	public:
+		Client() {}
+		~Client()
+		{
+			disconnect();
+			sp_free_port(m8_port);
+		}
+
+		/// @brief Send a command to the M8.
+		/// @param data an array of bytes containing the command and arguments
+		/// @param size the size of the array
+		Error send_command(const uint8_t (&data)[], size_t size)
+		{
+			if (m8_port == nullptr)
+				return ERR_NOT_CONNECTED;
+
+			sp_return result = sp_blocking_write(m8_port, data, size, 10);
+			return sp_to_m8(result);
+		}
+
+		Error send_reset_display()
+		{
+			return send_command({TX_RESET_DISPLAY}, 1);
+		}
+
+		Error send_enable_display()
+		{
+			return send_command({TX_ENABLE_DISPLAY}, 1);
+		}
+
+		Error send_disable_display()
+		{
+			return send_command({TX_DISCONNECT}, 1);
+		}
+
+		Error disconnect()
+		{
+			if (is_connected())
+			{
+				send_disable_display();
+				on_disconnect();
+				sp_close(m8_port);
+				sp_free_port(m8_port);
+				m8_port = nullptr;
+				cmd_size = 0; // also reset cmd_buffer
+				print("disconnected");
+			}
+			return OK;
+		}
+
+		Error send_keyjazz(uint8_t note, uint8_t velocity)
+		{
+			return send_command({TX_KEYJAZZ, note, velocity}, 3);
+		}
+
+		Error send_control_keys(uint8_t keystate)
+		{
+			return send_command({TX_CONTROL_KEYS, keystate}, 2);
+		}
+
+		Error send_theme_color(uint8_t index, uint8_t r, uint8_t g, uint8_t b)
+		{
+			return send_command({TX_THEME_COLOR, index, r, g, b}, 5);
+		}
+
+		bool connect(godot::String port_name);
+
+		bool is_connected()
+		{
+			return m8_port != nullptr;
+		}
+
+		Error read();
+
+	private:
+		/// @brief Append a byte to the command buffer.
+		/// @param byte
+		Error cmd_buffer_append(uint8_t byte)
+		{
+			if (cmd_size == RX_BUFFER_SIZE)
+			{
+				return ERR_CMD_BUFFER_OVERFLOW;
+			}
+			cmd_buffer[cmd_size++] = byte;
+			return OK;
+		}
+
+		/// @brief Read and process the command buffer.
+		/// @return true if the command was successfully processed.
+		virtual Error read_command(uint8_t *cmd_buffer, const uint16_t &cmd_size) = 0;
+
+		/// @brief Called when the M8 is disconnected and port is freed.
+		virtual void on_disconnect() = 0;
+
+	private:
+		static sp_port **get_port_list()
+		{
+			struct sp_port **port_list;
+
+			enum sp_return result = sp_list_ports(&port_list);
+
+			if (result != SP_OK)
+			{
+				fprintf(stderr,
+						"libm8: failed to list serial ports: "
+						"error code %d\n",
+						(int)sp_to_m8(result));
+				return nullptr;
+			}
+
+			return port_list;
+		}
+
+		static void free_port_list(sp_port **port_list)
+		{
+			sp_free_port_list(port_list);
+		}
+	};
+}

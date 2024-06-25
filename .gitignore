@@ -1,2 +1,26 @@
 # Godot 4+ specific ignores
 .godot/
+
+build/
+
+# library/object/executable files
+*.dll
+*.a
+*.so
+*.framework
+*.o
+*.os
+*.exe
+
+# tmp files
+*.tmp
+
+# vscode files
+.vscode
+
+# scons cache
+.sconsign.dblite
+
+project/addons/Asset_Drawer
+
+thirdparty/*/*

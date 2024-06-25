@@ -1,0 +1,275 @@
+[gd_scene load_steps=29 format=3 uid="uid://f2tvhcv8kiuu"]
+
+[ext_resource type="Script" path="res://scenes/desk_scene.gd" id="1_irl02"]
+[ext_resource type="Texture2D" uid="uid://c0wnmsv4tqel4" path="res://assets/Wood_Texture-7.jpg" id="2_gr6gg"]
+[ext_resource type="Texture2D" uid="uid://cby2najbsa01x" path="res://assets/texture_04.png" id="3_72vpc"]
+[ext_resource type="PackedScene" uid="uid://budu6000msy4d" path="res://DeviceModel.tscn" id="4_vkcd3"]
+[ext_resource type="Shader" path="res://CRTScreen.gdshader" id="5_b3l1k"]
+[ext_resource type="PackedScene" uid="uid://bddnp4aiq0x4w" path="res://assets/succulent_plants/scene.gltf" id="6_h2fct"]
+[ext_resource type="Texture2D" uid="uid://sw144ksus5yx" path="res://assets/succulent_plants/textures/taniku01-tex_baseColor.png" id="7_uxpbj"]
+
+[sub_resource type="Curve" id="Curve_jbk1r"]
+_data = [Vector2(0, 0), 0.0, 1.0, 0, 1, Vector2(1, 1), 1.0, 0.0, 1, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_6hjk4"]
+_data = [Vector2(0, 0), 0.0, 1.0, 0, 1, Vector2(1, 1), 1.0, 0.0, 1, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_iib2c"]
+_data = [Vector2(0, 0), 0.0, 1.78098, 0, 0, Vector2(0.557447, 0.406593), 0.147567, 0.147567, 0, 0, Vector2(1, 1), 3.22802, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_llfmb"]
+curve_x = SubResource("Curve_jbk1r")
+curve_y = SubResource("Curve_6hjk4")
+curve_z = SubResource("Curve_iib2c")
+
+[sub_resource type="Environment" id="Environment_ayqpk"]
+background_mode = 2
+tonemap_mode = 2
+ssr_fade_in = 0.321532
+sdfgi_enabled = true
+fog_light_color = Color(0, 0, 0, 1)
+fog_density = 0.001
+volumetric_fog_enabled = true
+volumetric_fog_albedo = Color(0.2385, 0.1925, 0.25, 1)
+volumetric_fog_ambient_inject = 0.53
+adjustment_enabled = true
+adjustment_color_correction = SubResource("CurveXYZTexture_llfmb")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6po1w"]
+specular_mode = 2
+albedo_texture = ExtResource("2_gr6gg")
+metallic = 0.24
+roughness = 0.5
+uv1_scale = Vector3(0.1, 0.1, 0.1)
+uv1_offset = Vector3(-0.445, -0.035, 0.455)
+uv1_triplanar = true
+texture_filter = 0
+
+[sub_resource type="BoxMesh" id="BoxMesh_omcp7"]
+size = Vector3(9.895, 0.25, 7.77)
+
+[sub_resource type="Gradient" id="Gradient_irow8"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_387vu"]
+noise_type = 3
+frequency = 0.2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_vek66"]
+seamless = true
+as_normal_map = true
+color_ramp = SubResource("Gradient_irow8")
+noise = SubResource("FastNoiseLite_387vu")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i4bc6"]
+albedo_color = Color(0.690127, 0.675268, 0.98973, 1)
+albedo_texture = ExtResource("3_72vpc")
+normal_enabled = true
+normal_scale = 0.22
+normal_texture = SubResource("NoiseTexture2D_vek66")
+uv1_scale = Vector3(2, 2, 2)
+uv1_triplanar = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_j5ux3"]
+size = Vector3(9.895, 0.32, 4.98)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0bcqi"]
+specular_mode = 2
+albedo_texture = ExtResource("2_gr6gg")
+metallic = 0.39
+roughness = 0.26
+uv1_scale = Vector3(0.12, 0.12, 0.12)
+uv1_offset = Vector3(0, -0.125, 0)
+uv1_triplanar = true
+texture_filter = 0
+
+[sub_resource type="BoxMesh" id="BoxMesh_ek01r"]
+size = Vector3(24, 1, 6)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_t2dqp"]
+resource_local_to_scene = false
+viewport_path = NodePath(".")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2fps4"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("5_b3l1k")
+shader_parameter/emission_amount = 0.25
+shader_parameter/curvature_amount_x = 0.0
+shader_parameter/curvature_amount_y = 0.0
+shader_parameter/curvature_ramp = 2.0
+shader_parameter/edge_darken = -0.25
+shader_parameter/edge_burn = 0.0
+shader_parameter/edge_burn_ramp = 10.0
+shader_parameter/distort_amount = 0.0
+shader_parameter/distort_offset = Vector2(0, 0)
+shader_parameter/brightness = 0.001
+shader_parameter/tex = SubResource("ViewportTexture_t2dqp")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w78fo"]
+resource_local_to_scene = true
+albedo_color = Color(0.1, 0.1, 0.1, 1)
+metallic = 0.6
+metallic_specular = 0.06
+roughness = 0.46
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_wopxj"]
+auto_exposure_scale = 0.02
+dof_blur_far_enabled = true
+dof_blur_far_distance = 15.0
+dof_blur_far_transition = 2.75
+dof_blur_near_enabled = true
+dof_blur_near_distance = 11.93
+dof_blur_near_transition = 2.25
+dof_blur_amount = 0.18
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tb1h5"]
+resource_name = "syna"
+cull_mode = 2
+albedo_color = Color(0.588495, 0.479037, 0.341119, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8sriq"]
+albedo_color = Color(0.716296, 0.716296, 0.716296, 1)
+roughness = 0.9
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 0.1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mesqs"]
+resource_name = "taniku01-tex"
+transparency = 4
+cull_mode = 2
+albedo_texture = ExtResource("7_uxpbj")
+roughness = 0.7
+emission_operator = 1
+subsurf_scatter_enabled = true
+subsurf_scatter_strength = 0.15
+
+[node name="M8Scene" type="Node3D"]
+script = ExtResource("1_irl02")
+metadata/_edit_vertical_guides_ = [640.0]
+metadata/_edit_horizontal_guides_ = [480.0]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+unique_name_in_owner = true
+environment = SubResource("Environment_ayqpk")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(0.258819, -0.4609, -0.848872, 0, -0.878817, 0.477159, -0.965926, -0.123498, -0.227455, 0.087698, 1.97022, -16.5359)
+light_color = Color(0.862333, 0.86, 1, 1)
+shadow_enabled = true
+shadow_bias = 0.01
+shadow_opacity = 0.83
+shadow_blur = 3.0
+
+[node name="LampLight" type="SpotLight3D" parent="."]
+transform = Transform3D(0.266284, 0.95967, -0.0901454, -0.46377, 0.209544, 0.860818, 0.844991, -0.187416, 0.500865, -2.964, 12.715, 10.369)
+visible = false
+light_color = Color(1, 0.922, 0.64, 1)
+light_size = 3.0
+shadow_enabled = true
+shadow_blur = 0.5
+spot_range = 43.892
+spot_attenuation = 0.0
+spot_angle = 16.72
+spot_angle_attenuation = 0.0192366
+
+[node name="LampLight2" type="SpotLight3D" parent="."]
+transform = Transform3D(0.231346, 0.952383, -0.198611, -0.918842, 0.280983, 0.27709, 0.319702, 0.118389, 0.940093, -4.77328, 3.32057, 10.2875)
+visible = false
+light_color = Color(1, 0.11, 0.11, 1)
+light_energy = 16.0
+light_size = 3.0
+shadow_enabled = true
+shadow_blur = 0.5
+spot_range = 43.892
+spot_angle = 36.8368
+
+[node name="LampLight3" type="SpotLight3D" parent="."]
+transform = Transform3D(0.356473, 0.892189, 0.277356, -0.86415, 0.201984, 0.460919, 0.355205, -0.403983, 0.842987, 3.05577, 5.79271, 10.2875)
+light_color = Color(0.614333, 0.11, 1, 1)
+light_energy = 6.243
+light_size = 3.0
+shadow_enabled = true
+shadow_blur = 0.5
+spot_range = 43.892
+spot_angle = 36.8368
+
+[node name="Table" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.93185, 0, 0.517638, 0, 2, 0, -0.517638, 0, 1.93185, -0.546, -3.597, -1.2)
+material_override = SubResource("StandardMaterial3D_6po1w")
+mesh = SubResource("BoxMesh_omcp7")
+
+[node name="Table4" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.97803, 0, 0.295619, 0, 2, 0, -0.295619, 0, 1.97803, -0.451, -3.597, -0.245)
+material_override = SubResource("StandardMaterial3D_i4bc6")
+mesh = SubResource("BoxMesh_j5ux3")
+
+[node name="Table2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.93185, 0.517638, 5.96046e-08, 0, -8.74228e-08, -2, -0.517638, 1.93185, -7.45058e-08, -2.83502, -8.37856, -7.41538)
+material_override = SubResource("StandardMaterial3D_0bcqi")
+mesh = SubResource("BoxMesh_ek01r")
+
+[node name="M8Model" parent="." instance=ExtResource("4_vkcd3")]
+unique_name_in_owner = true
+transform = Transform3D(35.8742, 0, 14.8596, 0, 38.83, 0, -14.8596, 0, 35.8742, -2.25, -3.037, 0.15)
+screen_material = SubResource("ShaderMaterial_2fps4")
+keycap_material = SubResource("StandardMaterial3D_w78fo")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(0.760406, -0.562439, 0.324724, 0, 0.5, 0.866026, -0.649448, -0.658531, 0.380203, 3.8, 9.615, 5.175)
+attributes = SubResource("CameraAttributesPractical_wopxj")
+current = true
+fov = 30.0
+size = 8.765
+far = 450.0
+
+[node name="Sketchfab_Scene" parent="." instance=ExtResource("6_h2fct")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 5.763, -3.306, -1.498)
+
+[node name="Pot003" parent="Sketchfab_Scene/Sketchfab_model/Root" index="0"]
+visible = false
+
+[node name="Pot002" parent="Sketchfab_Scene/Sketchfab_model/Root" index="1"]
+visible = false
+
+[node name="Pot001" parent="Sketchfab_Scene/Sketchfab_model/Root" index="2"]
+transform = Transform3D(0.401948, 0.915663, 0, -0.915663, 0.401948, 0, 0, 0, 1, -1, 0, 0)
+
+[node name="Pot001_0" parent="Sketchfab_Scene/Sketchfab_model/Root/Pot001" index="0"]
+material_override = SubResource("StandardMaterial3D_tb1h5")
+
+[node name="Pot001_1" parent="Sketchfab_Scene/Sketchfab_model/Root/Pot001" index="1"]
+material_override = SubResource("StandardMaterial3D_8sriq")
+
+[node name="aroe_0" parent="Sketchfab_Scene/Sketchfab_model/Root/Pot001/aroe" index="0"]
+material_override = SubResource("StandardMaterial3D_mesqs")
+
+[node name="Pot004" parent="Sketchfab_Scene/Sketchfab_model/Root" index="3"]
+visible = false
+
+[node name="Pot005" parent="Sketchfab_Scene/Sketchfab_model/Root" index="4"]
+visible = false
+
+[node name="Pot006" parent="Sketchfab_Scene/Sketchfab_model/Root" index="5"]
+visible = false
+
+[node name="Pot007" parent="Sketchfab_Scene/Sketchfab_model/Root" index="6"]
+visible = false
+
+[node name="Pot008" parent="Sketchfab_Scene/Sketchfab_model/Root" index="7"]
+visible = false
+
+[node name="Pot009" parent="Sketchfab_Scene/Sketchfab_model/Root" index="8"]
+visible = false
+
+[node name="Pot010" parent="Sketchfab_Scene/Sketchfab_model/Root" index="9"]
+visible = false
+
+[node name="������" parent="Sketchfab_Scene/Sketchfab_model/Root" index="10"]
+visible = false
+
+[editable path="Sketchfab_Scene"]

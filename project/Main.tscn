@@ -1,0 +1,224 @@
+[gd_scene load_steps=11 format=3 uid="uid://b265ke8cr3dgr"]
+
+[ext_resource type="Script" path="res://Main.gd" id="1_4g2n0"]
+[ext_resource type="Shader" path="res://PostProcess.gdshader" id="1_tjung"]
+[ext_resource type="Shader" path="res://CRTShader.gdshader" id="4_btrxk"]
+[ext_resource type="Script" path="res://spectrum_visualizer.gd" id="5_33ff2"]
+[ext_resource type="PackedScene" uid="uid://d13t756slc8b0" path="res://MainMenu.tscn" id="7_k5oyo"]
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_l1801"]
+color = Color(1, 1, 1, 0.2)
+grow_begin = -8.0
+grow_end = -8.0
+thickness = 2
+
+[sub_resource type="Theme" id="Theme_gulif"]
+CheckButton/colors/font_color = Color(1, 1, 1, 1)
+HSeparator/constants/separation = 16
+HSeparator/styles/separator = SubResource("StyleBoxLine_l1801")
+MarginContainer/constants/margin_bottom = 16
+MarginContainer/constants/margin_left = 16
+MarginContainer/constants/margin_right = 16
+MarginContainer/constants/margin_top = 16
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_x0ssf"]
+shader = ExtResource("4_btrxk")
+shader_parameter/overlay = true
+shader_parameter/scanlines_opacity = 0.0
+shader_parameter/scanlines_width = 0.25
+shader_parameter/grille_opacity = 0.046
+shader_parameter/resolution = Vector2(640, 480)
+shader_parameter/pixelate = false
+shader_parameter/roll = true
+shader_parameter/roll_speed = 10.0
+shader_parameter/roll_size = 15.0
+shader_parameter/roll_variation = 1.8
+shader_parameter/distort_intensity = 0.002
+shader_parameter/noise_opacity = 0.05
+shader_parameter/noise_speed = 5.0
+shader_parameter/static_noise_intensity = 0.01
+shader_parameter/aberration = 0.03
+shader_parameter/brightness = 1.4
+shader_parameter/discolor = false
+shader_parameter/warp_amount = 0.882
+shader_parameter/clip_warp = false
+shader_parameter/vignette_intensity = -0.265
+shader_parameter/vignette_opacity = 0.395
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pe34f"]
+shader = ExtResource("1_tjung")
+shader_parameter/effect = -3.855
+shader_parameter/effect_scale = 1.0
+shader_parameter/crop = 1.0
+shader_parameter/warp_amount = 0.5
+shader_parameter/warp_aspect = 1.0
+shader_parameter/border_alpha = 1.0
+shader_parameter/ca_amount = 0.1
+shader_parameter/vignette_intensity = 1.99
+shader_parameter/vignette_opacity = 1.0
+shader_parameter/vignette_rgb = Color(1, 1, 1, 1)
+shader_parameter/mirror_blur = 2.5
+shader_parameter/mirror_overlay = Color(1, 1, 1, 0.6)
+
+[sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_cl5ne"]
+
+[node name="Main" type="Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_gulif")
+script = ExtResource("1_4g2n0")
+visualizer_ca_amount = 0.01
+
+[node name="SceneViewportContainer" type="SubViewportContainer" parent="."]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SceneViewport" type="SubViewport" parent="SceneViewportContainer"]
+unique_name_in_owner = true
+handle_input_locally = false
+use_taa = true
+canvas_item_default_texture_filter = 0
+size = Vector2i(1280, 960)
+render_target_update_mode = 4
+
+[node name="CRTShader" type="ColorRect" parent="."]
+unique_name_in_owner = true
+visible = false
+material = SubResource("ShaderMaterial_x0ssf")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="."]
+visible = false
+material = SubResource("ShaderMaterial_pe34f")
+custom_minimum_size = Vector2(1280, 960)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="AudioInputMonitor" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+stream = SubResource("AudioStreamMicrophone_cl5ne")
+bus = &"Analyzer"
+
+[node name="SubViewport" type="SubViewport" parent="."]
+transparent_bg = true
+size = Vector2i(256, 128)
+
+[node name="SpectrumVisual" type="Node2D" parent="SubViewport"]
+unique_name_in_owner = true
+visible = false
+position = Vector2(128, 64)
+scale = Vector2(8, 8)
+script = ExtResource("5_33ff2")
+spectrum_db_min = 50.0
+spectrum_freq_min = 10.0
+spectrum_width = 32.0
+spectrum_height = 16.0
+spectrum_smoothing = 0.6
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="GridContainer" type="GridContainer" parent="MarginContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+alignment = 1
+
+[node name="DebugLabels" type="Control" parent="MarginContainer/GridContainer/VBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="LabelFPS" type="Label" parent="MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
+unique_name_in_owner = true
+layout_mode = 2
+offset_top = 4.0
+offset_right = 1.0
+offset_bottom = 27.0
+size_flags_horizontal = 0
+size_flags_vertical = 2
+
+[node name="LabelVersion" type="Label" parent="MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
+unique_name_in_owner = true
+layout_mode = 2
+offset_top = 31.0
+offset_right = 622.0
+offset_bottom = 54.0
+size_flags_vertical = 10
+vertical_alignment = 2
+
+[node name="LabelPort" type="Label" parent="MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
+unique_name_in_owner = true
+layout_mode = 2
+offset_top = 58.0
+offset_right = 622.0
+offset_bottom = 81.0
+size_flags_vertical = 10
+text = "*no device"
+vertical_alignment = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="MarginContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 8
+
+[node name="LabelStatus" type="Label" parent="MarginContainer/GridContainer/VBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="VBoxContainer4" type="VBoxContainer" parent="MarginContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MainMenuPanel" parent="." instance=ExtResource("7_k5oyo")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+
+[node name="TextureRect" type="TextureRect" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0

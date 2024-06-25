@@ -1,0 +1,209 @@
+[gd_scene load_steps=21 format=3 uid="uid://da23gfk2abg5f"]
+
+[ext_resource type="Script" path="res://scenes/floating_scene.gd" id="1_ufbfg"]
+[ext_resource type="PackedScene" uid="uid://budu6000msy4d" path="res://DeviceModel.tscn" id="4_oaihv"]
+[ext_resource type="Shader" path="res://CRTScreen.gdshader" id="5_t84je"]
+
+[sub_resource type="Environment" id="Environment_dmk2d"]
+background_mode = 2
+ssr_fade_in = 0.321532
+fog_light_color = Color(0, 0, 0, 1)
+fog_density = 0.001
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.02
+volumetric_fog_albedo = Color(0.4346, 0.53, 0.49343, 1)
+volumetric_fog_ambient_inject = 0.53
+adjustment_enabled = true
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_t2dqp"]
+resource_local_to_scene = false
+viewport_path = NodePath(".")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2fps4"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("5_t84je")
+shader_parameter/emission_amount = 0.25
+shader_parameter/curvature_amount_x = 0.0
+shader_parameter/curvature_amount_y = 0.0
+shader_parameter/curvature_ramp = 2.0
+shader_parameter/edge_darken = -0.25
+shader_parameter/edge_burn = 0.0
+shader_parameter/edge_burn_ramp = 10.0
+shader_parameter/distort_amount = 0.0
+shader_parameter/distort_offset = Vector2(0, 0)
+shader_parameter/brightness = 0.001
+shader_parameter/tex = SubResource("ViewportTexture_t2dqp")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yw5uk"]
+resource_local_to_scene = true
+albedo_color = Color(0.1, 0.1, 0.1, 1)
+metallic = 0.6
+metallic_specular = 0.06
+roughness = 0.46
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_yq44y"]
+exposure_multiplier = 1.5
+auto_exposure_scale = 0.02
+dof_blur_far_enabled = true
+dof_blur_far_distance = 15.0
+dof_blur_far_transition = 10.0
+dof_blur_near_enabled = true
+dof_blur_near_distance = 5.0
+dof_blur_near_transition = 10.0
+dof_blur_amount = 0.5
+
+[sub_resource type="Curve" id="Curve_cgsy1"]
+_data = [Vector2(0, 0), 0.0, 0.0927835, 0, 0, Vector2(0.527778, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_jqqhn"]
+curve = SubResource("Curve_cgsy1")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_oyruv"]
+emission_shape_scale = Vector3(10, 10, 10)
+emission_shape = 1
+emission_sphere_radius = 1.0
+direction = Vector3(0, 0, -1)
+initial_velocity_max = 0.5
+gravity = Vector3(0, 0, 0)
+scale_min = 0.1
+scale_max = 0.2
+scale_curve = SubResource("CurveTexture_jqqhn")
+
+[sub_resource type="Gradient" id="Gradient_ff30t"]
+interpolation_mode = 2
+interpolation_color_space = 2
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_b6bpi"]
+gradient = SubResource("Gradient_ff30t")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+metadata/_snap_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2arbn"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 1, 1, 0.1)
+albedo_texture = SubResource("GradientTexture2D_b6bpi")
+billboard_mode = 1
+billboard_keep_scale = true
+proximity_fade_enabled = true
+
+[sub_resource type="QuadMesh" id="QuadMesh_5vrwp"]
+material = SubResource("StandardMaterial3D_2arbn")
+size = Vector2(0.1, 0.1)
+
+[sub_resource type="Gradient" id="Gradient_w7vqr"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_uwqla"]
+noise_type = 3
+frequency = 0.3711
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_6kjnt"]
+color_ramp = SubResource("Gradient_w7vqr")
+noise = SubResource("FastNoiseLite_uwqla")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nx6w6"]
+render_priority = 0
+shader = ExtResource("5_t84je")
+shader_parameter/emission_amount = 1.0
+shader_parameter/curvature_amount_x = -22.575
+shader_parameter/curvature_amount_y = -14.1
+shader_parameter/curvature_ramp = 2.0
+shader_parameter/edge_darken = 0.0
+shader_parameter/edge_burn = 0.0
+shader_parameter/edge_burn_ramp = 0.0
+shader_parameter/distort_amount = 3.0
+shader_parameter/distort_offset = Vector2(0, 0)
+shader_parameter/brightness = -0.25
+shader_parameter/distort_texture = SubResource("NoiseTexture2D_6kjnt")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_rbhh0"]
+size = Vector2(48, 36)
+subdivide_width = 24
+subdivide_depth = 18
+
+[node name="M8Scene" type="Node3D"]
+script = ExtResource("1_ufbfg")
+metadata/_edit_vertical_guides_ = [640.0]
+metadata/_edit_horizontal_guides_ = [480.0]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+unique_name_in_owner = true
+environment = SubResource("Environment_dmk2d")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(-0.649448, 0.362834, 0.668258, -1.32698e-07, -0.878817, 0.477159, 0.760406, 0.30989, 0.570746, 0.087698, 1.97022, -16.5359)
+visible = false
+light_color = Color(0.862333, 0.86, 1, 1)
+shadow_enabled = true
+shadow_bias = 0.01
+shadow_opacity = 0.83
+shadow_blur = 3.0
+
+[node name="LampLight" type="SpotLight3D" parent="."]
+transform = Transform3D(0.166916, 0.966953, -0.192722, -0.562368, 0.253919, 0.786935, 0.809865, -0.0229712, 0.586167, -2.964, 11.885, 10.369)
+light_color = Color(0.8425, 0.79, 1, 1)
+light_size = 3.0
+shadow_enabled = true
+shadow_blur = 0.5
+spot_range = 43.892
+spot_attenuation = 0.0
+spot_angle = 16.72
+spot_angle_attenuation = 0.0192366
+
+[node name="LampLight2" type="SpotLight3D" parent="."]
+transform = Transform3D(0.231346, 0.952383, -0.198611, -0.918842, 0.280983, 0.27709, 0.319702, 0.118389, 0.940093, -4.77328, 3.32057, 10.2875)
+visible = false
+light_color = Color(1, 0.11, 0.11, 1)
+light_energy = 16.0
+light_size = 3.0
+shadow_enabled = true
+shadow_blur = 0.5
+spot_range = 43.892
+spot_angle = 36.8368
+
+[node name="LampLight3" type="SpotLight3D" parent="."]
+transform = Transform3D(0.356473, 0.892189, 0.277356, -0.86415, 0.201984, 0.460919, 0.355205, -0.403983, 0.842987, 3.05577, 5.79271, 10.2875)
+visible = false
+light_color = Color(0.614333, 0.11, 1, 1)
+light_energy = 6.243
+light_size = 3.0
+shadow_enabled = true
+shadow_blur = 0.5
+spot_range = 43.892
+spot_angle = 36.8368
+
+[node name="M8Model" parent="." instance=ExtResource("4_oaihv")]
+unique_name_in_owner = true
+transform = Transform3D(38.83, 0, 0, 0, 6.74276, -38.24, 0, 38.2401, 6.74275, 0, 0, 0)
+screen_material = SubResource("ShaderMaterial_2fps4")
+keycap_material = SubResource("StandardMaterial3D_yw5uk")
+
+[node name="CameraArm" type="Node3D" parent="."]
+unique_name_in_owner = true
+
+[node name="Camera3D" type="Camera3D" parent="CameraArm"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 13)
+attributes = SubResource("CameraAttributesPractical_yq44y")
+current = true
+fov = 37.8493
+size = 8.765
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+amount = 512
+lifetime = 10.0
+visibility_aabb = AABB(-11.9327, -4, -13.8765, 23.8655, 8, 27.753)
+process_material = SubResource("ParticleProcessMaterial_oyruv")
+draw_pass_1 = SubResource("QuadMesh_5vrwp")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(0.745, 0, 0, 0, -3.2565e-08, -0.745, 0, 0.745, -3.2565e-08, 0, 0, -20)
+material_override = SubResource("ShaderMaterial_nx6w6")
+mesh = SubResource("PlaneMesh_rbhh0")

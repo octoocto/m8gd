@@ -1,0 +1,15 @@
+[configuration]
+
+entry_symbol = "libm8gd_init"
+compatibility_minimum = 4.2
+
+[libraries]
+
+macos.debug = "res://addons/libm8gd/libm8gd.macos.template_debug.framework"
+macos.release = "res://addons/libm8gd/libm8gd.macos.template_release.framework"
+
+windows.debug.x86_64 = "res://addons/libm8gd/libm8gd.windows.template_debug.dll"
+windows.release.x86_64 = "res://addons/libm8gd/libm8gd.windows.template_release.dll"
+
+linux.debug.x86_64 = "res://addons/libm8gd/libm8gd.template_debug.x86_64.so"
+linux.release.x86_64 = "res://addons/libm8gd/libm8gd.template_release.x86_64.so"

@@ -1,0 +1,22 @@
+[remap]
+
+importer="font_data_image"
+type="FontFile"
+uid="uid://1wnaqr75d2w4"
+path="res://.godot/imported/m8stealth57_font.bmp-53567192bf3ab6b76e60da0849f06abd.fontdata"
+
+[deps]
+
+source_file="res://assets/m8stealth57_font.bmp"
+dest_files=["res://.godot/imported/m8stealth57_font.bmp-53567192bf3ab6b76e60da0849f06abd.fontdata"]
+
+[params]
+
+character_ranges=PackedStringArray("0-127")
+columns=16
+rows=8
+image_margin=Rect2i(0, 0, 0, 0)
+character_margin=Rect2i(0, 0, 0, 0)
+fallbacks=[]
+compress=true
+scaling_mode=1

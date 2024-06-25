@@ -1,0 +1,187 @@
+[gd_scene load_steps=5 format=3 uid="uid://d13t756slc8b0"]
+
+[ext_resource type="Script" path="res://MainMenu.gd" id="1_7xjs6"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_t3yyj"]
+outline_size = 2
+
+[sub_resource type="LabelSettings" id="LabelSettings_cher2"]
+outline_size = 2
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4w3sk"]
+
+[node name="MainMenuPanel" type="Panel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_7xjs6")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+custom_minimum_size = Vector2(800, 480)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 16.0
+offset_bottom = 16.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="DisplayRect" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+texture_filter = 1
+custom_minimum_size = Vector2(320, 240)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MenuContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(480, 0)
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/MenuContainer"]
+layout_mode = 2
+text = "Scene"
+label_settings = SubResource("LabelSettings_t3yyj")
+horizontal_alignment = 1
+
+[node name="OptionScenes" type="OptionButton" parent="MarginContainer/HBoxContainer/MenuContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/HBoxContainer/MenuContainer"]
+layout_mode = 2
+
+[node name="O" type="Label" parent="MarginContainer/HBoxContainer/MenuContainer"]
+layout_mode = 2
+text = "Options"
+label_settings = SubResource("LabelSettings_cher2")
+horizontal_alignment = 1
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/HBoxContainer/MenuContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="VSeparator" type="VSeparator" parent="MarginContainer/HBoxContainer/MenuContainer/HBoxContainer2"]
+layout_mode = 2
+theme_override_constants/separation = 1
+theme_override_styles/separator = SubResource("StyleBoxEmpty_4w3sk")
+
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/MenuContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Volume"
+
+[node name="LabelVolume" type="Label" parent="MarginContainer/HBoxContainer/MenuContainer/HBoxContainer2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "100%"
+horizontal_alignment = 2
+
+[node name="SliderVolume" type="HSlider" parent="MarginContainer/HBoxContainer/MenuContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="CheckButtonFullscreen" type="CheckButton" parent="MarginContainer/HBoxContainer/MenuContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Fullscreen"
+
+[node name="CheckButtonVsync" type="CheckButton" parent="MarginContainer/HBoxContainer/MenuContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "VSync"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/HBoxContainer/MenuContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="VSeparator" type="VSeparator" parent="MarginContainer/HBoxContainer/MenuContainer/HBoxContainer3"]
+layout_mode = 2
+theme_override_constants/separation = 1
+theme_override_styles/separator = SubResource("StyleBoxEmpty_4w3sk")
+
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/MenuContainer/HBoxContainer3"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "FPS Cap
+"
+
+[node name="LabelFPSCap" type="Label" parent="MarginContainer/HBoxContainer/MenuContainer/HBoxContainer3"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "0"
+horizontal_alignment = 2
+
+[node name="SliderFPSCap" type="HSlider" parent="MarginContainer/HBoxContainer/MenuContainer/HBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 500.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/MenuContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="VSeparator" type="VSeparator" parent="MarginContainer/HBoxContainer/MenuContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 1
+theme_override_styles/separator = SubResource("StyleBoxEmpty_4w3sk")
+
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/MenuContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Window Resolution"
+
+[node name="OptionRes" type="OptionButton" parent="MarginContainer/HBoxContainer/MenuContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+item_count = 4
+popup/item_0/text = "320x240 (1x MODEL01)"
+popup/item_0/id = 0
+popup/item_0/disabled = true
+popup/item_1/text = "640x480 (2x MODEL01)"
+popup/item_1/id = 1
+popup/item_2/text = "960x720 (3x MODEL01)"
+popup/item_2/id = 2
+popup/item_3/text = "1280x960 (4x MODEL01)"
+popup/item_3/id = 3
+
+[node name="CheckButtonFilter" type="CheckButton" parent="MarginContainer/HBoxContainer/MenuContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "CRT Filter"
+
+[node name="CheckButtonDebug" type="CheckButton" parent="MarginContainer/HBoxContainer/MenuContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Debug Info"
+
+[node name="HSeparator2" type="HSeparator" parent="MarginContainer/HBoxContainer/MenuContainer"]
+layout_mode = 2
+
+[node name="ButtonExit" type="Button" parent="MarginContainer/HBoxContainer/MenuContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Exit"
