@@ -1,6 +1,6 @@
 extends Node2D
 
-enum Type { BAR, CIRCLE }
+enum Type {BAR, CIRCLE}
 
 @export var type: Type = Type.BAR
 
@@ -16,9 +16,7 @@ enum Type { BAR, CIRCLE }
 
 var spectrum_analyzer: AudioEffectSpectrumAnalyzerInstance
 
-
 var last_peaks := []
-
 
 func _fft(from_hz: float, to_hz: float) -> float:
 	var magnitude := spectrum_analyzer.get_magnitude_for_frequency_range(
@@ -28,16 +26,13 @@ func _fft(from_hz: float, to_hz: float) -> float:
 	).length()
 	return clamp(magnitude, 0, 1)
 
-
 func _ready():
 	last_peaks.resize(spectrum_res)
 	last_peaks.fill(0.0)
-	spectrum_analyzer = AudioServer.get_bus_effect_instance(0, 0)
-
+	spectrum_analyzer = AudioServer.get_bus_effect_instance(1, 0)
 
 func _physics_process(delta):
 	queue_redraw()
-
 
 func _draw():
 	var bar_width := spectrum_width / spectrum_res
@@ -47,7 +42,7 @@ func _draw():
 
 	for i in range(logspace.size() - 1):
 
-		var magnitude = _fft(logspace[i], logspace[i+1])
+		var magnitude = _fft(logspace[i], logspace[i + 1])
 		var height = clamp((spectrum_db_min + linear_to_db(magnitude)) / spectrum_db_min, 0.0, 1.0) * spectrum_height
 
 		# var height_avg = max(height, lerp(height, last_peaks[i], spectrum_smoothing))
@@ -61,12 +56,12 @@ func _draw():
 			# draw_rect(rect, Color.WHITE)
 
 		if type == Type.CIRCLE:
-			polygon_points.append(Vector2.UP.rotated(PI * i / float(spectrum_res-1)) * (height_avg * 8.0 + 16.0))
+			polygon_points.append(Vector2.UP.rotated(PI * i / float(spectrum_res - 1)) * (height_avg * 8.0 + 16.0))
 
 	if type == Type.BAR:
 		# polygon_points.push_front(Vector2(0, -0.01))
 		# polygon_points[0].y = 0
-		polygon_points[-1].y = 0
+		polygon_points[- 1].y = 0
 		var mirrored_points = polygon_points.map(func(vec: Vector2): return vec.reflect(Vector2.UP))
 		polygon_points.reverse()
 		# mirrored_points.pop_back()
@@ -91,8 +86,8 @@ func _draw():
 		# draw_polyline(polygon_points, Color.WHITE, 4, true)
 
 func logrange(a, b, step) -> Array:
-	var pow_a = log(a) / log(10)  # convert to 10^a form
-	var pow_b = log(b) / log(10)  # convert to 10^b form
+	var pow_a = log(a) / log(10) # convert to 10^a form
+	var pow_b = log(b) / log(10) # convert to 10^b form
 	var d = (pow_b - pow_a) / float(step)
 
 	var logspace = []
@@ -101,4 +96,3 @@ func logrange(a, b, step) -> Array:
 		logspace.append(pow(10, pow_a + (i * d)))
 
 	return logspace
-

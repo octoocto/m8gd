@@ -2,6 +2,9 @@ class_name M8SceneDisplay extends Panel
 
 const MAIN_SCENE: PackedScene = preload ("res://scenes/desk_scene.tscn")
 
+const FONT_SMALL: BitMap = preload ("res://assets/m8stealth57.bmp")
+const FONT_BIG: BitMap = preload ("res://assets/m8stealth89.bmp")
+
 const M8K_UP = 64
 const M8K_DOWN = 32
 const M8K_LEFT = 128
@@ -22,9 +25,6 @@ signal m8_key_changed
 @onready var scene_viewport: SubViewport = %SceneViewport
 @onready var current_scene: M8Scene = null
 
-# @onready var m8_display_viewport: M8DisplayViewport = %M8DisplayViewport
-# @onready var m8_display_texture: ViewportTexture = null
-
 @onready var menu: MainMenu = %MainMenuPanel
 
 @onready var m8_client := M8GD.new()
@@ -39,25 +39,22 @@ var last_peak := 0.0
 func _ready():
 
 	# resize viewport with window
+	DisplayServer.window_set_min_size(Vector2i(640, 480)) # 2x M8 screen size
 	get_tree().get_root().size_changed.connect(on_window_size_changed)
-
-	# %M8DisplayViewport.get_node("%BrowserRect").texture = m8_client.get_display_texture()
 
 	# initialize main menu
 	print("initializing menu controls...")
 	menu.initialize(self)
 
-	# initialize m8 web display
-	# print("initializing web display...")
-	# m8_display_texture = m8_display_viewport.get_texture()
-
 	# initialize main scene
 	_preload_scene(MAIN_SCENE)
 
+## Temporarily show a message on the bottom-left of the screen.
 func print_blink(msg: String) -> void:
 	%LabelStatus.text = msg
 	%LabelStatus.modulate.a = 1.0
 
+## Load a scene from a filepath.
 func load_scene(scene_path) -> void:
 	# load packed scene from file
 	print("loading new scene from %s..." % scene_path)
@@ -67,6 +64,7 @@ func load_scene(scene_path) -> void:
 	_preload_scene(packed_scene)
 
 func _preload_scene(packed_scene: PackedScene) -> void:
+
 	# instantiate scene
 	print("instantiating scene...")
 	var scene: M8Scene = packed_scene.instantiate()
@@ -88,14 +86,16 @@ func _preload_scene(packed_scene: PackedScene) -> void:
 
 	print("scene loaded!")
 
+# Signal callbacks
+################################################################################
+
 func on_window_size_changed() -> void:
 	scene_viewport.size = DisplayServer.window_get_size()
 
-# func m8_display_start_cef_external() -> void:
-#     m8_display_viewport.stop_cef()
-#     m8_display_viewport.start_cef_external()
+# M8 client methods
+################################################################################
 
-## Automatically find and connect to an M8 device.
+## Automatically detect and connect to any M8 device.
 func m8_connect() -> void:
 
 	var m8_ports: Array = M8GD.list_devices()
@@ -110,6 +110,7 @@ func m8_connect() -> void:
 		m8_client.font_changed.connect(on_m8_font_changed)
 		m8_client.device_disconnected.connect(on_m8_disconnect)
 
+## Automatically detect and monitor an M8 audio device.
 func m8_connect_audio() -> void:
 
 	# If the M8 device is plugged in and detected, use it as a microphone and
@@ -122,31 +123,35 @@ func m8_connect_audio() -> void:
 			m8_audio_connected = true
 			print("monitoring audio with device %s" % device)
 
+## Disconnect the M8 audio device from the monitor.
 func m8_disconnect_audio() -> void:
 	m8_audio_connected = false
 	AudioServer.input_device = "Default"
 	audio_monitor.playing = false
 	print("no longer monitoring audio")
 
+## Check if the M8 audio device still exists. If not, disconnect.
 func m8_check_audio() -> void:
 	for device in AudioServer.get_input_device_list():
 		if device.contains("M8"):
 			return
 	m8_disconnect_audio()
 
-func on_m8_keystate_changed(keystate: int):
+func on_m8_keystate_changed(keystate: int) -> void:
 	update_keystate(keystate, false)
 	m8_locally_controlled = true
 
-func on_m8_system_info(hardware, firmware):
+func on_m8_system_info(hardware, firmware) -> void:
 	%LabelVersion.text = "%s %s" % [hardware, firmware]
 
-func on_m8_font_changed(bigfont):
+func on_m8_font_changed(bigfont: bool) -> void:
+	# switch between small/big fonts (Model_01)
 	if bigfont:
-		m8_client.load_font(load("res://assets/m8stealth89.bmp"))
+		m8_client.load_font(FONT_BIG)
 	else:
-		m8_client.load_font(load("res://assets/m8stealth57.bmp"))
+		m8_client.load_font(FONT_SMALL)
 
+## Called when the M8 has been disconnected.
 func on_m8_disconnect() -> void:
 
 	m8_connected = false
@@ -187,7 +192,6 @@ func _physics_process(delta: float) -> void:
 func _process(_delta: float) -> void:
 
 	# read and update m8 display texture every frame
-
 	if m8_connected and m8_client.read_serial_data():
 		m8_client.update_texture()
 

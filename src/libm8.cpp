@@ -18,7 +18,7 @@ libm8::Error libm8::Client::read()
         if (bytes_read < 0)
         {
             // bytes_read is a libserialport error code
-            libm8::Error error = libm8::sp_to_m8((sp_return)bytes_read);
+            libm8::Error error = sp_to_m8((sp_return)bytes_read);
             if (error == libm8::ERR_SP_INVALID_ARGS)
             {
                 disconnect();
@@ -81,18 +81,18 @@ libm8::Error libm8::Client::read()
     return libm8::OK;
 }
 
-bool libm8::Client::connect(godot::String target_port_name)
+libm8::Error libm8::Client::connect(godot::String target_port_name)
 {
     enum sp_return result;
 
     if (m8_port != nullptr)
-        return true;
+        return OK;
 
     struct sp_port **port_list;
 
     result = sp_list_ports(&port_list);
-    if (libm8::sp_check(result) != SP_OK)
-        return false;
+    if (result != SP_OK)
+        return sp_to_m8(result);
 
     for (int i = 0; port_list[i] != nullptr; i++)
     {
@@ -110,40 +110,40 @@ bool libm8::Client::connect(godot::String target_port_name)
     if (m8_port == nullptr)
     {
         printerr("failed to find an M8 with port \"%s\"!", target_port_name);
-        return false;
+        return ERR_DEVICE_NOT_FOUND;
     }
 
     print("opening port \"%s\"...", target_port_name);
 
     // open M8 port
     result = sp_open(m8_port, SP_MODE_READ_WRITE);
-    if (libm8::sp_check(result) != SP_OK)
-        return false;
+    if (result != SP_OK)
+        return sp_to_m8(result);
 
     // configure M8 port
     result = sp_set_baudrate(m8_port, M8_SP_BAUD_RATE);
-    if (libm8::sp_check(result) != SP_OK)
-        return false;
+    if (result != SP_OK)
+        return sp_to_m8(result);
 
     result = sp_set_bits(m8_port, M8_SP_DATA_BITS);
-    if (libm8::sp_check(result) != SP_OK)
-        return false;
+    if (result != SP_OK)
+        return sp_to_m8(result);
 
     result = sp_set_parity(m8_port, M8_SP_PARITY);
-    if (libm8::sp_check(result) != SP_OK)
-        return false;
+    if (result != SP_OK)
+        return sp_to_m8(result);
 
     result = sp_set_stopbits(m8_port, M8_SP_STOP_BITS);
-    if (libm8::sp_check(result) != SP_OK)
-        return false;
+    if (result != SP_OK)
+        return sp_to_m8(result);
 
     result = sp_set_flowcontrol(m8_port, M8_SP_FLOWCONTROL);
-    if (libm8::sp_check(result) != SP_OK)
-        return false;
+    if (result != SP_OK)
+        return sp_to_m8(result);
 
     print("port successfully opened!");
 
     send_enable_display();
     send_reset_display();
-    return true;
+    return OK;
 }

@@ -247,7 +247,7 @@ bool M8GD::connect(String target_port_name)
 {
 	print("connecting to port \"%s\"...", target_port_name);
 
-	return m8_client.connect(target_port_name);
+	return m8_client.connect(target_port_name) == libm8::OK;
 }
 
 libm8::Error M8GD::read_command(uint8_t *cmd_buffer, const uint16_t &cmd_size)

@@ -10,9 +10,6 @@ extends M8Scene
 var time := 0.0
 var raw_time := 0.0
 
-# func _ready():
-#     %SpectrumVisual.vscene = self
-
 func initialize(_display: M8SceneDisplay):
 	super(_display)
 
@@ -36,6 +33,20 @@ func _physics_process(delta):
 
 	#%DirectionalLight3D.light_color = color_fg.lightened(0.5)
 	# %M8Model.outline_color = color_fg
+
+	# "humanized" camera movements
+	# ----------------------------
+
+	camera_noise.frequency = 1
+	camera.position = camera_base_position + Vector3(
+		camera_noise.get_noise_2d(camera_noise_u, 0.0),
+		camera_noise.get_noise_2d(camera_noise_u, 0.3),
+		camera_noise.get_noise_2d(camera_noise_u, 0.6),
+	) * 0.05
+	camera_noise_u += delta
+
+	# mouse-camera smooth panning/zoom
+	# --------------------------------
 
 	# get mouse position as vector between (0, 0) and (1, 1)
 	var mouse_position = get_viewport().get_mouse_position() / Vector2(get_window().size)
@@ -61,14 +72,7 @@ func _physics_process(delta):
 			0)
 	)
 
-	camera_noise.frequency = 1
+	# mouse panning/zoom controls
 	camera.rotation = lerp(camera.rotation, camera_target_rotation, camera_smoothing)
-	camera.position = camera_base_position + Vector3(
-		camera_noise.get_noise_2d(camera_noise_u, 0.0),
-		camera_noise.get_noise_2d(camera_noise_u, 0.3),
-		camera_noise.get_noise_2d(camera_noise_u, 0.6),
-	) * 0.05
 	camera.fov = lerp(camera.fov, camera_target_fov, camera_fov_smoothing)
 	camera.attributes.dof_blur_far_distance = lerp(camera.attributes.dof_blur_far_distance, camera_target_dof, 0.01)
-
-	camera_noise_u += delta

@@ -94,50 +94,6 @@ namespace libm8
 		ERR_NOT_CONNECTED = 11,
 	};
 
-	static Error sp_to_m8(sp_return code)
-	{
-		switch (code)
-		{
-		case SP_ERR_ARG:
-			return ERR_SP_INVALID_ARGS;
-		case SP_ERR_FAIL:
-			return ERR_SP_FAILED;
-		case SP_ERR_MEM:
-			return ERR_SP_MEM;
-		case SP_ERR_SUPP:
-			return ERR_SP_NOT_SUPPORTED;
-		default:
-			return OK;
-		}
-	}
-
-	static int sp_check(int result)
-	{
-		char *error_msg;
-
-		switch (result)
-		{
-		case SP_ERR_ARG:
-			printerr("libserialport: invalid argument");
-			break;
-		case SP_ERR_FAIL:
-			error_msg = sp_last_error_message();
-			printerr("libserialport: failed: %s", error_msg);
-			sp_free_error_message(error_msg);
-			break;
-		case SP_ERR_SUPP:
-			printerr("libserialport: not supported");
-			break;
-		case SP_ERR_MEM:
-			printerr("libserialport: could not allocate memory");
-			break;
-		case SP_OK:
-		default:
-			break;
-		}
-		return result;
-	}
-
 	static bool is_m8_serial_port(sp_port *port)
 	{
 		int usb_vid, usb_pid;
@@ -170,6 +126,37 @@ namespace libm8
 			sp_free_port(m8_port);
 		}
 
+	private:
+		Error sp_to_m8(sp_return code)
+		{
+			char *error_msg;
+			switch (code)
+			{
+			case SP_ERR_ARG:
+				return ERR_SP_INVALID_ARGS;
+			case SP_ERR_FAIL:
+				error_msg = sp_last_error_message();
+				printerr("libserialport: failed: %s", error_msg);
+				sp_free_error_message(error_msg);
+				return ERR_SP_FAILED;
+			case SP_ERR_MEM:
+				return ERR_SP_MEM;
+			case SP_ERR_SUPP:
+				return ERR_SP_NOT_SUPPORTED;
+			default:
+				return OK;
+			}
+		}
+
+	private: // methods to override
+		/// @brief Read and process the command buffer.
+		/// @return true if the command was successfully processed.
+		virtual Error read_command(uint8_t *cmd_buffer, const uint16_t &cmd_size) = 0;
+
+		/// @brief Called when the M8 is disconnected and port is freed.
+		virtual void on_disconnect() = 0;
+
+	public:
 		/// @brief Send a command to the M8.
 		/// @param data an array of bytes containing the command and arguments
 		/// @param size the size of the array
@@ -227,7 +214,7 @@ namespace libm8
 			return send_command({TX_THEME_COLOR, index, r, g, b}, 5);
 		}
 
-		bool connect(godot::String port_name);
+		Error connect(godot::String port_name);
 
 		bool is_connected()
 		{
@@ -247,37 +234,6 @@ namespace libm8
 			}
 			cmd_buffer[cmd_size++] = byte;
 			return OK;
-		}
-
-		/// @brief Read and process the command buffer.
-		/// @return true if the command was successfully processed.
-		virtual Error read_command(uint8_t *cmd_buffer, const uint16_t &cmd_size) = 0;
-
-		/// @brief Called when the M8 is disconnected and port is freed.
-		virtual void on_disconnect() = 0;
-
-	private:
-		static sp_port **get_port_list()
-		{
-			struct sp_port **port_list;
-
-			enum sp_return result = sp_list_ports(&port_list);
-
-			if (result != SP_OK)
-			{
-				fprintf(stderr,
-						"libm8: failed to list serial ports: "
-						"error code %d\n",
-						(int)sp_to_m8(result));
-				return nullptr;
-			}
-
-			return port_list;
-		}
-
-		static void free_port_list(sp_port **port_list)
-		{
-			sp_free_port_list(port_list);
 		}
 	};
 }
