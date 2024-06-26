@@ -71,13 +71,13 @@ Assuming your Godot editor is named `godot`, run one of these commands to export
 
 ```sh
 # export to windows
-$ godot --headless --path project --export-release windows
+$ godot --headless --path project --export-release windows ../build/m8gd.zip
 
 # export to linux
-$ godot --headless --path project --export-release linux
+$ godot --headless --path project --export-release linux ../build/m8gd.zip
 
 # export to macos
-$ godot --headless --path project --export-release macos
+$ godot --headless --path project --export-release macos ../build/m8gd.zip
 ```
 
 Note: You may see some error messages during the export. This is normal, and the app will still export.
