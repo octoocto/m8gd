@@ -3,8 +3,8 @@
 [ext_resource type="Script" path="res://scenes/desk_scene.gd" id="1_irl02"]
 [ext_resource type="Texture2D" uid="uid://c0wnmsv4tqel4" path="res://assets/Wood_Texture-7.jpg" id="2_gr6gg"]
 [ext_resource type="Texture2D" uid="uid://cby2najbsa01x" path="res://assets/texture_04.png" id="3_72vpc"]
-[ext_resource type="PackedScene" uid="uid://budu6000msy4d" path="res://DeviceModel.tscn" id="4_vkcd3"]
-[ext_resource type="Shader" path="res://CRTScreen.gdshader" id="5_b3l1k"]
+[ext_resource type="PackedScene" uid="uid://budu6000msy4d" path="res://device_model.tscn" id="4_q67qt"]
+[ext_resource type="Shader" path="res://crt_screen.gdshader" id="5_i3fdp"]
 [ext_resource type="PackedScene" uid="uid://bckroenwlecqv" path="res://humanized_camera_3d.tscn" id="6_8qn1u"]
 [ext_resource type="PackedScene" uid="uid://bddnp4aiq0x4w" path="res://assets/succulent_plants/scene.gltf" id="6_h2fct"]
 [ext_resource type="Texture2D" uid="uid://sw144ksus5yx" path="res://assets/succulent_plants/textures/taniku01-tex_baseColor.png" id="7_uxpbj"]
@@ -96,7 +96,7 @@ viewport_path = NodePath(".")
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_2fps4"]
 resource_local_to_scene = true
 render_priority = 0
-shader = ExtResource("5_b3l1k")
+shader = ExtResource("5_i3fdp")
 shader_parameter/emission_amount = 0.25
 shader_parameter/curvature_amount_x = 0.0
 shader_parameter/curvature_amount_y = 0.0
@@ -109,7 +109,7 @@ shader_parameter/distort_offset = Vector2(0, 0)
 shader_parameter/brightness = 0.001
 shader_parameter/tex = SubResource("ViewportTexture_t2dqp")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dslro"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sgrs5"]
 resource_local_to_scene = true
 albedo_color = Color(0.1, 0.1, 0.1, 1)
 metallic = 0.6
@@ -207,11 +207,11 @@ transform = Transform3D(1.93185, 0.517638, 5.96046e-08, 0, -8.74228e-08, -2, -0.
 material_override = SubResource("StandardMaterial3D_0bcqi")
 mesh = SubResource("BoxMesh_ek01r")
 
-[node name="M8Model" parent="." instance=ExtResource("4_vkcd3")]
+[node name="M8Model" parent="." instance=ExtResource("4_q67qt")]
 unique_name_in_owner = true
 transform = Transform3D(35.8742, 0, 14.8596, 0, 38.83, 0, -14.8596, 0, 35.8742, -2.25, -3.037, 0.15)
 screen_material = SubResource("ShaderMaterial_2fps4")
-keycap_material = SubResource("StandardMaterial3D_dslro")
+keycap_material = SubResource("StandardMaterial3D_sgrs5")
 
 [node name="Camera3D" parent="." instance=ExtResource("6_8qn1u")]
 unique_name_in_owner = true

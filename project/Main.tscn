@@ -1,10 +1,10 @@
 [gd_scene load_steps=11 format=3 uid="uid://b265ke8cr3dgr"]
 
-[ext_resource type="Script" path="res://Main.gd" id="1_4g2n0"]
-[ext_resource type="Shader" path="res://PostProcess.gdshader" id="1_tjung"]
-[ext_resource type="Shader" path="res://CRTShader.gdshader" id="4_btrxk"]
+[ext_resource type="Script" path="res://main.gd" id="1_4g2n0"]
+[ext_resource type="Shader" path="res://post_process.gdshader" id="1_tjung"]
+[ext_resource type="Shader" path="res://crt_shader.gdshader" id="4_btrxk"]
 [ext_resource type="Script" path="res://spectrum_visualizer.gd" id="5_33ff2"]
-[ext_resource type="PackedScene" uid="uid://d13t756slc8b0" path="res://MainMenu.tscn" id="7_k5oyo"]
+[ext_resource type="PackedScene" uid="uid://d13t756slc8b0" path="res://main_menu.tscn" id="7_k5oyo"]
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_l1801"]
 color = Color(1, 1, 1, 0.2)
@@ -84,8 +84,7 @@ grow_vertical = 2
 [node name="SceneViewport" type="SubViewport" parent="SceneViewportContainer"]
 unique_name_in_owner = true
 handle_input_locally = false
-use_taa = true
-canvas_item_default_texture_filter = 0
+use_debanding = true
 size = Vector2i(1280, 960)
 render_target_update_mode = 4
 
