@@ -14,8 +14,10 @@ Still a very early WIP and many features are missing.
 ### Requirements
 
 - Git
+- GCC
 - Python 3.6+
 - Scons (`python -m pip install scons`)
+- pkg-config
 - libserialport headers
 - [Godot 4.2.2-stable](https://godotengine.org/download/archive/4.2.2-stable/)
 
