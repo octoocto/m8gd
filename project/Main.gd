@@ -54,6 +54,10 @@ func print_blink(msg: String) -> void:
 	%LabelStatus.text = msg
 	%LabelStatus.modulate.a = 1.0
 
+## Return true if user is in the menu.
+func is_menu_open() -> bool:
+	return %MainMenuPanel.visible
+
 ## Load a scene from a filepath.
 func load_scene(scene_path) -> void:
 	# load packed scene from file

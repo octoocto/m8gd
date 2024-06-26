@@ -1,6 +1,7 @@
-[gd_scene load_steps=21 format=3 uid="uid://da23gfk2abg5f"]
+[gd_scene load_steps=22 format=3 uid="uid://da23gfk2abg5f"]
 
 [ext_resource type="Script" path="res://scenes/floating_scene.gd" id="1_ufbfg"]
+[ext_resource type="PackedScene" uid="uid://bckroenwlecqv" path="res://humanized_camera_3d.tscn" id="4_8iar1"]
 [ext_resource type="PackedScene" uid="uid://budu6000msy4d" path="res://DeviceModel.tscn" id="4_oaihv"]
 [ext_resource type="Shader" path="res://CRTScreen.gdshader" id="5_t84je"]
 
@@ -35,23 +36,22 @@ shader_parameter/distort_offset = Vector2(0, 0)
 shader_parameter/brightness = 0.001
 shader_parameter/tex = SubResource("ViewportTexture_t2dqp")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yw5uk"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_im2y5"]
 resource_local_to_scene = true
 albedo_color = Color(0.1, 0.1, 0.1, 1)
 metallic = 0.6
 metallic_specular = 0.06
 roughness = 0.46
 
-[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_yq44y"]
-exposure_multiplier = 1.5
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_cep2e"]
 auto_exposure_scale = 0.02
 dof_blur_far_enabled = true
 dof_blur_far_distance = 15.0
-dof_blur_far_transition = 10.0
+dof_blur_far_transition = 2.75
 dof_blur_near_enabled = true
-dof_blur_near_distance = 5.0
-dof_blur_near_transition = 10.0
-dof_blur_amount = 0.5
+dof_blur_near_distance = 11.93
+dof_blur_near_transition = 2.25
+dof_blur_amount = 0.4
 
 [sub_resource type="Curve" id="Curve_cgsy1"]
 _data = [Vector2(0, 0), 0.0, 0.0927835, 0, 0, Vector2(0.527778, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -182,18 +182,15 @@ spot_angle = 36.8368
 unique_name_in_owner = true
 transform = Transform3D(38.83, 0, 0, 0, 6.74276, -38.24, 0, 38.2401, 6.74275, 0, 0, 0)
 screen_material = SubResource("ShaderMaterial_2fps4")
-keycap_material = SubResource("StandardMaterial3D_yw5uk")
+keycap_material = SubResource("StandardMaterial3D_im2y5")
 
 [node name="CameraArm" type="Node3D" parent="."]
 unique_name_in_owner = true
 
-[node name="Camera3D" type="Camera3D" parent="CameraArm"]
+[node name="Camera3D" parent="CameraArm" instance=ExtResource("4_8iar1")]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 13)
-attributes = SubResource("CameraAttributesPractical_yq44y")
-current = true
-fov = 37.8493
-size = 8.765
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 14)
+attributes = SubResource("CameraAttributesPractical_cep2e")
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="."]
 amount = 512

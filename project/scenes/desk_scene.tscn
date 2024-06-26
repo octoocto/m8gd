@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://cby2najbsa01x" path="res://assets/texture_04.png" id="3_72vpc"]
 [ext_resource type="PackedScene" uid="uid://budu6000msy4d" path="res://DeviceModel.tscn" id="4_vkcd3"]
 [ext_resource type="Shader" path="res://CRTScreen.gdshader" id="5_b3l1k"]
+[ext_resource type="PackedScene" uid="uid://bckroenwlecqv" path="res://humanized_camera_3d.tscn" id="6_8qn1u"]
 [ext_resource type="PackedScene" uid="uid://bddnp4aiq0x4w" path="res://assets/succulent_plants/scene.gltf" id="6_h2fct"]
 [ext_resource type="Texture2D" uid="uid://sw144ksus5yx" path="res://assets/succulent_plants/textures/taniku01-tex_baseColor.png" id="7_uxpbj"]
 
@@ -108,22 +109,12 @@ shader_parameter/distort_offset = Vector2(0, 0)
 shader_parameter/brightness = 0.001
 shader_parameter/tex = SubResource("ViewportTexture_t2dqp")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w78fo"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dslro"]
 resource_local_to_scene = true
 albedo_color = Color(0.1, 0.1, 0.1, 1)
 metallic = 0.6
 metallic_specular = 0.06
 roughness = 0.46
-
-[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_wopxj"]
-auto_exposure_scale = 0.02
-dof_blur_far_enabled = true
-dof_blur_far_distance = 15.0
-dof_blur_far_transition = 2.75
-dof_blur_near_enabled = true
-dof_blur_near_distance = 11.93
-dof_blur_near_transition = 2.25
-dof_blur_amount = 0.18
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tb1h5"]
 resource_name = "syna"
@@ -148,6 +139,10 @@ subsurf_scatter_strength = 0.15
 
 [node name="M8Scene" type="Node3D"]
 script = ExtResource("1_irl02")
+COLOR_SAMPLE_POINT_3 = null
+color_fg = null
+color_fg2 = null
+color_bg = null
 metadata/_edit_vertical_guides_ = [640.0]
 metadata/_edit_horizontal_guides_ = [480.0]
 
@@ -216,16 +211,11 @@ mesh = SubResource("BoxMesh_ek01r")
 unique_name_in_owner = true
 transform = Transform3D(35.8742, 0, 14.8596, 0, 38.83, 0, -14.8596, 0, 35.8742, -2.25, -3.037, 0.15)
 screen_material = SubResource("ShaderMaterial_2fps4")
-keycap_material = SubResource("StandardMaterial3D_w78fo")
+keycap_material = SubResource("StandardMaterial3D_dslro")
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="Camera3D" parent="." instance=ExtResource("6_8qn1u")]
 unique_name_in_owner = true
-transform = Transform3D(0.760406, -0.562439, 0.324724, 0, 0.5, 0.866026, -0.649448, -0.658531, 0.380203, 3.8, 9.615, 5.175)
-attributes = SubResource("CameraAttributesPractical_wopxj")
-current = true
-fov = 30.0
-size = 8.765
-far = 450.0
+transform = Transform3D(0.760406, -0.562438, 0.324724, 0, 0.5, 0.866026, -0.649448, -0.658531, 0.380203, 3.8, 9.615, 5.175)
 
 [node name="Sketchfab_Scene" parent="." instance=ExtResource("6_h2fct")]
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 5.763, -3.306, -1.498)
