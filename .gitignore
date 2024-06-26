@@ -21,6 +21,4 @@ build/
 # scons cache
 .sconsign.dblite
 
-project/addons/Asset_Drawer
-
 thirdparty/*/*

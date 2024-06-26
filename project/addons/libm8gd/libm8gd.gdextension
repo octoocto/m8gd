@@ -11,5 +11,5 @@ macos.release = "res://addons/libm8gd/libm8gd.macos.template_release.framework"
 windows.debug.x86_64 = "res://addons/libm8gd/libm8gd.windows.template_debug.dll"
 windows.release.x86_64 = "res://addons/libm8gd/libm8gd.windows.template_release.dll"
 
-linux.debug.x86_64 = "res://addons/libm8gd/libm8gd.template_debug.x86_64.so"
-linux.release.x86_64 = "res://addons/libm8gd/libm8gd.template_release.x86_64.so"
+linux.debug.x86_64 = "res://addons/libm8gd/libm8gd.linux.template_debug.so"
+linux.release.x86_64 = "res://addons/libm8gd/libm8gd.linux.template_release.so"
