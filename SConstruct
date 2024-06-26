@@ -40,13 +40,11 @@ env.Append(CPPPATH=["src", "thirdparty"])
 
 env.Append(LIBPATH=["thirdparty/godot-cpp/bin", "bin", "/mingw64/lib"])
 
-LIBFLAGS = PKG_CONFIG_LIBFLAGS
-LIBFLAGS += ["libgodot-cpp.%s.%s.x86_64" % (env["platform"], env["target"])]
+env.Append(LIBS=PKG_CONFIG_LIBFLAGS)
 
 library = env.SharedLibrary(
     target="%s/%s.%s.%s%s"
     % (ADDON_DIR, TARGET_LIB, env["platform"], env["target"], env["SHLIBSUFFIX"]),
     source=sources,
-    LIBS=LIBFLAGS,
 )
 Default(library)
