@@ -16,7 +16,7 @@ uniform vec2 distort_offset = vec2(0);
 
 uniform float brightness = 0.0;
 
-uniform sampler2D tex: source_color, filter_nearest, repeat_disable;
+uniform sampler2D tex: source_color, filter_linear, repeat_disable;
 uniform sampler2D noise_texture: source_color, filter_nearest;
 uniform sampler2D distort_texture: source_color, filter_nearest;
 

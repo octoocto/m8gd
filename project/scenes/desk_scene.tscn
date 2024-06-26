@@ -109,7 +109,7 @@ shader_parameter/distort_offset = Vector2(0, 0)
 shader_parameter/brightness = 0.001
 shader_parameter/tex = SubResource("ViewportTexture_t2dqp")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dslro"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_51n0g"]
 resource_local_to_scene = true
 albedo_color = Color(0.1, 0.1, 0.1, 1)
 metallic = 0.6
@@ -211,7 +211,7 @@ mesh = SubResource("BoxMesh_ek01r")
 unique_name_in_owner = true
 transform = Transform3D(35.8742, 0, 14.8596, 0, 38.83, 0, -14.8596, 0, 35.8742, -2.25, -3.037, 0.15)
 screen_material = SubResource("ShaderMaterial_2fps4")
-keycap_material = SubResource("StandardMaterial3D_dslro")
+keycap_material = SubResource("StandardMaterial3D_51n0g")
 
 [node name="Camera3D" parent="." instance=ExtResource("6_8qn1u")]
 unique_name_in_owner = true

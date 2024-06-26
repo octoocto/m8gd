@@ -26,12 +26,20 @@ func initialize(main_display: M8SceneDisplay) -> void:
 		main_display.load_scene(scene_paths[index])
 	)
 
+	# options
+
 	slider_volume.value_changed.connect(func(value: float):
 		var volume_db=- 60.0 * (1 - value)
 		print("volume = %f" % volume_db)
 		AudioServer.set_bus_volume_db(0, volume_db)
 		%LabelVolume.text="%d%%" % round(slider_volume.value / slider_volume.max_value * 100)
 	)
+
+	%CheckButtonDebug.toggled.connect(func(toggled_on):
+		main_display.get_node("%DebugLabels").visible=toggled_on
+	)
+
+	# video
 
 	%CheckButtonFullscreen.button_down.connect(func():
 		if DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_WINDOWED:
@@ -60,12 +68,38 @@ func initialize(main_display: M8SceneDisplay) -> void:
 		Engine.max_fps=int(value)
 	)
 
+	# graphics
+
 	%CheckButtonFilter.toggled.connect(func(toggled_on):
 		main_display.get_node("%CRTShader").visible=toggled_on
 	)
 
-	%CheckButtonDebug.toggled.connect(func(toggled_on):
-		main_display.get_node("%DebugLabels").visible=toggled_on
+	%SliderDOFShape.value_changed.connect(func(value: RenderingServer.DOFBokehShape):
+		RenderingServer.camera_attributes_set_dof_blur_bokeh_shape(value)
+		match value:
+			RenderingServer.DOF_BOKEH_BOX:
+				%LabelDOFShape.text="Box"
+			RenderingServer.DOF_BOKEH_HEXAGON:
+				%LabelDOFShape.text="Hexagon"
+			RenderingServer.DOF_BOKEH_CIRCLE:
+				%LabelDOFShape.text="Circle"
+	)
+
+	%SliderDOFQuality.value_changed.connect(func(value: RenderingServer.DOFBlurQuality):
+		RenderingServer.camera_attributes_set_dof_blur_quality(value, true)
+		match value:
+			RenderingServer.DOF_BLUR_QUALITY_VERY_LOW:
+				%LabelDOFQuality.text="Very Low"
+			RenderingServer.DOF_BLUR_QUALITY_LOW:
+				%LabelDOFQuality.text="Low"
+			RenderingServer.DOF_BLUR_QUALITY_MEDIUM:
+				%LabelDOFQuality.text="Medium"
+			RenderingServer.DOF_BLUR_QUALITY_HIGH:
+				%LabelDOFQuality.text="High"
+	)
+
+	%CheckButtonTAA.toggled.connect(func(toggled_on: bool):
+		ProjectSettings.set_setting("rendering/anti_aliasing/quality/use_taa", toggled_on)
 	)
 
 	button_exit.pressed.connect(func():
