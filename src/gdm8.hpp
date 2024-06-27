@@ -95,7 +95,7 @@ public:
 	/// @param fw_2 minor version
 	/// @param fw_3 patch version
 	/// @param bigfont
-	void set_model(libm8::HardwareModel model, uint8_t fw_1, uint8_t fw_2, uint8_t fw_3, bool bigfont);
+	void set_model(libm8::HardwareModel model, uint8_t fw_1, uint8_t fw_2, uint8_t fw_3, uint8_t font);
 
 	/// @brief Get the background color of the M8. This is updated when a
 	///        fullscreen rect is drawn.
@@ -156,4 +156,22 @@ public:
 	///        the reset display signal "R" to the M8.
 	///        This forces the M8 to re-send all draw commands through the serial port.
 	void enable_and_reset_display();
+
+private:
+	String get_model_name(libm8::HardwareModel model)
+	{
+		switch (model)
+		{
+		case libm8::MODEL_HEADLESS:
+			return "headless";
+		case libm8::MODEL_BETA:
+			return "beta";
+		case libm8::MODEL_01:
+			return "model_01";
+		case libm8::MODEL_02:
+			return "model_02";
+		default:
+			return "unknown";
+		}
+	}
 };

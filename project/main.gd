@@ -2,8 +2,11 @@ class_name M8SceneDisplay extends Panel
 
 const MAIN_SCENE: PackedScene = preload ("res://scenes/desk_scene.tscn")
 
-const FONT_SMALL: BitMap = preload ("res://assets/m8stealth57.bmp")
-const FONT_BIG: BitMap = preload ("res://assets/m8stealth89.bmp")
+const FONT_01_SMALL: BitMap = preload ("res://assets/m8_fonts/5_7.bmp")
+const FONT_01_BIG: BitMap = preload ("res://assets/m8_fonts/8_9.bmp")
+const FONT_02_SMALL: BitMap = preload ("res://assets/m8_fonts/9_9.bmp")
+const FONT_02_BOLD: BitMap = preload ("res://assets/m8_fonts/10_10.bmp")
+const FONT_02_HUGE: BitMap = preload ("res://assets/m8_fonts/12_12.bmp")
 
 const M8K_UP = 64
 const M8K_DOWN = 32
@@ -148,12 +151,21 @@ func on_m8_keystate_changed(keystate: int) -> void:
 func on_m8_system_info(hardware, firmware) -> void:
 	%LabelVersion.text = "%s %s" % [hardware, firmware]
 
-func on_m8_font_changed(bigfont: bool) -> void:
+func on_m8_font_changed(model: String, font: int) -> void:
 	# switch between small/big fonts (Model_01)
-	if bigfont:
-		m8_client.load_font(FONT_BIG)
-	else:
-		m8_client.load_font(FONT_SMALL)
+	match model:
+		"model_02":
+			if font == 0:
+				m8_client.load_font(FONT_02_SMALL)
+			elif font == 1:
+				m8_client.load_font(FONT_02_BOLD)
+			else:
+				m8_client.load_font(FONT_02_HUGE)
+		_:
+			if font == 0:
+				m8_client.load_font(FONT_01_SMALL)
+			else:
+				m8_client.load_font(FONT_01_BIG)
 
 ## Called when the M8 has been disconnected.
 func on_m8_disconnect() -> void:

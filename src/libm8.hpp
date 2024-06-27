@@ -36,6 +36,13 @@ namespace libm8
 		MODEL_02 = 3
 	};
 
+	enum Font
+	{
+		FONT_SMALL = 0, // normal font in model01/model02
+		FONT_LARGE = 1, // big font in model01; bold font in model02
+		FONT_HUGE = 2	// huge font in model02; unused in model01
+	};
+
 	enum CommandRX
 	{
 		DRAW_RECT = 0xFE,
