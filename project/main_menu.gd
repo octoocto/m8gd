@@ -57,10 +57,12 @@ func initialize(main_display: M8SceneDisplay) -> void:
 
 	%OptionRes.item_selected.connect(func(index):
 		match index:
-			0: DisplayServer.window_set_size(Vector2i(320, 240))
 			1: DisplayServer.window_set_size(Vector2i(640, 480))
 			2: DisplayServer.window_set_size(Vector2i(960, 720))
 			3: DisplayServer.window_set_size(Vector2i(1280, 960))
+			5: DisplayServer.window_set_size(Vector2i(960, 640))
+			6: DisplayServer.window_set_size(Vector2i(1440, 960))
+			7: DisplayServer.window_set_size(Vector2i(1920, 1280))
 	)
 
 	%SliderFPSCap.value_changed.connect(func(value: float):
