@@ -10,7 +10,8 @@ const PATH_SCENES := "res://scenes/"
 @onready var option_scenes: OptionButton = %OptionScenes
 @onready var scene_paths := []
 
-func initialize(main_display: M8SceneDisplay) -> void:
+func initialize(main: M8SceneDisplay) -> void:
+
 	# scan scenes folder
 	var dir_scenes = DirAccess.open(PATH_SCENES)
 
@@ -23,7 +24,7 @@ func initialize(main_display: M8SceneDisplay) -> void:
 		path = dir_scenes.get_next()
 
 	option_scenes.item_selected.connect(func(index: int):
-		main_display.load_scene(scene_paths[index])
+		main.load_scene(scene_paths[index])
 	)
 
 	# options
@@ -36,7 +37,7 @@ func initialize(main_display: M8SceneDisplay) -> void:
 	)
 
 	%CheckButtonDebug.toggled.connect(func(toggled_on):
-		main_display.get_node("%DebugLabels").visible=toggled_on
+		main.get_node("%DebugLabels").visible=toggled_on
 	)
 
 	# video
@@ -73,7 +74,7 @@ func initialize(main_display: M8SceneDisplay) -> void:
 	# graphics
 
 	%CheckButtonFilter.toggled.connect(func(toggled_on):
-		main_display.get_node("%CRTShader").visible=toggled_on
+		main.get_node("%CRTShader").visible=toggled_on
 	)
 
 	%SliderDOFShape.value_changed.connect(func(value: RenderingServer.DOFBokehShape):
@@ -101,14 +102,15 @@ func initialize(main_display: M8SceneDisplay) -> void:
 	)
 
 	%CheckButtonTAA.toggled.connect(func(toggled_on: bool):
-		ProjectSettings.set_setting("rendering/anti_aliasing/quality/use_taa", toggled_on)
+		# ProjectSettings.set_setting("rendering/anti_aliasing/quality/use_taa", toggled_on)
+		main.scene_viewport.use_taa=toggled_on
 	)
 
 	button_exit.pressed.connect(func():
 		get_tree().quit()
 	)
 
-	%DisplayRect.texture = main_display.m8_client.get_display_texture()
+	%DisplayRect.texture = main.m8_client.get_display_texture()
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey:
