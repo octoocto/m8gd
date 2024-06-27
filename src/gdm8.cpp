@@ -102,10 +102,22 @@ void M8GD::set_model(libm8::HardwareModel model,
 		emit_signal("system_info", sys_hardware, sys_firmware);
 	}
 
+	// emit "font_changed" if requested font is different
 	if (font_last == 0xFF || font != font_last)
 	{
 		font_last = font;
 		emit_signal("font_changed", get_model_name(model), font);
+
+		// change font parameters
+
+		print("requested font: %d", font);
+
+		libm8::FontParameters font_params = libm8::get_font_params(model, font);
+
+		display_buffer->x_offset = font_params.screen_x_offset;
+		display_buffer->y_offset = font_params.screen_y_offset;
+		display_buffer->font_y_offset = font_params.font_y_offset;
+		display_buffer->waveform_max = font_params.waveform_max;
 	}
 }
 
@@ -350,53 +362,8 @@ libm8::Error M8GD::read_command(uint8_t *cmd_buffer, const uint16_t &cmd_size)
 			(libm8::HardwareModel)cmd_buffer[1],
 			cmd_buffer[2], cmd_buffer[3], cmd_buffer[4], cmd_buffer[5]);
 
-		print("requested font: %d", cmd_buffer[5]);
-
-		if (cmd_buffer[1] == libm8::MODEL_02)
-		{
-			switch (cmd_buffer[5])
-			{
-			case libm8::FONT_SMALL:
-				display_buffer->x_offset = 0;
-				display_buffer->y_offset = -2;
-				display_buffer->font_y_offset = 5;
-				display_buffer->waveform_max = 38;
-				break;
-			case libm8::FONT_LARGE:
-				display_buffer->x_offset = 0;
-				display_buffer->y_offset = -2;
-				display_buffer->font_y_offset = 4;
-				display_buffer->waveform_max = 38;
-				break;
-			case libm8::FONT_HUGE:
-				display_buffer->x_offset = 0;
-				display_buffer->y_offset = -54;
-				display_buffer->font_y_offset = 4;
-				display_buffer->waveform_max = 24;
-				break;
-			}
-		}
-		else // model01/headless/beta
-		{
-			switch (cmd_buffer[5])
-			{
-			case libm8::FONT_SMALL:
-				display_buffer->x_offset = 0;
-				display_buffer->y_offset = 0;
-				display_buffer->font_y_offset = 3;
-				display_buffer->waveform_max = 24;
-				break;
-			case libm8::FONT_LARGE:
-				display_buffer->x_offset = 0;
-				display_buffer->y_offset = -40;
-				display_buffer->font_y_offset = 4;
-				display_buffer->waveform_max = 22;
-				break;
-			}
-		}
 		break;
 	}
-
 	default:
 		printerr("received invalid command packet:");
 		printerr_bytes(cmd_buffer, cmd_size);

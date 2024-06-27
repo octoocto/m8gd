@@ -43,6 +43,19 @@ namespace libm8
 		FONT_HUGE = 2	// huge font in model02; unused in model01
 	};
 
+	struct FontParameters
+	{
+		int8_t screen_x_offset, screen_y_offset; // offset of all draw calls
+		int8_t font_y_offset;					 // y-offset of fonts
+		uint8_t waveform_max;					 // max height of waveform
+	};
+
+	const FontParameters FONT_01_SMALL = {0, 0, 3, 24};
+	const FontParameters FONT_01_BIG = {0, -40, 4, 22};
+	const FontParameters FONT_02_SMALL = {0, -2, 5, 38};
+	const FontParameters FONT_02_BOLD = {0, -2, 4, 38};
+	const FontParameters FONT_02_HUGE = {0, -54, 4, 24};
+
 	enum CommandRX
 	{
 		DRAW_RECT = 0xFE,
@@ -106,6 +119,34 @@ namespace libm8
 		int usb_vid, usb_pid;
 		sp_get_port_usb_vid_pid(port, &usb_vid, &usb_pid);
 		return usb_vid == M8_USB_VID && usb_pid == M8_USB_PID;
+	}
+
+	static FontParameters get_font_params(uint8_t model, uint8_t font)
+	{
+		if (model == MODEL_02)
+		{
+			switch (font)
+			{
+			case FONT_SMALL:
+				return FONT_02_SMALL;
+			case FONT_LARGE:
+				return FONT_02_BOLD;
+			case FONT_HUGE:
+				return FONT_02_HUGE;
+			}
+		}
+		else
+		{
+			switch (font)
+			{
+			case FONT_SMALL:
+				return FONT_01_SMALL;
+			case FONT_LARGE:
+				return FONT_01_BIG;
+			}
+		}
+		printerr("unable to find correct font parameters! (model=%d, font=%d)", model, font);
+		return FONT_01_SMALL;
 	}
 
 	static uint16_t decode_u16(uint8_t *data, uint8_t start)
@@ -200,7 +241,7 @@ namespace libm8
 				sp_close(m8_port);
 				sp_free_port(m8_port);
 				m8_port = nullptr;
-				cmd_size = 0; // also reset cmd_buffer
+				cmd_size = 0;	// also reset cmd_buffer
 				zero_reads = 0; // also reset zero_reads counter
 				print("disconnected");
 			}
