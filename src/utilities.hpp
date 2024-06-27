@@ -5,14 +5,14 @@
 template <typename... VarArgs>
 static void print(const godot::String &p_text, const VarArgs... p_args)
 {
-    godot::String msg = "gdm8: " + godot::vformat(p_text, p_args...);
+    godot::String msg = "libm8gd: " + godot::vformat(p_text, p_args...);
     godot::UtilityFunctions::print(msg);
 }
 
 template <typename... VarArgs>
 static void printerr(const godot::String &p_text, const VarArgs... p_args)
 {
-    godot::String msg = "gdm8: " + godot::vformat(p_text, p_args...);
+    godot::String msg = "libm8gd: " + godot::vformat(p_text, p_args...);
     godot::UtilityFunctions::printerr(msg);
 }
 
