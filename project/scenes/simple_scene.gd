@@ -1,11 +1,13 @@
 extends M8Scene
 
-var m8_client
-func initialize(_display: M8SceneDisplay):
-    super(_display)
+var m8_client: M8GD
+
+func initialize(main_: M8SceneDisplay):
+    super(main_)
+
     # %TextureRect.texture = _display.m8_display_texture
-    %TextureRect.texture = _display.m8_client.get_display_texture()
-    m8_client = _display.m8_client
+    %TextureRect.texture = main.m8_client.get_display_texture()
+    m8_client = main.m8_client
 
 func _process(_delta):
 

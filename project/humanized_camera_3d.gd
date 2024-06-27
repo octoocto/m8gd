@@ -1,5 +1,6 @@
 class_name HumanizedCamera3D extends Camera3D
 
+@export var humanized_movement := true
 @export var humanize_freq := 1.0
 @export var humanize_amount := 0.05
 @export var pan_smoothing_focused := 0.05
@@ -32,8 +33,7 @@ func _ready() -> void:
 
 func update_humanized_movement(delta) -> void:
 
-	# "humanized" movements
-	# ----------------------------
+	if !humanized_movement: return
 
 	noise.frequency = humanize_freq
 	position = base_position + Vector3(

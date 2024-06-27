@@ -1,23 +1,41 @@
 extends M8Scene
 
 @onready var camera: HumanizedCamera3D = %Camera3D
-@onready var main: M8SceneDisplay
+
+@export var humanized_camera_movement := true:
+	set(value):
+		%Camera3D.humanized_movement = value
+		humanized_camera_movement = value
+
+@export var enable_m8_display_background := true:
+	set(value):
+		%DisplayMesh.visible = value
+		enable_m8_display_background = value
+
+@export var enable_depth_of_field := true:
+	set(value):
+		%Camera3D.attributes.dof_blur_far_enabled = value
+		%Camera3D.attributes.dof_blur_near_enabled = value
+		enable_depth_of_field = value
+
+@export var solid_background_color := Color.BLACK:
+	set(value):
+		%WorldEnvironment.environment.background_color = value
+		solid_background_color = value
 
 var time := 0.0
 var raw_time := 0.0
 
 func initialize(main_: M8SceneDisplay):
 	super(main_)
-	main = main_
 
 	%M8Model.init(main)
-	%MeshInstance3D.material_override.set_shader_parameter("tex", main.m8_client.get_display_texture())
+	%DisplayMesh.material_override.set_shader_parameter("tex", main.m8_client.get_display_texture())
 
 func is_between(x, a, b) -> bool:
 	return a < x and x < b
 
 func _physics_process(delta):
-	super(delta)
 
 	time += delta + (audio_peak * 0.25)
 	raw_time += delta

@@ -18,6 +18,7 @@ const M8K_OPTION = 2
 const M8K_EDIT = 1
 
 signal m8_key_changed
+signal m8_scene_changed
 
 @export var visualizer_ca_amount = 1.0
 @export var visualizer_glow_amount = 0.5
@@ -92,6 +93,7 @@ func _preload_scene(packed_scene: PackedScene) -> void:
 	current_scene.spectrum_analyzer = AudioServer.get_bus_effect_instance(1, 0)
 
 	print("scene loaded!")
+	m8_scene_changed.emit()
 
 # Signal callbacks
 ################################################################################

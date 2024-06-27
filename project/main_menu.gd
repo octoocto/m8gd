@@ -101,6 +101,26 @@ func initialize(main: M8SceneDisplay) -> void:
 				%LabelDOFQuality.text="High"
 	)
 
+	# MSAA
+
+	%SliderMSAA.value_changed.connect(func(value: int):
+		match value:
+			0:
+				main.scene_viewport.msaa_3d=Viewport.MSAA_DISABLED
+				%LabelMSAA.text="Disabled"
+			1:
+				main.scene_viewport.msaa_3d=Viewport.MSAA_2X
+				%LabelMSAA.text="2X"
+			2:
+				main.scene_viewport.msaa_3d=Viewport.MSAA_4X
+				%LabelMSAA.text="4X"
+			3:
+				main.scene_viewport.msaa_3d=Viewport.MSAA_8X
+				%LabelMSAA.text="8X"
+	)
+
+	# TAA
+
 	%CheckButtonTAA.toggled.connect(func(toggled_on: bool):
 		# ProjectSettings.set_setting("rendering/anti_aliasing/quality/use_taa", toggled_on)
 		main.scene_viewport.use_taa=toggled_on
@@ -111,6 +131,29 @@ func initialize(main: M8SceneDisplay) -> void:
 	)
 
 	%DisplayRect.texture = main.m8_client.get_display_texture()
+
+	# M8 Screen Emission
+
+	main.m8_scene_changed.connect(func():
+		var m8=main.current_scene.get_node("%M8Model")
+		if m8 is DeviceModel:
+			var screen=m8.get_node("%Screen")
+			var amount=screen.material_override.get_shader_parameter("emission_amount")
+			%SliderScreenEmission.editable=true
+			%SliderScreenEmission.value=amount
+			%LabelScreenEmission.text="%0.2f" % amount
+		else:
+			%SliderScreenEmission.editable=false
+			%LabelScreenEmission.text="N/A"
+	)
+
+	%SliderScreenEmission.value_changed.connect(func(value: float):
+		var m8=main.current_scene.get_node("%M8Model")
+		if m8 is DeviceModel:
+			var screen=m8.get_node("%Screen")
+			screen.material_override.set_shader_parameter("emission_amount", value)
+			%LabelScreenEmission.text="%0.2f" % value
+	)
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey:
