@@ -1,0 +1,16 @@
+[remap]
+
+importer="bitmap"
+type="BitMap"
+uid="uid://cqnshs33imc1a"
+path="res://.godot/imported/10_10.bmp-6c4a664bcfde819a298a1909180b1851.res"
+
+[deps]
+
+source_file="res://assets/m8_fonts/10_10.bmp"
+dest_files=["res://.godot/imported/10_10.bmp-6c4a664bcfde819a298a1909180b1851.res"]
+
+[params]
+
+create_from=0
+threshold=0.5

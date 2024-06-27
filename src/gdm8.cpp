@@ -1,5 +1,4 @@
 #include "gdm8.hpp"
-
 #include "utilities.hpp"
 
 #include <godot_cpp/core/class_db.hpp>
@@ -76,9 +75,9 @@ void M8GD::set_model(libm8::HardwareModel model)
 }
 
 void M8GD::set_model(libm8::HardwareModel model,
-					 uint8_t fw_1, uint8_t fw_2, uint8_t fw_3, bool bigfont)
+					 uint8_t fw_1, uint8_t fw_2, uint8_t fw_3, uint8_t font)
 {
-	static int bigfont_last = -1;
+	static uint8_t font_last = 0xFF;
 
 	switch (model)
 	{
@@ -105,10 +104,10 @@ void M8GD::set_model(libm8::HardwareModel model,
 		emit_signal("system_info", sys_hardware, sys_firmware);
 	}
 
-	if (bigfont_last == -1 || bigfont != (bool)bigfont_last)
+	if (font_last == 0xFF || font != font_last)
 	{
-		bigfont_last = bigfont;
-		emit_signal("font_changed", bigfont);
+		font_last = font;
+		emit_signal("font_changed", get_model_name(model), font);
 	}
 }
 
@@ -128,6 +127,10 @@ void M8GD::set_display_size(uint16_t width, uint16_t height)
 	if (display_texture == nullptr)
 	{
 		display_texture = ImageTexture::create_from_image(display_image);
+	}
+	else
+	{
+		display_texture->set_image(display_image);
 	}
 }
 
@@ -347,21 +350,49 @@ libm8::Error M8GD::read_command(uint8_t *cmd_buffer, const uint16_t &cmd_size)
 		// print("received system_info_command");
 		set_model(
 			(libm8::HardwareModel)cmd_buffer[1],
-			cmd_buffer[2], cmd_buffer[3], cmd_buffer[4], (bool)cmd_buffer[5]);
+			cmd_buffer[2], cmd_buffer[3], cmd_buffer[4], cmd_buffer[5]);
 
-		if (cmd_buffer[5] == 0)
+		if (cmd_buffer[1] == libm8::MODEL_02)
 		{
-			// model 01 small font offsets
-			display_buffer->font_y_offset = 3;
-			display_buffer->x_offset = 0;
-			display_buffer->y_offset = 0;
+			switch (cmd_buffer[5])
+			{
+			case libm8::FONT_SMALL:
+				display_buffer->x_offset = 0;
+				display_buffer->y_offset = -2;
+				display_buffer->font_y_offset = 5;
+				display_buffer->waveform_max = 38;
+				break;
+			case libm8::FONT_LARGE:
+				display_buffer->x_offset = 0;
+				display_buffer->y_offset = -2;
+				display_buffer->font_y_offset = 4;
+				display_buffer->waveform_max = 38;
+				break;
+			case libm8::FONT_HUGE:
+				display_buffer->x_offset = 0;
+				display_buffer->y_offset = -54;
+				display_buffer->font_y_offset = 4;
+				display_buffer->waveform_max = 24;
+				break;
+			}
 		}
-		else
+		else // model01/headless/beta
 		{
-			// model 01 big font offsets
-			display_buffer->font_y_offset = 4;
-			display_buffer->x_offset = 0;
-			display_buffer->y_offset = -40;
+			switch (cmd_buffer[5])
+			{
+			case libm8::FONT_SMALL:
+				display_buffer->x_offset = 0;
+				display_buffer->y_offset = 0;
+				display_buffer->font_y_offset = 3;
+				display_buffer->waveform_max = 24;
+				break;
+			case libm8::FONT_LARGE:
+				display_buffer->x_offset = 0;
+				display_buffer->y_offset = -40;
+				display_buffer->font_y_offset = 4;
+				display_buffer->waveform_max = 22;
+				break;
+			}
 		}
 		break;
 	}

@@ -94,7 +94,7 @@ void DisplayBuffer::draw_waveform(
     // clear region with background color
     draw_rect(
         x - x_offset + wf_offset, y - y_offset,
-        wf_width, 24,
+        wf_width, waveform_max,
         bg_r, bg_g, bg_b);
 
     if (wf_width > 0)
@@ -104,8 +104,8 @@ void DisplayBuffer::draw_waveform(
         for (int i = 0; i < end - start; i++)
         {
             uint8_t ampl = points[i + start];
-            if (ampl > 24)
-                ampl = 24;
+            if (ampl > waveform_max)
+                ampl = waveform_max;
             set_pixel(data, x + i + wf_offset, y + ampl - 2, r, g, b);
         }
 

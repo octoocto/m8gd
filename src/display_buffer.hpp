@@ -9,17 +9,18 @@ class DisplayBuffer
 {
 public:
     godot::PackedByteArray bytes;
-    int width;
-    int height;
+    uint16_t width;
+    uint16_t height;
 
     godot::Ref<godot::BitMap> font_bitmap;
-    int font_w;
-    int font_h;
+    uint8_t font_w;
+    uint8_t font_h;
 
-    // changes depending on small/big font
-    int font_y_offset = 0;
-    int x_offset = 0;
-    int y_offset = 0;
+    // changes depending on small/big/huge font
+    int8_t x_offset = 0;
+    int8_t y_offset = 0;
+    int8_t font_y_offset = 0;
+    uint8_t waveform_max = 0;
 
     // cached color from fullscreen draw_rect call
     uint8_t bg_r = 0;

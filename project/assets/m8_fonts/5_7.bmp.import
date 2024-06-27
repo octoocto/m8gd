@@ -1,0 +1,16 @@
+[remap]
+
+importer="bitmap"
+type="BitMap"
+uid="uid://clfoot57bhfj0"
+path="res://.godot/imported/5_7.bmp-a72d4d5021d2696747dd22c20b0200c2.res"
+
+[deps]
+
+source_file="res://assets/m8_fonts/5_7.bmp"
+dest_files=["res://.godot/imported/5_7.bmp-a72d4d5021d2696747dd22c20b0200c2.res"]
+
+[params]
+
+create_from=0
+threshold=0.5
