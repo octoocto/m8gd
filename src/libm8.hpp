@@ -124,6 +124,7 @@ namespace libm8
 		uint32_t cmd_size = 0;
 
 		Error last_error;
+		int zero_reads = 0;
 
 	public:
 		Client() {}
@@ -201,6 +202,7 @@ namespace libm8
 				sp_free_port(m8_port);
 				m8_port = nullptr;
 				cmd_size = 0; // also reset cmd_buffer
+				zero_reads = 0; // also reset zero_reads counter
 				print("disconnected");
 			}
 			return OK;

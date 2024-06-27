@@ -7,7 +7,6 @@ libm8::Error libm8::Client::read()
 
     int bytes_read;
     static bool is_slip_escaped = false;
-    static int zero_reads = 0;
 
     // keep reading bytes until there is nothing to read
     do
