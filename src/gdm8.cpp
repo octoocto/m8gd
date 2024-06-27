@@ -45,18 +45,16 @@ void M8GD::_bind_methods()
 
 M8GD::M8GD()
 {
-	// slip_handler = new SLIPHandler();
 	display_buffer = nullptr;
-	// m8_port = nullptr;
 
 	set_display_size(320, 240);
 
-	print("created new gdm8 instance");
+	print("created m8gd instance");
 }
 
 M8GD::~M8GD()
 {
-	// delete slip_handler;
+	print("destructing m8gd instance");
 	delete display_buffer;
 	disconnect();
 }
@@ -351,6 +349,8 @@ libm8::Error M8GD::read_command(uint8_t *cmd_buffer, const uint16_t &cmd_size)
 		set_model(
 			(libm8::HardwareModel)cmd_buffer[1],
 			cmd_buffer[2], cmd_buffer[3], cmd_buffer[4], cmd_buffer[5]);
+
+		print("requested font: %d", cmd_buffer[5]);
 
 		if (cmd_buffer[1] == libm8::MODEL_02)
 		{

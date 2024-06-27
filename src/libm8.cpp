@@ -20,6 +20,7 @@ libm8::Error libm8::Client::read()
             libm8::Error error = sp_to_m8((sp_return)bytes_read);
             if (error == libm8::ERR_SP_INVALID_ARGS)
             {
+                printerr("port invalid, disconnecting...");
                 disconnect();
             }
             return error;
@@ -72,6 +73,7 @@ libm8::Error libm8::Client::read()
             zero_reads++;
             if (zero_reads > MAX_ZERO_READS)
             {
+                print("zero_reads = %d, disconnecting...", zero_reads);
                 disconnect();
             }
         }

@@ -123,7 +123,6 @@ namespace libm8
 		uint8_t cmd_buffer[CMD_BUFFER_SIZE] = {0}; // decoded data buffer
 		uint32_t cmd_size = 0;
 
-		Error last_error;
 		int zero_reads = 0;
 
 	public:
