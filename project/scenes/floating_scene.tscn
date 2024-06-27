@@ -36,7 +36,7 @@ shader_parameter/distort_offset = Vector2(0, 0)
 shader_parameter/brightness = 0.001
 shader_parameter/tex = SubResource("ViewportTexture_t2dqp")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s3daa"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ty1kh"]
 resource_local_to_scene = true
 albedo_color = Color(0.1, 0.1, 0.1, 1)
 metallic = 0.6
@@ -145,7 +145,8 @@ shadow_bias = 0.01
 shadow_opacity = 0.83
 shadow_blur = 3.0
 
-[node name="FrontLight" type="SpotLight3D" parent="."]
+[node name="LightLamp" type="SpotLight3D" parent="."]
+unique_name_in_owner = true
 transform = Transform3D(0.166916, 0.966953, -0.192722, -0.562368, 0.253919, 0.786935, 0.809865, -0.0229712, 0.586167, -2.964, 11.885, 10.369)
 light_color = Color(0.8425, 0.79, 1, 1)
 light_size = 3.0
@@ -156,8 +157,10 @@ spot_attenuation = 0.0
 spot_angle = 16.72
 spot_angle_attenuation = 0.0192366
 
-[node name="LampLight2" type="SpotLight3D" parent="."]
+[node name="LightLeft" type="SpotLight3D" parent="."]
+unique_name_in_owner = true
 transform = Transform3D(0.231346, 0.952383, -0.198611, -0.918842, 0.280983, 0.27709, 0.319702, 0.118389, 0.940093, -4.77328, 3.32057, 10.2875)
+visible = false
 light_color = Color(1, 0.11, 0.11, 1)
 light_energy = 16.0
 light_size = 3.0
@@ -166,8 +169,10 @@ shadow_blur = 0.5
 spot_range = 43.892
 spot_angle = 36.8368
 
-[node name="LampLight3" type="SpotLight3D" parent="."]
+[node name="LightRight" type="SpotLight3D" parent="."]
+unique_name_in_owner = true
 transform = Transform3D(0.356473, 0.892189, 0.277356, -0.86415, 0.201984, 0.460919, 0.355205, -0.403983, 0.842987, 3.05577, 5.79271, 10.2875)
+visible = false
 light_color = Color(0.614333, 0.11, 1, 1)
 light_energy = 6.243
 light_size = 3.0
@@ -180,7 +185,7 @@ spot_angle = 36.8368
 unique_name_in_owner = true
 transform = Transform3D(38.83, 0, 0, 0, 6.74276, -38.24, 0, 38.2401, 6.74275, 0, 0, 0)
 screen_material = SubResource("ShaderMaterial_w3y4l")
-keycap_material = SubResource("StandardMaterial3D_s3daa")
+keycap_material = SubResource("StandardMaterial3D_ty1kh")
 
 [node name="CameraArm" type="Node3D" parent="."]
 unique_name_in_owner = true

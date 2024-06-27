@@ -56,14 +56,25 @@ func initialize(main: M8SceneDisplay) -> void:
 			DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED)
 	)
 
+	# Window resolution
+	# ------------------------------------------------------------------------
+
+	%OptionRes.select(0)
+
+	get_tree().physics_frame.connect(func():
+		var wsize:=DisplayServer.window_get_size()
+		%OptionRes.set_item_text(0, "%dx%d" % [wsize.x, wsize.y])
+	)
+
 	%OptionRes.item_selected.connect(func(index):
 		match index:
-			1: DisplayServer.window_set_size(Vector2i(640, 480))
-			2: DisplayServer.window_set_size(Vector2i(960, 720))
-			3: DisplayServer.window_set_size(Vector2i(1280, 960))
-			5: DisplayServer.window_set_size(Vector2i(960, 640))
-			6: DisplayServer.window_set_size(Vector2i(1440, 960))
-			7: DisplayServer.window_set_size(Vector2i(1920, 1280))
+			2: DisplayServer.window_set_size(Vector2i(640, 480))
+			3: DisplayServer.window_set_size(Vector2i(960, 720))
+			4: DisplayServer.window_set_size(Vector2i(1280, 960))
+			6: DisplayServer.window_set_size(Vector2i(960, 640))
+			7: DisplayServer.window_set_size(Vector2i(1440, 960))
+			8: DisplayServer.window_set_size(Vector2i(1920, 1280))
+		%OptionRes.select(0)
 	)
 
 	%SliderFPSCap.value_changed.connect(func(value: float):
@@ -132,7 +143,10 @@ func initialize(main: M8SceneDisplay) -> void:
 
 	%DisplayRect.texture = main.m8_client.get_display_texture()
 
-	# M8 Screen Emission
+	# M8 Model Options
+	# --------------------------------------------------------------------
+	
+	# Screen Emission
 
 	main.m8_scene_changed.connect(func():
 		var m8=main.current_scene.get_node("%M8Model")
@@ -153,6 +167,15 @@ func initialize(main: M8SceneDisplay) -> void:
 			var screen=m8.get_node("%Screen")
 			screen.material_override.set_shader_parameter("emission_amount", value)
 			%LabelScreenEmission.text="%0.2f" % value
+	)
+
+	# Background color (uneditable)
+
+	get_tree().physics_frame.connect(func():
+		var color=main.m8_client.get_background_color()
+		if color != %ThemeBGColor.color:
+			%LabelThemeBGColor.text="#%s" % color.to_html(false).to_upper()
+			%ThemeBGColor.color=color
 	)
 
 func _input(event: InputEvent) -> void:

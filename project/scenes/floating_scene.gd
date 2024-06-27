@@ -7,10 +7,10 @@ extends M8Scene
 		%Camera3D.humanized_movement = value
 		humanized_camera_movement = value
 
-@export var enable_m8_display_background := true:
+@export var enable_display_background := true:
 	set(value):
 		%DisplayMesh.visible = value
-		enable_m8_display_background = value
+		enable_display_background = value
 
 @export var enable_depth_of_field := true:
 	set(value):
@@ -22,6 +22,39 @@ extends M8Scene
 	set(value):
 		%WorldEnvironment.environment.background_color = value
 		solid_background_color = value
+
+@export var enable_lamp_light := true:
+	set(value):
+		enable_lamp_light = value
+		%LightLamp.visible = value
+
+@export var lamp_light_color := Color(0.85, 0.8, 1.0):
+	set(value):
+		left_light_color = value
+		%LightLamp.light_color = value
+		%LightLamp.light_energy = value.a
+
+@export var enable_left_light := false:
+	set(value):
+		enable_left_light = value
+		%LightLeft.visible = value
+
+@export var left_light_color := Color(1, 0, 0):
+	set(value):
+		left_light_color = value
+		%LightLeft.light_color = value
+		%LightLeft.light_energy = value.a * 16
+
+@export var enable_right_light = false:
+	set(value):
+		enable_right_light = value
+		%LightRight.visible = value
+
+@export var right_light_color := Color(0, 0, 1):
+	set(value):
+		right_light_color = value
+		%LightRight.light_color = value
+		%LightRight.light_energy = value.a * 16
 
 var time := 0.0
 var raw_time := 0.0
