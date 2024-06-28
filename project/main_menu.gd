@@ -2,6 +2,8 @@ class_name MainMenu extends Panel
 
 const PATH_SCENES := "res://scenes/"
 
+const REBIND_COOLDOWN := 100 # ms until can rebind again
+
 @onready var button_exit: Button = %ButtonExit
 
 @onready var slider_volume: HSlider = %SliderVolume
@@ -10,13 +12,16 @@ const PATH_SCENES := "res://scenes/"
 @onready var option_scenes: OptionButton = %OptionScenes
 @onready var scene_paths := []
 
-const REBIND_COOLDOWN := 100 # ms until can rebind again
+@onready var main: M8SceneDisplay
 
 var is_key_rebinding := false
 var last_rebind_time := 0.0
 var key_rebind_callback: Callable
 
 func initialize(main: M8SceneDisplay) -> void:
+
+	self.main = main
+	var config := main.config
 
 	# scan scenes folder
 	var dir_scenes = DirAccess.open(PATH_SCENES)
@@ -33,34 +38,55 @@ func initialize(main: M8SceneDisplay) -> void:
 		main.load_scene(scene_paths[index])
 	)
 
-	# options
+	button_exit.pressed.connect(func():
+		main.quit()
+	)
+
+	%DisplayRect.texture = main.m8_client.get_display_texture()
+
+	#==========================================================================
+	# OPTIONS
+	#==========================================================================
+
+	# audio volume
 
 	slider_volume.value_changed.connect(func(value: float):
 		var volume_db=- 60.0 * (1 - value)
 		print("volume = %f" % volume_db)
 		AudioServer.set_bus_volume_db(0, volume_db)
 		%LabelVolume.text="%d%%" % round(slider_volume.value / slider_volume.max_value * 100)
+		config.volume=value
 	)
+
+	slider_volume.value = config.volume
+
+	# debug text
 
 	%CheckButtonDebug.toggled.connect(func(toggled_on):
 		main.get_node("%DebugLabels").visible=toggled_on
+		config.debug_info=toggled_on
 	)
+	%CheckButtonDebug.button_pressed = config.debug_info
 
 	# video
 
-	%CheckButtonFullscreen.button_down.connect(func():
-		if DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_WINDOWED:
+	%CheckButtonFullscreen.toggled.connect(func(toggled_on):
+		if toggled_on:
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
 		else:
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+		config.fullscreen=toggled_on
 	)
+	%CheckButtonFullscreen.button_pressed = config.fullscreen
 
-	%CheckButtonVsync.button_down.connect(func():
-		if DisplayServer.window_get_vsync_mode() == DisplayServer.VSYNC_ENABLED:
-			DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
-		else:
+	%CheckButtonVsync.toggled.connect(func(toggled_on):
+		if toggled_on:
 			DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED)
+		else:
+			DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
+		config.vsync=toggled_on
 	)
+	%CheckButtonVsync.button_pressed = config.vsync
 
 	# Window resolution
 	# ------------------------------------------------------------------------
@@ -86,13 +112,17 @@ func initialize(main: M8SceneDisplay) -> void:
 	%SliderFPSCap.value_changed.connect(func(value: float):
 		if value > 0 and value < 15: value=15
 		Engine.max_fps=int(value)
+		config.fps_cap=int(value)
 	)
+	%SliderFPSCap.value = config.fps_cap
 
 	# graphics
 
 	%CheckButtonFilter.toggled.connect(func(toggled_on):
 		main.get_node("%CRTShader").visible=toggled_on
+		config.crt_filter=toggled_on
 	)
+	%CheckButtonFilter.button_pressed = config.crt_filter
 
 	%SliderDOFShape.value_changed.connect(func(value: RenderingServer.DOFBokehShape):
 		RenderingServer.camera_attributes_set_dof_blur_bokeh_shape(value)
@@ -103,7 +133,9 @@ func initialize(main: M8SceneDisplay) -> void:
 				%LabelDOFShape.text="Hexagon"
 			RenderingServer.DOF_BOKEH_CIRCLE:
 				%LabelDOFShape.text="Circle"
+		config.dof_bokeh_shape=value
 	)
+	%SliderDOFShape.value = config.dof_bokeh_shape
 
 	%SliderDOFQuality.value_changed.connect(func(value: RenderingServer.DOFBlurQuality):
 		RenderingServer.camera_attributes_set_dof_blur_quality(value, true)
@@ -116,7 +148,9 @@ func initialize(main: M8SceneDisplay) -> void:
 				%LabelDOFQuality.text="Medium"
 			RenderingServer.DOF_BLUR_QUALITY_HIGH:
 				%LabelDOFQuality.text="High"
+		config.dof_blur_quality=value
 	)
+	%SliderDOFQuality.value = config.dof_blur_quality
 
 	# MSAA
 
@@ -134,20 +168,18 @@ func initialize(main: M8SceneDisplay) -> void:
 			3:
 				main.scene_viewport.msaa_3d=Viewport.MSAA_8X
 				%LabelMSAA.text="8X"
+		config.msaa=value
 	)
+	%SliderMSAA.value = config.msaa
 
 	# TAA
 
 	%CheckButtonTAA.toggled.connect(func(toggled_on: bool):
 		# ProjectSettings.set_setting("rendering/anti_aliasing/quality/use_taa", toggled_on)
 		main.scene_viewport.use_taa=toggled_on
+		config.taa=toggled_on
 	)
-
-	button_exit.pressed.connect(func():
-		get_tree().quit()
-	)
-
-	%DisplayRect.texture = main.m8_client.get_display_texture()
+	%CheckButtonTAA.button_pressed = config.taa
 
 	# M8 Model Options
 	# --------------------------------------------------------------------
@@ -225,12 +257,30 @@ func initialize(main: M8SceneDisplay) -> void:
 
 	%ButtonResetBinds.button_down.connect(func(): reset_key_rebinds());
 
+	load_key_rebinds()
+
 func reset_key_rebinds() -> void:
 	for action in [
 		"key_up", "key_down", "key_left", "key_right",
 		"key_shift", "key_play", "key_option", "key_edit"]:
 		InputMap.action_erase_events(action)
+	save_key_rebinds()
 	print("keybindings reset to default")
+
+func load_key_rebinds() -> void:
+	for action in main.config.action_events.keys():
+		var events = main.config.action_events[action]
+		assert(events is Array)
+		for event in events:
+			assert(event is InputEvent, "event is not InputEvent, found %s" % type_string(typeof(event)))
+			InputMap.action_add_event(action, event)
+	print("key bindings loaded from config")
+
+func save_key_rebinds() -> void:
+	for action in main.M8_ACTIONS:
+		var events = InputMap.action_get_events(action)
+		main.config.action_events[action] = events
+	print("key bindings saved to config")
 
 func get_key_bind(action: String, index: int) -> String:
 
@@ -253,8 +303,6 @@ func start_key_rebind(action: String, index: int):
 	%BindActionPopup.visible = true
 
 	key_rebind_callback = func(event: InputEvent):
-		print("bind %s to %s" % [action, event.as_text()])
-
 		var events := InputMap.action_get_events(action)
 
 		if events.size() <= index:
@@ -269,6 +317,7 @@ func start_key_rebind(action: String, index: int):
 			InputMap.action_add_event(action, e)
 
 		Input.action_release(action)
+		save_key_rebinds()
 	
 	is_key_rebinding = true
 	print("starting rebind of %s" % action)
