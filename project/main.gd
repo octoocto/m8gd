@@ -121,17 +121,24 @@ func on_window_size_changed() -> void:
 ## Automatically detect and connect to any M8 device.
 func m8_connect() -> void:
 
+	menu.set_status_serialport("Scanning for M8s...")
+
 	var m8_ports: Array = M8GD.list_devices()
+	if m8_ports.size():
+		menu.set_status_serialport("Connecting to port %s..." % m8_ports[0])
+		if m8_client.connect(m8_ports[0]):
 
-	if m8_ports.size() and m8_client.connect(m8_ports[0]):
+			m8_connected = true
+			%LabelPort.text = m8_ports[0]
+			m8_client.keystate_changed.connect(on_m8_keystate_changed)
+			m8_client.system_info.connect(on_m8_system_info)
+			m8_client.font_changed.connect(on_m8_font_changed)
+			m8_client.device_disconnected.connect(on_m8_disconnect)
 
-		m8_connected = true
-		%LabelPort.text = m8_ports[0]
-		print_blink("connected to M8 at %s!" % m8_ports[0])
-		m8_client.keystate_changed.connect(on_m8_keystate_changed)
-		m8_client.system_info.connect(on_m8_system_info)
-		m8_client.font_changed.connect(on_m8_font_changed)
-		m8_client.device_disconnected.connect(on_m8_disconnect)
+			print_blink("connected to M8 at %s!" % m8_ports[0])
+			menu.set_status_serialport("Connected to M8 at serial port %s" % m8_ports[0])
+	else:
+		menu.set_status_serialport("Not connected (No M8s found)")
 
 ## Automatically detect and monitor an M8 audio device.
 func m8_connect_audio() -> void:
@@ -141,10 +148,16 @@ func m8_connect_audio() -> void:
 	for device in AudioServer.get_input_device_list():
 		if device.contains("M8"):
 			AudioServer.input_device = device
-			audio_monitor.stream = AudioStreamMicrophone.new()
+			var input_stream := AudioStreamMicrophone.new()
+			audio_monitor.stream = input_stream
 			audio_monitor.playing = true
 			m8_audio_connected = true
+
 			print("monitoring audio with device %s" % device)
+			menu.set_status_audiodevice("Listening to %s" % device)
+			return
+	
+	menu.set_status_audiodevice("Not connected (M8 audio device not found)")
 
 ## Disconnect the M8 audio device from the monitor.
 func m8_disconnect_audio() -> void:
@@ -152,6 +165,7 @@ func m8_disconnect_audio() -> void:
 	AudioServer.input_device = "Default"
 	audio_monitor.playing = false
 	print("no longer monitoring audio")
+	menu.set_status_audiodevice("Not connected (Disconnected)")
 
 ## Check if the M8 audio device still exists. If not, disconnect.
 func m8_check_audio() -> void:
@@ -198,6 +212,7 @@ func on_m8_disconnect() -> void:
 		m8_disconnect_audio()
 
 	print_blink("disconnected")
+	menu.set_status_serialport("Not connected (Disconnected)")
 
 func _physics_process(delta: float) -> void:
 
