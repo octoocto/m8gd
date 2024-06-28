@@ -17,6 +17,10 @@ const M8K_PLAY = 8
 const M8K_OPTION = 2
 const M8K_EDIT = 1
 
+const M8_ACTIONS := [
+	"key_up", "key_down", "key_left", "key_right",
+	"key_shift", "key_play", "key_option", "key_edit"]
+
 signal m8_key_changed
 signal m8_scene_changed
 
@@ -30,6 +34,8 @@ signal m8_scene_changed
 @onready var current_scene: M8Scene = null
 
 @onready var menu: MainMenu = %MainMenuPanel
+
+@onready var config := M8Config.load()
 
 @onready var m8_client := M8GD.new()
 @onready var m8_connected := false
@@ -52,6 +58,14 @@ func _ready():
 
 	# initialize main scene
 	_preload_scene(MAIN_SCENE)
+
+func _notification(what):
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		quit()
+
+func quit():
+	config.save()
+	get_tree().quit()
 
 ## Temporarily show a message on the bottom-left of the screen.
 func print_blink(msg: String) -> void:

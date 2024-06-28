@@ -13,6 +13,7 @@ config_version=5
 config/name="m8gd"
 config/version="0.2.0"
 run/main_scene="res://main.tscn"
+config/auto_accept_quit=false
 config/features=PackedStringArray("4.2")
 
 [audio]
