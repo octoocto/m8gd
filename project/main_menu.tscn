@@ -103,10 +103,8 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.0
-current_tab = 4
 
 [node name="Scene" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer"]
-visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16
@@ -671,6 +669,7 @@ layout_mode = 2
 text = "Reset to Defaults"
 
 [node name="Misc" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer"]
+visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16
