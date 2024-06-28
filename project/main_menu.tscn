@@ -103,7 +103,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.0
-current_tab = 3
+current_tab = 4
 
 [node name="Scene" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer"]
 visible = false
@@ -468,6 +468,7 @@ step = 0.01
 value = 1.0
 
 [node name="Keybindings" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer"]
+visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16
@@ -670,7 +671,6 @@ layout_mode = 2
 text = "Reset to Defaults"
 
 [node name="Misc" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer"]
-visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16
@@ -687,7 +687,6 @@ columns = 3
 
 [node name="Label7" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Misc/LeftMenu/GridContainer"]
 layout_mode = 2
-size_flags_horizontal = 3
 text = "Debug Info"
 
 [node name="VSeparator5" type="VSeparator" parent="MarginContainer/VBoxContainer/TabContainer/Misc/LeftMenu/GridContainer"]
@@ -698,6 +697,41 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_4w3sk")
 [node name="CheckButtonDebug" type="CheckButton" parent="MarginContainer/VBoxContainer/TabContainer/Misc/LeftMenu/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label8" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Misc/LeftMenu/GridContainer"]
+layout_mode = 2
+text = "Serial Port Status"
+
+[node name="VSeparator6" type="VSeparator" parent="MarginContainer/VBoxContainer/TabContainer/Misc/LeftMenu/GridContainer"]
+layout_mode = 2
+theme_override_constants/separation = 1
+theme_override_styles/separator = SubResource("StyleBoxEmpty_4w3sk")
+
+[node name="SerialPortStatus" type="Button" parent="MarginContainer/VBoxContainer/TabContainer/Misc/LeftMenu/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+text = "Not connected"
+alignment = 0
+
+[node name="Label9" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Misc/LeftMenu/GridContainer"]
+layout_mode = 2
+text = "Audio Device Status"
+
+[node name="VSeparator7" type="VSeparator" parent="MarginContainer/VBoxContainer/TabContainer/Misc/LeftMenu/GridContainer"]
+layout_mode = 2
+theme_override_constants/separation = 1
+theme_override_styles/separator = SubResource("StyleBoxEmpty_4w3sk")
+
+[node name="AudioDeviceStatus" type="Button" parent="MarginContainer/VBoxContainer/TabContainer/Misc/LeftMenu/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+text = "Not connected"
+alignment = 0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 visible = false

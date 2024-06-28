@@ -327,6 +327,12 @@ func end_key_rebind():
 	last_rebind_time = Time.get_ticks_msec()
 	%BindActionPopup.visible = false
 
+func set_status_serialport(text: String) -> void:
+	%SerialPortStatus.text = text
+
+func set_status_audiodevice(text: String) -> void:
+	%AudioDeviceStatus.text = text
+
 func _input(event: InputEvent) -> void:
 	if is_key_rebinding:
 		if event is InputEventKey and event.pressed:
