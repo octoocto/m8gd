@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://d13t756slc8b0"]
+[gd_scene load_steps=17 format=3 uid="uid://d13t756slc8b0"]
 
 [ext_resource type="Script" path="res://main_menu.gd" id="1_7xjs6"]
 
@@ -11,6 +11,7 @@ border_width_top = 1
 border_color = Color(1, 1, 1, 1)
 
 [sub_resource type="Theme" id="Theme_b8l6s"]
+Button/font_sizes/font_size = 12
 CheckButton/colors/font_color = Color(1, 1, 1, 1)
 CheckButton/font_sizes/font_size = 14
 Label/colors/font_color = Color(1, 1, 1, 1)
@@ -41,12 +42,33 @@ outline_size = 2
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dnh0l"]
 
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_v2m85"]
+color = Color(1, 1, 1, 0.25)
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7jqdk"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3mi27"]
 content_margin_top = 4.0
 content_margin_bottom = 4.0
 bg_color = Color(0.5, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8epsv"]
+bg_color = Color(0, 0, 0, 0.5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nhtyl"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 2
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+expand_margin_left = 16.0
+expand_margin_top = 16.0
+expand_margin_right = 16.0
+expand_margin_bottom = 16.0
 
 [node name="MainMenuPanel" type="Panel"]
 anchors_preset = 15
@@ -81,8 +103,10 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.0
+current_tab = 3
 
 [node name="Scene" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer"]
+visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16
@@ -443,6 +467,192 @@ max_value = 1.0
 step = 0.01
 value = 1.0
 
+[node name="Keybindings" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings"]
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer"]
+layout_mode = 2
+columns = 3
+
+[node name="LabelVideo2" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Key"
+label_settings = SubResource("LabelSettings_cher2")
+
+[node name="LabelVideo3" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Primary Binding"
+label_settings = SubResource("LabelSettings_cher2")
+
+[node name="LabelVideo4" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Secondary Binding"
+label_settings = SubResource("LabelSettings_cher2")
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer/GridContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_v2m85")
+
+[node name="HSeparator2" type="HSeparator" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer/GridContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_v2m85")
+
+[node name="HSeparator3" type="HSeparator" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer/GridContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_v2m85")
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "Up"
+
+[node name="ButtonBindUp1" type="Button" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+
+[node name="ButtonBindUp2" type="Button" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+
+[node name="Label2" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "Down"
+
+[node name="ButtonBindDown1" type="Button" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+
+[node name="ButtonBindDown2" type="Button" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+
+[node name="Label3" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "Left"
+
+[node name="ButtonBindLeft1" type="Button" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+
+[node name="ButtonBindLeft2" type="Button" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+
+[node name="Label4" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "Right"
+
+[node name="ButtonBindRight1" type="Button" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+
+[node name="ButtonBindRight2" type="Button" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+
+[node name="Label5" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "Option"
+
+[node name="ButtonBindOpt1" type="Button" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+
+[node name="ButtonBindOpt2" type="Button" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+
+[node name="Label6" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "Edit"
+
+[node name="ButtonBindEdit1" type="Button" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+
+[node name="ButtonBindEdit2" type="Button" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+
+[node name="Label7" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "Shift"
+
+[node name="ButtonBindShift1" type="Button" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+
+[node name="ButtonBindShift2" type="Button" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+
+[node name="Label8" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "Play"
+
+[node name="ButtonBindPlay1" type="Button" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+
+[node name="ButtonBindPlay2" type="Button" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+
+[node name="HSeparator3" type="HSeparator" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_v2m85")
+
+[node name="ButtonResetBinds" type="Button" parent="MarginContainer/VBoxContainer/TabContainer/Keybindings/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Reset to Defaults"
+
 [node name="Misc" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer"]
 visible = false
 layout_mode = 2
@@ -497,3 +707,30 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_3mi27")
 text = "Exit"
+
+[node name="BindActionPopup" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8epsv")
+
+[node name="PanelContainer" type="PanelContainer" parent="BindActionPopup"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_nhtyl")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="BindActionPopup/PanelContainer"]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+bbcode_enabled = true
+text = "Press the key or button you want to bind this action to...
+
+[center]Click ESC to cancel[/center]"
+fit_content = true
+metadata/_edit_use_anchors_ = true
