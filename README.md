@@ -84,6 +84,16 @@ Note: You may see some error messages during the export. This is normal, and the
 
 A .zip file containing the app should be created in the `build` folder.
 
+## Troubleshooting
+
+### Audio issues
+
+In order to monitor audio, m8gd will attempt to find the audio input device associated with the M8 and listen to it.
+
+If the device is disabled, or m8gd doesn't have permissions to access the M8's audio input device, then it will fail to connect.
+
+See more details [here](https://docs.godotengine.org/en/4.2/classes/class_projectsettings.html#class-projectsettings-property-audio-driver-enable-input).
+
 ## Development
 
 This project has been tested to work on [Godot 4.2.2-stable](https://godotengine.org/download/archive/4.2.2-stable/).
