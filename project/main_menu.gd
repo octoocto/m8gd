@@ -143,12 +143,6 @@ func initialize(p_main: M8SceneDisplay) -> void:
 
 	# graphics
 
-	%CheckButtonFilter.toggled.connect(func(toggled_on):
-		main.get_node("%CRTShader").visible=toggled_on
-		config.crt_filter=toggled_on
-	)
-	%CheckButtonFilter.button_pressed = config.crt_filter
-
 	%SliderDOFShape.value_changed.connect(func(value: RenderingServer.DOFBokehShape):
 		RenderingServer.camera_attributes_set_dof_blur_bokeh_shape(value)
 		match value:
@@ -205,6 +199,39 @@ func initialize(p_main: M8SceneDisplay) -> void:
 		config.taa=toggled_on
 	)
 	%CheckButtonTAA.button_pressed = config.taa
+
+	# Filter / Shader Settings
+	# --------------------------------------------------------------------
+
+	%CheckButtonFilter1.toggled.connect(func(toggled_on):
+		main.get_node("%VHSFilter1").visible=toggled_on
+		config.filter_1=toggled_on
+	)
+	%CheckButtonFilter1.button_pressed = config.filter_1
+
+	%CheckButtonFilter2.toggled.connect(func(toggled_on):
+		main.get_node("%VHSFilter2").visible=toggled_on
+		config.filter_2=toggled_on
+	)
+	%CheckButtonFilter2.button_pressed = config.filter_2
+
+	%CheckButtonFilter3.toggled.connect(func(toggled_on):
+		main.get_node("%VHSFilter3").visible=toggled_on
+		config.filter_3=toggled_on
+	)
+	%CheckButtonFilter3.button_pressed = config.filter_3
+
+	%CheckButtonFilter4.toggled.connect(func(toggled_on):
+		main.get_node("%Filter4").visible=toggled_on
+		config.filter_4=toggled_on
+	)
+	%CheckButtonFilter4.button_pressed = config.filter_4
+
+	%CheckButtonFilter5.toggled.connect(func(toggled_on):
+		main.get_node("%CRTShader").visible=toggled_on
+		config.crt_filter=toggled_on
+	)
+	%CheckButtonFilter5.button_pressed = config.crt_filter
 
 	# M8 Model Options
 	# --------------------------------------------------------------------
