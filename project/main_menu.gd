@@ -48,7 +48,10 @@ func initialize(p_main: M8SceneDisplay) -> void:
 	# OPTIONS
 	#==========================================================================
 
-	# audio volume
+	# Audio settings
+	#--------------------------------------------------------------------------
+
+	# volume
 
 	slider_volume.value_changed.connect(func(value: float):
 		var volume_db=- 60.0 * (1 - value)
@@ -60,13 +63,35 @@ func initialize(p_main: M8SceneDisplay) -> void:
 
 	slider_volume.value = config.volume
 
-	# debug text
+	# audio driver (readonly)
 
-	%CheckButtonDebug.toggled.connect(func(toggled_on):
-		main.get_node("%DebugLabels").visible=toggled_on
-		config.debug_info=toggled_on
+	%LineEditAudioDriver.placeholder_text = ProjectSettings.get_setting("audio/driver/driver")
+
+	# audio mix rate (readonly)
+
+	%LineEditAudioRate.placeholder_text = "%d Hz" % AudioServer.get_mix_rate()
+	# %LineEditAudioRate.text_submitted.connect(func(text):
+	# 	if text.is_valid_int():
+	# 		ProjectSettings.set_setting("audio/driver/mix_rate", int(text))
+	# 	%LineEditAudioRate.text=""
+	# 	%LineEditAudioRate.placeholder_text="%d Hz" % AudioServer.get_mix_rate()
+	# )
+
+	# audio latency (readonly)
+
+	var audio_latency_update_timer := Timer.new()
+	add_child(audio_latency_update_timer)
+	audio_latency_update_timer.start(1.0)
+	audio_latency_update_timer.timeout.connect(func():
+		if visible:
+			%LineEditAudioLatency.placeholder_text="%f ms" % AudioServer.get_output_latency()
 	)
-	%CheckButtonDebug.button_pressed = config.debug_info
+	# %LineEditAudioLatency.text_submitted.connect(func(text):
+	# 	if text.is_valid_int():
+	# 		ProjectSettings.set_setting("audio/driver/output_latency", int(text))
+	# 	%LineEditAudioLatency.text=""
+	# 	%LineEditAudioLatency.placeholder_text="%f ms" % AudioServer.get_output_latency()
+	# )
 
 	# video
 
@@ -262,17 +287,20 @@ func initialize(p_main: M8SceneDisplay) -> void:
 	# Misc
 	# --------------------------------------------------------------------
 
+	# debug text
+
+	%CheckButtonDebug.toggled.connect(func(toggled_on):
+		main.get_node("%DebugLabels").visible=toggled_on
+		config.debug_info=toggled_on
+	)
+	%CheckButtonDebug.button_pressed = config.debug_info
+
+	# serial ports
+
 	var refresh_serial_ports = func():
 		%ListSerialPorts.clear()
 		for port in M8GD.list_devices():
 			%ListSerialPorts.add_item(port)
-
-	var refresh_audio_devices = func():
-		%ListAudioDevices.clear()
-		for device in AudioServer.get_input_device_list():
-			%ListAudioDevices.add_item(device)
-
-	# serial ports
 
 	refresh_serial_ports.call()
 
@@ -291,6 +319,11 @@ func initialize(p_main: M8SceneDisplay) -> void:
 	)
 
 	# audio devices
+
+	var refresh_audio_devices = func():
+		%ListAudioDevices.clear()
+		for device in AudioServer.get_input_device_list():
+			%ListAudioDevices.add_item(device)
 
 	refresh_audio_devices.call()
 

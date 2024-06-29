@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://d13t756slc8b0"]
+[gd_scene load_steps=19 format=3 uid="uid://d13t756slc8b0"]
 
 [ext_resource type="Script" path="res://main_menu.gd" id="1_7xjs6"]
 
@@ -17,8 +17,10 @@ CheckButton/font_sizes/font_size = 14
 ItemList/font_sizes/font_size = 12
 Label/colors/font_color = Color(1, 1, 1, 1)
 Label/font_sizes/font_size = 14
+LineEdit/font_sizes/font_size = 12
 Panel/styles/panel = SubResource("StyleBoxFlat_1asjn")
 TabContainer/styles/panel = SubResource("StyleBoxFlat_vd3cv")
+TextEdit/font_sizes/font_size = 12
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_l2hi4"]
 
@@ -42,6 +44,8 @@ outline_size = 2
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_f5cg4"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dnh0l"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wlgng"]
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_v2m85"]
 color = Color(1, 1, 1, 0.25)
@@ -106,10 +110,8 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.0
-current_tab = 4
 
 [node name="Scene" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer"]
-visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16
@@ -438,12 +440,6 @@ theme_override_constants/margin_bottom = 16
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 
-[node name="LabelOptions" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Audio/LeftMenu"]
-layout_mode = 2
-text = "Sound"
-label_settings = SubResource("LabelSettings_cher2")
-horizontal_alignment = 1
-
 [node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/TabContainer/Audio/LeftMenu"]
 layout_mode = 2
 columns = 3
@@ -469,6 +465,74 @@ size_flags_vertical = 4
 max_value = 1.0
 step = 0.01
 value = 1.0
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer/TabContainer/Audio/LeftMenu"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_wlgng")
+
+[node name="LabelVideo2" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Audio/LeftMenu"]
+layout_mode = 2
+text = "Audio Driver Info"
+label_settings = SubResource("LabelSettings_cher2")
+horizontal_alignment = 1
+
+[node name="GridContainer2" type="GridContainer" parent="MarginContainer/VBoxContainer/TabContainer/Audio/LeftMenu"]
+layout_mode = 2
+columns = 3
+
+[node name="Label4" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Audio/LeftMenu/GridContainer2"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Audio Driver"
+
+[node name="VSeparator3" type="VSeparator" parent="MarginContainer/VBoxContainer/TabContainer/Audio/LeftMenu/GridContainer2"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_4w3sk")
+
+[node name="LineEditAudioDriver" type="LineEdit" parent="MarginContainer/VBoxContainer/TabContainer/Audio/LeftMenu/GridContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_length = 10
+editable = false
+virtual_keyboard_type = 2
+
+[node name="Label3" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Audio/LeftMenu/GridContainer2"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Mix Rate"
+
+[node name="VSeparator" type="VSeparator" parent="MarginContainer/VBoxContainer/TabContainer/Audio/LeftMenu/GridContainer2"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_4w3sk")
+
+[node name="LineEditAudioRate" type="LineEdit" parent="MarginContainer/VBoxContainer/TabContainer/Audio/LeftMenu/GridContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_length = 10
+editable = false
+virtual_keyboard_type = 2
+
+[node name="Label5" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Audio/LeftMenu/GridContainer2"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Output Latency"
+
+[node name="VSeparator2" type="VSeparator" parent="MarginContainer/VBoxContainer/TabContainer/Audio/LeftMenu/GridContainer2"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_4w3sk")
+
+[node name="LineEditAudioLatency" type="LineEdit" parent="MarginContainer/VBoxContainer/TabContainer/Audio/LeftMenu/GridContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_length = 10
+editable = false
+virtual_keyboard_type = 2
 
 [node name="Keybindings" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer"]
 visible = false
@@ -674,6 +738,7 @@ layout_mode = 2
 text = "Reset to Defaults"
 
 [node name="Misc" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer"]
+visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16
