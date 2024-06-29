@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://b265ke8cr3dgr"]
+[gd_scene load_steps=20 format=3 uid="uid://b265ke8cr3dgr"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_4g2n0"]
 [ext_resource type="Shader" path="res://shaders/post_process.gdshader" id="1_tjung"]
@@ -118,8 +118,6 @@ shader_parameter/clip_warp = false
 shader_parameter/vignette_intensity = 3.18
 shader_parameter/vignette_opacity = 0.047
 
-[sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_cl5ne"]
-
 [node name="Main" type="Panel"]
 anchors_preset = 15
 anchor_right = 1.0
@@ -221,11 +219,6 @@ grow_vertical = 2
 
 [node name="BackBufferCopy" type="BackBufferCopy" parent="CRTShader"]
 copy_mode = 2
-
-[node name="AudioInputMonitor" type="AudioStreamPlayer" parent="."]
-unique_name_in_owner = true
-stream = SubResource("AudioStreamMicrophone_cl5ne")
-bus = &"Analyzer"
 
 [node name="SubViewport" type="SubViewport" parent="."]
 transparent_bg = true
