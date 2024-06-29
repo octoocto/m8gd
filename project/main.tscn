@@ -143,6 +143,7 @@ grow_vertical = 2
 unique_name_in_owner = true
 handle_input_locally = false
 size = Vector2i(1280, 960)
+render_target_update_mode = 4
 
 [node name="TextureRect2" type="TextureRect" parent="SceneViewportContainer/SceneViewport"]
 visible = false
@@ -222,6 +223,7 @@ grow_vertical = 2
 copy_mode = 2
 
 [node name="AudioInputMonitor" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
 stream = SubResource("AudioStreamMicrophone_cl5ne")
 bus = &"Analyzer"
 
@@ -257,7 +259,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
 
 [node name="GridContainer" type="GridContainer" parent="MarginContainer"]
 layout_mode = 2
