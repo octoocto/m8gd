@@ -134,6 +134,7 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_l2hi4")
 [node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/TabContainer/Scene/LeftMenu"]
 custom_minimum_size = Vector2(0, 160)
 layout_mode = 2
+size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_5wjh1")
 horizontal_scroll_mode = 0
 scroll_deadzone = -4
@@ -157,12 +158,9 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Reset to Defaults"
 
-[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer/TabContainer/Scene/LeftMenu"]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_l2hi4")
-
 [node name="LabelOptions" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Scene/LeftMenu"]
 layout_mode = 2
+size_flags_vertical = 8
 text = "M8 Model"
 label_settings = SubResource("LabelSettings_cher2")
 horizontal_alignment = 1
@@ -171,26 +169,6 @@ horizontal_alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 columns = 3
-
-[node name="Label4" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Scene/LeftMenu/ContainerModel"]
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-text = "Screen Emission"
-
-[node name="LabelScreenEmission" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Scene/LeftMenu/ContainerModel"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(50, 0)
-layout_mode = 2
-text = "0"
-horizontal_alignment = 2
-
-[node name="SliderScreenEmission" type="HSlider" parent="MarginContainer/VBoxContainer/TabContainer/Scene/LeftMenu/ContainerModel"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-max_value = 1.0
-step = 0.01
 
 [node name="Label5" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Scene/LeftMenu/ContainerModel"]
 custom_minimum_size = Vector2(100, 0)
@@ -207,6 +185,7 @@ horizontal_alignment = 2
 [node name="ThemeBGColor" type="ColorPickerButton" parent="MarginContainer/VBoxContainer/TabContainer/Scene/LeftMenu/ContainerModel"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 disabled = true
 edit_alpha = false
 

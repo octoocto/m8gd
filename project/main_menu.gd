@@ -244,30 +244,7 @@ func initialize(p_main: M8SceneDisplay) -> void:
 	# M8 Model Options
 	# --------------------------------------------------------------------
 	
-	# Screen Emission
-
-	main.m8_scene_changed.connect(func():
-		var m8=main.current_scene.get_node("%M8Model")
-		if m8 is DeviceModel:
-			var screen=m8.get_node("%Screen")
-			var amount=screen.material_override.get_shader_parameter("emission_amount")
-			%SliderScreenEmission.editable=true
-			%SliderScreenEmission.value=amount
-			%LabelScreenEmission.text="%0.2f" % amount
-		else:
-			%SliderScreenEmission.editable=false
-			%LabelScreenEmission.text="N/A"
-	)
-
-	%SliderScreenEmission.value_changed.connect(func(value: float):
-		var m8=main.current_scene.get_node("%M8Model")
-		if m8 is DeviceModel:
-			var screen=m8.get_node("%Screen")
-			screen.material_override.set_shader_parameter("emission_amount", value)
-			%LabelScreenEmission.text="%0.2f" % value
-	)
-
-	# Background color (uneditable)
+	# Background color (read-only)
 
 	get_tree().physics_frame.connect(func():
 		var color=main.m8_client.get_background_color()
