@@ -48,6 +48,14 @@ func initialize(p_main: M8SceneDisplay) -> void:
 	# OPTIONS
 	#==========================================================================
 
+	# Scene settings
+	#--------------------------------------------------------------------------
+
+	%ButtonResetSceneVars.pressed.connect(func():
+		main.current_scene.config_delete_profile(main.current_scene.DEFAULT_PROFILE)
+		main.reload_scene()
+	)
+
 	# Audio settings
 	#--------------------------------------------------------------------------
 

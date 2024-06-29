@@ -76,6 +76,11 @@ func print_blink(msg: String) -> void:
 func is_menu_open() -> bool:
 	return %MainMenuPanel.visible
 
+## Reload the current scene.
+func reload_scene() -> void:
+	if current_scene:
+		load_scene(current_scene.scene_file_path)
+
 ## Load a scene from a filepath.
 func load_scene(scene_path) -> void:
 	# load packed scene from file
