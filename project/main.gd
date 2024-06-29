@@ -28,7 +28,7 @@ signal m8_scene_changed
 @export var visualizer_glow_amount = 0.5
 @export var visualizer_brightness_amount = 0.1
 
-@onready var audio_monitor: AudioStreamPlayer = %AudioInputMonitor
+@onready var audio_monitor: AudioStreamPlayer
 
 @onready var scene_viewport: SubViewport = %SceneViewport
 @onready var current_scene: M8Scene = null
@@ -158,10 +158,21 @@ func m8_audio_connect(device: String) -> void:
 		menu.set_status_audiodevice("Failed: audio device not found: %s" % device)
 		return
 
+	if audio_monitor:
+		audio_monitor.stream = null
+		audio_monitor.queue_free()
+
+	menu.set_status_audiodevice("Not connected")
+	await get_tree().create_timer(0.1).timeout
+
 	AudioServer.input_device = device
-	var input_stream := AudioStreamMicrophone.new()
-	audio_monitor.stream = input_stream
+
+	audio_monitor = AudioStreamPlayer.new()
+	audio_monitor.stream = AudioStreamMicrophone.new()
+	audio_monitor.bus = "Analyzer"
+	add_child(audio_monitor)
 	audio_monitor.playing = true
+
 	m8_audio_connected = true
 
 	print("monitoring audio with device %s" % device)
