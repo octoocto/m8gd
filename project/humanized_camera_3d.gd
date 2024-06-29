@@ -1,5 +1,6 @@
 class_name HumanizedCamera3D extends Camera3D
 
+@export var mouse_controlled_pan_zoom := true
 @export var humanized_movement := true
 @export var humanize_freq := 1.0
 @export var humanize_amount := 0.05
@@ -44,6 +45,8 @@ func update_humanized_movement(delta) -> void:
 	noise_u += delta
 
 func update_mouse_movement(_delta) -> void:
+
+	if !mouse_controlled_pan_zoom: return
 
 	# get mouse position as vector between (0, 0) and (1, 1)
 	var mouse_position = get_viewport().get_mouse_position() / Vector2(get_window().size)
