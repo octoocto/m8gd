@@ -14,6 +14,7 @@ border_color = Color(1, 1, 1, 1)
 Button/font_sizes/font_size = 12
 CheckButton/colors/font_color = Color(1, 1, 1, 1)
 CheckButton/font_sizes/font_size = 14
+ItemList/font_sizes/font_size = 14
 Label/colors/font_color = Color(1, 1, 1, 1)
 Label/font_sizes/font_size = 14
 Panel/styles/panel = SubResource("StyleBoxFlat_1asjn")
@@ -699,8 +700,9 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Label8" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Misc/LeftMenu/GridContainer"]
+custom_minimum_size = Vector2(90, 0)
 layout_mode = 2
-text = "Serial Port Status"
+text = "Serial Port"
 
 [node name="VSeparator6" type="VSeparator" parent="MarginContainer/VBoxContainer/TabContainer/Misc/LeftMenu/GridContainer"]
 layout_mode = 2
@@ -715,16 +717,21 @@ disabled = true
 text = "Not connected"
 alignment = 0
 
-[node name="Label9" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Misc/LeftMenu/GridContainer"]
+[node name="GridContainer2" type="GridContainer" parent="MarginContainer/VBoxContainer/TabContainer/Misc/LeftMenu"]
 layout_mode = 2
-text = "Audio Device Status"
+columns = 3
 
-[node name="VSeparator7" type="VSeparator" parent="MarginContainer/VBoxContainer/TabContainer/Misc/LeftMenu/GridContainer"]
+[node name="Label9" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Misc/LeftMenu/GridContainer2"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+text = "Audio Device"
+
+[node name="VSeparator7" type="VSeparator" parent="MarginContainer/VBoxContainer/TabContainer/Misc/LeftMenu/GridContainer2"]
 layout_mode = 2
 theme_override_constants/separation = 1
 theme_override_styles/separator = SubResource("StyleBoxEmpty_4w3sk")
 
-[node name="AudioDeviceStatus" type="Button" parent="MarginContainer/VBoxContainer/TabContainer/Misc/LeftMenu/GridContainer"]
+[node name="AudioDeviceStatus" type="Button" parent="MarginContainer/VBoxContainer/TabContainer/Misc/LeftMenu/GridContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
