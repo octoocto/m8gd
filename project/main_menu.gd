@@ -353,6 +353,12 @@ func initialize(p_main: M8SceneDisplay) -> void:
 		%ButtonConnectAudioDevice.disabled=true
 	)
 
+	%TabContainer.tab_changed.connect(func(tab: int):
+		if tab == 5: # misc tab
+			refresh_serial_ports.call()
+			refresh_audio_devices.call()
+	)
+
 func reset_key_rebinds() -> void:
 	for action in [
 		"key_up", "key_down", "key_left", "key_right",
