@@ -152,6 +152,11 @@ unique_name_in_owner = true
 layout_mode = 2
 columns = 3
 
+[node name="ButtonResetSceneVars" type="Button" parent="MarginContainer/VBoxContainer/TabContainer/Scene/LeftMenu"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Reset to Defaults"
+
 [node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer/TabContainer/Scene/LeftMenu"]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_l2hi4")

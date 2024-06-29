@@ -103,10 +103,15 @@ func config_get_profile(profile_name: String) -> Dictionary:
         print("scene: initializing profile '%s'" % profile_name)
         main.config.scene_parameters[scene_file_path][profile_name] = {}
 
-    var profile: Dictionary = main.config.scene_parameters[scene_file_path]
+    var profile: Dictionary = main.config.scene_parameters[scene_file_path][profile_name]
     assert(profile is Dictionary)
     # print("scene: using profile '%s'" % profile_name)
     return profile
+
+func config_delete_profile(profile_name: String):
+    if main.config.scene_parameters[scene_file_path].has(profile_name):
+        print("scene: deleting profile '%s'" % profile_name)
+        main.config.scene_parameters[scene_file_path].erase(profile_name)
 
 func config_load_profile(profile_name: String) -> void:
     print("scene: %s: loading profile '%s'" % [scene_file_path, profile_name])
