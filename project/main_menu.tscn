@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://d13t756slc8b0"]
+[gd_scene load_steps=18 format=3 uid="uid://d13t756slc8b0"]
 
 [ext_resource type="Script" path="res://main_menu.gd" id="1_7xjs6"]
 
@@ -14,7 +14,7 @@ border_color = Color(1, 1, 1, 1)
 Button/font_sizes/font_size = 12
 CheckButton/colors/font_color = Color(1, 1, 1, 1)
 CheckButton/font_sizes/font_size = 14
-ItemList/font_sizes/font_size = 14
+ItemList/font_sizes/font_size = 12
 Label/colors/font_color = Color(1, 1, 1, 1)
 Label/font_sizes/font_size = 14
 Panel/styles/panel = SubResource("StyleBoxFlat_1asjn")
@@ -45,6 +45,8 @@ outline_size = 2
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_v2m85"]
 color = Color(1, 1, 1, 0.25)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5cyir"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7jqdk"]
 
@@ -104,8 +106,10 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.0
+current_tab = 4
 
 [node name="Scene" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer"]
+visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16
@@ -670,7 +674,6 @@ layout_mode = 2
 text = "Reset to Defaults"
 
 [node name="Misc" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer"]
-visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16
@@ -716,6 +719,36 @@ size_flags_horizontal = 3
 disabled = true
 text = "Not connected"
 alignment = 0
+text_overrun_behavior = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/TabContainer/Misc/LeftMenu"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ListSerialPorts" type="ItemList" parent="MarginContainer/VBoxContainer/TabContainer/Misc/LeftMenu/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/TabContainer/Misc/LeftMenu"]
+layout_mode = 2
+
+[node name="ButtonRefreshSerialPorts" type="Button" parent="MarginContainer/VBoxContainer/TabContainer/Misc/LeftMenu/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Refresh"
+
+[node name="ButtonConnectSerialPort" type="Button" parent="MarginContainer/VBoxContainer/TabContainer/Misc/LeftMenu/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+text = "Connect"
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer/TabContainer/Misc/LeftMenu"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_5cyir")
 
 [node name="GridContainer2" type="GridContainer" parent="MarginContainer/VBoxContainer/TabContainer/Misc/LeftMenu"]
 layout_mode = 2
@@ -738,6 +771,32 @@ size_flags_horizontal = 3
 disabled = true
 text = "Not connected"
 alignment = 0
+text_overrun_behavior = 3
+
+[node name="ScrollContainer2" type="ScrollContainer" parent="MarginContainer/VBoxContainer/TabContainer/Misc/LeftMenu"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ListAudioDevices" type="ItemList" parent="MarginContainer/VBoxContainer/TabContainer/Misc/LeftMenu/ScrollContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/TabContainer/Misc/LeftMenu"]
+layout_mode = 2
+
+[node name="ButtonRefreshAudioDevices" type="Button" parent="MarginContainer/VBoxContainer/TabContainer/Misc/LeftMenu/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Refresh"
+
+[node name="ButtonConnectAudioDevice" type="Button" parent="MarginContainer/VBoxContainer/TabContainer/Misc/LeftMenu/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+text = "Connect"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 visible = false

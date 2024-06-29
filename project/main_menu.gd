@@ -18,9 +18,9 @@ var is_key_rebinding := false
 var last_rebind_time := 0.0
 var key_rebind_callback: Callable
 
-func initialize(main: M8SceneDisplay) -> void:
+func initialize(p_main: M8SceneDisplay) -> void:
 
-	self.main = main
+	main = p_main
 	var config := main.config
 
 	# scan scenes folder
@@ -258,6 +258,55 @@ func initialize(main: M8SceneDisplay) -> void:
 	%ButtonResetBinds.button_down.connect(func(): reset_key_rebinds());
 
 	load_key_rebinds()
+
+	# Misc
+	# --------------------------------------------------------------------
+
+	var refresh_serial_ports = func():
+		%ListSerialPorts.clear()
+		for port in M8GD.list_devices():
+			%ListSerialPorts.add_item(port)
+
+	var refresh_audio_devices = func():
+		%ListAudioDevices.clear()
+		for device in AudioServer.get_input_device_list():
+			%ListAudioDevices.add_item(device)
+
+	# serial ports
+
+	refresh_serial_ports.call()
+
+	%ListSerialPorts.item_selected.connect(func(_index):
+		%ButtonConnectSerialPort.disabled=false
+	)
+
+	%ButtonRefreshSerialPorts.pressed.connect(refresh_serial_ports)
+
+	%ButtonConnectSerialPort.pressed.connect(func():
+		var index= %ListSerialPorts.get_selected_items()[0]
+		var text= %ListSerialPorts.get_item_text(index)
+		main.m8_device_connect(text)
+		%ListSerialPorts.deselect_all()
+		%ButtonConnectSerialPort.disabled=true
+	)
+
+	# audio devices
+
+	refresh_audio_devices.call()
+
+	%ListAudioDevices.item_selected.connect(func(_index):
+		%ButtonConnectAudioDevice.disabled=false
+	)
+
+	%ButtonRefreshAudioDevices.pressed.connect(refresh_audio_devices)
+
+	%ButtonConnectAudioDevice.pressed.connect(func():
+		var index= %ListAudioDevices.get_selected_items()[0]
+		var text= %ListAudioDevices.get_item_text(index)
+		main.m8_audio_connect(text)
+		%ListAudioDevices.deselect_all()
+		%ButtonConnectAudioDevice.disabled=true
+	)
 
 func reset_key_rebinds() -> void:
 	for action in [

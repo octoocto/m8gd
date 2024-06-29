@@ -118,49 +118,69 @@ func on_window_size_changed() -> void:
 # M8 client methods
 ################################################################################
 
-## Automatically detect and connect to any M8 device.
-func m8_connect() -> void:
+func m8_device_connect(port: String) -> void:
 
-	menu.set_status_serialport("Scanning for M8s...")
+	var m8_ports: Array = M8GD.list_devices()
+
+	if !port in m8_ports:
+		menu.set_status_serialport("Failed: port not found: %s" % port)
+		return
+
+	menu.set_status_serialport("Connecting to serial port %s..." % m8_ports[0])
+
+	if !m8_client.connect(port):
+		menu.set_status_serialport("Failed: failed to connect to port: %s" % port)
+		return
+
+	m8_connected = true
+	%LabelPort.text = m8_ports[0]
+	m8_client.keystate_changed.connect(on_m8_keystate_changed)
+	m8_client.system_info.connect(on_m8_system_info)
+	m8_client.font_changed.connect(on_m8_font_changed)
+	m8_client.device_disconnected.connect(on_m8_device_disconnect)
+
+	print_blink("connected to M8 at %s!" % m8_ports[0])
+	menu.set_status_serialport("Connected to: %s" % m8_ports[0])
+
+## Automatically detect and connect to any M8 device.
+func m8_device_connect_auto() -> void:
+
+	menu.set_status_serialport("Scanning for M8 devices...")
 
 	var m8_ports: Array = M8GD.list_devices()
 	if m8_ports.size():
-		menu.set_status_serialport("Connecting to port %s..." % m8_ports[0])
-		if m8_client.connect(m8_ports[0]):
-
-			m8_connected = true
-			%LabelPort.text = m8_ports[0]
-			m8_client.keystate_changed.connect(on_m8_keystate_changed)
-			m8_client.system_info.connect(on_m8_system_info)
-			m8_client.font_changed.connect(on_m8_font_changed)
-			m8_client.device_disconnected.connect(on_m8_disconnect)
-
-			print_blink("connected to M8 at %s!" % m8_ports[0])
-			menu.set_status_serialport("Connected to M8 at serial port %s" % m8_ports[0])
+		m8_device_connect(m8_ports[0])
 	else:
-		menu.set_status_serialport("Not connected (No M8s found)")
+		menu.set_status_serialport("Not connected: No M8 devices found")
+
+func m8_audio_connect(device: String) -> void:
+	if !device in AudioServer.get_input_device_list():
+		menu.set_status_audiodevice("Failed: audio device not found: %s" % device)
+		return
+
+	AudioServer.input_device = device
+	var input_stream := AudioStreamMicrophone.new()
+	audio_monitor.stream = input_stream
+	audio_monitor.playing = true
+	m8_audio_connected = true
+
+	print("monitoring audio with device %s" % device)
+	menu.set_status_audiodevice("Connected to: %s" % device)
 
 ## Automatically detect and monitor an M8 audio device.
-func m8_connect_audio() -> void:
+func m8_audio_connect_auto() -> void:
 
 	# If the M8 device is plugged in and detected, use it as a microphone and
 	# playback to the default audio output device.
 	for device in AudioServer.get_input_device_list():
 		if device.contains("M8"):
-			AudioServer.input_device = device
-			var input_stream := AudioStreamMicrophone.new()
-			audio_monitor.stream = input_stream
-			audio_monitor.playing = true
-			m8_audio_connected = true
-
-			print("monitoring audio with device %s" % device)
-			menu.set_status_audiodevice("Listening to %s" % device)
+			m8_audio_connect(device)
 			return
 	
-	menu.set_status_audiodevice("Not connected (M8 audio device not found)")
+	menu.set_status_audiodevice("Not connected: No M8 audio device found")
 
 ## Disconnect the M8 audio device from the monitor.
-func m8_disconnect_audio() -> void:
+func m8_audio_disconnect() -> void:
 	m8_audio_connected = false
 	AudioServer.input_device = "Default"
 	audio_monitor.playing = false
@@ -168,11 +188,11 @@ func m8_disconnect_audio() -> void:
 	menu.set_status_audiodevice("Not connected (Disconnected)")
 
 ## Check if the M8 audio device still exists. If not, disconnect.
-func m8_check_audio() -> void:
+func m8_audio_check() -> void:
 	for device in AudioServer.get_input_device_list():
 		if device.contains("M8"):
 			return
-	m8_disconnect_audio()
+	m8_audio_disconnect()
 
 func on_m8_keystate_changed(keystate: int) -> void:
 	update_keystate(keystate, false)
@@ -198,7 +218,7 @@ func on_m8_font_changed(model: String, font: int) -> void:
 				m8_client.load_font(FONT_01_BIG)
 
 ## Called when the M8 has been disconnected.
-func on_m8_disconnect() -> void:
+func on_m8_device_disconnect() -> void:
 
 	m8_connected = false
 	%LabelPort.text = ""
@@ -206,10 +226,10 @@ func on_m8_disconnect() -> void:
 	m8_client.keystate_changed.disconnect(on_m8_keystate_changed)
 	m8_client.system_info.disconnect(on_m8_system_info)
 	m8_client.font_changed.disconnect(on_m8_font_changed)
-	m8_client.device_disconnected.disconnect(on_m8_disconnect)
+	m8_client.device_disconnected.disconnect(on_m8_device_disconnect)
 
 	if m8_audio_connected:
-		m8_disconnect_audio()
+		m8_audio_disconnect()
 
 	print_blink("disconnected")
 	menu.set_status_serialport("Not connected (Disconnected)")
@@ -244,14 +264,14 @@ func _process(_delta: float) -> void:
 
 	# auto connect to m8s
 	if !m8_connected:
-		m8_connect()
+		m8_device_connect_auto()
 
 	# auto monitor audio if m8 is connected
 	if m8_connected and !m8_audio_connected:
-		m8_connect_audio()
+		m8_audio_connect_auto()
 
 	if m8_connected and m8_audio_connected:
-		m8_check_audio()
+		m8_audio_check()
 
 	%LabelFPS.text = "%d" % Engine.get_frames_per_second()
 
