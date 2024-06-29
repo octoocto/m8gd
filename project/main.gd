@@ -44,6 +44,9 @@ signal m8_scene_changed
 @onready var m8_keystate_last: int = 0
 @onready var m8_locally_controlled := false
 
+## true if audio device is in the middle of connecting
+var is_audio_connecting = false
+
 var last_peak := 0.0
 
 func _ready():
@@ -163,9 +166,14 @@ func m8_audio_connect(device: String) -> void:
 		menu.set_status_audiodevice("Failed: audio device not found: %s" % device)
 		return
 
-	if audio_monitor:
+	if is_audio_connecting: return
+	is_audio_connecting = true
+
+	if audio_monitor and is_instance_valid(audio_monitor):
 		audio_monitor.stream = null
 		audio_monitor.queue_free()
+		remove_child(audio_monitor)
+		audio_monitor = null
 
 	menu.set_status_audiodevice("Not connected")
 	await get_tree().create_timer(0.1).timeout
@@ -176,9 +184,14 @@ func m8_audio_connect(device: String) -> void:
 	audio_monitor.stream = AudioStreamMicrophone.new()
 	audio_monitor.bus = "Analyzer"
 	add_child(audio_monitor)
-	audio_monitor.playing = true
+	audio_monitor.playing = false
 
+	menu.set_status_audiodevice("Starting...")
+	await get_tree().create_timer(0.1).timeout
+
+	audio_monitor.playing = true
 	m8_audio_connected = true
+	is_audio_connecting = false
 
 	print("monitoring audio with device %s" % device)
 	menu.set_status_audiodevice("Connected to: %s" % device)
