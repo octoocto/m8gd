@@ -13,11 +13,17 @@ var version = 0
 @export var fps_cap := 0
 
 # graphical settings
-@export var crt_filter := false
 @export var msaa := 0
 @export var taa := false
 @export var dof_bokeh_shape := 1
 @export var dof_blur_quality := 2
+
+# filter/shader settings
+@export var filter_1 := false
+@export var filter_2 := false
+@export var filter_3 := false
+@export var filter_4 := false
+@export var crt_filter := false
 
 # audio settings
 @export var volume := 0.8

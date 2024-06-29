@@ -29,7 +29,7 @@ MarginContainer/constants/margin_top = 16
 shader = ExtResource("4_ioov3")
 shader_parameter/wiggle = 0.03
 shader_parameter/wiggle_speed = 25.0
-shader_parameter/smear = 1.908
+shader_parameter/smear = 1.0
 shader_parameter/blur_samples = 15
 
 [sub_resource type="Gradient" id="Gradient_bdoh7"]
@@ -48,7 +48,7 @@ noise = SubResource("FastNoiseLite_0dh6t")
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_i0wc8"]
 shader = ExtResource("2_34vyn")
 shader_parameter/vhs_resolution = Vector2(320, 240)
-shader_parameter/samples = 2
+shader_parameter/samples = 3
 shader_parameter/crease_noise = 1.0
 shader_parameter/crease_opacity = 0.5
 shader_parameter/filter_intensity = 0.0
@@ -64,16 +64,16 @@ shader_parameter/noise_texture = SubResource("NoiseTexture2D_8or2m")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_j82o4"]
 shader = ExtResource("4_tq17m")
-shader_parameter/res = Vector2(320, 480)
+shader_parameter/res = Vector2(640, 480)
 shader_parameter/mask_type = 0
-shader_parameter/bloom_type = 2
+shader_parameter/bloom_type = 1
 shader_parameter/hardScan = -8.0
 shader_parameter/hardPix = -2.0
 shader_parameter/hardBloomScan = -2.0
 shader_parameter/hardBloomPix = -1.5
-shader_parameter/bloomAmount = 5.385
-shader_parameter/warp = Vector2(200, 200)
-shader_parameter/maskDark = 0.75
+shader_parameter/bloomAmount = 16.0
+shader_parameter/warp = Vector2(500, 500)
+shader_parameter/maskDark = 0.758
 shader_parameter/maskLight = 1.75
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_pe34f"]
@@ -111,12 +111,12 @@ shader_parameter/noise_opacity = 0.0
 shader_parameter/noise_speed = 5.0
 shader_parameter/static_noise_intensity = 0.0
 shader_parameter/aberration = 0.03
-shader_parameter/brightness = 1.4
+shader_parameter/brightness = 1.0
 shader_parameter/discolor = false
-shader_parameter/warp_amount = 0.0
+shader_parameter/warp_amount = 0.923
 shader_parameter/clip_warp = false
-shader_parameter/vignette_intensity = 3.18
-shader_parameter/vignette_opacity = 0.047
+shader_parameter/vignette_intensity = 5.0
+shader_parameter/vignette_opacity = 0.05
 
 [node name="Main" type="Panel"]
 anchors_preset = 15
@@ -150,7 +150,7 @@ offset_right = 1280.0
 offset_bottom = 960.0
 texture = ExtResource("2_3rehb")
 
-[node name="VHSFilter2" type="ColorRect" parent="."]
+[node name="VHSFilter1" type="ColorRect" parent="."]
 unique_name_in_owner = true
 visible = false
 material = SubResource("ShaderMaterial_x0ssf")
@@ -161,10 +161,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="BackBufferCopy2" type="BackBufferCopy" parent="VHSFilter2"]
+[node name="BackBufferCopy2" type="BackBufferCopy" parent="VHSFilter1"]
 copy_mode = 2
 
-[node name="VHSFilter" type="ColorRect" parent="."]
+[node name="VHSFilter2" type="ColorRect" parent="."]
 unique_name_in_owner = true
 visible = false
 material = SubResource("ShaderMaterial_i0wc8")
@@ -175,7 +175,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="BackBufferCopy" type="BackBufferCopy" parent="VHSFilter"]
+[node name="BackBufferCopy" type="BackBufferCopy" parent="VHSFilter2"]
 copy_mode = 2
 
 [node name="VHSFilter3" type="ColorRect" parent="."]
@@ -192,7 +192,8 @@ grow_vertical = 2
 [node name="BackBufferCopy2" type="BackBufferCopy" parent="VHSFilter3"]
 copy_mode = 2
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="Filter4" type="ColorRect" parent="."]
+unique_name_in_owner = true
 visible = false
 material = SubResource("ShaderMaterial_pe34f")
 custom_minimum_size = Vector2(1280, 960)
@@ -203,7 +204,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="BackBufferCopy" type="BackBufferCopy" parent="ColorRect"]
+[node name="BackBufferCopy" type="BackBufferCopy" parent="Filter4"]
 copy_mode = 2
 
 [node name="CRTShader" type="ColorRect" parent="."]

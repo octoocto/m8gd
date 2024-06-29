@@ -110,6 +110,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.0
+tab_alignment = 1
 
 [node name="Scene" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer"]
 layout_mode = 2
@@ -324,19 +325,6 @@ horizontal_alignment = 1
 layout_mode = 2
 columns = 3
 
-[node name="Label6" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Video/RightMenu/GridContainerGraphics"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "CRT Filter"
-
-[node name="VSeparator4" type="VSeparator" parent="MarginContainer/VBoxContainer/TabContainer/Video/RightMenu/GridContainerGraphics"]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_4w3sk")
-
-[node name="CheckButtonFilter" type="CheckButton" parent="MarginContainer/VBoxContainer/TabContainer/Video/RightMenu/GridContainerGraphics"]
-unique_name_in_owner = true
-layout_mode = 2
-
 [node name="Label10" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Video/RightMenu/GridContainerGraphics"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -427,6 +415,68 @@ ticks_on_borders = true
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_styles/separator = SubResource("StyleBoxEmpty_l2hi4")
+
+[node name="Filters" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/TabContainer/Filters"]
+layout_mode = 2
+columns = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Filters/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "VHS Smearing"
+
+[node name="CheckButtonFilter1" type="CheckButton" parent="MarginContainer/VBoxContainer/TabContainer/Filters/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label2" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Filters/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "VHS Distortion & Tearing"
+
+[node name="CheckButtonFilter2" type="CheckButton" parent="MarginContainer/VBoxContainer/TabContainer/Filters/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label3" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Filters/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "CRT Pixelization"
+
+[node name="CheckButtonFilter3" type="CheckButton" parent="MarginContainer/VBoxContainer/TabContainer/Filters/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label5" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Filters/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Reverse Curvature Warping"
+
+[node name="CheckButtonFilter4" type="CheckButton" parent="MarginContainer/VBoxContainer/TabContainer/Filters/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label4" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Filters/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "CRT Curvature Warping"
+
+[node name="CheckButtonFilter5" type="CheckButton" parent="MarginContainer/VBoxContainer/TabContainer/Filters/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="Audio" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer"]
 visible = false
