@@ -1,8 +1,12 @@
-[gd_scene load_steps=11 format=3 uid="uid://b265ke8cr3dgr"]
+[gd_scene load_steps=21 format=3 uid="uid://b265ke8cr3dgr"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_4g2n0"]
-[ext_resource type="Shader" path="res://post_process.gdshader" id="1_tjung"]
-[ext_resource type="Shader" path="res://crt_shader.gdshader" id="4_btrxk"]
+[ext_resource type="Shader" path="res://shaders/post_process.gdshader" id="1_tjung"]
+[ext_resource type="Shader" path="res://shaders/crt.gdshader" id="2_2rjfu"]
+[ext_resource type="Texture2D" uid="uid://bcsoiuuis4yx2" path="res://assets/m8_screen_placeholder.png" id="2_3rehb"]
+[ext_resource type="Shader" path="res://shaders/vhs.gdshader" id="2_34vyn"]
+[ext_resource type="Shader" path="res://shaders/vhs2.gdshader" id="4_ioov3"]
+[ext_resource type="Shader" path="res://shaders/vhs3.gdshader" id="4_tq17m"]
 [ext_resource type="Script" path="res://spectrum_visualizer.gd" id="5_33ff2"]
 [ext_resource type="PackedScene" uid="uid://d13t756slc8b0" path="res://main_menu.tscn" id="7_k5oyo"]
 
@@ -22,43 +26,97 @@ MarginContainer/constants/margin_right = 16
 MarginContainer/constants/margin_top = 16
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_x0ssf"]
-shader = ExtResource("4_btrxk")
-shader_parameter/overlay = true
-shader_parameter/scanlines_opacity = 0.0
-shader_parameter/scanlines_width = 0.25
-shader_parameter/grille_opacity = 0.046
-shader_parameter/resolution = Vector2(640, 480)
-shader_parameter/pixelate = false
-shader_parameter/roll = true
-shader_parameter/roll_speed = 10.0
-shader_parameter/roll_size = 15.0
-shader_parameter/roll_variation = 1.8
-shader_parameter/distort_intensity = 0.002
-shader_parameter/noise_opacity = 0.05
-shader_parameter/noise_speed = 5.0
-shader_parameter/static_noise_intensity = 0.01
-shader_parameter/aberration = 0.03
-shader_parameter/brightness = 1.4
-shader_parameter/discolor = false
-shader_parameter/warp_amount = 0.882
-shader_parameter/clip_warp = false
-shader_parameter/vignette_intensity = -0.265
-shader_parameter/vignette_opacity = 0.395
+shader = ExtResource("4_ioov3")
+shader_parameter/wiggle = 0.03
+shader_parameter/wiggle_speed = 25.0
+shader_parameter/smear = 1.908
+shader_parameter/blur_samples = 15
+
+[sub_resource type="Gradient" id="Gradient_bdoh7"]
+interpolation_color_space = 2
+offsets = PackedFloat32Array(0, 0.794258, 1)
+colors = PackedColorArray(1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_0dh6t"]
+noise_type = 3
+frequency = 0.1
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_8or2m"]
+color_ramp = SubResource("Gradient_bdoh7")
+noise = SubResource("FastNoiseLite_0dh6t")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_i0wc8"]
+shader = ExtResource("2_34vyn")
+shader_parameter/vhs_resolution = Vector2(320, 240)
+shader_parameter/samples = 2
+shader_parameter/crease_noise = 1.0
+shader_parameter/crease_opacity = 0.5
+shader_parameter/filter_intensity = 0.0
+shader_parameter/tape_crease_smear = 0.2
+shader_parameter/tape_crease_intensity = 0.0
+shader_parameter/tape_crease_jitter = 0.5
+shader_parameter/tape_crease_speed = 0.5
+shader_parameter/tape_crease_discoloration = 0.5
+shader_parameter/bottom_border_thickness = 6.0
+shader_parameter/bottom_border_jitter = 24.0
+shader_parameter/noise_intensity = 0.0
+shader_parameter/noise_texture = SubResource("NoiseTexture2D_8or2m")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_j82o4"]
+shader = ExtResource("4_tq17m")
+shader_parameter/res = Vector2(320, 480)
+shader_parameter/mask_type = 0
+shader_parameter/bloom_type = 2
+shader_parameter/hardScan = -8.0
+shader_parameter/hardPix = -2.0
+shader_parameter/hardBloomScan = -2.0
+shader_parameter/hardBloomPix = -1.5
+shader_parameter/bloomAmount = 5.385
+shader_parameter/warp = Vector2(200, 200)
+shader_parameter/maskDark = 0.75
+shader_parameter/maskLight = 1.75
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_pe34f"]
 shader = ExtResource("1_tjung")
-shader_parameter/effect = -3.855
+shader_parameter/effect = -1.0
 shader_parameter/effect_scale = 1.0
 shader_parameter/crop = 1.0
-shader_parameter/warp_amount = 0.5
+shader_parameter/warp_amount = -1.05
 shader_parameter/warp_aspect = 1.0
 shader_parameter/border_alpha = 1.0
-shader_parameter/ca_amount = 0.1
-shader_parameter/vignette_intensity = 1.99
-shader_parameter/vignette_opacity = 1.0
-shader_parameter/vignette_rgb = Color(1, 1, 1, 1)
-shader_parameter/mirror_blur = 2.5
-shader_parameter/mirror_overlay = Color(1, 1, 1, 0.6)
+shader_parameter/ca_amount = 0.0
+shader_parameter/mirror_blur = 0.5
+shader_parameter/reflection_amount = 0.39
+shader_parameter/mirror_overlay = Color(1, 1, 1, 0.215686)
+shader_parameter/border_color = Color(0.06, 0.06, 0.06, 1)
+shader_parameter/border_shadow_range = 6.42
+shader_parameter/border_shadow_ramp = 0.485
+shader_parameter/vignette_ramp = 0.16
+shader_parameter/vignette_range = 1.045
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fpc4l"]
+shader = ExtResource("2_2rjfu")
+shader_parameter/overlay = false
+shader_parameter/scanlines_opacity = 0.0
+shader_parameter/scanlines_width = 0.0
+shader_parameter/grille_opacity = 0.0
+shader_parameter/resolution = Vector2(640, 480)
+shader_parameter/pixelate = false
+shader_parameter/roll = true
+shader_parameter/roll_speed = 8.0
+shader_parameter/roll_size = 15.0
+shader_parameter/roll_variation = 1.8
+shader_parameter/distort_intensity = 0.002
+shader_parameter/noise_opacity = 0.0
+shader_parameter/noise_speed = 5.0
+shader_parameter/static_noise_intensity = 0.0
+shader_parameter/aberration = 0.03
+shader_parameter/brightness = 1.4
+shader_parameter/discolor = false
+shader_parameter/warp_amount = 0.0
+shader_parameter/clip_warp = false
+shader_parameter/vignette_intensity = 3.18
+shader_parameter/vignette_opacity = 0.047
 
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_cl5ne"]
 
@@ -84,11 +142,16 @@ grow_vertical = 2
 [node name="SceneViewport" type="SubViewport" parent="SceneViewportContainer"]
 unique_name_in_owner = true
 handle_input_locally = false
-use_debanding = true
 size = Vector2i(1280, 960)
-render_target_update_mode = 4
 
-[node name="CRTShader" type="ColorRect" parent="."]
+[node name="TextureRect2" type="TextureRect" parent="SceneViewportContainer/SceneViewport"]
+visible = false
+texture_filter = 1
+offset_right = 1280.0
+offset_bottom = 960.0
+texture = ExtResource("2_3rehb")
+
+[node name="VHSFilter2" type="ColorRect" parent="."]
 unique_name_in_owner = true
 visible = false
 material = SubResource("ShaderMaterial_x0ssf")
@@ -98,6 +161,37 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="BackBufferCopy2" type="BackBufferCopy" parent="VHSFilter2"]
+copy_mode = 2
+
+[node name="VHSFilter" type="ColorRect" parent="."]
+unique_name_in_owner = true
+visible = false
+material = SubResource("ShaderMaterial_i0wc8")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BackBufferCopy" type="BackBufferCopy" parent="VHSFilter"]
+copy_mode = 2
+
+[node name="VHSFilter3" type="ColorRect" parent="."]
+unique_name_in_owner = true
+visible = false
+material = SubResource("ShaderMaterial_j82o4")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BackBufferCopy2" type="BackBufferCopy" parent="VHSFilter3"]
+copy_mode = 2
 
 [node name="ColorRect" type="ColorRect" parent="."]
 visible = false
@@ -110,8 +204,24 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="AudioInputMonitor" type="AudioStreamPlayer" parent="."]
+[node name="BackBufferCopy" type="BackBufferCopy" parent="ColorRect"]
+copy_mode = 2
+
+[node name="CRTShader" type="ColorRect" parent="."]
 unique_name_in_owner = true
+visible = false
+material = SubResource("ShaderMaterial_fpc4l")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BackBufferCopy" type="BackBufferCopy" parent="CRTShader"]
+copy_mode = 2
+
+[node name="AudioInputMonitor" type="AudioStreamPlayer" parent="."]
 stream = SubResource("AudioStreamMicrophone_cl5ne")
 bus = &"Analyzer"
 
