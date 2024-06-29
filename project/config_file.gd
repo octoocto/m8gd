@@ -4,6 +4,9 @@ const CONFIG_FILE_PATH := "user://config.res"
 
 var version = 0
 
+# scene settings
+@export var scene_parameters := {} # Dictionary[String, Dictionary]
+
 # video settings
 @export var fullscreen := false
 @export var vsync := true
@@ -23,7 +26,7 @@ var version = 0
 @export var debug_info := false
 
 # contains key bindings
-@export var action_events: Dictionary = {}
+@export var action_events := {} # Dictionary[String, Array]
 
 func save():
     var error = ResourceSaver.save(self, CONFIG_FILE_PATH, )
