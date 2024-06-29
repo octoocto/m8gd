@@ -346,6 +346,7 @@ func reset_key_rebinds() -> void:
 		"key_up", "key_down", "key_left", "key_right",
 		"key_shift", "key_play", "key_option", "key_edit"]:
 		InputMap.action_erase_events(action)
+		InputMap.action_add_event(action, ProjectSettings.get_setting("input/" + action).events[0])
 	save_key_rebinds()
 	print("keybindings reset to default")
 
