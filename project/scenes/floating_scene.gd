@@ -12,6 +12,13 @@ extends M8Scene
 		%Camera3D.humanized_movement = value
 		humanized_camera_movement = value
 
+@export var model_screen_emission := 0.25:
+	set(value):
+		if %M8Model is DeviceModel:
+			var screen = %M8Model.get_node("%Screen")
+			screen.material_override.set_shader_parameter("emission_amount", value)
+		model_screen_emission = value
+
 @export var enable_display_background := true:
 	set(value):
 		%DisplayMesh.visible = value
@@ -85,6 +92,8 @@ func _physics_process(delta):
 	if main.is_menu_open(): return
 
 	camera.update_mouse_movement(delta)
+	
+	if !enable_mouse_controlled_pan_zoom: return
 
 	# get mouse position as vector between (0, 0) and (1, 1)
 	var mouse_position = get_viewport().get_mouse_position() / Vector2(get_window().size)

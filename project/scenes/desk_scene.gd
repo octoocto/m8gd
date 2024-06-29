@@ -12,6 +12,13 @@ extends M8Scene
 		%Camera3D.humanized_movement = value
 		humanized_camera_movement = value
 
+@export var model_screen_emission := 0.25:
+	set(value):
+		if %M8Model is DeviceModel:
+			var screen = %M8Model.get_node("%Screen")
+			screen.material_override.set_shader_parameter("emission_amount", value)
+		model_screen_emission = value
+
 @export var enable_directional_light := true:
 	set(value):
 		enable_directional_light = value
