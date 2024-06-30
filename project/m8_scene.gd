@@ -36,16 +36,27 @@ func initialize(p_main: M8SceneDisplay):
 
 	config_load_profile(DEFAULT_PROFILE)
 
+	var regex = RegEx.new()
+	regex.compile("^\\d+,\\d+$") # match "#,#" export_range patterns
+
 	# add menu items
 	var export_vars := get_export_vars()
 	for v in export_vars:
 		var property = v.name
 		if v.hint_string == "bool":
 			push_scene_var_bool(property)
+			continue
 		if v.hint_string == "Color":
 			push_scene_var_color(property)
+			continue
 		if v.hint_string == "float":
 			push_scene_var_slider(property)
+			continue
+
+		if regex.search(v.hint_string):
+			var range_min = int(v.hint_string.split(",")[0])
+			var range_max = int(v.hint_string.split(",")[1])
+			push_scene_var_int_slider(property, range_min, range_max)
 
 func clear_scene_vars():
 	var grid: GridContainer = main.menu.get_node("%ContainerSceneVars")
@@ -114,6 +125,37 @@ func push_scene_var_slider(property: String):
 		set(property, value)
 		config_update_property(DEFAULT_PROFILE, property)
 		value_label.text="%.2f" % value
+	)
+
+	grid.add_child(label)
+	grid.add_child(value_label)
+	grid.add_child(slider)
+
+func push_scene_var_int_slider(property: String, range_min: int, range_max: int) -> void:
+
+	var grid: GridContainer = main.menu.get_node("%ContainerSceneVars")
+
+	var label = Label.new()
+	var value_label := Label.new()
+	var slider := HSlider.new()
+
+	label.text = property.capitalize()
+	label.size_flags_horizontal = Control.SIZE_FILL + Control.SIZE_EXPAND
+
+	value_label.text = "%d" % get(property)
+	value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+
+	slider.custom_minimum_size.x = 80
+	slider.max_value = range_max
+	slider.min_value = range_min
+	slider.step = 1
+	slider.tick_count = range_max - range_min
+	slider.ticks_on_borders = true
+	slider.value = get(property)
+	slider.value_changed.connect(func(value: float):
+		set(property, value)
+		config_update_property(DEFAULT_PROFILE, property)
+		value_label.text="%d" % value
 	)
 
 	grid.add_child(label)
