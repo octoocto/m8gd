@@ -99,9 +99,9 @@ void fragment() {
 	col = clamp(col, 0.0, 1.0);
 
 	// yiq
-	col = rgb2yiq(col);
-	col = vec3(0.9, 1.1, 1.5) * col + vec3(0.1, -0.1, 0.0) * filter_intensity;
-	col = yiq2rgb(col);
+	//col = rgb2yiq(col);
+	//col = vec3(0.9, 1.1, 1.5) * col + vec3(0.1, -0.1, 0.0) * filter_intensity;
+	//col = yiq2rgb(col);
 
 	COLOR = vec4(col, 1.0);
 }

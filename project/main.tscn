@@ -48,7 +48,7 @@ noise = SubResource("FastNoiseLite_0dh6t")
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_i0wc8"]
 shader = ExtResource("2_34vyn")
 shader_parameter/vhs_resolution = Vector2(320, 240)
-shader_parameter/samples = 3
+shader_parameter/samples = 4
 shader_parameter/crease_noise = 1.0
 shader_parameter/crease_opacity = 0.5
 shader_parameter/filter_intensity = 0.0
@@ -65,7 +65,7 @@ shader_parameter/noise_texture = SubResource("NoiseTexture2D_8or2m")
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_j82o4"]
 shader = ExtResource("4_tq17m")
 shader_parameter/res = Vector2(640, 480)
-shader_parameter/mask_type = 0
+shader_parameter/mask_type = 1
 shader_parameter/bloom_type = 1
 shader_parameter/hardScan = -8.0
 shader_parameter/hardPix = -2.0
@@ -102,7 +102,7 @@ shader_parameter/scanlines_width = 0.0
 shader_parameter/grille_opacity = 0.0
 shader_parameter/resolution = Vector2(640, 480)
 shader_parameter/pixelate = false
-shader_parameter/roll = true
+shader_parameter/roll = false
 shader_parameter/roll_speed = 8.0
 shader_parameter/roll_size = 15.0
 shader_parameter/roll_variation = 1.8
