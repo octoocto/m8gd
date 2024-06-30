@@ -54,7 +54,13 @@ func _ready():
 
 	# resize viewport with window
 	DisplayServer.window_set_min_size(Vector2i(640, 480)) # 2x M8 screen size
-	get_tree().get_root().size_changed.connect(on_window_size_changed)
+	# get_tree().get_root().size_changed.connect(on_window_size_changed)
+	get_tree().physics_frame.connect(func():
+		if scene_viewport.size != DisplayServer.window_get_size():
+			scene_viewport.size=DisplayServer.window_get_size()
+			%VHSFilter2.material.set_shader_parameter("vhs_resolution", scene_viewport.size / 4)
+			%VHSFilter3.material.set_shader_parameter("res", scene_viewport.size / 2)
+	)
 
 	# initialize main menu
 	print("initializing menu controls...")
@@ -121,8 +127,8 @@ func _preload_scene(packed_scene: PackedScene) -> void:
 # Signal callbacks
 ################################################################################
 
-func on_window_size_changed() -> void:
-	scene_viewport.size = DisplayServer.window_get_size()
+# func on_window_size_changed() -> void:
+# 	scene_viewport.size = DisplayServer.window_get_size()
 
 # M8 client methods
 ################################################################################
