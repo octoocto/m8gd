@@ -46,6 +46,7 @@ signal m8_scene_changed
 
 ## true if audio device is in the middle of connecting
 var is_audio_connecting = false
+var audio_device_last: String = ""
 
 var last_peak := 0.0
 
@@ -189,11 +190,12 @@ func m8_audio_connect(device: String) -> void:
 	menu.set_status_audiodevice("Starting...")
 	await get_tree().create_timer(0.1).timeout
 
+	audio_device_last = device
 	audio_monitor.playing = true
 	m8_audio_connected = true
 	is_audio_connecting = false
 
-	print("monitoring audio with device %s" % device)
+	print("audio: connected to device %s" % device)
 	menu.set_status_audiodevice("Connected to: %s" % device)
 
 ## Automatically detect and monitor an M8 audio device.
@@ -213,15 +215,22 @@ func m8_audio_disconnect() -> void:
 	m8_audio_connected = false
 	AudioServer.input_device = "Default"
 	audio_monitor.playing = false
-	print("no longer monitoring audio")
+	print("audio: disconnected")
 	menu.set_status_audiodevice("Not connected (Disconnected)")
 
 ## Check if the M8 audio device still exists. If not, disconnect.
 func m8_audio_check() -> void:
-	for device in AudioServer.get_input_device_list():
-		if device.contains("M8"):
+	if is_audio_connecting: return
+
+	if is_instance_valid(audio_monitor):
+		if !AudioServer.input_device in AudioServer.get_input_device_list():
+			print("audio: device no longer found, disconnecting...")
+			m8_audio_disconnect()
 			return
-	m8_audio_disconnect()
+
+		if !audio_monitor.playing or audio_monitor.stream_paused:
+			print("audio: stream stopped, reconnecting...")
+			m8_audio_connect(audio_device_last)
 
 func on_m8_keystate_changed(keystate: int) -> void:
 	update_keystate(keystate, false)
