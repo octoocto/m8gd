@@ -104,9 +104,9 @@ void DisplayBuffer::draw_waveform(
         for (int i = 0; i < end - start; i++)
         {
             uint8_t ampl = points[i + start];
-            if (ampl > waveform_max)
-                ampl = waveform_max;
-            set_pixel(data, x + i + wf_offset, y + ampl - 2, r, g, b);
+            if (ampl > waveform_max - 1)
+                ampl = waveform_max - 1;
+            set_pixel(data, x + i + wf_offset, y + ampl, r, g, b);
         }
 
         last_wf_width = wf_width;
