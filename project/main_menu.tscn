@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://d13t756slc8b0"]
+[gd_scene load_steps=20 format=3 uid="uid://d13t756slc8b0"]
 
 [ext_resource type="Script" path="res://main_menu.gd" id="1_7xjs6"]
 
@@ -46,6 +46,8 @@ outline_size = 2
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dnh0l"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wlgng"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_sgnvi"]
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_v2m85"]
 color = Color(1, 1, 1, 0.25)
@@ -409,56 +411,59 @@ theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 
-[node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/TabContainer/Filters"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/TabContainer/Filters"]
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/TabContainer/Filters/VBoxContainer"]
 layout_mode = 2
 columns = 2
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Filters/GridContainer"]
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Filters/VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "VHS Smearing"
 
-[node name="CheckButtonFilter1" type="CheckButton" parent="MarginContainer/VBoxContainer/TabContainer/Filters/GridContainer"]
+[node name="CheckButtonFilter1" type="CheckButton" parent="MarginContainer/VBoxContainer/TabContainer/Filters/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label2" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Filters/GridContainer"]
+[node name="Label2" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Filters/VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "VHS Distortion & Tearing"
 
-[node name="CheckButtonFilter2" type="CheckButton" parent="MarginContainer/VBoxContainer/TabContainer/Filters/GridContainer"]
+[node name="CheckButtonFilter2" type="CheckButton" parent="MarginContainer/VBoxContainer/TabContainer/Filters/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label3" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Filters/GridContainer"]
+[node name="Label3" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Filters/VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "CRT Pixelization"
 
-[node name="CheckButtonFilter3" type="CheckButton" parent="MarginContainer/VBoxContainer/TabContainer/Filters/GridContainer"]
+[node name="CheckButtonFilter3" type="CheckButton" parent="MarginContainer/VBoxContainer/TabContainer/Filters/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label5" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Filters/GridContainer"]
+[node name="Label5" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Filters/VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Reverse Curvature Warping"
 
-[node name="CheckButtonFilter4" type="CheckButton" parent="MarginContainer/VBoxContainer/TabContainer/Filters/GridContainer"]
+[node name="CheckButtonFilter4" type="CheckButton" parent="MarginContainer/VBoxContainer/TabContainer/Filters/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label4" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Filters/GridContainer"]
+[node name="Label4" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Filters/VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "CRT Curvature Warping"
 
-[node name="CheckButtonFilter5" type="CheckButton" parent="MarginContainer/VBoxContainer/TabContainer/Filters/GridContainer"]
+[node name="CheckButtonFilter5" type="CheckButton" parent="MarginContainer/VBoxContainer/TabContainer/Filters/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -568,6 +573,111 @@ size_flags_horizontal = 3
 max_length = 10
 editable = false
 virtual_keyboard_type = 2
+
+[node name="HSeparator2" type="HSeparator" parent="MarginContainer/VBoxContainer/TabContainer/Audio/LeftMenu"]
+layout_mode = 2
+
+[node name="GridContainer3" type="GridContainer" parent="MarginContainer/VBoxContainer/TabContainer/Audio/LeftMenu"]
+layout_mode = 2
+columns = 3
+
+[node name="Label4" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Audio/LeftMenu/GridContainer3"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+text = "Audio Analyzer Min Freq"
+vertical_alignment = 1
+
+[node name="LabelAVCA2" type="VSeparator" parent="MarginContainer/VBoxContainer/TabContainer/Audio/LeftMenu/GridContainer3"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/separator = SubResource("StyleBoxEmpty_sgnvi")
+
+[node name="SpinBoxAVMinFreq" type="SpinBox" parent="MarginContainer/VBoxContainer/TabContainer/Audio/LeftMenu/GridContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+min_value = 100.0
+max_value = 20000.0
+step = 100.0
+value = 100.0
+
+[node name="Label5" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Audio/LeftMenu/GridContainer3"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+text = "Audio Analyzer Max Freq"
+vertical_alignment = 1
+
+[node name="LabelAVCA3" type="VSeparator" parent="MarginContainer/VBoxContainer/TabContainer/Audio/LeftMenu/GridContainer3"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/separator = SubResource("StyleBoxEmpty_sgnvi")
+
+[node name="SpinBoxAVMaxFreq" type="SpinBox" parent="MarginContainer/VBoxContainer/TabContainer/Audio/LeftMenu/GridContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+min_value = 100.0
+max_value = 20000.0
+step = 100.0
+value = 100.0
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Audio/LeftMenu/GridContainer3"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+text = "Audio to Brightness Amount*"
+vertical_alignment = 1
+
+[node name="LabelAVBrightness" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Audio/LeftMenu/GridContainer3"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "0.00"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="SliderAVBrightness" type="HSlider" parent="MarginContainer/VBoxContainer/TabContainer/Audio/LeftMenu/GridContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.1
+value = -1.0
+allow_lesser = true
+
+[node name="Label3" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Audio/LeftMenu/GridContainer3"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+text = "Audio to C. Abberation Amount*"
+vertical_alignment = 1
+
+[node name="LabelAVCA" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Audio/LeftMenu/GridContainer3"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "0.00"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="SliderAVCA" type="HSlider" parent="MarginContainer/VBoxContainer/TabContainer/Audio/LeftMenu/GridContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 0.1
+step = 0.01
+value = -1.0
+allow_lesser = true
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Audio/LeftMenu"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5, 0.5, 0.5, 1)
+text = "*only applies when the \"CRT Curvature Warping\" filter is enabled"
+autowrap_mode = 2
 
 [node name="Keybindings" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer"]
 visible = false

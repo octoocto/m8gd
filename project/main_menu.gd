@@ -241,6 +241,32 @@ func initialize(p_main: M8SceneDisplay) -> void:
 	)
 	%CheckButtonFilter5.button_pressed = config.crt_filter
 
+	%SpinBoxAVMinFreq.value_changed.connect(func(value):
+		main.visualizer_frequency_min=value
+		config.audio_analyzer_min_freq=value
+	)
+	%SpinBoxAVMinFreq.value = config.audio_analyzer_min_freq
+
+	%SpinBoxAVMaxFreq.value_changed.connect(func(value):
+		main.visualizer_frequency_max=value
+		config.audio_analyzer_max_freq=value
+	)
+	%SpinBoxAVMaxFreq.value = config.audio_analyzer_max_freq
+
+	%SliderAVBrightness.value_changed.connect(func(value):
+		main.visualizer_brightness_amount=value
+		%LabelAVBrightness.text="%d%%" % (value * 100.0)
+		config.audio_to_brightness=value
+	)
+	%SliderAVBrightness.value = config.audio_to_brightness
+
+	%SliderAVCA.value_changed.connect(func(value):
+		main.visualizer_ca_amount=value
+		%LabelAVCA.text="%d%%" % (value * 1000.0)
+		config.audio_to_ca=value
+	)
+	%SliderAVCA.value = config.audio_to_ca
+
 	# M8 Model Options
 	# --------------------------------------------------------------------
 	
