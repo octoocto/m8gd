@@ -13,9 +13,6 @@ const DEFAULT_PROFILE = "__main"
 # @export var color_fg2: Color
 # @export var color_bg: Color
 
-## Updated by Main scene
-var audio_peak := 0.0
-
 var spectrum_analyzer: AudioEffectSpectrumAnalyzerInstance
 
 var main: M8SceneDisplay

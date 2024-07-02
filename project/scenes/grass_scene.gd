@@ -64,20 +64,12 @@ extends M8Scene
 		%LightRight.light_color = value
 		%LightRight.light_energy = value.a * 16
 
-var time := 0.0
-var raw_time := 0.0
-
 func initialize(main_: M8SceneDisplay):
 	super(main_)
 
 	%M8Model.init(main)
 
 func _physics_process(delta):
-
-	time += delta + (audio_peak * 0.25)
-	raw_time += delta
-
-	%WorldEnvironment.environment.adjustment_brightness = 1.0 + audio_peak * 0.1
 
 	camera.update_humanized_movement(delta)
 

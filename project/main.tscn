@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://b265ke8cr3dgr"]
+[gd_scene load_steps=19 format=3 uid="uid://b265ke8cr3dgr"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_4g2n0"]
 [ext_resource type="Shader" path="res://shaders/post_process.gdshader" id="1_tjung"]
@@ -7,7 +7,6 @@
 [ext_resource type="Shader" path="res://shaders/vhs.gdshader" id="2_34vyn"]
 [ext_resource type="Shader" path="res://shaders/vhs2.gdshader" id="4_ioov3"]
 [ext_resource type="Shader" path="res://shaders/vhs3.gdshader" id="4_tq17m"]
-[ext_resource type="Script" path="res://spectrum_visualizer.gd" id="5_33ff2"]
 [ext_resource type="PackedScene" uid="uid://d13t756slc8b0" path="res://main_menu.tscn" id="7_k5oyo"]
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_l1801"]
@@ -126,7 +125,10 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = SubResource("Theme_gulif")
 script = ExtResource("1_4g2n0")
-visualizer_ca_amount = 0.01
+visualizer_ca_amount = 0.002
+visualizer_brightness_amount = 0.5
+visualizer_frequency_min = 800
+visualizer_frequency_max = 1000
 
 [node name="SceneViewportContainer" type="SubViewportContainer" parent="."]
 texture_filter = 1
@@ -221,31 +223,6 @@ grow_vertical = 2
 [node name="BackBufferCopy" type="BackBufferCopy" parent="CRTShader"]
 copy_mode = 2
 
-[node name="SubViewport" type="SubViewport" parent="."]
-transparent_bg = true
-size = Vector2i(256, 128)
-
-[node name="SpectrumVisual" type="Node2D" parent="SubViewport"]
-unique_name_in_owner = true
-visible = false
-position = Vector2(128, 64)
-scale = Vector2(8, 8)
-script = ExtResource("5_33ff2")
-spectrum_db_min = 50.0
-spectrum_freq_min = 10.0
-spectrum_width = 32.0
-spectrum_height = 16.0
-spectrum_smoothing = 0.6
-
-[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
-modulate = Color(1, 1, 1, 0)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
@@ -281,21 +258,81 @@ size_flags_vertical = 2
 [node name="LabelVersion" type="Label" parent="MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
 unique_name_in_owner = true
 layout_mode = 2
-offset_top = 31.0
+offset_top = 32.0
 offset_right = 622.0
-offset_bottom = 54.0
+offset_bottom = 55.0
 size_flags_vertical = 10
 vertical_alignment = 2
 
 [node name="LabelPort" type="Label" parent="MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
 unique_name_in_owner = true
 layout_mode = 2
-offset_top = 58.0
+offset_top = 64.0
 offset_right = 622.0
-offset_bottom = 81.0
+offset_bottom = 87.0
 size_flags_vertical = 10
 text = "*no device"
 vertical_alignment = 2
+
+[node name="LabelAudioPeak" type="Label" parent="MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
+unique_name_in_owner = true
+layout_mode = 2
+offset_top = 96.0
+offset_right = 622.0
+offset_bottom = 119.0
+size_flags_vertical = 10
+text = "0.0 dB"
+vertical_alignment = 2
+
+[node name="LabelAudioPeakAvg" type="Label" parent="MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
+unique_name_in_owner = true
+modulate = Color(0.75, 0.75, 1, 1)
+layout_mode = 2
+offset_top = 112.0
+offset_right = 622.0
+offset_bottom = 135.0
+size_flags_vertical = 10
+text = "0.0 dB"
+vertical_alignment = 2
+
+[node name="LabelAudioPeakMax" type="Label" parent="MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
+unique_name_in_owner = true
+modulate = Color(1, 0.75, 0.75, 1)
+layout_mode = 2
+offset_top = 128.0
+offset_right = 622.0
+offset_bottom = 151.0
+size_flags_vertical = 10
+text = "0.0 dB"
+vertical_alignment = 2
+
+[node name="LabelAudioLevel" type="Label" parent="MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
+unique_name_in_owner = true
+modulate = Color(0.75, 1, 0.75, 1)
+layout_mode = 2
+offset_top = 152.0
+offset_right = 622.0
+offset_bottom = 175.0
+size_flags_vertical = 10
+text = "0.0 dB"
+vertical_alignment = 2
+
+[node name="RectAudioLevel" type="ColorRect" parent="MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 88.0
+offset_top = 156.0
+offset_right = 96.0
+offset_bottom = 172.0
+color = Color(0.5, 1, 0.5, 1)
+
+[node name="RectAudioLevelAvg" type="ColorRect" parent="MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 88.0
+offset_top = 156.0
+offset_right = 96.0
+offset_bottom = 172.0
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/GridContainer"]
 layout_mode = 2
@@ -320,9 +357,3 @@ size_flags_vertical = 3
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
-
-[node name="TextureRect" type="TextureRect" parent="."]
-unique_name_in_owner = true
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0

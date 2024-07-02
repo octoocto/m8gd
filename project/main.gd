@@ -27,6 +27,8 @@ signal m8_scene_changed
 @export var visualizer_ca_amount = 1.0
 @export var visualizer_glow_amount = 0.5
 @export var visualizer_brightness_amount = 0.1
+@export var visualizer_frequency_min := 0
+@export var visualizer_frequency_max := 400
 
 @onready var audio_monitor: AudioStreamPlayer
 
@@ -48,12 +50,18 @@ signal m8_scene_changed
 var is_audio_connecting = false
 var audio_device_last: String = ""
 
+var audio_peak := 0.0 # audio peak (in dB)
+var audio_level_raw := 0.0 # audio peak (in linear from 0.0 to 1.0)
+var audio_level := 0.0 # audio peak (in linear from 0.0 to 1.0)
 var last_peak := 0.0
+var last_peak_max := 0.0
+var last_audio_level := 0.0
 
 func _ready():
 
 	# resize viewport with window
 	DisplayServer.window_set_min_size(Vector2i(640, 480)) # 2x M8 screen size
+
 	# get_tree().get_root().size_changed.connect(on_window_size_changed)
 	get_tree().physics_frame.connect(func():
 		if scene_viewport.size != DisplayServer.window_get_size():
@@ -175,6 +183,7 @@ func m8_audio_connect(device: String) -> void:
 
 	if is_audio_connecting: return
 	is_audio_connecting = true
+	AudioServer.set_bus_mute(0, true)
 
 	if audio_monitor and is_instance_valid(audio_monitor):
 		audio_monitor.stream = null
@@ -200,6 +209,7 @@ func m8_audio_connect(device: String) -> void:
 	audio_monitor.playing = true
 	m8_audio_connected = true
 	is_audio_connecting = false
+	AudioServer.set_bus_mute(0, false)
 
 	print("audio: connected to device %s" % device)
 	menu.set_status_audiodevice("Connected to: %s" % device)
@@ -278,22 +288,57 @@ func on_m8_device_disconnect() -> void:
 	print_blink("disconnected")
 	menu.set_status_serialport("Not connected (Disconnected)")
 
+func audio_get_level() -> float:
+	return audio_level
+
+func audio_get_spectrum_analyzer() -> AudioEffectSpectrumAnalyzerInstance:
+	return AudioServer.get_bus_effect_instance(1, 0)
+
+func audio_fft(from_hz: float, to_hz: float) -> float:
+	var magnitude := audio_get_spectrum_analyzer().get_magnitude_for_frequency_range(
+		from_hz,
+		to_hz,
+		AudioEffectSpectrumAnalyzerInstance.MAGNITUDE_AVERAGE
+	)
+	return (magnitude.x + magnitude.y) / 2.0
+
 func _physics_process(delta: float) -> void:
 
 	# calculate peaks for visualizations
 
-	var peak = db_to_linear((AudioServer.get_bus_peak_volume_left_db(1, 0) + AudioServer.get_bus_peak_volume_right_db(1, 0)) / 2.0)
-	var avg_peak = (peak + last_peak) / 2.0
-	last_peak = avg_peak
+	# var audio_peak_raw = linear_to_db(audio_fft(1000, 2000) * 100.0)
+	var audio_peak_raw = audio_fft(visualizer_frequency_min, visualizer_frequency_max)
+	if is_nan(audio_peak_raw) or is_inf(audio_peak_raw):
+		audio_peak_raw = 0.0
+
+	# calculate ranges for audio level
+	# var audio_peak_raw = (AudioServer.get_bus_peak_volume_left_db(1, 0) + AudioServer.get_bus_peak_volume_right_db(1, 0)) / 2.0
+	audio_peak = max(audio_peak_raw, lerp(audio_peak_raw, last_peak, 0.95))
+	var audio_peak_max = max(audio_peak_raw, lerp(audio_peak_raw, last_peak_max, 0.995))
+	last_peak = audio_peak
+	last_peak_max = audio_peak_max
+
+	# convert range from (audio_peak_raw, audio_peak_max) to (0, 1) and apply smoothing
+	# audio_level = pow(clamp(db_to_linear(audio_peak), 0.0, 1.0), 2)
+	audio_level_raw = clamp((audio_peak - audio_peak_raw) / (audio_peak_max - audio_peak_raw), 0.0, 1.0)
+	if is_nan(audio_level_raw):
+		audio_level_raw = 0.0
+	audio_level = max(audio_level_raw, lerp(audio_level_raw, last_audio_level, 0.90))
+	last_audio_level = audio_level
+
+	%LabelAudioPeak.text = "%06f" % audio_peak_raw
+	%LabelAudioPeakAvg.text = "%06f" % audio_peak
+	%LabelAudioPeakMax.text = "%06f" % audio_peak_max
+	%LabelAudioLevel.text = "%06f" % audio_level
+
+	%RectAudioLevel.size.x = (audio_level_raw) * 200
+	%RectAudioLevelAvg.position.x = (audio_level) * 200.0 + 88.0
 	
 	# do shader parameter responses to audio
 
 	var material_crt_filter: ShaderMaterial = $CRTShader.material
-	material_crt_filter.set_shader_parameter("aberration", avg_peak * visualizer_ca_amount)
-	# if scene is CRT_Scene:
-	#     scene.crt_glow_amount = 1.0 + (avg_peak * visualizer_glow_amount)
-	#     scene.brightness = 1.0 + (avg_peak * visualizer_brightness_amount)
-	current_scene.audio_peak = avg_peak
+	material_crt_filter.set_shader_parameter("aberration", audio_level * visualizer_ca_amount)
+	material_crt_filter.set_shader_parameter("brightness", 1.0 + (audio_level * visualizer_brightness_amount))
 
 	# fade out status message
 
