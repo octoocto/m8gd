@@ -19,16 +19,36 @@ extends M8Scene
 			screen.material_override.set_shader_parameter("emission_amount", value)
 		model_screen_emission = value
 
-@export var enable_display_background := true:
-	set(value):
-		%DisplayMesh.visible = value
-		enable_display_background = value
-
 @export var enable_depth_of_field := true:
 	set(value):
 		%Camera3D.attributes.dof_blur_far_enabled = value
 		%Camera3D.attributes.dof_blur_near_enabled = value
 		enable_depth_of_field = value
+
+@export var enable_display_background := true:
+	set(value):
+		%DisplayMesh.visible = value
+		enable_display_background = value
+
+@export var enable_audio_spectrum := false:
+	set(value):
+		%SpriteAudioSpectrum.visible = value
+		enable_audio_spectrum = value
+
+@export var audio_spectrum_color := Color.WHITE:
+	set(value):
+		%SpriteAudioSpectrum.modulate = value
+		audio_spectrum_color = value
+
+@export_range(-1, 8) var audio_spectrum_width: int = 1:
+	set(value):
+		%AudioSpectrum.line_width = value
+		audio_spectrum_width = value
+
+@export var audio_spectrum_interlace := true:
+	set(value):
+		%AudioSpectrum.interlace = value
+		audio_spectrum_interlace = value
 
 @export var solid_background_color := Color.BLACK:
 	set(value):

@@ -3,6 +3,9 @@ extends Node2D
 enum Type {BAR, CIRCLE}
 
 @export var type: Type = Type.BAR
+@export var interlace: bool = true
+@export var mirror: bool = true
+@export var line_width: int = 1
 
 @export var spectrum_res: int = 32
 @export var spectrum_db_min: float = 60.0
@@ -50,7 +53,11 @@ func _draw():
 		last_peaks[i] = height_avg
 
 		if type == Type.BAR:
-			var pos := Vector2(i * bar_width, height_avg * (1 - 2 * (i % 2)))
+			var pos: Vector2
+			if interlace:
+				pos = Vector2(i * bar_width, height_avg * (1 - 2 * (i % 2)))
+			else:
+				pos = Vector2(i * bar_width, height_avg)
 			polygon_points.append(pos)
 			# var rect := Rect2(pos.x, pos.y, bar_width, 1.0)
 			# draw_rect(rect, Color.WHITE)
@@ -61,13 +68,15 @@ func _draw():
 	if type == Type.BAR:
 		# polygon_points.push_front(Vector2(0, -0.01))
 		# polygon_points[0].y = 0
-		polygon_points[- 1].y = 0
-		var mirrored_points = polygon_points.map(func(vec: Vector2): return vec.reflect(Vector2.UP))
-		polygon_points.reverse()
-		# mirrored_points.pop_back()
-		# mirrored_points.pop_front()
-		polygon_points.append_array(mirrored_points)
-		draw_polyline(polygon_points, Color.WHITE, 1.0, false)
+		if mirror:
+			# polygon_points[- 1].y = 0
+			var mirrored_points = polygon_points.map(func(vec: Vector2): return vec.reflect(Vector2.UP))
+			polygon_points.reverse()
+			polygon_points.append_array(mirrored_points)
+		# for point in polygon_points:
+		# 	draw_line(point, point + Vector2.UP * 2, Color.WHITE, 4)
+		draw_polyline(polygon_points, Color.WHITE, line_width, false)
+		# draw_multiline(polygon_points, Color.WHITE)
 		# draw_colored_polygon(polygon_points, Color.WHITE)
 		# draw_colored_polygon(mirrored_points, Color.WHITE)
 		# draw_colored_polygon(polygon_points.map(func(vec): return vec.reflect(Vector2.RIGHT)), Color.WHITE)

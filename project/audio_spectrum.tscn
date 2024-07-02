@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://263mog4cxgwr"]
+
+[ext_resource type="Script" path="res://audio_spectrum.gd" id="1_1v02u"]
+
+[node name="AudioSpectrum" type="Node2D"]
+scale = Vector2(1, -1)
+script = ExtResource("1_1v02u")
+spectrum_res = 243
+spectrum_freq_min = 600.0
+spectrum_width = 320.0
+spectrum_height = 240.0
+spectrum_smoothing = 0.25
