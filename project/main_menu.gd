@@ -62,10 +62,10 @@ func initialize(p_main: M8SceneDisplay) -> void:
 	# volume
 
 	slider_volume.value_changed.connect(func(value: float):
-		var volume_db=- 60.0 * (1 - value) - 20.0
+		var volume_db=linear_to_db(pow(value, 2))
 		print("volume = %f" % volume_db)
 		AudioServer.set_bus_volume_db(0, volume_db)
-		%LabelVolume.text="%d%%" % round(slider_volume.value / slider_volume.max_value * 100)
+		%LabelVolume.text="%d%% (%05.2f dB)" % [round(slider_volume.value / slider_volume.max_value * 100), volume_db]
 		config.volume=value
 	)
 	slider_volume.value = config.volume
