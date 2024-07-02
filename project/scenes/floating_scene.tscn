@@ -37,7 +37,7 @@ shader_parameter/distort_offset = Vector2(0, 0)
 shader_parameter/brightness = 0.001
 shader_parameter/tex = SubResource("ViewportTexture_t2dqp")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0qfuh"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l3758"]
 resource_local_to_scene = true
 albedo_color = Color(0.1, 0.1, 0.1, 1)
 metallic = 0.6
@@ -189,7 +189,7 @@ spot_angle = 36.8368
 unique_name_in_owner = true
 transform = Transform3D(38.83, 0, 0, 0, 6.74276, -38.24, 0, 38.2401, 6.74275, 0, 0, 0)
 screen_material = SubResource("ShaderMaterial_w3y4l")
-keycap_material = SubResource("StandardMaterial3D_0qfuh")
+keycap_material = SubResource("StandardMaterial3D_l3758")
 
 [node name="CameraArm" type="Node3D" parent="."]
 unique_name_in_owner = true
@@ -198,7 +198,6 @@ unique_name_in_owner = true
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 14)
 attributes = SubResource("CameraAttributesPractical_cep2e")
-dof_zoomout = 30.0
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="."]
 visible = false
@@ -216,7 +215,7 @@ mesh = SubResource("PlaneMesh_rbhh0")
 
 [node name="SpriteAudioSpectrum" type="Sprite3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, -4)
+transform = Transform3D(1.25, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, -4)
 pixel_size = 0.035
 texture_filter = 0
 texture = SubResource("ViewportTexture_fk07f")
