@@ -6,6 +6,7 @@ var version = 0
 
 # scene settings
 @export var scene_parameters := {} # Dictionary[String, Dictionary]
+@export var last_scene_path: String # path to last scene opened
 
 # video settings
 @export var fullscreen := false

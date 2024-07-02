@@ -75,13 +75,16 @@ func _ready():
 	menu.initialize(self)
 
 	# initialize main scene
-	_preload_scene(MAIN_SCENE)
+	if not load_scene(config.last_scene_path):
+		_preload_scene(MAIN_SCENE)
 
 func _notification(what):
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		quit()
 
 func quit():
+	if is_instance_valid(current_scene):
+		config.last_scene_path = current_scene.scene_file_path
 	config.save()
 	get_tree().quit()
 
@@ -100,13 +103,17 @@ func reload_scene() -> void:
 		load_scene(current_scene.scene_file_path)
 
 ## Load a scene from a filepath.
-func load_scene(scene_path) -> void:
+func load_scene(scene_path) -> bool:
 	# load packed scene from file
 	print("loading new scene from %s..." % scene_path)
 	var packed_scene = load(scene_path.trim_suffix(".remap"))
-	assert(packed_scene != null and packed_scene is PackedScene)
+
+	if packed_scene == null or !packed_scene is PackedScene:
+		return false
 
 	_preload_scene(packed_scene)
+
+	return true
 
 func _preload_scene(packed_scene: PackedScene) -> void:
 
