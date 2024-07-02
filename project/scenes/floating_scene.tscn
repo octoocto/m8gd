@@ -1,8 +1,9 @@
-[gd_scene load_steps=22 format=3 uid="uid://da23gfk2abg5f"]
+[gd_scene load_steps=24 format=3 uid="uid://da23gfk2abg5f"]
 
 [ext_resource type="Script" path="res://scenes/floating_scene.gd" id="1_ufbfg"]
 [ext_resource type="PackedScene" uid="uid://bckroenwlecqv" path="res://humanized_camera_3d.tscn" id="4_8iar1"]
 [ext_resource type="PackedScene" uid="uid://budu6000msy4d" path="res://device_model.tscn" id="4_oaihv"]
+[ext_resource type="PackedScene" uid="uid://263mog4cxgwr" path="res://audio_spectrum.tscn" id="5_ryr46"]
 [ext_resource type="Shader" path="res://shaders/crt_screen.gdshader" id="5_t84je"]
 
 [sub_resource type="Environment" id="Environment_dmk2d"]
@@ -36,7 +37,7 @@ shader_parameter/distort_offset = Vector2(0, 0)
 shader_parameter/brightness = 0.001
 shader_parameter/tex = SubResource("ViewportTexture_t2dqp")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mrxas"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0qfuh"]
 resource_local_to_scene = true
 albedo_color = Color(0.1, 0.1, 0.1, 1)
 metallic = 0.6
@@ -126,6 +127,9 @@ size = Vector2(48, 36)
 subdivide_width = 24
 subdivide_depth = 18
 
+[sub_resource type="ViewportTexture" id="ViewportTexture_fk07f"]
+viewport_path = NodePath("SubViewport")
+
 [node name="M8Scene" type="Node3D"]
 script = ExtResource("1_ufbfg")
 metadata/_edit_vertical_guides_ = [640.0]
@@ -185,7 +189,7 @@ spot_angle = 36.8368
 unique_name_in_owner = true
 transform = Transform3D(38.83, 0, 0, 0, 6.74276, -38.24, 0, 38.2401, 6.74275, 0, 0, 0)
 screen_material = SubResource("ShaderMaterial_w3y4l")
-keycap_material = SubResource("StandardMaterial3D_mrxas")
+keycap_material = SubResource("StandardMaterial3D_0qfuh")
 
 [node name="CameraArm" type="Node3D" parent="."]
 unique_name_in_owner = true
@@ -194,6 +198,7 @@ unique_name_in_owner = true
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 14)
 attributes = SubResource("CameraAttributesPractical_cep2e")
+dof_zoomout = 30.0
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="."]
 visible = false
@@ -208,3 +213,20 @@ unique_name_in_owner = true
 transform = Transform3D(0.745, 0, 0, 0, -3.2565e-08, -0.745, 0, 0.745, -3.2565e-08, 0, 0, -20)
 material_override = SubResource("ShaderMaterial_nx6w6")
 mesh = SubResource("PlaneMesh_rbhh0")
+
+[node name="SpriteAudioSpectrum" type="Sprite3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, -4)
+pixel_size = 0.035
+texture_filter = 0
+texture = SubResource("ViewportTexture_fk07f")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+disable_3d = true
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(640, 480)
+
+[node name="AudioSpectrum" parent="SubViewport" instance=ExtResource("5_ryr46")]
+unique_name_in_owner = true
+position = Vector2(320, 240)
