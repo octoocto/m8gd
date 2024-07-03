@@ -34,8 +34,10 @@ func _ready():
 	last_peaks.fill(0.0)
 	spectrum_analyzer = AudioServer.get_bus_effect_instance(1, 0)
 
-func _physics_process(delta):
-	queue_redraw()
+func _process(_delta):
+	if visible:
+		print("drawing spectrum")
+		queue_redraw()
 
 func _draw():
 	var bar_width := spectrum_width / spectrum_res

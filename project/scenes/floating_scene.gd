@@ -33,6 +33,7 @@ extends M8Scene
 @export var enable_audio_spectrum := false:
 	set(value):
 		%SpriteAudioSpectrum.visible = value
+		%AudioSpectrum.visible = value
 		enable_audio_spectrum = value
 
 @export var audio_spectrum_color := Color.WHITE:
