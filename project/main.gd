@@ -51,6 +51,7 @@ var is_audio_connecting = false
 var audio_device_last: String = ""
 
 var audio_peak := 0.0 # audio peak (in dB)
+var audio_peak_max := 0.0
 var audio_level_raw := 0.0 # audio peak (in linear from 0.0 to 1.0)
 var audio_level := 0.0 # audio peak (in linear from 0.0 to 1.0)
 var last_peak := 0.0
@@ -320,8 +321,14 @@ func _physics_process(delta: float) -> void:
 
 	# calculate ranges for audio level
 	# var audio_peak_raw = (AudioServer.get_bus_peak_volume_left_db(1, 0) + AudioServer.get_bus_peak_volume_right_db(1, 0)) / 2.0
-	audio_peak = max(audio_peak_raw, lerp(audio_peak_raw, last_peak, 0.95))
-	var audio_peak_max = max(audio_peak_raw, lerp(audio_peak_raw, last_peak_max, 0.995))
+	audio_peak = max(audio_peak_raw, lerp(audio_peak_raw, last_peak, 0.70))
+
+	# if audio_peak_max_timer.time_left == 0.0:
+	audio_peak_max = lerp(audio_peak_raw, last_peak_max, 0.90)
+
+	if audio_peak_max < audio_peak_raw:
+		audio_peak_max = audio_peak_raw
+
 	last_peak = audio_peak
 	last_peak_max = audio_peak_max
 
@@ -330,7 +337,7 @@ func _physics_process(delta: float) -> void:
 	audio_level_raw = clamp((audio_peak - audio_peak_raw) / (audio_peak_max - audio_peak_raw), 0.0, 1.0)
 	if is_nan(audio_level_raw):
 		audio_level_raw = 0.0
-	audio_level = max(audio_level_raw, lerp(audio_level_raw, last_audio_level, 0.90))
+	audio_level = max(audio_level_raw, lerp(audio_level_raw, last_audio_level, 0.95))
 	last_audio_level = audio_level
 
 	%LabelAudioPeak.text = "%06f" % audio_peak_raw

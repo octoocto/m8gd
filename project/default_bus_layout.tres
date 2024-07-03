@@ -2,7 +2,7 @@
 
 [sub_resource type="AudioEffectSpectrumAnalyzer" id="AudioEffectSpectrumAnalyzer_e5840"]
 resource_name = "SpectrumAnalyzer"
-buffer_length = 0.5
+buffer_length = 0.1
 
 [resource]
 bus/1/name = &"Analyzer"
