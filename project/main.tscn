@@ -126,6 +126,7 @@ grow_vertical = 2
 theme = SubResource("Theme_gulif")
 script = ExtResource("1_4g2n0")
 visualizer_ca_amount = 0.002
+visualizer_glow_amount = null
 visualizer_brightness_amount = 0.5
 visualizer_frequency_min = 800
 visualizer_frequency_max = 1000
