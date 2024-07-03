@@ -7,9 +7,9 @@ class_name DeviceModel extends StaticBody3D
 @export var screen_material: ShaderMaterial
 @export var keycap_material: Material
 # @export var outline_color: Color:
-#     set(value):
-#         outline_color = value
-#         %BodyOutline.material_override.albedo_color = value
+#	 set(value):
+#		 outline_color = value
+#		 %BodyOutline.material_override.albedo_color = value
 
 @export var key_up := false
 @export var key_down := false

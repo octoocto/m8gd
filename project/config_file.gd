@@ -42,18 +42,18 @@ var version = 0
 @export var action_events := {} # Dictionary[String, Array]
 
 func save():
-    var error = ResourceSaver.save(self, CONFIG_FILE_PATH, )
-    if error == OK:
-        print("config saved")
-    else:
-        printerr("failed to save config: %s" % error_string(error))
+	var error = ResourceSaver.save(self, CONFIG_FILE_PATH, )
+	if error == OK:
+		print("config saved")
+	else:
+		printerr("failed to save config: %s" % error_string(error))
 
 static func load() -> M8Config:
-    if FileAccess.file_exists(CONFIG_FILE_PATH):
-        var config = ResourceLoader.load(CONFIG_FILE_PATH)
-        assert(config is M8Config)
-        print("using config loaded from file")
-        return config
-    else:
-        print("using default config")
-        return M8Config.new()
+	if FileAccess.file_exists(CONFIG_FILE_PATH):
+		var config = ResourceLoader.load(CONFIG_FILE_PATH)
+		assert(config is M8Config)
+		print("using config loaded from file")
+		return config
+	else:
+		print("using default config")
+		return M8Config.new()

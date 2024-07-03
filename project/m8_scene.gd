@@ -218,17 +218,17 @@ func _fft(from_hz: float, to_hz: float) -> float:
 	return clamp(magnitude, 0, 1)
 
 # func update_m8_color_samples():
-#     if main.m8_display_viewport != null:
-#         var image = receiver_texture.get_image()
-#         if image != null:
-#             color_fg2 = image.get_pixelv(COLOR_SAMPLE_POINT_3)
-#             color_fg = image.get_pixelv(COLOR_SAMPLE_POINT_2)
-#             color_bg = image.get_pixelv(COLOR_SAMPLE_POINT_1)
+#	 if main.m8_display_viewport != null:
+#		 var image = receiver_texture.get_image()
+#		 if image != null:
+#			 color_fg2 = image.get_pixelv(COLOR_SAMPLE_POINT_3)
+#			 color_fg = image.get_pixelv(COLOR_SAMPLE_POINT_2)
+#			 color_bg = image.get_pixelv(COLOR_SAMPLE_POINT_1)
 
 # func _physics_process(_delta):
-#     if receiver_texture != null:
-#         var image = receiver_texture.get_image()
-#         if image != null:
-#             color_fg2 = image.get_pixelv(COLOR_SAMPLE_POINT_3)
-#             color_fg = image.get_pixelv(COLOR_SAMPLE_POINT_2)
-#             color_bg = image.get_pixelv(COLOR_SAMPLE_POINT_1)
+#	 if receiver_texture != null:
+#		 var image = receiver_texture.get_image()
+#		 if image != null:
+#			 color_fg2 = image.get_pixelv(COLOR_SAMPLE_POINT_3)
+#			 color_fg = image.get_pixelv(COLOR_SAMPLE_POINT_2)
+#			 color_bg = image.get_pixelv(COLOR_SAMPLE_POINT_1)
