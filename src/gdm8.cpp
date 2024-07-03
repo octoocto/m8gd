@@ -38,7 +38,7 @@ void M8GD::_bind_methods()
 	ClassDB::bind_method(D_METHOD("connect", "preferred_device"), &M8GD::connect);
 
 	ADD_SIGNAL(MethodInfo("system_info", PropertyInfo(Variant::STRING, "hardware"), PropertyInfo(Variant::STRING, "firmware")));
-	ADD_SIGNAL(MethodInfo("font_changed", PropertyInfo(Variant::STRING, "bigfont")));
+	ADD_SIGNAL(MethodInfo("font_changed", PropertyInfo(Variant::INT, "model"), PropertyInfo(Variant::STRING, "font")));
 	ADD_SIGNAL(MethodInfo("keystate_changed", PropertyInfo(Variant::INT, "keystate")));
 	ADD_SIGNAL(MethodInfo("device_disconnected"));
 }
