@@ -56,6 +56,18 @@ namespace libm8
 	const FontParameters FONT_02_BOLD = {0, -2, 4, 38};
 	const FontParameters FONT_02_HUGE = {0, -54, 4, 24};
 
+	enum Keys
+	{
+		KEY_UP = 1 << 6,
+		KEY_DOWN = 1 << 5,
+		KEY_LEFT = 1 << 7,
+		KEY_RIGHT = 1 << 2,
+		KEY_SHIFT = 1 << 4,
+		KEY_PLAY = 1 << 3,
+		KEY_OPTION = 1 << 1,
+		KEY_EDIT = 1 << 0
+	};
+
 	enum CommandRX
 	{
 		DRAW_RECT = 0xFE,
