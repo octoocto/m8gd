@@ -21,7 +21,7 @@ const M8_ACTIONS := [
 	"key_up", "key_down", "key_left", "key_right",
 	"key_shift", "key_play", "key_option", "key_edit"]
 
-signal m8_key_changed
+signal m8_key_changed(key: String, pressed: bool)
 signal m8_scene_changed
 
 @export var visualizer_ca_amount = 1.0
@@ -74,6 +74,9 @@ func _ready():
 	# initialize main menu
 	print("initializing menu controls...")
 	menu.initialize(self)
+
+	# initialize key overlay
+	%KeyOverlay.init(self)
 
 	# initialize main scene
 	if not load_scene(config.last_scene_path):
@@ -309,6 +312,9 @@ func audio_fft(from_hz: float, to_hz: float) -> float:
 		AudioEffectSpectrumAnalyzerInstance.MAGNITUDE_AVERAGE
 	)
 	return (magnitude.x + magnitude.y) / 2.0
+
+func m8_is_key_pressed(bit: int):
+	return m8_keystate&bit
 
 func _physics_process(delta: float) -> void:
 

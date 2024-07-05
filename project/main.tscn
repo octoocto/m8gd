@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://b265ke8cr3dgr"]
+[gd_scene load_steps=20 format=3 uid="uid://b265ke8cr3dgr"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_4g2n0"]
 [ext_resource type="Shader" path="res://shaders/post_process.gdshader" id="1_tjung"]
@@ -8,6 +8,7 @@
 [ext_resource type="Shader" path="res://shaders/vhs2.gdshader" id="4_ioov3"]
 [ext_resource type="Shader" path="res://shaders/vhs3.gdshader" id="4_tq17m"]
 [ext_resource type="PackedScene" uid="uid://d13t756slc8b0" path="res://main_menu.tscn" id="7_k5oyo"]
+[ext_resource type="PackedScene" uid="uid://ca2jqh2tc7jix" path="res://key_overlay.tscn" id="8_dnyct"]
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_l1801"]
 color = Color(1, 1, 1, 0.2)
@@ -126,7 +127,6 @@ grow_vertical = 2
 theme = SubResource("Theme_gulif")
 script = ExtResource("1_4g2n0")
 visualizer_ca_amount = 0.002
-visualizer_glow_amount = null
 visualizer_brightness_amount = 0.5
 visualizer_frequency_min = 800
 visualizer_frequency_max = 1000
@@ -152,6 +152,19 @@ texture_filter = 1
 offset_right = 1280.0
 offset_bottom = 960.0
 texture = ExtResource("2_3rehb")
+
+[node name="KeyOverlay" parent="." instance=ExtResource("8_dnyct")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+offset_left = 964.0
+offset_top = 944.0
+offset_right = 1264.0
+offset_bottom = 944.0
+grow_horizontal = 0
+grow_vertical = 0
+size_flags_horizontal = 8
+size_flags_vertical = 10
 
 [node name="VHSFilter1" type="ColorRect" parent="."]
 unique_name_in_owner = true
