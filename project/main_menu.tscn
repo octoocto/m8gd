@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://d13t756slc8b0"]
+[gd_scene load_steps=23 format=3 uid="uid://d13t756slc8b0"]
 
 [ext_resource type="Script" path="res://main_menu.gd" id="1_7xjs6"]
 
@@ -36,6 +36,12 @@ anti_aliasing = false
 
 [sub_resource type="LabelSettings" id="LabelSettings_cher2"]
 outline_size = 2
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_06k14"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bruag"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0w5ic"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4w3sk"]
 
@@ -113,7 +119,6 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.0
-tab_alignment = 1
 
 [node name="Scene" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer"]
 layout_mode = 2
@@ -195,6 +200,244 @@ edit_alpha = false
 [node name="HSeparator3" type="HSeparator" parent="MarginContainer/VBoxContainer/TabContainer/Scene/LeftMenu"]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_l2hi4")
+
+[node name="Model" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="LeftMenu" type="VBoxContainer" parent="MarginContainer/VBoxContainer/TabContainer/Model"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu"]
+layout_mode = 2
+text = "(Only applies to scenes with an M8 model in it.)"
+
+[node name="HSeparator2" type="HSeparator" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_06k14")
+
+[node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu"]
+layout_mode = 2
+columns = 2
+
+[node name="Label2" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Key Highlight Colors"
+
+[node name="Label3" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Key Highlight Settings"
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu/GridContainer"]
+layout_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu/GridContainer"]
+layout_mode = 2
+
+[node name="HSeparator3" type="HSeparator" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu/GridContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_constants/separation = 152
+theme_override_styles/separator = SubResource("StyleBoxEmpty_bruag")
+
+[node name="GridContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu/GridContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu/GridContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Highlight Color Opacity"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu/GridContainer/GridContainer"]
+layout_mode = 2
+
+[node name="LabelHL_Opacity" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu/GridContainer/GridContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+text = "1.00"
+horizontal_alignment = 2
+
+[node name="SliderHL_Opacity" type="HSlider" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu/GridContainer/GridContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.01
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu/GridContainer/GridContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu/GridContainer/GridContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+text = "Apply Screen Filters"
+horizontal_alignment = 2
+
+[node name="CheckButtonHL_Filters" type="CheckButton" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu/GridContainer/GridContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu"]
+layout_mode = 2
+text = "Key Overlay Settings"
+
+[node name="HSeparator4" type="HSeparator" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu"]
+layout_mode = 2
+
+[node name="GridContainer2" type="GridContainer" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu"]
+layout_mode = 2
+columns = 3
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu/GridContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Key Overlay Enabled"
+
+[node name="VSeparator" type="VSeparator" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu/GridContainer2"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_0w5ic")
+
+[node name="CheckButtonKeyOverlayEnable" type="CheckButton" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu/GridContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label2" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu/GridContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Style"
+
+[node name="LabelKeyOverlayStyle" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu/GridContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Boxed"
+horizontal_alignment = 2
+
+[node name="SliderKeyOverlayStyle" type="HSlider" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu/GridContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 1.0
+tick_count = 2
+
+[node name="Control" type="Control" parent="MarginContainer/VBoxContainer/TabContainer/Model"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+mouse_filter = 1
+
+[node name="ColorPickerHL_Up" type="ColorPickerButton" parent="MarginContainer/VBoxContainer/TabContainer/Model/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 60.0
+offset_top = 95.0
+offset_right = 92.0
+offset_bottom = 127.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(1, 1, 1, 1)
+edit_alpha = false
+
+[node name="ColorPickerHL_Down" type="ColorPickerButton" parent="MarginContainer/VBoxContainer/TabContainer/Model/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 60.0
+offset_top = 127.0
+offset_right = 92.0
+offset_bottom = 159.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(1, 1, 1, 1)
+edit_alpha = false
+
+[node name="ColorPickerHL_Left" type="ColorPickerButton" parent="MarginContainer/VBoxContainer/TabContainer/Model/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 28.0
+offset_top = 127.0
+offset_right = 60.0
+offset_bottom = 159.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(1, 1, 1, 1)
+edit_alpha = false
+
+[node name="ColorPickerHL_Right" type="ColorPickerButton" parent="MarginContainer/VBoxContainer/TabContainer/Model/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 92.0
+offset_top = 127.0
+offset_right = 124.0
+offset_bottom = 159.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(1, 1, 1, 1)
+edit_alpha = false
+
+[node name="ColorPickerHL_Shift" type="ColorPickerButton" parent="MarginContainer/VBoxContainer/TabContainer/Model/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 60.0
+offset_top = 167.0
+offset_right = 92.0
+offset_bottom = 199.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(1, 1, 1, 1)
+edit_alpha = false
+
+[node name="ColorPickerHL_Play" type="ColorPickerButton" parent="MarginContainer/VBoxContainer/TabContainer/Model/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 92.0
+offset_top = 167.0
+offset_right = 124.0
+offset_bottom = 199.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(1, 1, 1, 1)
+edit_alpha = false
+
+[node name="ColorPickerHL_Option" type="ColorPickerButton" parent="MarginContainer/VBoxContainer/TabContainer/Model/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 100.0
+offset_top = 87.0
+offset_right = 132.0
+offset_bottom = 119.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(1, 1, 1, 1)
+edit_alpha = false
+
+[node name="ColorPickerHL_Edit" type="ColorPickerButton" parent="MarginContainer/VBoxContainer/TabContainer/Model/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 132.0
+offset_top = 87.0
+offset_right = 164.0
+offset_bottom = 119.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(1, 1, 1, 1)
+edit_alpha = false
 
 [node name="Video" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer"]
 visible = false

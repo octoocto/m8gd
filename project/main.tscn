@@ -153,19 +153,6 @@ offset_right = 1280.0
 offset_bottom = 960.0
 texture = ExtResource("2_3rehb")
 
-[node name="KeyOverlay" parent="." instance=ExtResource("8_dnyct")]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(200, 0)
-layout_mode = 2
-offset_left = 964.0
-offset_top = 944.0
-offset_right = 1264.0
-offset_bottom = 944.0
-grow_horizontal = 0
-grow_vertical = 0
-size_flags_horizontal = 8
-size_flags_vertical = 10
-
 [node name="VHSFilter1" type="ColorRect" parent="."]
 unique_name_in_owner = true
 visible = false
@@ -236,6 +223,22 @@ grow_vertical = 2
 
 [node name="BackBufferCopy" type="BackBufferCopy" parent="CRTShader"]
 copy_mode = 2
+
+[node name="KeyOverlay" parent="." instance=ExtResource("8_dnyct")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -240.0
+offset_right = 0.0
+grow_horizontal = 0
+grow_vertical = 0
+size_flags_horizontal = 8
+size_flags_vertical = 10
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1

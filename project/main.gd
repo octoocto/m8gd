@@ -35,6 +35,8 @@ signal m8_scene_changed
 @onready var scene_viewport: SubViewport = %SceneViewport
 @onready var current_scene: M8Scene = null
 
+@onready var key_overlay: M8KeyOverlay = %KeyOverlay
+
 @onready var menu: MainMenu = %MainMenuPanel
 
 @onready var config := M8Config.load()
@@ -71,12 +73,12 @@ func _ready():
 			%VHSFilter3.material.set_shader_parameter("res", scene_viewport.size / 2)
 	)
 
+	# initialize key overlay
+	key_overlay.init(self)
+
 	# initialize main menu
 	print("initializing menu controls...")
 	menu.initialize(self)
-
-	# initialize key overlay
-	%KeyOverlay.init(self)
 
 	# initialize main scene
 	if not load_scene(config.last_scene_path):
@@ -139,6 +141,7 @@ func _preload_scene(packed_scene: PackedScene) -> void:
 	scene.initialize(self)
 	current_scene = scene
 	current_scene.spectrum_analyzer = AudioServer.get_bus_effect_instance(1, 0)
+	menu.update_device_colors()
 
 	print("scene loaded!")
 	m8_scene_changed.emit()

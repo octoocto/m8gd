@@ -267,18 +267,6 @@ func initialize(p_main: M8SceneDisplay) -> void:
 	)
 	%SliderAVCA.value = config.audio_to_ca
 
-	# M8 Model Options
-	# --------------------------------------------------------------------
-	
-	# Background color (read-only)
-
-	get_tree().physics_frame.connect(func():
-		var color=main.m8_client.get_background_color()
-		if color != %ThemeBGColor.color:
-			%LabelThemeBGColor.text="#%s" % color.to_html(false).to_upper()
-			%ThemeBGColor.color=color
-	)
-
 	# Keybindings
 	# --------------------------------------------------------------------
 
@@ -321,6 +309,110 @@ func initialize(p_main: M8SceneDisplay) -> void:
 	%ButtonResetBinds.button_down.connect(func(): reset_key_rebinds());
 
 	load_key_rebinds()
+
+	# M8 Model Options
+	# --------------------------------------------------------------------
+	
+	# Background color (read-only)
+
+	get_tree().physics_frame.connect(func():
+		var color=main.m8_client.get_background_color()
+		if color != %ThemeBGColor.color:
+			%LabelThemeBGColor.text="#%s" % color.to_html(false).to_upper()
+			%ThemeBGColor.color=color
+	)
+
+	# Key highlight colors (also affects key overlay color)
+
+	%SliderHL_Opacity.value_changed.connect(func(value: float):
+		config.hl_opacity=value
+		%LabelHL_Opacity.text="%d%%" % (value * 100)
+		if get_device_model():
+			get_device_model().highlight_opacity=value
+	)
+	%SliderHL_Opacity.value = config.hl_opacity
+
+	%CheckButtonHL_Filters.toggled.connect(func(toggled_on: bool):
+		config.hl_filters=toggled_on
+		var index_on:=main.get_node("%VHSFilter1").get_index()
+		var index_off:=main.get_node("%CRTShader").get_index()
+		if toggled_on:
+			main.move_child(main.key_overlay, index_on)
+		else:
+			main.move_child(main.key_overlay, index_off)
+	)
+	%CheckButtonHL_Filters.button_pressed = config.hl_filters
+
+	var on_directional_color_changed = func(color: Color):
+		main.key_overlay.color_directional = color
+		config.hl_color_directional = color
+
+		%ColorPickerHL_Up.color = color
+		%ColorPickerHL_Down.color = color
+		%ColorPickerHL_Left.color = color
+		%ColorPickerHL_Right.color = color
+
+		if get_device_model():
+			get_device_model().get_node("%Keycap_Up").material_overlay.albedo_color = color
+			get_device_model().get_node("%Keycap_Down").material_overlay.albedo_color = color
+			get_device_model().get_node("%Keycap_Left").material_overlay.albedo_color = color
+			get_device_model().get_node("%Keycap_Right").material_overlay.albedo_color = color
+
+	%ColorPickerHL_Up.color_changed.connect(on_directional_color_changed)
+	%ColorPickerHL_Down.color_changed.connect(on_directional_color_changed)
+	%ColorPickerHL_Left.color_changed.connect(on_directional_color_changed)
+	%ColorPickerHL_Right.color_changed.connect(on_directional_color_changed)
+	%ColorPickerHL_Up.color = config.hl_color_directional
+
+	%ColorPickerHL_Shift.color_changed.connect(func(color: Color):
+		main.key_overlay.color_shift=color
+		config.hl_color_shift=color
+		if get_device_model():
+			get_device_model().get_node("%Keycap_Shift").material_overlay.albedo_color=color
+	)
+	%ColorPickerHL_Shift.color = config.hl_color_shift
+
+	%ColorPickerHL_Play.color_changed.connect(func(color: Color):
+		main.key_overlay.color_play=color
+		config.hl_color_play=color
+		if get_device_model():
+			get_device_model().get_node("%Keycap_Play").material_overlay.albedo_color=color
+	)
+	%ColorPickerHL_Play.color = config.hl_color_play
+
+	%ColorPickerHL_Option.color_changed.connect(func(color: Color):
+		main.key_overlay.color_option=color
+		config.hl_color_option=color
+		if get_device_model():
+			get_device_model().get_node("%Keycap_Option").material_overlay.albedo_color=color
+	)
+	%ColorPickerHL_Option.color = config.hl_color_option
+
+	%ColorPickerHL_Edit.color_changed.connect(func(color: Color):
+		main.key_overlay.color_edit=color
+		config.hl_color_edit=color
+		if get_device_model():
+			get_device_model().get_node("%Keycap_Edit").material_overlay.albedo_color=color
+	)
+	%ColorPickerHL_Edit.color = config.hl_color_edit
+
+	%CheckButtonKeyOverlayEnable.toggled.connect(func(toggled_on: bool):
+		main.key_overlay.visible=toggled_on
+		if toggled_on == false:
+			main.key_overlay.clear()
+		config.key_overlay_enabled=toggled_on
+	)
+	%CheckButtonKeyOverlayEnable.button_pressed = config.key_overlay_enabled
+
+	%SliderKeyOverlayStyle.value_changed.connect(func(value: int):
+		main.key_overlay.overlay_style=value
+		config.key_overlay_style=value
+		if value == 0:
+			%LabelKeyOverlayStyle.text="Boxed"
+		else:
+			%LabelKeyOverlayStyle.text="Unboxed"
+	)
+	%SliderKeyOverlayStyle.value = config.key_overlay_style
 
 	# Misc
 	# --------------------------------------------------------------------
@@ -384,6 +476,37 @@ func initialize(p_main: M8SceneDisplay) -> void:
 			refresh_serial_ports.call()
 			refresh_audio_devices.call()
 	)
+
+##
+## Try to return the device model in the current scene.
+## If there isn't one, returns null.
+##
+func get_device_model() -> DeviceModel:
+	if main.current_scene:
+		return main.current_scene.get_node("%M8Model")
+	else:
+		return null
+
+func update_device_colors() -> void:
+
+	if get_device_model():
+
+		get_device_model().highlight_opacity = %SliderHL_Opacity.value
+
+		get_device_model().get_node("%Keycap_Up").material_overlay.albedo_color = %ColorPickerHL_Up.color
+		get_device_model().get_node("%Keycap_Down").material_overlay.albedo_color = %ColorPickerHL_Down.color
+		get_device_model().get_node("%Keycap_Left").material_overlay.albedo_color = %ColorPickerHL_Left.color
+		get_device_model().get_node("%Keycap_Right").material_overlay.albedo_color = %ColorPickerHL_Right.color
+		get_device_model().get_node("%Keycap_Shift").material_overlay.albedo_color = %ColorPickerHL_Shift.color
+		get_device_model().get_node("%Keycap_Play").material_overlay.albedo_color = %ColorPickerHL_Play.color
+		get_device_model().get_node("%Keycap_Option").material_overlay.albedo_color = %ColorPickerHL_Option.color
+		get_device_model().get_node("%Keycap_Edit").material_overlay.albedo_color = %ColorPickerHL_Edit.color
+
+	main.key_overlay.color_directional = %ColorPickerHL_Up.color
+	main.key_overlay.color_shift = %ColorPickerHL_Shift.color
+	main.key_overlay.color_play = %ColorPickerHL_Play.color
+	main.key_overlay.color_option = %ColorPickerHL_Option.color
+	main.key_overlay.color_edit = %ColorPickerHL_Edit.color
 
 func reset_key_rebinds() -> void:
 	for action in [

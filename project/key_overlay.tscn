@@ -1,8 +1,20 @@
-[gd_scene load_steps=5 format=3 uid="uid://ca2jqh2tc7jix"]
+[gd_scene load_steps=14 format=3 uid="uid://ca2jqh2tc7jix"]
 
 [ext_resource type="Script" path="res://key_overlay.gd" id="1_tnj14"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v85e1"]
+content_margin_left = 8.0
+content_margin_right = 8.0
+bg_color = Color(1, 0.86179, 0.866894, 1)
+border_width_bottom = 2
+border_color = Color(0.4, 0.4, 0.4, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o6gxx"]
 content_margin_left = 8.0
 content_margin_right = 8.0
 bg_color = Color(0.9, 0.9, 0.9, 1)
@@ -13,6 +25,52 @@ corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_apn7d"]
+content_margin_left = 8.0
+content_margin_right = 8.0
+bg_color = Color(0.9, 0.9, 0.9, 1)
+border_width_bottom = 2
+border_color = Color(0.4, 0.4, 0.4, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5aded"]
+content_margin_left = 8.0
+content_margin_right = 8.0
+bg_color = Color(0.9, 0.9, 0.9, 1)
+border_width_bottom = 2
+border_color = Color(0.4, 0.4, 0.4, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0e0yo"]
+content_margin_left = 8.0
+content_margin_right = 8.0
+bg_color = Color(0.9, 0.9, 0.9, 1)
+border_width_bottom = 2
+border_color = Color(0.4, 0.4, 0.4, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+anti_aliasing = false
+
+[sub_resource type="LabelSettings" id="LabelSettings_aiwcp"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_w1myr"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_uwuav"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_krp3h"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_cd5gv"]
 
 [sub_resource type="FontVariation" id="FontVariation_rngjy"]
 variation_embolden = 1.5
@@ -27,6 +85,16 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 91.0
 script = ExtResource("1_tnj14")
+panel_directional = SubResource("StyleBoxFlat_v85e1")
+panel_shift = SubResource("StyleBoxFlat_o6gxx")
+panel_play = SubResource("StyleBoxFlat_apn7d")
+panel_option = SubResource("StyleBoxFlat_5aded")
+panel_edit = SubResource("StyleBoxFlat_0e0yo")
+label_directional = SubResource("LabelSettings_aiwcp")
+label_shift = SubResource("LabelSettings_w1myr")
+label_play = SubResource("LabelSettings_uwuav")
+label_option = SubResource("LabelSettings_krp3h")
+label_edit = SubResource("LabelSettings_cd5gv")
 
 [node name="Control" type="Control" parent="."]
 unique_name_in_owner = true

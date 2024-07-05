@@ -1,5 +1,7 @@
 class_name DeviceModel extends StaticBody3D
 
+@export var highlight_opacity := 1.0
+
 @export var screw_material: Material
 @export var body_material: Material
 @export var bezel_material: Material
@@ -81,14 +83,14 @@ func _physics_process(_delta: float) -> void:
 	keycap_edit.position = lerp(keycap_edit.position, home_keycap_edit + int(key_edit) * pressed_trans, press_speed)
 
 	# animate keycap colors if pressed/unpressed
-	keycap_up.material_overlay.albedo_color.a = 1.0 if key_up else 0.0
-	keycap_down.material_overlay.albedo_color.a = 1.0 if key_down else 0.0
-	keycap_left.material_overlay.albedo_color.a = 1.0 if key_left else 0.0
-	keycap_right.material_overlay.albedo_color.a = 1.0 if key_right else 0.0
-	keycap_shift.material_overlay.albedo_color.a = 1.0 if key_shift else 0.0
-	keycap_play.material_overlay.albedo_color.a = 1.0 if key_play else 0.0
-	keycap_option.material_overlay.albedo_color.a = 1.0 if key_option else 0.0
-	keycap_edit.material_overlay.albedo_color.a = 1.0 if key_edit else 0.0
+	keycap_up.material_overlay.albedo_color.a = highlight_opacity if key_up else 0.0
+	keycap_down.material_overlay.albedo_color.a = highlight_opacity if key_down else 0.0
+	keycap_left.material_overlay.albedo_color.a = highlight_opacity if key_left else 0.0
+	keycap_right.material_overlay.albedo_color.a = highlight_opacity if key_right else 0.0
+	keycap_shift.material_overlay.albedo_color.a = highlight_opacity if key_shift else 0.0
+	keycap_play.material_overlay.albedo_color.a = highlight_opacity if key_play else 0.0
+	keycap_option.material_overlay.albedo_color.a = highlight_opacity if key_option else 0.0
+	keycap_edit.material_overlay.albedo_color.a = highlight_opacity if key_edit else 0.0
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey:

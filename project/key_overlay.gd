@@ -1,7 +1,48 @@
-@tool
-extends Control
+class_name M8KeyOverlay extends Control
 
 const MAX_ITEMS := 10
+
+@export_enum("Boxed", "Unboxed") var overlay_style: int = 0:
+	set(value):
+		overlay_style = value
+		_update_colors()
+
+@export var panel_directional: StyleBox
+@export var panel_shift: StyleBox
+@export var panel_play: StyleBox
+@export var panel_option: StyleBox
+@export var panel_edit: StyleBox
+
+@export var label_directional: LabelSettings
+@export var label_shift: LabelSettings
+@export var label_play: LabelSettings
+@export var label_option: LabelSettings
+@export var label_edit: LabelSettings
+
+var color_directional := Color.WHITE:
+	set(value):
+		color_directional = value
+		_set_color(value, panel_directional, label_directional)
+
+var color_shift := Color.WHITE:
+	set(value):
+		color_shift = value
+		_set_color(value, panel_shift, label_shift)
+
+var color_play := Color.WHITE:
+	set(value):
+		color_play = value
+		_set_color(value, panel_play, label_play)
+
+var color_option := Color.WHITE:
+	set(value):
+		color_option = value
+		_set_color(value, panel_option, label_option)
+
+var color_edit := Color.WHITE:
+	set(value):
+		color_edit = value
+		_set_color(value, panel_edit, label_edit)
 
 @onready var main: M8SceneDisplay
 
@@ -11,6 +52,24 @@ const MAX_ITEMS := 10
 @onready var current_keystate: int = -1 # bitfield of the pressed keys for the current item
 @onready var current_times: int = 0 # amount of times to display for the current item
 @onready var current_item_count: int = 0 # amount of elements in the current item
+
+func _set_color(color: Color, panel: StyleBox, label: LabelSettings) -> void:
+	if overlay_style == 0: # boxed style
+		panel.bg_color = color
+		if color.get_luminance() > 0.5:
+			label.font_color = Color.BLACK
+		else:
+			label.font_color = Color.WHITE
+	else: # unboxed style
+		color.v = max(color.v, 0.5)
+		label.font_color = color
+
+func _update_colors() -> void:
+	color_directional = color_directional
+	color_shift = color_shift
+	color_play = color_play
+	color_option = color_option
+	color_edit = color_edit
 
 func init(p_main: M8SceneDisplay) -> void:
 	main = p_main
@@ -29,11 +88,30 @@ func init(p_main: M8SceneDisplay) -> void:
 	)
 
 ##
+## Delete all items.
+##
+func clear() -> void:
+	for child in %VBoxContainer.get_children():
+		%VBoxContainer.remove_child(child)
+		child.queue_free()
+
+##
 ## Add a new item to the key overlay list. Sets the current item to the added item.
 ##
 func add_item():
+
+	# fade out the last item
 	if is_instance_valid(current_item):
-		current_item.modulate.a = 0.5
+		var last_item := current_item
+		last_item.modulate.a = 0.5
+
+		var fade_tween := create_tween()
+		fade_tween.tween_property(last_item, "modulate:a", 0.0, 5.0)
+		fade_tween.tween_callback(func():
+			if is_instance_valid(last_item):
+				last_item.queue_free()
+		)
+
 	current_item = HBoxContainer.new()
 	current_times = 1
 	current_item_count = 0
@@ -56,21 +134,21 @@ func update_item():
 	current_keystate = main.m8_keystate
 
 	if main.m8_is_key_pressed(main.M8K_SHIFT):
-		add_element("SHIFT")
+		add_element("SHIFT", panel_shift, label_shift)
 	if main.m8_is_key_pressed(main.M8K_OPTION):
-		add_element("OPTION")
+		add_element("OPTION", panel_option, label_option)
 	if main.m8_is_key_pressed(main.M8K_EDIT):
-		add_element("EDIT")
+		add_element("EDIT", panel_edit, label_edit)
 	if main.m8_is_key_pressed(main.M8K_PLAY):
-		add_element("PLAY")
+		add_element("PLAY", panel_play, label_play)
 	if main.m8_is_key_pressed(main.M8K_UP):
-		add_element("UP")
+		add_element("UP", panel_directional, label_directional)
 	if main.m8_is_key_pressed(main.M8K_DOWN):
-		add_element("DOWN")
+		add_element("DOWN", panel_directional, label_directional)
 	if main.m8_is_key_pressed(main.M8K_LEFT):
-		add_element("LEFT")
+		add_element("LEFT", panel_directional, label_directional)
 	if main.m8_is_key_pressed(main.M8K_RIGHT):
-		add_element("RIGHT")
+		add_element("RIGHT", panel_directional, label_directional)
 	
 	if current_times > 1:
 		var times_label := Label.new()
@@ -92,14 +170,20 @@ func inc_item():
 ##
 ## Adds an element (key text, and plus sign if needed) to the current item.
 ##
-func add_element(text: String):
+func add_element(text: String, style: StyleBox, label_style: LabelSettings):
 	if !is_instance_valid(current_item):
 		return
+
 	var panel := PanelContainer.new()
-	# panel.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
 	var label := Label.new()
 	label.text = text
-	label.add_theme_color_override("font_color", Color.BLACK)
+
+	if overlay_style == 0:
+		panel.add_theme_stylebox_override("panel", style)
+		label.label_settings = label_style
+	else:
+		panel.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+		label.label_settings = label_style
 
 	if current_item_count > 0:
 		var plus_label := Label.new()

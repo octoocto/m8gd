@@ -8,6 +8,19 @@ var version = 0
 @export var scene_parameters := {} # Dictionary[String, Dictionary]
 @export var last_scene_path: String # path to last scene opened
 
+# device model settings
+@export var hl_opacity := 1.0
+@export var hl_filters := false
+@export var hl_color_directional := Color.WHITE
+@export var hl_color_shift := Color.WHITE
+@export var hl_color_play := Color.WHITE
+@export var hl_color_option := Color.WHITE
+@export var hl_color_edit := Color.WHITE
+
+# key overlay settings
+@export var key_overlay_enabled := false
+@export var key_overlay_style := 0
+
 # video settings
 @export var fullscreen := false
 @export var vsync := true
