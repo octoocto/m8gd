@@ -20,6 +20,10 @@ config/features=PackedStringArray("4.2")
 
 driver/enable_input=true
 
+[debug]
+
+gdscript/warnings/untyped_declaration=1
+
 [display]
 
 window/size/viewport_width=1280

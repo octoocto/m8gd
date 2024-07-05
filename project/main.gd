@@ -24,9 +24,9 @@ const M8_ACTIONS := [
 signal m8_key_changed(key: String, pressed: bool)
 signal m8_scene_changed
 
-@export var visualizer_ca_amount = 1.0
-@export var visualizer_glow_amount = 0.5
-@export var visualizer_brightness_amount = 0.1
+@export var visualizer_ca_amount := 1.0
+@export var visualizer_glow_amount := 0.5
+@export var visualizer_brightness_amount := 0.1
 @export var visualizer_frequency_min := 0
 @export var visualizer_frequency_max := 400
 
@@ -49,7 +49,7 @@ signal m8_scene_changed
 @onready var m8_locally_controlled := false
 
 ## true if audio device is in the middle of connecting
-var is_audio_connecting = false
+var is_audio_connecting := false
 var audio_device_last: String = ""
 
 var audio_peak := 0.0 # audio peak (in dB)
@@ -60,13 +60,13 @@ var last_peak := 0.0
 var last_peak_max := 0.0
 var last_audio_level := 0.0
 
-func _ready():
+func _ready() -> void:
 
 	# resize viewport with window
 	DisplayServer.window_set_min_size(Vector2i(640, 480)) # 2x M8 screen size
 
 	# get_tree().get_root().size_changed.connect(on_window_size_changed)
-	get_tree().physics_frame.connect(func():
+	get_tree().physics_frame.connect(func() -> void:
 		if scene_viewport.size != DisplayServer.window_get_size():
 			scene_viewport.size=DisplayServer.window_get_size()
 			%VHSFilter2.material.set_shader_parameter("vhs_resolution", scene_viewport.size / 4)
@@ -78,17 +78,17 @@ func _ready():
 
 	# initialize main menu
 	print("initializing menu controls...")
-	menu.initialize(self)
+	menu.init(self)
 
 	# initialize main scene
 	if not load_scene(config.last_scene_path):
 		_preload_scene(MAIN_SCENE)
 
-func _notification(what):
+func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		quit()
 
-func quit():
+func quit() -> void:
 	if is_instance_valid(current_scene):
 		config.last_scene_path = current_scene.scene_file_path
 	config.save()
@@ -109,10 +109,10 @@ func reload_scene() -> void:
 		load_scene(current_scene.scene_file_path)
 
 ## Load a scene from a filepath.
-func load_scene(scene_path) -> bool:
+func load_scene(scene_path: String) -> bool:
 	# load packed scene from file
 	print("loading new scene from %s..." % scene_path)
-	var packed_scene = load(scene_path.trim_suffix(".remap"))
+	var packed_scene: PackedScene = load(scene_path.trim_suffix(".remap"))
 
 	if packed_scene == null or !packed_scene is PackedScene:
 		return false
@@ -138,7 +138,7 @@ func _preload_scene(packed_scene: PackedScene) -> void:
 	# add new scene and initialize
 	print("adding new scene...")
 	scene_viewport.add_child(scene)
-	scene.initialize(self)
+	scene.init(self)
 	current_scene = scene
 	current_scene.spectrum_analyzer = AudioServer.get_bus_effect_instance(1, 0)
 	menu.update_device_colors()
@@ -228,7 +228,9 @@ func m8_audio_connect(device: String) -> void:
 	print("audio: connected to device %s" % device)
 	menu.set_status_audiodevice("Connected to: %s" % device)
 
+##
 ## Automatically detect and monitor an M8 audio device.
+##
 func m8_audio_connect_auto() -> void:
 
 	# If the M8 device is plugged in and detected, use it as a microphone and
@@ -240,7 +242,9 @@ func m8_audio_connect_auto() -> void:
 	
 	menu.set_status_audiodevice("Not connected: No M8 audio device found")
 
+##
 ## Disconnect the M8 audio device from the monitor.
+##
 func m8_audio_disconnect() -> void:
 	m8_audio_connected = false
 	AudioServer.input_device = "Default"
@@ -266,7 +270,7 @@ func on_m8_keystate_changed(keystate: int) -> void:
 	update_keystate(keystate, false)
 	m8_locally_controlled = true
 
-func on_m8_system_info(hardware, firmware) -> void:
+func on_m8_system_info(hardware: String, firmware: String) -> void:
 	%LabelVersion.text = "%s %s" % [hardware, firmware]
 
 func on_m8_font_changed(model: String, font: int) -> void:
@@ -316,7 +320,7 @@ func audio_fft(from_hz: float, to_hz: float) -> float:
 	)
 	return (magnitude.x + magnitude.y) / 2.0
 
-func m8_is_key_pressed(bit: int):
+func m8_is_key_pressed(bit: int) -> bool:
 	return m8_keystate&bit
 
 func _physics_process(delta: float) -> void:
@@ -324,7 +328,7 @@ func _physics_process(delta: float) -> void:
 	# calculate peaks for visualizations
 
 	# var audio_peak_raw = linear_to_db(audio_fft(1000, 2000) * 100.0)
-	var audio_peak_raw = audio_fft(visualizer_frequency_min, visualizer_frequency_max)
+	var audio_peak_raw := audio_fft(visualizer_frequency_min, visualizer_frequency_max)
 	if is_nan(audio_peak_raw) or is_inf(audio_peak_raw):
 		audio_peak_raw = 0.0
 
@@ -389,7 +393,7 @@ func _process(_delta: float) -> void:
 
 	var is_anything_pressed := false
 
-	for key in ["key_up", "key_down", "key_left", "key_right", "key_shift", "key_play", "key_option", "key_edit"]:
+	for key: String in ["key_up", "key_down", "key_left", "key_right", "key_shift", "key_play", "key_option", "key_edit"]:
 		if Input.is_action_pressed(key):
 			is_anything_pressed = true
 			break
@@ -397,7 +401,7 @@ func _process(_delta: float) -> void:
 	# godot action to m8 controller
 	if !m8_locally_controlled or m8_locally_controlled and is_anything_pressed:
 
-		var keystate = 0
+		var keystate := 0
 
 		if Input.is_action_pressed("key_up"): keystate += M8K_UP
 		if Input.is_action_pressed("key_down"): keystate += M8K_DOWN
@@ -414,7 +418,7 @@ func _process(_delta: float) -> void:
 
 	if Input.is_action_just_pressed("force_read"): m8_client.update_texture()
 
-func update_keystate(keystate: int, write: bool=false):
+func update_keystate(keystate: int, write: bool=false) -> void:
 
 	if keystate != m8_keystate_last:
 
@@ -442,7 +446,7 @@ func update_keystate(keystate: int, write: bool=false):
 
 		m8_keystate_last = m8_keystate
 
-func _input(event):
+func _input(event: InputEvent) -> void:
 
 	if event is InputEventKey:
 		# fullscreen ALT+ENTER toggle

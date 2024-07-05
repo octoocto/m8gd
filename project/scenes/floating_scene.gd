@@ -15,7 +15,7 @@ extends M8Scene
 @export var model_screen_emission := 0.25:
 	set(value):
 		if %M8Model is DeviceModel:
-			var screen = %M8Model.get_node("%Screen")
+			var screen: MeshInstance3D = %M8Model.get_node("%Screen")
 			screen.material_override.set_shader_parameter("emission_amount", value)
 		model_screen_emission = value
 
@@ -78,7 +78,7 @@ extends M8Scene
 		%LightLeft.light_color = value
 		%LightLeft.light_energy = value.a * 16
 
-@export var enable_right_light = false:
+@export var enable_right_light := false:
 	set(value):
 		enable_right_light = value
 		%LightRight.visible = value
@@ -89,16 +89,16 @@ extends M8Scene
 		%LightRight.light_color = value
 		%LightRight.light_energy = value.a * 16
 
-func initialize(main_: M8SceneDisplay):
-	super(main_)
+func init(p_main: M8SceneDisplay) -> void:
+	super(p_main)
 
 	%M8Model.init(main)
 	%DisplayMesh.material_override.set_shader_parameter("tex", main.m8_client.get_display_texture())
 
-func is_between(x, a, b) -> bool:
+func is_between(x: float, a: float, b: float) -> bool:
 	return a < x and x < b
 
-func _physics_process(delta):
+func _physics_process(delta: float) -> void:
 
 	camera.update_humanized_movement(delta)
 
@@ -109,7 +109,7 @@ func _physics_process(delta):
 	if !enable_mouse_controlled_pan_zoom: return
 
 	# get mouse position as vector between (0, 0) and (1, 1)
-	var mouse_position = get_viewport().get_mouse_position() / Vector2(get_window().size)
+	var mouse_position := get_viewport().get_mouse_position() / Vector2(get_window().size)
 
 	# ignore mouse positions outside this range (outside the window)
 	if !is_between(mouse_position.x, 0.0, 1.0) or !is_between(mouse_position.y, 0.0, 1.0):

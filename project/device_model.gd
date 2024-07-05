@@ -22,14 +22,14 @@ class_name DeviceModel extends StaticBody3D
 @export var key_option := false
 @export var key_edit := false
 
-@onready var keycap_up = %Keycap_Up
-@onready var keycap_down = %Keycap_Down
-@onready var keycap_left = %Keycap_Left
-@onready var keycap_right = %Keycap_Right
-@onready var keycap_shift = %Keycap_Shift
-@onready var keycap_play = %Keycap_Play
-@onready var keycap_option = %Keycap_Option
-@onready var keycap_edit = %Keycap_Edit
+@onready var keycap_up: MeshInstance3D = %Keycap_Up
+@onready var keycap_down: MeshInstance3D = %Keycap_Down
+@onready var keycap_left: MeshInstance3D = %Keycap_Left
+@onready var keycap_right: MeshInstance3D = %Keycap_Right
+@onready var keycap_shift: MeshInstance3D = %Keycap_Shift
+@onready var keycap_play: MeshInstance3D = %Keycap_Play
+@onready var keycap_option: MeshInstance3D = %Keycap_Option
+@onready var keycap_edit: MeshInstance3D = %Keycap_Edit
 
 @onready var home_keycap_up: Vector3 = keycap_up.position
 @onready var home_keycap_down: Vector3 = keycap_down.position
@@ -40,9 +40,9 @@ class_name DeviceModel extends StaticBody3D
 @onready var home_keycap_option: Vector3 = keycap_option.position
 @onready var home_keycap_edit: Vector3 = keycap_edit.position
 
-func init(display: M8SceneDisplay):
+func init(display: M8SceneDisplay) -> void:
 	screen_material.set_shader_parameter("tex", display.m8_client.get_display_texture())
-	display.m8_key_changed.connect(func(key, pressed):
+	display.m8_key_changed.connect(func(key: String, pressed: bool) -> void:
 		match key:
 			"up":
 				key_up=pressed
@@ -63,7 +63,9 @@ func init(display: M8SceneDisplay):
 	)
 
 func _ready() -> void:
-	for keycap in [keycap_up, keycap_down, keycap_left, keycap_right, keycap_shift, keycap_play, keycap_option, keycap_edit]:
+	for keycap: MeshInstance3D in [
+		keycap_up, keycap_down, keycap_left, keycap_right,
+		keycap_shift, keycap_play, keycap_option, keycap_edit]:
 		keycap.material_overlay = keycap.material_overlay.duplicate()
 
 func _physics_process(_delta: float) -> void:

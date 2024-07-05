@@ -4,7 +4,7 @@ extends M8Scene
 	set(value):
 		force_integer_scale = value
 
-func initialize(p_main: M8SceneDisplay):
+func init(p_main: M8SceneDisplay) -> void:
 	super(p_main)
 
 	# %TextureRect.texture = _display.m8_display_texture
@@ -12,8 +12,8 @@ func initialize(p_main: M8SceneDisplay):
 
 func get_auto_integer_scale() -> int:
 
-	var window_size = DisplayServer.window_get_size()
-	var texture = %TextureRect.texture
+	var window_size := DisplayServer.window_get_size()
+	var texture: Texture2D = %TextureRect.texture
 	var intscale := 1
 
 	while ((intscale + 1) * texture.get_size().x <= window_size.x and (intscale + 1) * texture.get_size().y <= window_size.y):
@@ -21,7 +21,7 @@ func get_auto_integer_scale() -> int:
 
 	return intscale
 
-func _process(_delta):
+func _process(_delta: float) -> void:
 
 	RenderingServer.set_default_clear_color(main.m8_client.get_background_color())
 

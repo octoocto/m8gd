@@ -17,7 +17,7 @@ var spectrum_analyzer: AudioEffectSpectrumAnalyzerInstance
 
 var main: M8SceneDisplay
 
-func initialize(p_main: M8SceneDisplay):
+func init(p_main: M8SceneDisplay) -> void:
 	main = p_main
 
 	var config: M8Config = main.config
@@ -33,13 +33,13 @@ func initialize(p_main: M8SceneDisplay):
 
 	config_load_profile(DEFAULT_PROFILE)
 
-	var regex = RegEx.new()
+	var regex := RegEx.new()
 	regex.compile("^-?\\d+,-?\\d+$") # match "#,#" export_range patterns
 
 	# add menu items
 	var export_vars := get_export_vars()
-	for v in export_vars:
-		var property = v.name
+	for v: Dictionary in export_vars:
+		var property: String = v.name
 		if v.hint_string == "bool":
 			push_scene_var_bool(property)
 			continue
@@ -51,31 +51,31 @@ func initialize(p_main: M8SceneDisplay):
 			continue
 
 		if regex.search(v.hint_string):
-			var range_min = int(v.hint_string.split(",")[0])
-			var range_max = int(v.hint_string.split(",")[1])
+			var range_min := int(v.hint_string.split(",")[0])
+			var range_max := int(v.hint_string.split(",")[1])
 			push_scene_var_int_slider(property, range_min, range_max)
 			continue
 
 		printerr("scene: unrecognized export var type: %s" % v.hint_string)
 
-func clear_scene_vars():
+func clear_scene_vars() -> void:
 	var grid: GridContainer = main.menu.get_node("%ContainerSceneVars")
 
 	for c in grid.get_children():
 		grid.remove_child(c)
 		c.queue_free()
 
-func push_scene_var_bool(property: String):
+func push_scene_var_bool(property: String) -> void:
 	var grid: GridContainer = main.menu.get_node("%ContainerSceneVars")
 
-	var label = Label.new()
-	var sep = VSeparator.new()
-	var button = CheckButton.new()
+	var label := Label.new()
+	var sep := VSeparator.new()
+	var button := CheckButton.new()
 
 	label.text = property.capitalize()
 	label.size_flags_horizontal = Control.SIZE_FILL + Control.SIZE_EXPAND
 	button.button_pressed = get(property)
-	button.toggled.connect(func(toggled_on: bool):
+	button.toggled.connect(func(toggled_on: bool) -> void:
 		set(property, toggled_on)
 		config_update_property(DEFAULT_PROFILE, property)
 	)
@@ -84,17 +84,17 @@ func push_scene_var_bool(property: String):
 	grid.add_child(sep)
 	grid.add_child(button)
 
-func push_scene_var_color(property: String):
+func push_scene_var_color(property: String) -> void:
 	var grid: GridContainer = main.menu.get_node("%ContainerSceneVars")
 
-	var label = Label.new()
-	var sep = VSeparator.new()
-	var button = ColorPickerButton.new()
+	var label := Label.new()
+	var sep := VSeparator.new()
+	var button := ColorPickerButton.new()
 
 	label.text = property.capitalize()
 	label.size_flags_horizontal = Control.SIZE_FILL + Control.SIZE_EXPAND
 	button.color = get(property)
-	button.color_changed.connect(func(color: Color):
+	button.color_changed.connect(func(color: Color) -> void:
 		set(property, color)
 		config_update_property(DEFAULT_PROFILE, property)
 	)
@@ -103,10 +103,10 @@ func push_scene_var_color(property: String):
 	grid.add_child(sep)
 	grid.add_child(button)
 
-func push_scene_var_slider(property: String):
+func push_scene_var_slider(property: String) -> void:
 	var grid: GridContainer = main.menu.get_node("%ContainerSceneVars")
 
-	var label = Label.new()
+	var label := Label.new()
 	var value_label := Label.new()
 	var slider := HSlider.new()
 
@@ -121,7 +121,7 @@ func push_scene_var_slider(property: String):
 	slider.min_value = 0.0
 	slider.step = 0.01
 	slider.value = get(property)
-	slider.value_changed.connect(func(value: float):
+	slider.value_changed.connect(func(value: float) -> void:
 		set(property, value)
 		config_update_property(DEFAULT_PROFILE, property)
 		value_label.text="%.2f" % value
@@ -135,7 +135,7 @@ func push_scene_var_int_slider(property: String, range_min: int, range_max: int)
 
 	var grid: GridContainer = main.menu.get_node("%ContainerSceneVars")
 
-	var label = Label.new()
+	var label := Label.new()
 	var value_label := Label.new()
 	var slider := HSlider.new()
 
@@ -152,7 +152,7 @@ func push_scene_var_int_slider(property: String, range_min: int, range_max: int)
 	slider.tick_count = range_max - range_min
 	slider.ticks_on_borders = true
 	slider.value = get(property)
-	slider.value_changed.connect(func(value: float):
+	slider.value_changed.connect(func(value: float) -> void:
 		set(property, value)
 		config_update_property(DEFAULT_PROFILE, property)
 		value_label.text="%d" % value
@@ -163,7 +163,7 @@ func push_scene_var_int_slider(property: String, range_min: int, range_max: int)
 	grid.add_child(slider)
 
 func get_export_vars() -> Array:
-	return get_property_list().filter(func(prop):
+	return get_property_list().filter(func(prop: Dictionary) -> bool:
 		return prop["usage"] == (
 			PROPERTY_USAGE_SCRIPT_VARIABLE +
 			PROPERTY_USAGE_STORAGE +
@@ -181,7 +181,7 @@ func config_get_profile(profile_name: String) -> Dictionary:
 	# print("scene: using profile '%s'" % profile_name)
 	return profile
 
-func config_delete_profile(profile_name: String):
+func config_delete_profile(profile_name: String) -> void:
 	if main.config.scene_parameters[scene_file_path].has(profile_name):
 		print("scene: deleting profile '%s'" % profile_name)
 		main.config.scene_parameters[scene_file_path].erase(profile_name)
@@ -189,8 +189,8 @@ func config_delete_profile(profile_name: String):
 func config_load_profile(profile_name: String) -> void:
 	print("scene: %s: loading profile '%s'" % [scene_file_path, profile_name])
 	var export_vars := get_export_vars()
-	for v in export_vars:
-		var property = v.name
+	for v: Dictionary in export_vars:
+		var property: String = v.name
 		set(property, config_get_property(profile_name, property))
 
 func config_get_property(profile_name: String, property: String) -> Variant:

@@ -5,21 +5,19 @@ extends OmniLight3D
 const COLOR_SAMPLE_POINT_1 := Vector2i(0, 0)
 const COLOR_SAMPLE_POINT_2 := Vector2i(19, 66)
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
+func _ready() -> void:
 	_update()
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _physics_process(delta):
+func _physics_process(_delta: float) -> void:
 	_update()
 	
-func _update():
+func _update() -> void:
 	#var texture = light_projector
 	#light_projector = null
 	#light_projector = texture
 	if viewport_texture != null:
 			
-		var image = viewport_texture.get_image()
+		var image := viewport_texture.get_image()
 		if image != null:
 			var color_1 := image.get_pixelv(COLOR_SAMPLE_POINT_1)
 			var color_2 := image.get_pixelv(COLOR_SAMPLE_POINT_2)

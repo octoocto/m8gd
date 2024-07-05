@@ -20,7 +20,7 @@ class_name HumanizedCamera3D extends Camera3D
 @onready var noise: FastNoiseLite = FastNoiseLite.new()
 @onready var noise_u: float = 0.0
 
-func is_between(x, a, b) -> bool:
+func is_between(x: float, a: float, b: float) -> bool:
 	return a < x and x < b
 
 func is_mouse_position_in_window(mouse_position: Vector2) -> bool:
@@ -32,7 +32,7 @@ func vdeg_to_rad(v: Vector2) -> Vector2:
 func _ready() -> void:
 	noise.noise_type = FastNoiseLite.TYPE_PERLIN
 
-func update_humanized_movement(delta) -> void:
+func update_humanized_movement(delta: float) -> void:
 
 	if !humanized_movement: return
 
@@ -44,13 +44,13 @@ func update_humanized_movement(delta) -> void:
 	) * humanize_amount
 	noise_u += delta
 
-func update_mouse_movement(_delta) -> void:
+func update_mouse_movement(_delta: float) -> void:
 
 	if !mouse_controlled_pan_zoom: return
 
 	# get mouse position as vector between (0, 0) and (1, 1)
-	var mouse_position = get_viewport().get_mouse_position() / Vector2(get_window().size)
-	var mouse_clicked = Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)
+	var mouse_position := get_viewport().get_mouse_position() / Vector2(get_window().size)
+	var mouse_clicked := Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)
 	var pan_smoothing := pan_smoothing_focused
 
 	# ignore mouse positions outside this range (outside the window)
@@ -62,8 +62,8 @@ func update_mouse_movement(_delta) -> void:
 	mouse_position = (mouse_position * 2.0) - Vector2(1.0, 1.0)
 
 	var mouse_range := vdeg_to_rad(pan_range_zoomin) if mouse_clicked else vdeg_to_rad(pan_range_zoomout)
-	var target_fov = fov_zoomin if mouse_clicked else fov_zoomout
-	var target_dof = dof_zoomin if mouse_clicked else dof_zoomout
+	var target_fov := fov_zoomin if mouse_clicked else fov_zoomout
+	var target_dof := dof_zoomin if mouse_clicked else dof_zoomout
 	var target_rotation := (
 		base_rotation + Vector3(
 			- mouse_position.y * mouse_range.y,

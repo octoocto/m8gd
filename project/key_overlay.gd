@@ -73,7 +73,7 @@ func _update_colors() -> void:
 
 func init(p_main: M8SceneDisplay) -> void:
 	main = p_main
-	main.m8_key_changed.connect(func(key: String, pressed: bool):
+	main.m8_key_changed.connect(func(key: String, pressed: bool) -> void:
 		if pressed:
 			if main.m8_keystate == current_keystate:
 				inc_item()
@@ -98,7 +98,7 @@ func clear() -> void:
 ##
 ## Add a new item to the key overlay list. Sets the current item to the added item.
 ##
-func add_item():
+func add_item() -> void:
 
 	# fade out the last item
 	if is_instance_valid(current_item):
@@ -107,7 +107,7 @@ func add_item():
 
 		var fade_tween := create_tween()
 		fade_tween.tween_property(last_item, "modulate:a", 0.0, 5.0)
-		fade_tween.tween_callback(func():
+		fade_tween.tween_callback(func() -> void:
 			if is_instance_valid(last_item):
 				last_item.queue_free()
 		)
@@ -125,7 +125,7 @@ func add_item():
 ##
 ## Update the current item in the key overlay list.
 ##
-func update_item():
+func update_item() -> void:
 	if !is_inside_tree() or !is_instance_valid(current_item):
 		return
 	for child in current_item.get_children():
@@ -156,21 +156,21 @@ func update_item():
 		current_item.add_child(times_label)
 
 	if %VBoxContainer.get_children().size() > MAX_ITEMS:
-		var child = %VBoxContainer.get_child(0)
+		var child := %VBoxContainer.get_child(0)
 		child.queue_free()
 		%VBoxContainer.remove_child(child)
 
 ##
 ## Increment the displayed number of times the item was pressed for the current item.
 ##
-func inc_item():
+func inc_item() -> void:
 	current_times += 1
 	update_item()
 
 ##
 ## Adds an element (key text, and plus sign if needed) to the current item.
 ##
-func add_element(text: String, style: StyleBox, label_style: LabelSettings):
+func add_element(text: String, style: StyleBox, label_style: LabelSettings) -> void:
 	if !is_instance_valid(current_item):
 		return
 

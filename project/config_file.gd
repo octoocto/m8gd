@@ -2,7 +2,7 @@ class_name M8Config extends Resource
 
 const CONFIG_FILE_PATH := "user://config.res"
 
-var version = 0
+var version: int = 0
 
 # scene settings
 @export var scene_parameters := {} # Dictionary[String, Dictionary]
@@ -40,8 +40,8 @@ var version = 0
 @export var crt_filter := false
 
 # visualizer settings
-@export var audio_analyzer_min_freq = 800
-@export var audio_analyzer_max_freq = 1200
+@export var audio_analyzer_min_freq: int = 800
+@export var audio_analyzer_max_freq: int = 1200
 @export var audio_to_brightness := 0.1
 @export var audio_to_ca := 0.02
 
@@ -54,8 +54,8 @@ var version = 0
 # contains key bindings
 @export var action_events := {} # Dictionary[String, Array]
 
-func save():
-	var error = ResourceSaver.save(self, CONFIG_FILE_PATH, )
+func save() -> void:
+	var error := ResourceSaver.save(self, CONFIG_FILE_PATH)
 	if error == OK:
 		print("config saved")
 	else:
@@ -63,7 +63,7 @@ func save():
 
 static func load() -> M8Config:
 	if FileAccess.file_exists(CONFIG_FILE_PATH):
-		var config = ResourceLoader.load(CONFIG_FILE_PATH)
+		var config: M8Config = ResourceLoader.load(CONFIG_FILE_PATH)
 		assert(config is M8Config)
 		print("using config loaded from file")
 		return config
