@@ -144,6 +144,7 @@ libm8::Error libm8::Client::connect(godot::String target_port_name)
 
     print("port successfully opened!");
 
+    send_disable_display();
     send_enable_display();
     send_reset_display();
     return OK;
