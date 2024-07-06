@@ -27,6 +27,11 @@ public:
     uint8_t bg_g = 0;
     uint8_t bg_b = 0;
 
+    // cached color from last draw_rect call
+    uint8_t last_r = 0;
+    uint8_t last_g = 0;
+    uint8_t last_b = 0;
+
     DisplayBuffer(int width, int height);
     ~DisplayBuffer();
 
@@ -54,10 +59,25 @@ public:
         }
     }
 
+    // 12-byte call
     void draw_rect(
         uint16_t x, uint16_t y,
         uint16_t w, uint16_t h,
         uint8_t r, uint8_t g, uint8_t b);
+
+    // 9-byte call; use last RGB value
+    void draw_rect(
+        uint16_t x, uint16_t y,
+        uint16_t w, uint16_t h);
+
+    // 8-byte call; width/height = 1x1
+    void draw_rect(
+        uint16_t x, uint16_t y,
+        uint8_t r, uint8_t g, uint8_t b);
+
+    // 5-byte call; width/height = 1x1, use last RGB value
+    void draw_rect(
+        uint16_t x, uint16_t y);
 
     void draw_char(
         uint8_t ch,

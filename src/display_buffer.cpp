@@ -14,6 +14,10 @@ DisplayBuffer::~DisplayBuffer() {}
 
 void DisplayBuffer::draw_rect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint8_t r, uint8_t g, uint8_t b)
 {
+    last_r = r;
+    last_g = g;
+    last_b = b;
+
     // save color as background color if was a fullscreen rect
     if (x == 0 && y == 0 && w >= width && h >= height)
     {
@@ -37,6 +41,21 @@ void DisplayBuffer::draw_rect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, ui
             set_pixel(data, i, j, r, g, b);
         }
     }
+}
+
+void DisplayBuffer::draw_rect(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
+{
+    draw_rect(x, y, w, h, last_r, last_g, last_b);
+}
+
+void DisplayBuffer::draw_rect(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b)
+{
+    draw_rect(x, y, 1, 1, r, g, b);
+}
+
+void DisplayBuffer::draw_rect(uint16_t x, uint16_t y)
+{
+    draw_rect(x, y, 1, 1, last_r, last_g, last_b);
 }
 
 void DisplayBuffer::draw_char(

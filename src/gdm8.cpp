@@ -269,24 +269,49 @@ libm8::Error M8GD::read_command(uint8_t *cmd_buffer, const uint16_t &cmd_size)
 	{
 	case libm8::DRAW_RECT:
 
-		if (cmd_size != libm8::DRAW_RECT_SIZE)
+		if (cmd_size != libm8::DRAW_RECT_SIZE_1 && cmd_size != libm8::DRAW_RECT_SIZE_2 && cmd_size != libm8::DRAW_RECT_SIZE_3 && cmd_size != libm8::DRAW_RECT_SIZE_4)
 		{
 			printerr(
-				"DRAW_RECT failed: expected length %d, got %d",
-				libm8::DRAW_RECT_SIZE, cmd_size);
+				"DRAW_RECT failed: expected length %d/%d/%d/%d, got %d",
+				libm8::DRAW_RECT_SIZE_1, libm8::DRAW_RECT_SIZE_2, libm8::DRAW_RECT_SIZE_3, libm8::DRAW_RECT_SIZE_4, cmd_size);
 			printerr_bytes(cmd_buffer, cmd_size);
 			return libm8::ERR_CMD_HANDLER_INVALID_SIZE;
 		}
 		// print("received draw_rectangle_command");
 
-		display_buffer->draw_rect(
-			libm8::decode_u16(cmd_buffer, 1),
-			libm8::decode_u16(cmd_buffer, 3),
-			libm8::decode_u16(cmd_buffer, 5),
-			libm8::decode_u16(cmd_buffer, 7),
-			cmd_buffer[9],
-			cmd_buffer[10],
-			cmd_buffer[11]);
+		switch (cmd_size)
+		{
+		case libm8::DRAW_RECT_SIZE_1:
+			display_buffer->draw_rect(
+				libm8::decode_u16(cmd_buffer, 1),
+				libm8::decode_u16(cmd_buffer, 3),
+				libm8::decode_u16(cmd_buffer, 5),
+				libm8::decode_u16(cmd_buffer, 7),
+				cmd_buffer[9],
+				cmd_buffer[10],
+				cmd_buffer[11]);
+			break;
+		case libm8::DRAW_RECT_SIZE_2:
+			display_buffer->draw_rect(
+				libm8::decode_u16(cmd_buffer, 1),
+				libm8::decode_u16(cmd_buffer, 3),
+				libm8::decode_u16(cmd_buffer, 5),
+				libm8::decode_u16(cmd_buffer, 7));
+			break;
+		case libm8::DRAW_RECT_SIZE_3:
+			display_buffer->draw_rect(
+				libm8::decode_u16(cmd_buffer, 1),
+				libm8::decode_u16(cmd_buffer, 3),
+				cmd_buffer[9],
+				cmd_buffer[10],
+				cmd_buffer[11]);
+			break;
+		case libm8::DRAW_RECT_SIZE_4:
+			display_buffer->draw_rect(
+				libm8::decode_u16(cmd_buffer, 1),
+				libm8::decode_u16(cmd_buffer, 3));
+			break;
+		}
 
 		break;
 
@@ -342,7 +367,7 @@ libm8::Error M8GD::read_command(uint8_t *cmd_buffer, const uint16_t &cmd_size)
 			return libm8::ERR_CMD_HANDLER_INVALID_SIZE;
 		}
 		// print("received key pressed:");
-		// print("    %s %s", std::bitset<8>(cmd_buffer[1]).to_string().c_str(), std::bitset<8>(cmd_buffer[2]).to_string().c_str());
+		// print("	%s %s", std::bitset<8>(cmd_buffer[1]).to_string().c_str(), std::bitset<8>(cmd_buffer[2]).to_string().c_str());
 		emit_signal("keystate_changed", (int)cmd_buffer[1]);
 		break;
 	}

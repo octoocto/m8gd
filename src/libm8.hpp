@@ -71,7 +71,10 @@ namespace libm8
 	enum CommandRX
 	{
 		DRAW_RECT = 0xFE,
-		DRAW_RECT_SIZE = 12,
+		DRAW_RECT_SIZE_1 = 12,
+		DRAW_RECT_SIZE_2 = 9,
+		DRAW_RECT_SIZE_3 = 8,
+		DRAW_RECT_SIZE_4 = 5,
 
 		DRAW_CHAR = 0xFD,
 		DRAW_CHAR_SIZE = 12,
