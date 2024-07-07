@@ -22,8 +22,6 @@ Panel/styles/panel = SubResource("StyleBoxFlat_1asjn")
 TabContainer/styles/panel = SubResource("StyleBoxFlat_vd3cv")
 TextEdit/font_sizes/font_size = 12
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_l2hi4"]
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5wjh1"]
 bg_color = Color(0, 0, 0, 1)
 draw_center = false
@@ -36,6 +34,8 @@ anti_aliasing = false
 
 [sub_resource type="LabelSettings" id="LabelSettings_cher2"]
 outline_size = 2
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_l2hi4"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_06k14"]
 
@@ -131,13 +131,24 @@ theme_override_constants/margin_bottom = 16
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 
-[node name="OptionScenes" type="OptionButton" parent="MarginContainer/VBoxContainer/TabContainer/Scene/LeftMenu"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/TabContainer/Scene/LeftMenu"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Scene/LeftMenu/HBoxContainer"]
+layout_mode = 2
+text = "Load scene"
+
+[node name="OptionScenes" type="OptionButton" parent="MarginContainer/VBoxContainer/TabContainer/Scene/LeftMenu/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label2" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Scene/LeftMenu"]
+layout_mode = 2
+text = "Scene parameters"
 
 [node name="HSeparator4" type="HSeparator" parent="MarginContainer/VBoxContainer/TabContainer/Scene/LeftMenu"]
 layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_l2hi4")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/TabContainer/Scene/LeftMenu"]
 custom_minimum_size = Vector2(0, 160)

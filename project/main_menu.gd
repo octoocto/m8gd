@@ -35,8 +35,10 @@ func init(p_main: M8SceneDisplay) -> void:
 		path = dir_scenes.get_next()
 
 	option_scenes.item_selected.connect(func(index: int) -> void:
-		main.load_scene(scene_paths[index])
+		if index != - 1:
+			main.load_scene(scene_paths[index])
 	)
+	option_scenes.selected = -1
 
 	button_exit.pressed.connect(func() -> void:
 		main.quit()
@@ -178,16 +180,16 @@ func init(p_main: M8SceneDisplay) -> void:
 	%SliderMSAA.value_changed.connect(func(value: int) -> void:
 		match value:
 			0:
-				ProjectSettings.set_setting("rendering/anti_aliasing/quality/msaa_3d", Viewport.MSAA_DISABLED)
+				get_viewport().msaa_3d=Viewport.MSAA_DISABLED
 				%LabelMSAA.text="Disabled"
 			1:
-				ProjectSettings.set_setting("rendering/anti_aliasing/quality/msaa_3d", Viewport.MSAA_2X)
+				get_viewport().msaa_3d=Viewport.MSAA_2X
 				%LabelMSAA.text="2X"
 			2:
-				ProjectSettings.set_setting("rendering/anti_aliasing/quality/msaa_3d", Viewport.MSAA_4X)
+				get_viewport().msaa_3d=Viewport.MSAA_4X
 				%LabelMSAA.text="4X"
 			3:
-				ProjectSettings.set_setting("rendering/anti_aliasing/quality/msaa_3d", Viewport.MSAA_8X)
+				get_viewport().msaa_3d=Viewport.MSAA_8X
 				%LabelMSAA.text="8X"
 		config.msaa=value
 	)
@@ -196,7 +198,7 @@ func init(p_main: M8SceneDisplay) -> void:
 	# TAA
 
 	%CheckButtonTAA.toggled.connect(func(toggled_on: bool) -> void:
-		ProjectSettings.set_setting("rendering/anti_aliasing/quality/use_taa", toggled_on)
+		get_viewport().use_taa=toggled_on
 		config.taa=toggled_on
 	)
 	%CheckButtonTAA.button_pressed = config.taa
