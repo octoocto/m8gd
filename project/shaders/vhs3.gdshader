@@ -102,7 +102,7 @@ vec2 Dist(vec2 pos){
 	pos = pos * res; 
 	return - ((pos - floor(pos)) - vec2(0.5));
 }
-    
+	
 // 1D Gaussian.
 float Gaus(float pos, float scale){ return exp2(scale * pos * pos); }
 
@@ -213,7 +213,7 @@ vec3 Bloom(vec2 pos, sampler2D iChannel0){
 
 // Distortion of scanlines, and end of screen alpha.
 vec2 Warp(vec2 pos){
-	pos = pos * 2.0 - 1.0;    
+	pos = pos * 2.0 - 1.0;	
 	pos *= vec2(1.0 + (pos.y * pos.y) * 1.0 / warp.x, 1.0 + (pos.x * pos.x) * 1.0/ warp.y);
 	
 	return pos * 0.5+0.5;
@@ -257,7 +257,7 @@ vec3 Mask(vec2 pos){
 	
 		return mask;
 	}
-  }    
+  }	
 
 // Draw dividing bars.
 float Bar(float pos, float bar){ pos -= bar; return pos * pos < 4.0 ? 0.0 : 1.0; }
@@ -268,9 +268,9 @@ void fragment(){
 	
 	COLOR.rgb = Tri(pos, SCREEN_TEXTURE) * Mask(FRAGCOORD.xy);
 	if (bloom_type == 0){ 
-		COLOR.rgb = mix(COLOR.rgb,Bloom(pos, SCREEN_TEXTURE), 1.0 / bloomAmount);    
+		COLOR.rgb = mix(COLOR.rgb,Bloom(pos, SCREEN_TEXTURE), 1.0 / bloomAmount);	
 	}else if (bloom_type == 1){
-		COLOR.rgb += Bloom(pos, SCREEN_TEXTURE) * 1.0 / bloomAmount;    
+		COLOR.rgb += Bloom(pos, SCREEN_TEXTURE) * 1.0 / bloomAmount;	
 	} 
 	
 	COLOR.a = 1.0;  

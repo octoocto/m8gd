@@ -31,18 +31,18 @@ uniform float vignette_range = 0.9;
 
 //float vignette(vec2 uv){
 	//vec2 delta = uv - 0.5;
-    //float delta2 = dot(delta.xy, delta.xy);
-    //float delta4 = pow(delta2, vignette_intensity);
-    //return clamp(1.0 - delta4, 0.0, 1.0);
+	//float delta2 = dot(delta.xy, delta.xy);
+	//float delta4 = pow(delta2, vignette_intensity);
+	//return clamp(1.0 - delta4, 0.0, 1.0);
 //}
 
 vec2 distort(vec2 uv) {
-    vec2 delta = uv - 0.5;
-    float delta2 = dot(delta.xy, delta.xy);
-    float delta4 = delta2 * delta2;
-    float delta_offset = delta4 * warp_amount;
+	vec2 delta = uv - 0.5;
+	float delta2 = dot(delta.xy, delta.xy);
+	float delta4 = delta2 * delta2;
+	float delta_offset = delta4 * warp_amount;
 
-    return uv + delta * delta_offset;
+	return uv + delta * delta_offset;
 }
 
 // Adds a black border to hide stretched pixel created by the warp effect
@@ -60,7 +60,7 @@ vec2 mirror(vec2 uv) {
 	else if (uv.x < 0.0) { uv.x = 1.0 - uv.x; }
 	if (uv.y > 1.0) { uv.y = 2.0 - uv.y; }
 	else if (uv.y < 0.0) { uv.y = 1.0 - uv.y; }
-    return uv;
+	return uv;
 }
 
 float mirror_lod(vec2 uv) {
@@ -73,18 +73,18 @@ bool is_in_mirror(vec2 uv) {
 }
 
 void fragment() {
-    //vec2 uv = SCREEN_UV * 2.0;
-    //uv.x = uv.x - 1.0;
-    //uv.y = uv.y - 1.0;
+	//vec2 uv = SCREEN_UV * 2.0;
+	//uv.x = uv.x - 1.0;
+	//uv.y = uv.y - 1.0;
 
-    vec2 uv = distort(SCREEN_UV);
-    vec2 uv_r = uv + abs(uv.x) * vec2(ca_amount / 100.0, 0.0);
-    vec2 uv_g = uv;
-    vec2 uv_b = uv - abs(uv.x) * vec2(ca_amount / 100.0, 0.0);
+	vec2 uv = distort(SCREEN_UV);
+	vec2 uv_r = uv + abs(uv.x) * vec2(ca_amount / 100.0, 0.0);
+	vec2 uv_g = uv;
+	vec2 uv_b = uv - abs(uv.x) * vec2(ca_amount / 100.0, 0.0);
 
-    COLOR.r = textureLod(SCREEN_TEXTURE, mirror(uv_r), mirror_lod(uv_r)).r;
-    COLOR.g = textureLod(SCREEN_TEXTURE, mirror(uv_g), mirror_lod(uv_g)).g;
-    COLOR.b = textureLod(SCREEN_TEXTURE, mirror(uv_b), mirror_lod(uv_b)).b;
+	COLOR.r = textureLod(SCREEN_TEXTURE, mirror(uv_r), mirror_lod(uv_r)).r;
+	COLOR.g = textureLod(SCREEN_TEXTURE, mirror(uv_g), mirror_lod(uv_g)).g;
+	COLOR.b = textureLod(SCREEN_TEXTURE, mirror(uv_b), mirror_lod(uv_b)).b;
 	
 
 	
@@ -110,8 +110,8 @@ void fragment() {
 	}
 
 
-    //COLOR.rgb = texture(SCREEN_TEXTURE, uv).rgb;
-    //COLOR.rgb *= clamp(border(uv) + border_alpha, 0.0, 1.0);
+	//COLOR.rgb = texture(SCREEN_TEXTURE, uv).rgb;
+	//COLOR.rgb *= clamp(border(uv) + border_alpha, 0.0, 1.0);
 
 	//COLOR.rgb *= vignette(uv) * vignette_opacity;
 
