@@ -119,8 +119,10 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.0
+current_tab = 1
 
 [node name="Scene" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer"]
+visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16
@@ -213,7 +215,6 @@ layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_l2hi4")
 
 [node name="Model" type="MarginContainer" parent="MarginContainer/VBoxContainer/TabContainer"]
-visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16
@@ -283,20 +284,6 @@ size_flags_horizontal = 3
 max_value = 1.0
 step = 0.01
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu/GridContainer/GridContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu/GridContainer/GridContainer/HBoxContainer2"]
-custom_minimum_size = Vector2(40, 0)
-layout_mode = 2
-text = "Apply Screen Filters"
-horizontal_alignment = 2
-
-[node name="CheckButtonHL_Filters" type="CheckButton" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu/GridContainer/GridContainer/HBoxContainer2"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu"]
 layout_mode = 2
 text = "Key Overlay Settings"
@@ -313,11 +300,25 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Key Overlay Enabled"
 
-[node name="VSeparator" type="VSeparator" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu/GridContainer2"]
+[node name="VSeparator2" type="VSeparator" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu/GridContainer2"]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_0w5ic")
 
 [node name="CheckButtonKeyOverlayEnable" type="CheckButton" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu/GridContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label3" type="Label" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu/GridContainer2"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+text = "Use Screen Filters"
+
+[node name="VSeparator" type="VSeparator" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu/GridContainer2"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_0w5ic")
+
+[node name="CheckButtonHL_Filters" type="CheckButton" parent="MarginContainer/VBoxContainer/TabContainer/Model/LeftMenu/GridContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3

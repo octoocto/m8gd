@@ -34,7 +34,7 @@ shader_parameter/distort_offset = Vector2(0, 0)
 shader_parameter/brightness = 0.001
 shader_parameter/tex = SubResource("ViewportTexture_t2dqp")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bvmyc"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2hsxo"]
 resource_local_to_scene = true
 albedo_color = Color(0.1, 0.1, 0.1, 1)
 metallic = 0.6
@@ -260,7 +260,7 @@ spot_angle = 36.8368
 unique_name_in_owner = true
 transform = Transform3D(38.83, 0, 0, 0, 38.83, 0, 0, 0, 38.83, 0, 0.269188, 0)
 screen_material = SubResource("ShaderMaterial_3tyua")
-keycap_material = SubResource("StandardMaterial3D_bvmyc")
+keycap_material = SubResource("StandardMaterial3D_2hsxo")
 
 [node name="Camera3D" parent="." instance=ExtResource("5_jy4yn")]
 unique_name_in_owner = true
