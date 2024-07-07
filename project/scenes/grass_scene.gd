@@ -12,6 +12,12 @@ extends M8Scene
 		%Camera3D.humanized_movement = value
 		humanized_camera_movement = value
 
+@export var enable_depth_of_field := true:
+	set(value):
+		%Camera3D.attributes.dof_blur_far_enabled = value
+		%Camera3D.attributes.dof_blur_near_enabled = value
+		enable_depth_of_field = value
+
 @export var model_screen_emission := 0.25:
 	set(value):
 		if %DeviceModel is DeviceModel:
@@ -71,8 +77,6 @@ func init(p_main: M8SceneDisplay) -> void:
 
 func _physics_process(delta: float) -> void:
 
-	camera.update_humanized_movement(delta)
-
 	if main.is_menu_open(): return
 
-	camera.update_mouse_movement(delta)
+	camera.update(delta)

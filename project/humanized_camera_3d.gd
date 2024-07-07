@@ -20,6 +20,8 @@ class_name HumanizedCamera3D extends Camera3D
 @onready var noise: FastNoiseLite = FastNoiseLite.new()
 @onready var noise_u: float = 0.0
 
+var is_repositioning := false
+
 func is_between(x: float, a: float, b: float) -> bool:
 	return a < x and x < b
 
@@ -31,6 +33,14 @@ func vdeg_to_rad(v: Vector2) -> Vector2:
 
 func _ready() -> void:
 	noise.noise_type = FastNoiseLite.TYPE_PERLIN
+
+func update(delta: float) -> void:
+
+	if is_repositioning:
+		update_reposition(delta)
+	else:
+		update_humanized_movement(delta)
+		update_mouse_movement(delta)
 
 func update_humanized_movement(delta: float) -> void:
 
@@ -75,3 +85,30 @@ func update_mouse_movement(_delta: float) -> void:
 	rotation = lerp(rotation, target_rotation, pan_smoothing)
 	fov = lerp(fov, target_fov, fov_smoothing)
 	attributes.dof_blur_far_distance = lerp(attributes.dof_blur_far_distance, target_dof, 0.01)
+
+func update_reposition(delta: float) -> void:
+	if Input.is_action_pressed("cam_forward"):
+		global_position -= global_transform.basis.z * delta * 10
+	if Input.is_action_pressed("cam_back"):
+		global_position += global_transform.basis.z * delta * 10
+	if Input.is_action_pressed("cam_left"):
+		global_position -= global_transform.basis.x * delta * 10
+	if Input.is_action_pressed("cam_right"):
+		global_position += global_transform.basis.x * delta * 10
+
+func _input(event: InputEvent) -> void:
+
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
+		if event.pressed:
+			is_repositioning = true
+			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		else:
+			is_repositioning = false
+			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+			base_position = position
+			base_rotation = rotation
+
+	if is_repositioning:
+		if event is InputEventMouseMotion:
+			rotation.y -= event.relative.x * 0.001
+			rotation.x -= event.relative.y * 0.001

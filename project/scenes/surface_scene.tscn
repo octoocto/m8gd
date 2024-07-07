@@ -214,7 +214,7 @@ environment = SubResource("Environment_ayqpk")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 unique_name_in_owner = true
 transform = Transform3D(0.258819, -0.4609, -0.848872, 0, -0.878817, 0.477159, -0.965926, -0.123498, -0.227455, 0.087698, 4.97022, -16.5359)
-light_color = Color(0.862333, 0.86, 1, 1)
+light_color = Color(1, 0.86, 0.86, 1)
 shadow_enabled = true
 shadow_bias = 0.01
 shadow_opacity = 0.83
@@ -222,20 +222,20 @@ shadow_blur = 3.0
 
 [node name="LightLamp" type="SpotLight3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(0.266284, 0.95967, -0.0901449, -0.46377, 0.209544, 0.860819, 0.844991, -0.187416, 0.500865, -2.964, 15.715, 10.369)
-visible = false
-light_color = Color(1, 0.922, 0.64, 1)
+transform = Transform3D(0.266284, 0.95967, -0.0901449, -0.46377, 0.209544, 0.860819, 0.844991, -0.187416, 0.500865, -0.919, 16.42, 9.424)
+light_color = Color(0.8, 0.866667, 1, 1)
 light_size = 3.0
 shadow_enabled = true
-shadow_blur = 0.5
+shadow_bias = 0.06
 spot_range = 43.892
 spot_attenuation = 0.0
 spot_angle = 16.72
-spot_angle_attenuation = 0.0192366
+spot_angle_attenuation = 0.406125
 
 [node name="LightLeft" type="SpotLight3D" parent="."]
 unique_name_in_owner = true
 transform = Transform3D(0.231346, 0.952383, -0.198611, -0.918842, 0.280983, 0.27709, 0.319702, 0.118389, 0.940093, -4.77328, 6.32057, 10.2875)
+visible = false
 light_color = Color(1, 0.11, 0.11, 1)
 light_energy = 16.0
 light_size = 3.0
@@ -246,9 +246,10 @@ spot_angle = 36.8368
 
 [node name="LightRight" type="SpotLight3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(0.356473, 0.892189, 0.277356, -0.864151, 0.201984, 0.460919, 0.355205, -0.403983, 0.842987, 3.05577, 8.79271, 10.2875)
+transform = Transform3D(0.652098, -0.104201, 0.750939, 0, 0.990509, 0.137445, -0.758134, -0.0896274, 0.64591, 6.968, 5.274, 6.753)
+visible = false
 light_color = Color(0.614333, 0.11, 1, 1)
-light_energy = 6.243
+light_energy = 16.0
 light_size = 3.0
 shadow_enabled = true
 shadow_blur = 0.5
@@ -288,6 +289,7 @@ material_override = SubResource("StandardMaterial3D_mesqs")
 mesh = SubResource("ArrayMesh_k7qls")
 skeleton = NodePath("")
 
-[node name="Ground" type="MeshInstance3D" parent="."]
+[node name="SurfaceMesh" type="MeshInstance3D" parent="."]
+unique_name_in_owner = true
 material_override = SubResource("StandardMaterial3D_dtr6l")
 mesh = SubResource("PlaneMesh_4c1u1")
