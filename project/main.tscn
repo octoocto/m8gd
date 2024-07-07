@@ -1,9 +1,8 @@
-[gd_scene load_steps=20 format=3 uid="uid://b265ke8cr3dgr"]
+[gd_scene load_steps=19 format=3 uid="uid://b265ke8cr3dgr"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_4g2n0"]
 [ext_resource type="Shader" path="res://shaders/post_process.gdshader" id="1_tjung"]
 [ext_resource type="Shader" path="res://shaders/crt.gdshader" id="2_2rjfu"]
-[ext_resource type="Texture2D" uid="uid://bcsoiuuis4yx2" path="res://assets/m8_screen_placeholder.png" id="2_3rehb"]
 [ext_resource type="Shader" path="res://shaders/vhs.gdshader" id="2_34vyn"]
 [ext_resource type="Shader" path="res://shaders/vhs2.gdshader" id="4_ioov3"]
 [ext_resource type="Shader" path="res://shaders/vhs3.gdshader" id="4_tq17m"]
@@ -118,42 +117,22 @@ shader_parameter/clip_warp = false
 shader_parameter/vignette_intensity = 5.0
 shader_parameter/vignette_opacity = 0.05
 
-[node name="Main" type="Panel"]
+[node name="Main" type="Node"]
+script = ExtResource("1_4g2n0")
+
+[node name="SceneRoot" type="Node" parent="."]
+unique_name_in_owner = true
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = SubResource("Theme_gulif")
-script = ExtResource("1_4g2n0")
-visualizer_ca_amount = 0.002
-visualizer_brightness_amount = 0.5
-visualizer_frequency_min = 800
-visualizer_frequency_max = 1000
 
-[node name="SceneViewportContainer" type="SubViewportContainer" parent="."]
-texture_filter = 1
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="SceneViewport" type="SubViewport" parent="SceneViewportContainer"]
-unique_name_in_owner = true
-handle_input_locally = false
-size = Vector2i(1280, 960)
-render_target_update_mode = 4
-
-[node name="TextureRect2" type="TextureRect" parent="SceneViewportContainer/SceneViewport"]
-visible = false
-texture_filter = 1
-offset_right = 1280.0
-offset_bottom = 960.0
-texture = ExtResource("2_3rehb")
-
-[node name="VHSFilter1" type="ColorRect" parent="."]
+[node name="VHSFilter1" type="ColorRect" parent="UI"]
 unique_name_in_owner = true
 visible = false
 material = SubResource("ShaderMaterial_x0ssf")
@@ -164,10 +143,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="BackBufferCopy2" type="BackBufferCopy" parent="VHSFilter1"]
+[node name="BackBufferCopy2" type="BackBufferCopy" parent="UI/VHSFilter1"]
 copy_mode = 2
 
-[node name="VHSFilter2" type="ColorRect" parent="."]
+[node name="VHSFilter2" type="ColorRect" parent="UI"]
 unique_name_in_owner = true
 visible = false
 material = SubResource("ShaderMaterial_i0wc8")
@@ -178,10 +157,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="BackBufferCopy" type="BackBufferCopy" parent="VHSFilter2"]
+[node name="BackBufferCopy" type="BackBufferCopy" parent="UI/VHSFilter2"]
 copy_mode = 2
 
-[node name="VHSFilter3" type="ColorRect" parent="."]
+[node name="VHSFilter3" type="ColorRect" parent="UI"]
 unique_name_in_owner = true
 visible = false
 material = SubResource("ShaderMaterial_j82o4")
@@ -192,10 +171,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="BackBufferCopy2" type="BackBufferCopy" parent="VHSFilter3"]
+[node name="BackBufferCopy2" type="BackBufferCopy" parent="UI/VHSFilter3"]
 copy_mode = 2
 
-[node name="Filter4" type="ColorRect" parent="."]
+[node name="Filter4" type="ColorRect" parent="UI"]
 unique_name_in_owner = true
 visible = false
 material = SubResource("ShaderMaterial_pe34f")
@@ -207,10 +186,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="BackBufferCopy" type="BackBufferCopy" parent="Filter4"]
+[node name="BackBufferCopy" type="BackBufferCopy" parent="UI/Filter4"]
 copy_mode = 2
 
-[node name="CRTShader" type="ColorRect" parent="."]
+[node name="CRTShader" type="ColorRect" parent="UI"]
 unique_name_in_owner = true
 visible = false
 material = SubResource("ShaderMaterial_fpc4l")
@@ -221,10 +200,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="BackBufferCopy" type="BackBufferCopy" parent="CRTShader"]
+[node name="BackBufferCopy" type="BackBufferCopy" parent="UI/CRTShader"]
 copy_mode = 2
 
-[node name="KeyOverlay" parent="." instance=ExtResource("8_dnyct")]
+[node name="KeyOverlay" parent="UI" instance=ExtResource("8_dnyct")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(240, 0)
 layout_mode = 1
@@ -240,7 +219,7 @@ grow_vertical = 0
 size_flags_horizontal = 8
 size_flags_vertical = 10
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="UI"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -248,22 +227,22 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="GridContainer" type="GridContainer" parent="MarginContainer"]
+[node name="GridContainer" type="GridContainer" parent="UI/MarginContainer"]
 layout_mode = 2
 columns = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/GridContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 alignment = 1
 
-[node name="DebugLabels" type="Control" parent="MarginContainer/GridContainer/VBoxContainer"]
+[node name="DebugLabels" type="Control" parent="UI/MarginContainer/GridContainer/VBoxContainer"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="LabelFPS" type="Label" parent="MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
+[node name="LabelFPS" type="Label" parent="UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
 unique_name_in_owner = true
 layout_mode = 2
 offset_top = 4.0
@@ -272,7 +251,7 @@ offset_bottom = 27.0
 size_flags_horizontal = 0
 size_flags_vertical = 2
 
-[node name="LabelVersion" type="Label" parent="MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
+[node name="LabelVersion" type="Label" parent="UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
 unique_name_in_owner = true
 layout_mode = 2
 offset_top = 32.0
@@ -281,7 +260,7 @@ offset_bottom = 55.0
 size_flags_vertical = 10
 vertical_alignment = 2
 
-[node name="LabelPort" type="Label" parent="MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
+[node name="LabelPort" type="Label" parent="UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
 unique_name_in_owner = true
 layout_mode = 2
 offset_top = 64.0
@@ -291,7 +270,7 @@ size_flags_vertical = 10
 text = "*no device"
 vertical_alignment = 2
 
-[node name="LabelAudioPeak" type="Label" parent="MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
+[node name="LabelAudioPeak" type="Label" parent="UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
 unique_name_in_owner = true
 layout_mode = 2
 offset_top = 96.0
@@ -301,7 +280,7 @@ size_flags_vertical = 10
 text = "0.0 dB"
 vertical_alignment = 2
 
-[node name="LabelAudioPeakAvg" type="Label" parent="MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
+[node name="LabelAudioPeakAvg" type="Label" parent="UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
 unique_name_in_owner = true
 modulate = Color(0.75, 0.75, 1, 1)
 layout_mode = 2
@@ -312,7 +291,7 @@ size_flags_vertical = 10
 text = "0.0 dB"
 vertical_alignment = 2
 
-[node name="LabelAudioPeakMax" type="Label" parent="MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
+[node name="LabelAudioPeakMax" type="Label" parent="UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
 unique_name_in_owner = true
 modulate = Color(1, 0.75, 0.75, 1)
 layout_mode = 2
@@ -323,7 +302,7 @@ size_flags_vertical = 10
 text = "0.0 dB"
 vertical_alignment = 2
 
-[node name="LabelAudioLevel" type="Label" parent="MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
+[node name="LabelAudioLevel" type="Label" parent="UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
 unique_name_in_owner = true
 modulate = Color(0.75, 1, 0.75, 1)
 layout_mode = 2
@@ -334,7 +313,7 @@ size_flags_vertical = 10
 text = "0.0 dB"
 vertical_alignment = 2
 
-[node name="RectAudioLevel" type="ColorRect" parent="MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
+[node name="RectAudioLevel" type="ColorRect" parent="UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 88.0
@@ -343,7 +322,7 @@ offset_right = 96.0
 offset_bottom = 172.0
 color = Color(0.5, 1, 0.5, 1)
 
-[node name="RectAudioLevelAvg" type="ColorRect" parent="MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
+[node name="RectAudioLevelAvg" type="ColorRect" parent="UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 88.0
@@ -351,26 +330,26 @@ offset_top = 156.0
 offset_right = 96.0
 offset_bottom = 172.0
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/GridContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="UI/MarginContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="VBoxContainer3" type="VBoxContainer" parent="MarginContainer/GridContainer"]
+[node name="VBoxContainer3" type="VBoxContainer" parent="UI/MarginContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 8
 
-[node name="LabelStatus" type="Label" parent="MarginContainer/GridContainer/VBoxContainer3"]
+[node name="LabelStatus" type="Label" parent="UI/MarginContainer/GridContainer/VBoxContainer3"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="VBoxContainer4" type="VBoxContainer" parent="MarginContainer/GridContainer"]
+[node name="VBoxContainer4" type="VBoxContainer" parent="UI/MarginContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="MainMenuPanel" parent="." instance=ExtResource("7_k5oyo")]
+[node name="MainMenuPanel" parent="UI" instance=ExtResource("7_k5oyo")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1

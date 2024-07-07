@@ -178,16 +178,16 @@ func init(p_main: M8SceneDisplay) -> void:
 	%SliderMSAA.value_changed.connect(func(value: int) -> void:
 		match value:
 			0:
-				main.scene_viewport.msaa_3d=Viewport.MSAA_DISABLED
+				ProjectSettings.set_setting("rendering/anti_aliasing/quality/msaa_3d", Viewport.MSAA_DISABLED)
 				%LabelMSAA.text="Disabled"
 			1:
-				main.scene_viewport.msaa_3d=Viewport.MSAA_2X
+				ProjectSettings.set_setting("rendering/anti_aliasing/quality/msaa_3d", Viewport.MSAA_2X)
 				%LabelMSAA.text="2X"
 			2:
-				main.scene_viewport.msaa_3d=Viewport.MSAA_4X
+				ProjectSettings.set_setting("rendering/anti_aliasing/quality/msaa_3d", Viewport.MSAA_4X)
 				%LabelMSAA.text="4X"
 			3:
-				main.scene_viewport.msaa_3d=Viewport.MSAA_8X
+				ProjectSettings.set_setting("rendering/anti_aliasing/quality/msaa_3d", Viewport.MSAA_8X)
 				%LabelMSAA.text="8X"
 		config.msaa=value
 	)
@@ -196,8 +196,7 @@ func init(p_main: M8SceneDisplay) -> void:
 	# TAA
 
 	%CheckButtonTAA.toggled.connect(func(toggled_on: bool) -> void:
-		# ProjectSettings.set_setting("rendering/anti_aliasing/quality/use_taa", toggled_on)
-		main.scene_viewport.use_taa=toggled_on
+		ProjectSettings.set_setting("rendering/anti_aliasing/quality/use_taa", toggled_on)
 		config.taa=toggled_on
 	)
 	%CheckButtonTAA.button_pressed = config.taa

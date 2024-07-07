@@ -1,4 +1,4 @@
-class_name M8SceneDisplay extends Panel
+class_name M8SceneDisplay extends Node
 
 const MAIN_SCENE: PackedScene = preload ("res://scenes/desk_scene.tscn")
 
@@ -32,7 +32,8 @@ signal m8_scene_changed
 
 @onready var audio_monitor: AudioStreamPlayer
 
-@onready var scene_viewport: SubViewport = %SceneViewport
+# @onready var scene_viewport: SubViewport = %SceneViewport
+@onready var scene_root: Node = %SceneRoot
 @onready var current_scene: M8Scene = null
 
 @onready var key_overlay: M8KeyOverlay = %KeyOverlay
@@ -64,14 +65,6 @@ func _ready() -> void:
 
 	# resize viewport with window
 	DisplayServer.window_set_min_size(Vector2i(640, 480)) # 2x M8 screen size
-
-	# get_tree().get_root().size_changed.connect(on_window_size_changed)
-	get_tree().physics_frame.connect(func() -> void:
-		if scene_viewport.size != DisplayServer.window_get_size():
-			scene_viewport.size=DisplayServer.window_get_size()
-			%VHSFilter2.material.set_shader_parameter("vhs_resolution", scene_viewport.size / 4)
-			%VHSFilter3.material.set_shader_parameter("res", scene_viewport.size / 2)
-	)
 
 	# initialize key overlay
 	key_overlay.init(self)
@@ -131,13 +124,13 @@ func _preload_scene(packed_scene: PackedScene) -> void:
 	# remove existing scene from viewport
 	if current_scene:
 		print("freeing current scene...")
-		scene_viewport.remove_child(current_scene)
+		scene_root.remove_child(current_scene)
 		current_scene.queue_free()
 		current_scene = null
 
 	# add new scene and initialize
 	print("adding new scene...")
-	scene_viewport.add_child(scene)
+	scene_root.add_child(scene)
 	scene.init(self)
 	current_scene = scene
 	current_scene.spectrum_analyzer = AudioServer.get_bus_effect_instance(1, 0)
@@ -145,12 +138,6 @@ func _preload_scene(packed_scene: PackedScene) -> void:
 
 	print("scene loaded!")
 	m8_scene_changed.emit()
-
-# Signal callbacks
-################################################################################
-
-# func on_window_size_changed() -> void:
-# 	scene_viewport.size = DisplayServer.window_get_size()
 
 # M8 client methods
 ################################################################################
@@ -363,7 +350,7 @@ func _physics_process(delta: float) -> void:
 	
 	# do shader parameter responses to audio
 
-	var material_crt_filter: ShaderMaterial = $CRTShader.material
+	var material_crt_filter: ShaderMaterial = %CRTShader.material
 	material_crt_filter.set_shader_parameter("aberration", audio_level * visualizer_ca_amount)
 	material_crt_filter.set_shader_parameter("brightness", 1.0 + (audio_level * visualizer_brightness_amount))
 
