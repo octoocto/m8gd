@@ -332,9 +332,9 @@ func init(p_main: M8SceneDisplay) -> void:
 		var index_on:=main.get_node("%VHSFilter1").get_index()
 		var index_off:=main.get_node("%CRTShader").get_index()
 		if toggled_on:
-			main.move_child(main.key_overlay, index_on)
+			main.get_node("%UI").move_child(main.key_overlay, index_on)
 		else:
-			main.move_child(main.key_overlay, index_off)
+			main.get_node("%UI").move_child(main.key_overlay, index_off)
 	)
 	%CheckButtonHL_Filters.button_pressed = config.hl_filters
 

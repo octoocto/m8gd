@@ -124,6 +124,7 @@ script = ExtResource("1_4g2n0")
 unique_name_in_owner = true
 
 [node name="UI" type="Control" parent="."]
+unique_name_in_owner = true
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -205,6 +206,7 @@ copy_mode = 2
 
 [node name="KeyOverlay" parent="UI" instance=ExtResource("8_dnyct")]
 unique_name_in_owner = true
+visible = false
 custom_minimum_size = Vector2(240, 0)
 layout_mode = 1
 anchors_preset = 3
