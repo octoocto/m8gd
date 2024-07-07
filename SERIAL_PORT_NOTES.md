@@ -35,7 +35,7 @@ Hex Value | Description
 2. If not escaped, and the byte is...
     1. The special byte ESC (0xDB):
 
-        1. The loop is now "escaped".
+        1. The loop is now escaped.
         2. Continue to Step 4.
 
     2. The special byte END (0xC0):
@@ -53,13 +53,15 @@ Hex Value | Description
     1. The special byte ESC_END (0xDC):
 
         1. Add the END byte 0xC0 to the command buffer.
-        2. Continue to Step 4.
+        2. The loop is no longer escaped.
+        3. Continue to Step 4.
 
     2. The special byte ESC_ESC (0xDD):
 
         1. Add the ESC byte 0xDB to the command buffer.
-        2. Continue to Step 4.
-    
+        2. The loop is no longer escaped.
+        3. Continue to Step 4.
+
     3. Any other byte:
 
         1. An unrecognized byte has been escaped. Raise an error.

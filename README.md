@@ -1,13 +1,18 @@
 
-# m8gd: M8 Display and Visualizer
+# m8gd: M8 Headless Display and Visualizer
 
 ## Description
 
-m8gd renders the M8's display in a 3D environment using the Godot Engine.
+m8gd is a M8 headless client that is capable of rendering the M8's display in a 3D environment using the Godot Engine.
 
-This repository consists of the C++ library `libm8gd` that acts as a headless M8 client library and Godot extension, and the Godot project `m8gd` to provide the display.
+This repository consists of the C++ library and GDExtension `libm8gd` that acts as a headless M8 client library, and the Godot project `m8gd` as the frontend.
 
-Still a very early WIP and many features are missing.
+## Features
+
+- Multiple 3D scenes inspired by live camera setups:
+    - [ ] The
+- [ ] s
+
 
 ## Building from source
 
@@ -71,16 +76,17 @@ Assuming your Godot editor is named `godot`, run one of these commands to export
 
 ```sh
 # export to windows
-$ godot --headless --path project --export-release windows ../build/m8gd.zip
+$ godot --headless --path project --export-release windows ../build/m8gd_windows.zip
 
 # export to linux
-$ godot --headless --path project --export-release linux ../build/m8gd.zip
+$ godot --headless --path project --export-release linux ../build/m8gd_linux.zip
 
 # export to macos
-$ godot --headless --path project --export-release macos ../build/m8gd.zip
+$ godot --headless --path project --export-release macos ../build/m8gd_macos.zip
 ```
 
 Note: You may see some error messages during the export. This is normal, and the app will still export.
+(The errors are due to not having the debug version of libgdm8, which we do not need to compile here.)
 
 A .zip file containing the app should be created in the `build` folder.
 
@@ -93,6 +99,10 @@ In order to monitor audio, m8gd will attempt to find the audio input device asso
 If the device is disabled, or m8gd doesn't have permissions to access the M8's audio input device, then it will fail to connect.
 
 See more details [here](https://docs.godotengine.org/en/4.2/classes/class_projectsettings.html#class-projectsettings-property-audio-driver-enable-input).
+
+### Running on macOS
+
+This app is signed with an ad-hoc signature
 
 ## Development
 
