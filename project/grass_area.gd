@@ -5,10 +5,16 @@ extends MultiMeshInstance3D
 @export var grass_mesh: Mesh
 @export var num_meshes := 1000
 
-func _ready():
-	generate()
+@export var editor_generate := false:
+	set(value):
+		if value:
+			generate()
 
-func generate():
+func _ready() -> void:
+	if !Engine.is_editor_hint():
+		generate()
+
+func generate() -> void:
 	multimesh = MultiMesh.new()
 
 	multimesh.mesh = grass_mesh
@@ -18,12 +24,11 @@ func generate():
 	multimesh.visible_instance_count = -1
 
 	for i in range(multimesh.instance_count):
-		var xform = Transform3D()
-
+		var xform := Transform3D()
 		var shift := Vector3(
-			randf_range(-extents.x, extents.x),
-			randf_range(-extents.y, extents.y),
-			randf_range(-extents.z, extents.z)
+			randf_range( - extents.x, extents.x),
+			randf_range( - extents.y, extents.y),
+			randf_range( - extents.z, extents.z)
 		)
 
 		shift.y -= clamp(Vector2(shift.x, shift.z).length() / max(extents.x, extents.z), 0, -1)

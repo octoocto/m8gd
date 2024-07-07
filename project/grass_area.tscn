@@ -83,7 +83,7 @@ radial_segments = 4
 cap_top = false
 cap_bottom = false
 
-[node name="grass_area" type="MultiMeshInstance3D"]
+[node name="GrassArea" type="MultiMeshInstance3D"]
 material_override = SubResource("ShaderMaterial_p5pab")
 multimesh = SubResource("MultiMesh_esiro")
 script = ExtResource("2_xcclk")
