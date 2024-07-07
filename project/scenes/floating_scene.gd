@@ -14,8 +14,8 @@ extends M8Scene
 
 @export var model_screen_emission := 0.25:
 	set(value):
-		if %M8Model is DeviceModel:
-			var screen: MeshInstance3D = %M8Model.get_node("%Screen")
+		if %DeviceModel is DeviceModel:
+			var screen: MeshInstance3D = %DeviceModel.get_node("%Screen")
 			screen.material_override.set_shader_parameter("emission_amount", value)
 		model_screen_emission = value
 
@@ -92,7 +92,7 @@ extends M8Scene
 func init(p_main: M8SceneDisplay) -> void:
 	super(p_main)
 
-	%M8Model.init(main)
+	%DeviceModel.init(main)
 	%DisplayMesh.material_override.set_shader_parameter("tex", main.m8_client.get_display_texture())
 
 func is_between(x: float, a: float, b: float) -> bool:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://f2tvhcv8kiuu"]
+[gd_scene load_steps=28 format=3 uid="uid://f2tvhcv8kiuu"]
 
 [ext_resource type="Script" path="res://scenes/desk_scene.gd" id="1_irl02"]
 [ext_resource type="Texture2D" uid="uid://c0wnmsv4tqel4" path="res://assets/Wood_Texture-7.jpg" id="2_gr6gg"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://bckroenwlecqv" path="res://humanized_camera_3d.tscn" id="6_8qn1u"]
 [ext_resource type="PackedScene" uid="uid://bddnp4aiq0x4w" path="res://assets/succulent_plants/scene.gltf" id="6_h2fct"]
 [ext_resource type="Texture2D" uid="uid://sw144ksus5yx" path="res://assets/succulent_plants/textures/taniku01-tex_baseColor.png" id="7_uxpbj"]
+[ext_resource type="Texture2D" uid="uid://d01h4xbn66tpi" path="res://assets/texture_07.png" id="9_rl8cn"]
 
 [sub_resource type="Environment" id="Environment_ayqpk"]
 background_mode = 2
@@ -90,7 +91,7 @@ shader_parameter/distort_offset = Vector2(0, 0)
 shader_parameter/brightness = 0.001
 shader_parameter/tex = SubResource("ViewportTexture_t2dqp")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8byp1"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ugeaa"]
 resource_local_to_scene = true
 albedo_color = Color(0.1, 0.1, 0.1, 1)
 metallic = 0.6
@@ -118,6 +119,15 @@ emission_operator = 1
 subsurf_scatter_enabled = true
 subsurf_scatter_strength = 0.15
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dtr6l"]
+albedo_texture = ExtResource("9_rl8cn")
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
+texture_filter = 0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_4c1u1"]
+size = Vector2(200, 200)
+
 [node name="M8Scene" type="Node3D"]
 script = ExtResource("1_irl02")
 metadata/_edit_vertical_guides_ = [640.0]
@@ -129,7 +139,7 @@ environment = SubResource("Environment_ayqpk")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(0.258819, -0.4609, -0.848872, 0, -0.878817, 0.477159, -0.965926, -0.123498, -0.227455, 0.087698, 1.97022, -16.5359)
+transform = Transform3D(0.258819, -0.4609, -0.848872, 0, -0.878817, 0.477159, -0.965926, -0.123498, -0.227455, 0.087698, 4.97022, -16.5359)
 light_color = Color(0.862333, 0.86, 1, 1)
 shadow_enabled = true
 shadow_bias = 0.01
@@ -138,7 +148,7 @@ shadow_blur = 3.0
 
 [node name="LightLamp" type="SpotLight3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(0.266284, 0.95967, -0.0901454, -0.46377, 0.209544, 0.860818, 0.844991, -0.187416, 0.500865, -2.964, 12.715, 10.369)
+transform = Transform3D(0.266284, 0.95967, -0.0901449, -0.46377, 0.209544, 0.860819, 0.844991, -0.187416, 0.500865, -2.964, 15.715, 10.369)
 light_color = Color(1, 0.922, 0.64, 1)
 light_size = 3.0
 shadow_enabled = true
@@ -150,7 +160,7 @@ spot_angle_attenuation = 0.0192366
 
 [node name="LightLeft" type="SpotLight3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(0.231346, 0.952383, -0.198611, -0.918842, 0.280983, 0.27709, 0.319702, 0.118389, 0.940093, -4.77328, 3.32057, 10.2875)
+transform = Transform3D(0.231346, 0.952383, -0.198611, -0.918842, 0.280983, 0.27709, 0.319702, 0.118389, 0.940093, -4.77328, 6.32057, 10.2875)
 visible = false
 light_color = Color(1, 0.11, 0.11, 1)
 light_energy = 16.0
@@ -162,7 +172,7 @@ spot_angle = 36.8368
 
 [node name="LightRight" type="SpotLight3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(0.356473, 0.892189, 0.277356, -0.86415, 0.201984, 0.460919, 0.355205, -0.403983, 0.842987, 3.05577, 5.79271, 10.2875)
+transform = Transform3D(0.356473, 0.892189, 0.277356, -0.864151, 0.201984, 0.460919, 0.355205, -0.403983, 0.842987, 3.05577, 8.79271, 10.2875)
 visible = false
 light_color = Color(0.614333, 0.11, 1, 1)
 light_energy = 6.243
@@ -173,33 +183,36 @@ spot_range = 43.892
 spot_angle = 36.8368
 
 [node name="Table" type="MeshInstance3D" parent="."]
-transform = Transform3D(1.93185, 0, 0.517638, 0, 2, 0, -0.517638, 0, 1.93185, -0.546, -3.597, -1.2)
+transform = Transform3D(1.93185, 0, 0.517638, 0, 2, 0, -0.517638, 0, 1.93185, -0.546, -0.597, -1.2)
+visible = false
 material_override = SubResource("StandardMaterial3D_6po1w")
 mesh = SubResource("BoxMesh_omcp7")
 
 [node name="Table4" type="MeshInstance3D" parent="."]
-transform = Transform3D(1.97803, 0, 0.295619, 0, 2, 0, -0.295619, 0, 1.97803, -0.451, -3.597, -0.245)
+transform = Transform3D(1.97803, 0, 0.295619, 0, 2, 0, -0.295619, 0, 1.97803, -0.451, -0.597, -0.245)
+visible = false
 material_override = SubResource("StandardMaterial3D_i4bc6")
 mesh = SubResource("BoxMesh_j5ux3")
 
 [node name="Table2" type="MeshInstance3D" parent="."]
-transform = Transform3D(1.93185, 0.517638, 5.96046e-08, 0, -8.74228e-08, -2, -0.517638, 1.93185, -7.45058e-08, -2.83502, -8.37856, -7.41538)
+transform = Transform3D(1.93185, 0.517638, 5.96046e-08, 0, -8.74228e-08, -2, -0.517638, 1.93185, -7.45058e-08, -2.83502, -5.37856, -7.41538)
+visible = false
 material_override = SubResource("StandardMaterial3D_0bcqi")
 mesh = SubResource("BoxMesh_ek01r")
 
-[node name="M8Model" parent="." instance=ExtResource("4_q67qt")]
+[node name="DeviceModel" parent="." instance=ExtResource("4_q67qt")]
 unique_name_in_owner = true
-transform = Transform3D(35.8742, 0, 14.8596, 0, 38.83, 0, -14.8596, 0, 35.8742, -2.25, -3.037, 0.15)
+transform = Transform3D(35.8742, 0, 14.8596, 0, 38.83, 0, -14.8596, 0, 35.8742, -2.25, 0.214759, 0.15)
 screen_material = SubResource("ShaderMaterial_3tyua")
-keycap_material = SubResource("StandardMaterial3D_8byp1")
+keycap_material = SubResource("StandardMaterial3D_ugeaa")
 
 [node name="Camera3D" parent="." instance=ExtResource("6_8qn1u")]
 unique_name_in_owner = true
-transform = Transform3D(0.760406, -0.562438, 0.324724, 0, 0.5, 0.866026, -0.649448, -0.658531, 0.380203, 3.8, 9.615, 5.175)
+transform = Transform3D(0.760406, -0.562438, 0.324724, 0, 0.5, 0.866025, -0.649448, -0.658531, 0.380203, 3.8, 12.615, 5.175)
 dof_zoomout = 16.0
 
 [node name="Sketchfab_Scene" parent="." instance=ExtResource("6_h2fct")]
-transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 5.763, -3.306, -1.498)
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 5.763, -0.00348353, -1.498)
 
 [node name="Pot003" parent="Sketchfab_Scene/Sketchfab_model/Root" index="0"]
 visible = false
@@ -242,5 +255,9 @@ visible = false
 
 [node name="������" parent="Sketchfab_Scene/Sketchfab_model/Root" index="10"]
 visible = false
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+material_override = SubResource("StandardMaterial3D_dtr6l")
+mesh = SubResource("PlaneMesh_4c1u1")
 
 [editable path="Sketchfab_Scene"]

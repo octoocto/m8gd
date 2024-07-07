@@ -37,7 +37,7 @@ shader_parameter/distort_offset = Vector2(0, 0)
 shader_parameter/brightness = 0.001
 shader_parameter/tex = SubResource("ViewportTexture_t2dqp")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6xm2m"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v3rvt"]
 resource_local_to_scene = true
 albedo_color = Color(0.1, 0.1, 0.1, 1)
 metallic = 0.6
@@ -185,11 +185,11 @@ shadow_blur = 0.5
 spot_range = 43.892
 spot_angle = 36.8368
 
-[node name="M8Model" parent="." instance=ExtResource("4_oaihv")]
+[node name="DeviceModel" parent="." instance=ExtResource("4_oaihv")]
 unique_name_in_owner = true
 transform = Transform3D(38.83, 0, 0, 0, 6.74276, -38.24, 0, 38.2401, 6.74275, 0, 0, 0)
 screen_material = SubResource("ShaderMaterial_w3y4l")
-keycap_material = SubResource("StandardMaterial3D_6xm2m")
+keycap_material = SubResource("StandardMaterial3D_v3rvt")
 
 [node name="CameraArm" type="Node3D" parent="."]
 unique_name_in_owner = true

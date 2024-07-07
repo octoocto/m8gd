@@ -476,7 +476,7 @@ func init(p_main: M8SceneDisplay) -> void:
 ##
 func get_device_model() -> DeviceModel:
 	if main.current_scene:
-		return main.current_scene.get_node("%M8Model")
+		return main.current_scene.get_node("%DeviceModel")
 	else:
 		return null
 
