@@ -103,14 +103,15 @@ func add_item() -> void:
 	# fade out the last item
 	if is_instance_valid(current_item):
 		var last_item := current_item
-		last_item.modulate.a = 0.5
+
+		var fade_callback := func(value: float) -> void:
+			if last_item != null and is_instance_valid(last_item):
+				last_item.modulate.a = value
+				if value == 0.0:
+					last_item.queue_free()
 
 		var fade_tween := create_tween()
-		fade_tween.tween_property(last_item, "modulate:a", 0.0, 5.0)
-		fade_tween.tween_callback(func() -> void:
-			if is_instance_valid(last_item):
-				last_item.queue_free()
-		)
+		fade_tween.tween_method(fade_callback, 0.5, 0.0, 5.0)
 
 	current_item = HBoxContainer.new()
 	current_times = 1
@@ -157,7 +158,6 @@ func update_item() -> void:
 
 	if %VBoxContainer.get_children().size() > MAX_ITEMS:
 		var child := %VBoxContainer.get_child(0)
-		child.queue_free()
 		%VBoxContainer.remove_child(child)
 
 ##
