@@ -7,13 +7,6 @@ m8gd is a M8 headless client that is capable of rendering the M8's display in a 
 
 This repository consists of the C++ library and GDExtension `libm8gd` that acts as a headless M8 client library, and the Godot project `m8gd` as the frontend.
 
-## Features
-
-- Multiple 3D scenes inspired by live camera setups:
-    - [ ] The
-- [ ] s
-
-
 ## Building from source
 
 ### Requirements
