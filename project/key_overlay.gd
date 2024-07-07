@@ -48,6 +48,8 @@ var color_edit := Color.WHITE:
 
 @onready var anim_tween: Tween # tween for scroll animation
 
+@onready var current_fade_tween: Tween # tween for scroll animation
+
 @onready var current_item: HBoxContainer # last added item in the key overlay list
 @onready var current_keystate: int = -1 # bitfield of the pressed keys for the current item
 @onready var current_times: int = 0 # amount of times to display for the current item
@@ -118,10 +120,19 @@ func add_item() -> void:
 	current_item_count = 0
 	%VBoxContainer.add_child(current_item)
 	update_item()
-	if anim_tween: anim_tween.kill()
 	%Control.position.y += 30
+
+	if anim_tween: anim_tween.kill()
 	anim_tween = create_tween()
 	anim_tween.tween_property( %Control, "position:y", -40, 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+
+	if current_fade_tween: current_fade_tween.kill()
+	current_fade_tween = create_tween()
+	current_fade_tween.tween_property(current_item, "modulate:a", 0, 10.0).set_ease(Tween.EASE_IN)
+	current_fade_tween.tween_callback(func() -> void:
+		if is_instance_valid(current_item):
+			current_item.queue_free()
+	)
 
 ##
 ## Update the current item in the key overlay list.
