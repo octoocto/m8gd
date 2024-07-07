@@ -104,25 +104,25 @@ func _physics_process(delta: float) -> void:
 
 	camera.update(delta)
 	
-	# if !enable_mouse_controlled_pan_zoom: return
+	if !enable_mouse_controlled_pan_zoom or camera.is_repositioning: return
 
-	# # get mouse position as vector between (0, 0) and (1, 1)
-	# var mouse_position := get_viewport().get_mouse_position() / Vector2(get_window().size)
+	# get mouse position as vector between (0, 0) and (1, 1)
+	var mouse_position := get_viewport().get_mouse_position() / Vector2(get_window().size)
 
-	# # ignore mouse positions outside this range (outside the window)
-	# if !is_between(mouse_position.x, 0.0, 1.0) or !is_between(mouse_position.y, 0.0, 1.0):
-	# 	mouse_position = Vector2(0.5, 0.5)
+	# ignore mouse positions outside this range (outside the window)
+	if !is_between(mouse_position.x, 0.0, 1.0) or !is_between(mouse_position.y, 0.0, 1.0):
+		mouse_position = Vector2(0.5, 0.5)
 
-	# # remap mouse position to be in range (-1, -1) to (1, 1). (0, 0) is center of the window.
-	# mouse_position = (mouse_position * 2.0) - Vector2(1.0, 1.0)
+	# remap mouse position to be in range (-1, -1) to (1, 1). (0, 0) is center of the window.
+	mouse_position = (mouse_position * 2.0) - Vector2(1.0, 1.0)
 
-	# var camera_arm_mouse_range := Vector2(deg_to_rad(10), deg_to_rad(5))
-	# var camera_arm_target_rotation := (
-	# 	Vector3(
-	# 		- mouse_position.y * camera_arm_mouse_range.y,
-	# 		- mouse_position.x * camera_arm_mouse_range.x,
-	# 		0)
-	# )
+	var camera_arm_mouse_range := Vector2(deg_to_rad(10), deg_to_rad(5))
+	var camera_arm_target_rotation := (
+		Vector3(
+			- mouse_position.y * camera_arm_mouse_range.y,
+			- mouse_position.x * camera_arm_mouse_range.x,
+			0)
+	)
 
-	# # mouse panning/zoom controls
-	# %CameraArm.rotation = lerp( %CameraArm.rotation, camera_arm_target_rotation, camera.pan_smoothing_focused)
+	# mouse panning/zoom controls
+	%CameraArm.rotation = lerp( %CameraArm.rotation, camera_arm_target_rotation, camera.pan_smoothing_focused)
