@@ -1,6 +1,6 @@
 class_name M8SceneDisplay extends Node
 
-const MAIN_SCENE: PackedScene = preload ("res://scenes/desk_scene.tscn")
+const MAIN_SCENE: PackedScene = preload ("res://scenes/floating_scene.tscn")
 
 const FONT_01_SMALL: BitMap = preload ("res://assets/m8_fonts/5_7.bmp")
 const FONT_01_BIG: BitMap = preload ("res://assets/m8_fonts/8_9.bmp")
