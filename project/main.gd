@@ -52,6 +52,12 @@ signal m8_scene_changed
 @onready var m8_keystate_last: int = 0
 @onready var m8_locally_controlled := false
 
+var current_serial_device: String = ""
+var current_audio_device: String = ""
+
+## if true, keep scanning for devices until one is found
+var is_waiting_for_device := true
+
 ## true if audio device is in the middle of connecting
 var is_audio_connecting := false
 var audio_device_last: String = ""
@@ -147,6 +153,9 @@ func _preload_scene(packed_scene: PackedScene) -> void:
 
 func m8_device_connect(port: String) -> void:
 
+	if m8_client.is_connected():
+		m8_device_disconnect()
+
 	var m8_ports: Array = M8GD.list_devices()
 
 	if !port in m8_ports:
@@ -165,6 +174,7 @@ func m8_device_connect(port: String) -> void:
 	m8_client.system_info.connect(on_m8_system_info)
 	m8_client.font_changed.connect(on_m8_font_changed)
 	m8_client.device_disconnected.connect(on_m8_device_disconnect)
+	current_serial_device = port
 
 	print_blink("connected to M8 at %s!" % m8_ports[0])
 	menu.set_status_serialport("Connected to: %s" % m8_ports[0])
@@ -215,6 +225,7 @@ func m8_audio_connect(device: String) -> void:
 	is_audio_connecting = false
 	AudioServer.set_bus_mute(0, false)
 
+	current_audio_device = device
 	print("audio: connected to device %s" % device)
 	menu.set_status_audiodevice("Connected to: %s" % device)
 
@@ -239,6 +250,7 @@ func m8_audio_disconnect() -> void:
 	m8_audio_connected = false
 	AudioServer.input_device = "Default"
 	audio_monitor.playing = false
+	current_audio_device = ""
 	print("audio: disconnected")
 	menu.set_status_audiodevice("Not connected (Disconnected)")
 
@@ -279,6 +291,14 @@ func on_m8_font_changed(model: String, font: int) -> void:
 			else:
 				m8_client.load_font(FONT_01_BIG)
 
+func m8_device_disconnect(wait_for_device:=true) -> void:
+	if m8_client.is_connected():
+		m8_client.disconnect()
+		on_m8_device_disconnect()
+		is_waiting_for_device = wait_for_device
+		if is_waiting_for_device:
+			menu.set_status_serialport("Not connected. Waiting for device...")
+
 ## Called when the M8 has been disconnected.
 func on_m8_device_disconnect() -> void:
 
@@ -293,6 +313,7 @@ func on_m8_device_disconnect() -> void:
 	if m8_audio_connected:
 		m8_audio_disconnect()
 
+	current_serial_device = ""
 	print_blink("disconnected")
 	menu.set_status_serialport("Not connected (Disconnected)")
 
@@ -369,15 +390,15 @@ func _process(_delta: float) -> void:
 		m8_client.update_texture()
 
 	# auto connect to m8s
-	if !m8_connected:
+	if !m8_connected and is_waiting_for_device:
 		m8_device_connect_auto()
 
 	# auto monitor audio if m8 is connected
-	if m8_connected and !m8_audio_connected:
-		m8_audio_connect_auto()
-
-	if m8_connected and m8_audio_connected:
-		m8_audio_check()
+	if m8_connected:
+		if m8_audio_connected:
+			m8_audio_check()
+		else:
+			m8_audio_connect_auto()
 
 	%LabelFPS.text = "%d" % Engine.get_frames_per_second()
 

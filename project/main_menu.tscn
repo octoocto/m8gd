@@ -278,13 +278,25 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_06k14")
+
 [node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer"]
 layout_mode = 2
 
 [node name="ButtonRefreshSerialPorts" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
-text = "Refresh"
+text = "Refresh List"
+
+[node name="ButtonDisconnectSerialPort" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+disabled = true
+text = "Disconnect"
 
 [node name="ButtonConnectSerialPort" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
@@ -336,13 +348,25 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="HSeparator3" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_06k14")
+
 [node name="HBoxContainer2" type="HBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer"]
 layout_mode = 2
 
 [node name="ButtonRefreshAudioDevices" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer/HBoxContainer2"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
-text = "Refresh"
+text = "Refresh List"
+
+[node name="ButtonDisconnectAudioDevice" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+disabled = true
+text = "Disconnect"
 
 [node name="ButtonConnectAudioDevice" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer/HBoxContainer2"]
 unique_name_in_owner = true

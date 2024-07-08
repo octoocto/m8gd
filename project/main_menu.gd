@@ -449,8 +449,14 @@ func init(p_main: M8SceneDisplay) -> void:
 
 	refresh_serial_ports.call()
 
-	%ListSerialPorts.item_selected.connect(func(_index: int) -> void:
+	%ListSerialPorts.item_selected.connect(func(index: int) -> void:
 		%ButtonConnectSerialPort.disabled=false
+		if main.current_serial_device == %ListSerialPorts.get_item_text(index):
+			%ButtonConnectSerialPort.text="Reconnect"
+			%ButtonDisconnectSerialPort.disabled=false
+		else:
+			%ButtonConnectSerialPort.text="Connect"
+			%ButtonDisconnectSerialPort.disabled=true
 	)
 
 	%ButtonRefreshSerialPorts.pressed.connect(refresh_serial_ports)
@@ -461,6 +467,11 @@ func init(p_main: M8SceneDisplay) -> void:
 		main.m8_device_connect(text)
 		%ListSerialPorts.deselect_all()
 		%ButtonConnectSerialPort.disabled=true
+		%ButtonConnectSerialPort.text="Connect"
+	)
+
+	%ButtonDisconnectSerialPort.pressed.connect(func() -> void:
+		main.m8_device_disconnect(false)
 	)
 
 	# audio devices
@@ -472,8 +483,14 @@ func init(p_main: M8SceneDisplay) -> void:
 
 	refresh_audio_devices.call()
 
-	%ListAudioDevices.item_selected.connect(func(_index: int) -> void:
+	%ListAudioDevices.item_selected.connect(func(index: int) -> void:
 		%ButtonConnectAudioDevice.disabled=false
+		if main.current_audio_device == %ListAudioDevices.get_item_text(index):
+			%ButtonConnectAudioDevice.text="Reconnect"
+			%ButtonDisconnectAudioDevice.disabled=false
+		else:
+			%ButtonConnectAudioDevice.text="Connect"
+			%ButtonDisconnectAudioDevice.disabled=true
 	)
 
 	%ButtonRefreshAudioDevices.pressed.connect(refresh_audio_devices)
@@ -484,6 +501,11 @@ func init(p_main: M8SceneDisplay) -> void:
 		main.m8_audio_connect(text)
 		%ListAudioDevices.deselect_all()
 		%ButtonConnectAudioDevice.disabled=true
+		%ButtonConnectAudioDevice.text="Connect"
+	)
+
+	%ButtonDisconnectAudioDevice.pressed.connect(func() -> void:
+		main.m8_audio_disconnect()
 	)
 
 	%TabContainer.tab_changed.connect(func(tab: int) -> void:
