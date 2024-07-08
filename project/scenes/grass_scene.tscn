@@ -43,7 +43,7 @@ shader_parameter/distort_offset = Vector2(0, 0)
 shader_parameter/brightness = 0.001
 shader_parameter/tex = SubResource("ViewportTexture_t2dqp")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_b5a0p"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7eprg"]
 resource_local_to_scene = true
 albedo_color = Color(0.1, 0.1, 0.1, 1)
 metallic = 0.6
@@ -190,13 +190,12 @@ spot_angle = 36.8368
 unique_name_in_owner = true
 transform = Transform3D(35.8742, 0, 14.8596, 0, 38.83, 0, -14.8596, 0, 35.8742, -2.25, 2.51882, 0.15)
 screen_material = SubResource("ShaderMaterial_3tyua")
-keycap_material = SubResource("StandardMaterial3D_b5a0p")
+keycap_material = SubResource("StandardMaterial3D_7eprg")
 
 [node name="Camera3D" parent="." instance=ExtResource("6_08s3p")]
 unique_name_in_owner = true
 transform = Transform3D(0.994522, 0.0856243, -0.0599548, 0, 0.573576, 0.819152, 0.104528, -0.814665, 0.570434, -2.67, 12.5984, 7.73)
 attributes = SubResource("CameraAttributesPractical_lyp6v")
-dof_zoomout = 16.0
 
 [node name="GrassArea" parent="." instance=ExtResource("7_83g7i")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.311, 1.3, 2)

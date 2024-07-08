@@ -346,6 +346,18 @@ size_flags_vertical = 8
 unique_name_in_owner = true
 layout_mode = 2
 
+[node name="CameraStatus" type="RichTextLabel" parent="UI/MarginContainer/GridContainer/VBoxContainer3"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+bbcode_enabled = true
+text = "[b]CAM[/b]
+POS		%+05.1f %+05.1f %+05.1f
+ANG	%+04.0f %+04.0f
+LEN		%03.1f
+"
+fit_content = true
+
 [node name="VBoxContainer4" type="VBoxContainer" parent="UI/MarginContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3

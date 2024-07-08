@@ -74,6 +74,7 @@ func init(p_main: M8SceneDisplay) -> void:
 	super(p_main)
 
 	%DeviceModel.init(main)
+	camera.init(main)
 
 func _physics_process(delta: float) -> void:
 

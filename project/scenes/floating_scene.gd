@@ -94,6 +94,7 @@ func init(p_main: M8SceneDisplay) -> void:
 
 	%DeviceModel.init(main)
 	%DisplayMesh.material_override.set_shader_parameter("tex", main.m8_client.get_display_texture())
+	camera.init(main)
 
 func is_between(x: float, a: float, b: float) -> bool:
 	return a < x and x < b

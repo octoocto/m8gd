@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://f2tvhcv8kiuu"]
+[gd_scene load_steps=28 format=3 uid="uid://f2tvhcv8kiuu"]
 
 [ext_resource type="Script" path="res://scenes/surface_scene.gd" id="1_87ai1"]
 [ext_resource type="PackedScene" uid="uid://budu6000msy4d" path="res://device_model.tscn" id="3_trbiq"]
@@ -34,12 +34,21 @@ shader_parameter/distort_offset = Vector2(0, 0)
 shader_parameter/brightness = 0.001
 shader_parameter/tex = SubResource("ViewportTexture_t2dqp")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2hsxo"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_njcvo"]
 resource_local_to_scene = true
 albedo_color = Color(0.1, 0.1, 0.1, 1)
 metallic = 0.6
 metallic_specular = 0.06
 roughness = 0.46
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_5h073"]
+auto_exposure_scale = 0.02
+dof_blur_far_enabled = true
+dof_blur_far_distance = 17.4
+dof_blur_far_transition = 1.0
+dof_blur_near_enabled = true
+dof_blur_near_distance = 11.4
+dof_blur_amount = 0.18
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tb1h5"]
 resource_name = "syna"
@@ -260,12 +269,15 @@ spot_angle = 36.8368
 unique_name_in_owner = true
 transform = Transform3D(38.83, 0, 0, 0, 38.83, 0, 0, 0, 38.83, 0, 0.269188, 0)
 screen_material = SubResource("ShaderMaterial_3tyua")
-keycap_material = SubResource("StandardMaterial3D_2hsxo")
+keycap_material = SubResource("StandardMaterial3D_njcvo")
 
 [node name="Camera3D" parent="." instance=ExtResource("5_jy4yn")]
 unique_name_in_owner = true
 transform = Transform3D(0.906308, -0.365998, 0.211309, 0, 0.5, 0.866025, -0.422618, -0.784885, 0.453154, 4.353, 12.615, 6.695)
-dof_zoomout = 16.0
+attributes = SubResource("CameraAttributesPractical_5h073")
+dof_zoomin = 1.5
+dof_focus_distance = 14.4
+dof_focus_width = 3.0
 
 [node name="PlantModel" type="Node3D" parent="."]
 unique_name_in_owner = true

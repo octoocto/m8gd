@@ -1,3 +1,4 @@
+@tool
 class_name HumanizedCamera3D extends Camera3D
 
 @export var mouse_controlled_pan_zoom := true
@@ -11,8 +12,23 @@ class_name HumanizedCamera3D extends Camera3D
 @export var pan_range_zoomin := Vector2(15, 10)
 @export var fov_zoomout := 30.0
 @export var fov_zoomin := 15.0
-@export var dof_zoomout := 15.0
-@export var dof_zoomin := 17.0
+
+@export var dof_zoomout := 1.5
+@export var dof_zoomin := 0.5
+
+@export var dof_focus_distance := 13.5:
+	set(value):
+		dof_focus_distance = value
+		attributes.dof_blur_far_distance = value + dof_focus_width
+		attributes.dof_blur_near_distance = value - dof_focus_width
+
+@export_range(-0.5, 100, 0.1) var dof_focus_width := 1.5:
+	set(value):
+		dof_focus_width = value
+		attributes.dof_blur_far_distance = dof_focus_distance + value
+		attributes.dof_blur_near_distance = dof_focus_distance - value
+
+@onready var main: M8SceneDisplay
 
 @onready var base_rotation := rotation
 @onready var base_position := position
@@ -33,6 +49,9 @@ func vdeg_to_rad(v: Vector2) -> Vector2:
 
 func _ready() -> void:
 	noise.noise_type = FastNoiseLite.TYPE_PERLIN
+
+func init(p_main: M8SceneDisplay) -> void:
+	main = p_main
 
 func update(delta: float) -> void:
 
@@ -84,7 +103,7 @@ func update_mouse_movement(_delta: float) -> void:
 	# mouse panning/zoom controls
 	rotation = lerp(rotation, target_rotation, pan_smoothing)
 	fov = lerp(fov, target_fov, fov_smoothing)
-	attributes.dof_blur_far_distance = lerp(attributes.dof_blur_far_distance, target_dof, 0.01)
+	dof_focus_width = lerp(dof_focus_width, target_dof, 0.1)
 
 func update_reposition(delta: float) -> void:
 	if Input.is_action_pressed("cam_forward"):
@@ -96,19 +115,37 @@ func update_reposition(delta: float) -> void:
 	if Input.is_action_pressed("cam_right"):
 		global_position += global_transform.basis.x * delta * 10
 
+	update_status()
+
 func _input(event: InputEvent) -> void:
 
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
 		if event.pressed:
 			is_repositioning = true
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+			main.cam_status.visible = true
+			update_status()
 		else:
 			is_repositioning = false
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 			base_position = position
 			base_rotation = rotation
+			main.cam_status.visible = false
 
 	if is_repositioning:
 		if event is InputEventMouseMotion:
 			rotation.y -= event.relative.x * 0.001
 			rotation.x -= event.relative.y * 0.001
+		
+		if event is InputEventMouseButton and event.pressed:
+			if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+				dof_focus_distance += 0.1
+			if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+				dof_focus_distance -= 0.1
+
+func update_status() -> void:
+	main.cam_status.text = main.cam_status_template % [
+		position.x, position.y, position.z,
+		rad_to_deg(rotation.x), rad_to_deg(rotation.y),
+		dof_focus_distance
+	]

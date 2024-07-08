@@ -40,6 +40,9 @@ signal m8_scene_changed
 
 @onready var menu: MainMenu = %MainMenuPanel
 
+@onready var cam_status: RichTextLabel = %CameraStatus
+@onready var cam_status_template: String = cam_status.text
+
 @onready var config := M8Config.load()
 
 @onready var m8_client := M8GD.new()
