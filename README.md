@@ -32,12 +32,16 @@ $ git submodule update --init
 ```
 
 #### 2. Compile the GDExtension libm8gd
-If necessary, use the `platform=<platform>` flag to specify the platform to compile for.
-```sh
+```bash
 $ scons target=template_release
 
 # or, specify a platform ("windows", "linux", or "macos")
-$ scons platform=windows target=template_release
+$ scons target=template_release platform=<platform>
+```
+##### Compiling for Windows (via MinGW64)
+```bash
+# specifying platform is required here
+$ scons target=template_release platform=windows
 ```
 
 #### 3. Download and Install the export templates for Godot
