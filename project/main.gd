@@ -30,7 +30,7 @@ signal m8_scene_changed
 @export var visualizer_frequency_min := 0
 @export var visualizer_frequency_max := 400
 
-@onready var audio_monitor: AudioStreamPlayer
+@onready var audio_monitor: AudioStreamPlayer = %AudioStreamPlayer
 
 # @onready var scene_viewport: SubViewport = %SceneViewport
 @onready var scene_root: Node = %SceneRoot
@@ -203,21 +203,21 @@ func m8_audio_connect(device: String) -> void:
 	is_audio_connecting = true
 	AudioServer.set_bus_mute(0, true)
 
-	if audio_monitor and is_instance_valid(audio_monitor):
-		audio_monitor.stream = null
-		audio_monitor.queue_free()
-		remove_child(audio_monitor)
-		audio_monitor = null
+	# if audio_monitor and is_instance_valid(audio_monitor):
+	# 	audio_monitor.stream = null
+	# 	audio_monitor.queue_free()
+	# 	remove_child(audio_monitor)
+	# 	audio_monitor = null
 
 	menu.set_status_audiodevice("Not connected")
 	await get_tree().create_timer(0.1).timeout
 
 	AudioServer.input_device = device
 
-	audio_monitor = AudioStreamPlayer.new()
-	audio_monitor.stream = AudioStreamMicrophone.new()
-	audio_monitor.bus = "Analyzer"
-	add_child(audio_monitor)
+	# audio_monitor = AudioStreamPlayer.new()
+	# audio_monitor.stream = AudioStreamMicrophone.new()
+	# audio_monitor.bus = "Analyzer"
+	# add_child(audio_monitor)
 	audio_monitor.playing = false
 
 	menu.set_status_audiodevice("Starting...")
