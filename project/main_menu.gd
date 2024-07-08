@@ -432,14 +432,6 @@ func init(p_main: M8SceneDisplay) -> void:
 	# Misc
 	# --------------------------------------------------------------------
 
-	# debug text
-
-	%CheckButtonDebug.toggled.connect(func(toggled_on: bool) -> void:
-		main.get_node("%DebugLabels").visible=toggled_on
-		config.debug_info=toggled_on
-	)
-	%CheckButtonDebug.button_pressed = config.debug_info
-
 	# serial ports
 
 	var refresh_serial_ports := func() -> void:
@@ -512,6 +504,55 @@ func init(p_main: M8SceneDisplay) -> void:
 		if tab == 5: # misc tab
 			refresh_serial_ports.call()
 			refresh_audio_devices.call()
+	)
+
+	# Debug Tab
+	# --------------------------------------------------------------------
+
+	%CheckButtonDebug.toggled.connect(func(toggled_on: bool) -> void:
+		main.get_node("%DebugLabels").visible=toggled_on
+		config.debug_info=toggled_on
+	)
+	%CheckButtonDebug.button_pressed = config.debug_info
+
+	%ButtonM8Enable.pressed.connect(main.m8_send_enable_display)
+	%ButtonM8Disable.pressed.connect(main.m8_send_disable_display)
+	%ButtonM8Reset.pressed.connect(main.m8_send_reset_display)
+
+	%SpinBoxM8Keys.value_changed.connect(func(value: float) -> void:
+		%LabelM8KeysBinary.text=String.num_int64(int(value), 2).pad_zeros(8)
+	)
+
+	%ButtonM8Control.pressed.connect(func() -> void:
+		var keys: int= %SpinBoxM8Keys.get_line_edit().text.to_int()
+		main.m8_send_control(keys)
+	)
+
+	%ButtonM8KeyJazz.pressed.connect(func() -> void:
+		var n: int= %SpinBoxM8Note.get_line_edit().text.to_int()
+		var v: int= %SpinBoxM8Vel.get_line_edit().text.to_int()
+		print("debug: sending keyjazz (n=%d, v=%d)" % [n, v])
+		main.m8_send_keyjazz(n, v)
+	)
+
+	%SpinBoxM8ThemeDelay.value_changed.connect(func(value: float) -> void:
+		%LabelM8ThemeDelayMS.text="%.1fms" % (value / 60.0 * 1000.0)
+	)
+
+	var m8t_colors := [
+		%ColorM8T0, %ColorM8T1, %ColorM8T2, %ColorM8T3,
+		%ColorM8T4, %ColorM8T5, %ColorM8T6, %ColorM8T7,
+		%ColorM8T8, %ColorM8T9, %ColorM8T10, %ColorM8T11,
+		%ColorM8T12
+	]
+
+	%ButtonM8Theme.pressed.connect(func() -> void:
+		print("debug: sending theme colors")
+		var delay_frames: int= %SpinBoxM8ThemeDelay.get_line_edit().text.to_int()
+		for i: int in range(m8t_colors.size()):
+			main.m8_send_theme_color(i, m8t_colors[i].color)
+			for j in range(delay_frames):
+				await get_tree().physics_frame
 	)
 
 func on_color_picker_add_preset(color: Color) -> void:

@@ -317,6 +317,24 @@ func on_m8_device_disconnect() -> void:
 	print_blink("disconnected")
 	menu.set_status_serialport("Not connected (Disconnected)")
 
+func m8_send_theme_color(index: int, color: Color) -> void:
+	m8_client.send_theme_color(index, color)
+
+func m8_send_enable_display() -> void:
+	m8_client.send_enable_display()
+
+func m8_send_disable_display() -> void:
+	m8_client.send_disable_display()
+
+func m8_send_reset_display() -> void:
+	m8_client.send_reset_display()
+
+func m8_send_keyjazz(note: int, velocity: int) -> void:
+	m8_client.send_keyjazz(note, velocity)
+
+func m8_send_control(keys: int) -> void:
+	m8_client.send_input(keys)
+
 func audio_get_level() -> float:
 	return audio_level
 
