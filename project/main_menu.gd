@@ -362,6 +362,9 @@ func init(p_main: M8SceneDisplay) -> void:
 	%ColorPickerHL_Left.color_changed.connect(on_directional_color_changed)
 	%ColorPickerHL_Right.color_changed.connect(on_directional_color_changed)
 	%ColorPickerHL_Up.color = config.hl_color_directional
+	%ColorPickerHL_Down.color = config.hl_color_directional
+	%ColorPickerHL_Left.color = config.hl_color_directional
+	%ColorPickerHL_Right.color = config.hl_color_directional
 
 	%ColorPickerHL_Shift.color_changed.connect(func(color: Color) -> void:
 		main.key_overlay.color_shift=color
