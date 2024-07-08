@@ -391,6 +391,19 @@ func init(p_main: M8SceneDisplay) -> void:
 	)
 	%ColorPickerHL_Edit.color = config.hl_color_edit
 
+	for colorpicker: ColorPickerButton in [
+		%ColorPickerHL_Up,
+		%ColorPickerHL_Down,
+		%ColorPickerHL_Left,
+		%ColorPickerHL_Right,
+		%ColorPickerHL_Shift,
+		%ColorPickerHL_Play,
+		%ColorPickerHL_Option,
+		%ColorPickerHL_Edit
+	]:
+		colorpicker.get_picker().preset_added.connect(on_color_picker_add_preset)
+		colorpicker.get_picker().preset_removed.connect(on_color_picker_erase_preset)
+
 	%CheckButtonKeyOverlayEnable.toggled.connect(func(toggled_on: bool) -> void:
 		main.key_overlay.visible=toggled_on
 		if toggled_on == false:
@@ -471,6 +484,26 @@ func init(p_main: M8SceneDisplay) -> void:
 			refresh_serial_ports.call()
 			refresh_audio_devices.call()
 	)
+
+func on_color_picker_add_preset(color: Color) -> void:
+	%ColorPickerHL_Up.get_picker().add_preset(color)
+	%ColorPickerHL_Down.get_picker().add_preset(color)
+	%ColorPickerHL_Left.get_picker().add_preset(color)
+	%ColorPickerHL_Right.get_picker().add_preset(color)
+	%ColorPickerHL_Shift.get_picker().add_preset(color)
+	%ColorPickerHL_Play.get_picker().add_preset(color)
+	%ColorPickerHL_Option.get_picker().add_preset(color)
+	%ColorPickerHL_Edit.get_picker().add_preset(color)
+
+func on_color_picker_erase_preset(color: Color) -> void:
+	%ColorPickerHL_Up.get_picker().erase_preset(color)
+	%ColorPickerHL_Down.get_picker().erase_preset(color)
+	%ColorPickerHL_Left.get_picker().erase_preset(color)
+	%ColorPickerHL_Right.get_picker().erase_preset(color)
+	%ColorPickerHL_Shift.get_picker().erase_preset(color)
+	%ColorPickerHL_Play.get_picker().erase_preset(color)
+	%ColorPickerHL_Option.get_picker().erase_preset(color)
+	%ColorPickerHL_Edit.get_picker().erase_preset(color)
 
 ##
 ## Try to return the device model in the current scene.
