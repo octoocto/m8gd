@@ -1545,7 +1545,7 @@ text = "Delay"
 [node name="SpinBoxM8ThemeDelay" type="SpinBox" parent="CenterContainer/VBoxContainer/TabContainer/Debug/VBoxContainer/HBoxContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
-max_value = 6.0
+max_value = 10.0
 value = 2.0
 suffix = "f"
 
