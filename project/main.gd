@@ -67,7 +67,7 @@ var last_audio_level := 0.0
 func _ready() -> void:
 
 	# resize viewport with window
-	DisplayServer.window_set_min_size(Vector2i(640, 480)) # 2x M8 screen size
+	DisplayServer.window_set_min_size(Vector2i(960, 640)) # 2x M8 screen size
 
 	# initialize key overlay
 	key_overlay.init(self)
