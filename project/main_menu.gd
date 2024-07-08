@@ -44,6 +44,10 @@ func init(p_main: M8SceneDisplay) -> void:
 		main.quit()
 	)
 
+	%ButtonClose.pressed.connect(func() -> void:
+		visible=false
+	)
+
 	%DisplayRect.texture = main.m8_client.get_display_texture()
 
 	#==========================================================================
