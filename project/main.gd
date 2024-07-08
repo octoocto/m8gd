@@ -86,6 +86,10 @@ func _ready() -> void:
 	if not load_scene(config.last_scene_path):
 		_preload_scene(MAIN_SCENE)
 
+	%ButtonSplashClose.pressed.connect(func() -> void:
+		%SplashContainer.visible=false
+	)
+
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		quit()
