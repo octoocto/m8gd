@@ -47,9 +47,9 @@ roughness = 0.46
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_cep2e"]
 auto_exposure_scale = 0.02
 dof_blur_far_enabled = true
-dof_blur_far_distance = 15.0
+dof_blur_far_distance = 15.5
 dof_blur_far_transition = 2.75
-dof_blur_near_distance = 11.93
+dof_blur_near_distance = 12.5
 dof_blur_near_transition = 2.25
 dof_blur_amount = 0.5
 
@@ -199,6 +199,7 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 14)
 attributes = SubResource("CameraAttributesPractical_cep2e")
 dof_zoomin = 0.0
+dof_focus_distance = 14.0
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="."]
 visible = false
