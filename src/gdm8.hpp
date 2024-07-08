@@ -137,6 +137,12 @@ public:
 	///
 	void send_input(uint8_t input_code);
 
+	void send_theme_color(uint8_t index, Color color);
+
+	void send_enable_display();
+
+	void send_disable_display();
+
 	/// @brief Attempts to connect to the serial port at port_name.
 	///        Serial port name must be of a valid M8 device.
 	/// @param port_name

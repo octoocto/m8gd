@@ -30,6 +30,10 @@ void M8GD::_bind_methods()
 
 	ClassDB::bind_method(D_METHOD("send_keyjazz", "note", "velocity"), &M8GD::send_keyjazz);
 	ClassDB::bind_method(D_METHOD("send_input", "input_code"), &M8GD::send_input);
+	ClassDB::bind_method(D_METHOD("send_theme_color", "index", "color"), &M8GD::send_theme_color);
+	ClassDB::bind_method(D_METHOD("send_enable_display"), &M8GD::send_enable_display);
+	ClassDB::bind_method(D_METHOD("send_disable_display"), &M8GD::send_disable_display);
+	ClassDB::bind_method(D_METHOD("send_reset_display"), &M8GD::reset_display);
 
 	ClassDB::bind_method(D_METHOD("read_serial_data"), &M8GD::read);
 	ClassDB::bind_method(D_METHOD("is_connected"), &M8GD::is_connected);
@@ -208,6 +212,28 @@ void M8GD::send_keyjazz(uint8_t note, uint8_t velocity)
 void M8GD::send_input(uint8_t keystate)
 {
 	m8_client.send_control_keys(keystate);
+}
+
+void M8GD::send_theme_color(uint8_t index, Color color)
+{
+	// ERR_FAIL_COND_MSG(index > 12, vformat("Invalid color index %d", index));
+
+	const uint32_t rgba32 = color.to_rgba32();
+	uint8_t *rgba = (uint8_t *)&rgba32;
+	libm8::Error err = m8_client.send_theme_color(index, rgba[3], rgba[2], rgba[1]);
+	print("set theme color at idx %d to %02X %02X %02X", index, rgba[3], rgba[2], rgba[1]);
+
+	ERR_FAIL_COND_MSG(err != libm8::OK, vformat("Failed to send command, error code = %d", err));
+}
+
+void M8GD::send_enable_display()
+{
+	m8_client.send_enable_display();
+}
+
+void M8GD::send_disable_display()
+{
+	m8_client.send_disable_display();
 }
 
 godot::TypedArray<godot::String> M8GD::list_devices()
