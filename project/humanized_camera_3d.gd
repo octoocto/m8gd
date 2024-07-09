@@ -124,6 +124,7 @@ func _input(event: InputEvent) -> void:
 			is_repositioning = true
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 			main.cam_status.visible = true
+			main.cam_help.visible = true
 			update_status()
 		else:
 			is_repositioning = false
@@ -131,6 +132,7 @@ func _input(event: InputEvent) -> void:
 			base_position = position
 			base_rotation = rotation
 			main.cam_status.visible = false
+			main.cam_help.visible = false
 
 	if is_repositioning:
 		if event is InputEventMouseMotion:
