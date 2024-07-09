@@ -977,13 +977,20 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "VSync"
 
-[node name="VSeparator2" type="VSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerVideo"]
+[node name="LabelVsync" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerVideo"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_4w3sk")
+text = "Enabled"
+horizontal_alignment = 2
 
-[node name="CheckButtonVsync" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerVideo"]
+[node name="SliderVsync" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerVideo"]
 unique_name_in_owner = true
 layout_mode = 2
+max_value = 3.0
+value = 1.0
+tick_count = 4
+ticks_on_borders = true
 
 [node name="Label4" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerVideo"]
 custom_minimum_size = Vector2(100, 0)

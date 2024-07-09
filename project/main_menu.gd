@@ -147,14 +147,23 @@ func init(p_main: M8SceneDisplay) -> void:
 	)
 	%CheckButtonFullscreen.button_pressed = config.fullscreen
 
-	%CheckButtonVsync.toggled.connect(func(toggled_on: bool) -> void:
-		if toggled_on:
-			DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED)
-		else:
-			DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
-		config.vsync=toggled_on
+	%SliderVsync.value_changed.connect(func(value: int) -> void:
+		match value:
+			1:
+				DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED)
+				%LabelVsync.text="Enabled"
+			2:
+				DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_MAILBOX)
+				%LabelVsync.text="Mailbox"
+			3:
+				DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ADAPTIVE)
+				%LabelVsync.text="Adaptive"
+			0, _:
+				DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
+				%LabelVsync.text="Disabled"
+		config.vsync=value
 	)
-	%CheckButtonVsync.button_pressed = config.vsync
+	%SliderVsync.value = config.vsync
 
 	# Window resolution
 	# ------------------------------------------------------------------------
@@ -720,5 +729,4 @@ func _input(event: InputEvent) -> void:
 func _process(_delta: float) -> void:
 	%CheckButtonFullscreen.button_pressed = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN
 	%OptionRes.disabled = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN
-	%CheckButtonVsync.button_pressed = DisplayServer.window_get_vsync_mode() == DisplayServer.VSYNC_ENABLED
 	%LabelFPSCap.text = "%d" % Engine.max_fps
