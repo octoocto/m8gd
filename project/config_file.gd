@@ -40,6 +40,7 @@ var version: int = 0
 @export var crt_filter := false
 
 # visualizer settings
+@export var audio_analyzer_enabled := false
 @export var audio_analyzer_min_freq: int = 800
 @export var audio_analyzer_max_freq: int = 1200
 @export var audio_to_brightness := 0.1

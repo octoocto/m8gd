@@ -1215,13 +1215,27 @@ fit_content = true
 layout_mode = 2
 columns = 3
 
+[node name="Label2" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer/GridContainer3"]
+layout_mode = 2
+text = "Enable Spectrum Analyzer"
+
+[node name="VSeparator3" type="VSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer/GridContainer3"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/separator = SubResource("StyleBoxEmpty_sgnvi")
+
+[node name="CheckButtonEnableSA" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer/GridContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+
 [node name="Label4" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer/GridContainer3"]
 custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 text = "Min Frequency"
 vertical_alignment = 1
 
-[node name="LabelAVCA2" type="VSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer/GridContainer3"]
+[node name="VSeparator" type="VSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer/GridContainer3"]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 size_flags_vertical = 4
@@ -1243,7 +1257,7 @@ layout_mode = 2
 text = "Max Frequency"
 vertical_alignment = 1
 
-[node name="LabelAVCA3" type="VSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer/GridContainer3"]
+[node name="VSeparator2" type="VSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer/GridContainer3"]
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 size_flags_vertical = 4

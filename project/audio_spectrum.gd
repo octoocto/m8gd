@@ -17,41 +17,36 @@ enum Type {BAR, CIRCLE}
 
 @export_range(0.0, 1.0) var spectrum_smoothing: float = 0.5
 
-var spectrum_analyzer: AudioEffectSpectrumAnalyzerInstance
+var main: M8SceneDisplay
 
 var last_peaks := []
 
-func _fft(from_hz: float, to_hz: float) -> float:
-	var magnitude := spectrum_analyzer.get_magnitude_for_frequency_range(
-		from_hz,
-		to_hz,
-		AudioEffectSpectrumAnalyzerInstance.MAGNITUDE_MAX
-	).length()
-	return clamp(magnitude, 0, 1)
-
-func _ready():
+func _ready() -> void:
 	last_peaks.resize(spectrum_res)
 	last_peaks.fill(0.0)
-	spectrum_analyzer = AudioServer.get_bus_effect_instance(1, 0)
 
-func _process(_delta):
+func init(p_main: M8SceneDisplay) -> void:
+	main = p_main
+
+func _process(_delta: float) -> void:
 	if visible:
-		print("drawing spectrum")
 		queue_redraw()
 
-func _draw():
-	var bar_width := spectrum_width / spectrum_res
-	var logspace = logrange(spectrum_freq_min, spectrum_freq_max, spectrum_res + 1)
+func _draw() -> void:
+	if !main.audio_is_spectrum_analyzer_enabled(): return
 
-	var polygon_points = []
+	var bar_width := spectrum_width / spectrum_res
+	var logspace := logrange(spectrum_freq_min, spectrum_freq_max, spectrum_res + 1)
+
+	var polygon_points := []
 
 	for i in range(logspace.size() - 1):
 
-		var magnitude = _fft(logspace[i], logspace[i + 1])
-		var height = clamp((spectrum_db_min + linear_to_db(magnitude)) / spectrum_db_min, 0.0, 1.0) * spectrum_height
+		var magnitude := main.audio_fft(logspace[i], logspace[i + 1])
+		var height: float = clamp((spectrum_db_min + linear_to_db(magnitude)) / spectrum_db_min, 0.0, 1.0) * spectrum_height
 
 		# var height_avg = max(height, lerp(height, last_peaks[i], spectrum_smoothing))
-		var height_avg = lerp(height, last_peaks[i], spectrum_smoothing)
+		var height_avg: float = lerp(height, last_peaks[i], spectrum_smoothing)
 		last_peaks[i] = height_avg
 
 		if type == Type.BAR:
@@ -72,7 +67,9 @@ func _draw():
 		# polygon_points[0].y = 0
 		if mirror:
 			# polygon_points[- 1].y = 0
-			var mirrored_points = polygon_points.map(func(vec: Vector2): return vec.reflect(Vector2.UP))
+			var mirrored_points := polygon_points.map(func(vec: Vector2) -> Vector2:
+				return vec.reflect(Vector2.UP)
+			)
 			polygon_points.reverse()
 			polygon_points.append_array(mirrored_points)
 		# for point in polygon_points:
@@ -87,7 +84,9 @@ func _draw():
 
 	if type == Type.CIRCLE:
 		# add mirrored points to polygon
-		var mirrored_points = polygon_points.map(func(vec: Vector2): return vec.reflect(Vector2.UP))
+		var mirrored_points := polygon_points.map(func(vec: Vector2) -> Vector2:
+			return vec.reflect(Vector2.UP)
+		)
 		mirrored_points.reverse()
 		mirrored_points.pop_back()
 		mirrored_points.pop_front()
@@ -96,12 +95,12 @@ func _draw():
 		draw_colored_polygon(polygon_points, Color.WHITE)
 		# draw_polyline(polygon_points, Color.WHITE, 4, true)
 
-func logrange(a, b, step) -> Array:
-	var pow_a = log(a) / log(10) # convert to 10^a form
-	var pow_b = log(b) / log(10) # convert to 10^b form
-	var d = (pow_b - pow_a) / float(step)
+func logrange(a: float, b: float, step: float) -> Array:
+	var pow_a := log(a) / log(10) # convert to 10^a form
+	var pow_b := log(b) / log(10) # convert to 10^b form
+	var d := (pow_b - pow_a) / float(step)
 
-	var logspace = []
+	var logspace := []
 
 	for i in range(step):
 		logspace.append(pow(10, pow_a + (i * d)))

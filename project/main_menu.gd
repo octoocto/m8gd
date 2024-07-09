@@ -62,7 +62,7 @@ func init(p_main: M8SceneDisplay) -> void:
 		main.reload_scene()
 	)
 
-	# Audio settings
+	# Audio Tab
 	#--------------------------------------------------------------------------
 
 	# volume
@@ -70,7 +70,7 @@ func init(p_main: M8SceneDisplay) -> void:
 	slider_volume.value_changed.connect(func(value: float) -> void:
 		var volume_db: float=linear_to_db(pow(value, 2))
 		print("volume = %f" % volume_db)
-		AudioServer.set_bus_volume_db(0, volume_db)
+		main.audio_set_volume(volume_db)
 		%LabelVolume.text="%d%% (%05.2f dB)" % [round(slider_volume.value / slider_volume.max_value * 100), volume_db]
 		config.volume=value
 	)
@@ -100,6 +100,41 @@ func init(p_main: M8SceneDisplay) -> void:
 		if visible:
 			%LineEditAudioLatency.placeholder_text="%f ms" % AudioServer.get_output_latency()
 	)
+
+	%CheckButtonEnableSA.toggled.connect(func(toggled_on: bool) -> void:
+		main.audio_set_spectrum_analyzer_enabled(toggled_on)
+		config.audio_analyzer_enabled=toggled_on
+	)
+	%CheckButtonEnableSA.button_pressed = config.audio_analyzer_enabled
+
+	%SpinBoxAVMinFreq.value_changed.connect(func(value: int) -> void:
+		main.visualizer_frequency_min=value
+		config.audio_analyzer_min_freq=value
+	)
+	%SpinBoxAVMinFreq.value = config.audio_analyzer_min_freq
+
+	%SpinBoxAVMaxFreq.value_changed.connect(func(value: int) -> void:
+		main.visualizer_frequency_max=value
+		config.audio_analyzer_max_freq=value
+	)
+	%SpinBoxAVMaxFreq.value = config.audio_analyzer_max_freq
+
+	%SliderAVBrightness.value_changed.connect(func(value: float) -> void:
+		main.visualizer_brightness_amount=value
+		%LabelAVBrightness.text="%d%%" % (value * 100.0)
+		config.audio_to_brightness=value
+	)
+	%SliderAVBrightness.value = config.audio_to_brightness
+
+	%SliderAVCA.value_changed.connect(func(value: float) -> void:
+		main.visualizer_ca_amount=value
+		%LabelAVCA.text="%d%%" % (value * 1000.0)
+		config.audio_to_ca=value
+	)
+	%SliderAVCA.value = config.audio_to_ca
+
+	# Video Tab
+	#--------------------------------------------------------------------------
 
 	# video
 
@@ -239,32 +274,6 @@ func init(p_main: M8SceneDisplay) -> void:
 		config.crt_filter=toggled_on
 	)
 	%CheckButtonFilter5.button_pressed = config.crt_filter
-
-	%SpinBoxAVMinFreq.value_changed.connect(func(value: int) -> void:
-		main.visualizer_frequency_min=value
-		config.audio_analyzer_min_freq=value
-	)
-	%SpinBoxAVMinFreq.value = config.audio_analyzer_min_freq
-
-	%SpinBoxAVMaxFreq.value_changed.connect(func(value: int) -> void:
-		main.visualizer_frequency_max=value
-		config.audio_analyzer_max_freq=value
-	)
-	%SpinBoxAVMaxFreq.value = config.audio_analyzer_max_freq
-
-	%SliderAVBrightness.value_changed.connect(func(value: float) -> void:
-		main.visualizer_brightness_amount=value
-		%LabelAVBrightness.text="%d%%" % (value * 100.0)
-		config.audio_to_brightness=value
-	)
-	%SliderAVBrightness.value = config.audio_to_brightness
-
-	%SliderAVCA.value_changed.connect(func(value: float) -> void:
-		main.visualizer_ca_amount=value
-		%LabelAVCA.text="%d%%" % (value * 1000.0)
-		config.audio_to_ca=value
-	)
-	%SliderAVCA.value = config.audio_to_ca
 
 	# Keybindings
 	# --------------------------------------------------------------------

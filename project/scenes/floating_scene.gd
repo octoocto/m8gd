@@ -93,6 +93,7 @@ func init(p_main: M8SceneDisplay) -> void:
 	super(p_main)
 
 	%DeviceModel.init(main)
+	%AudioSpectrum.init(main)
 	%DisplayMesh.material_override.set_shader_parameter("tex", main.m8_client.get_display_texture())
 	camera.init(main)
 

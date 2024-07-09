@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://b265ke8cr3dgr"]
+[gd_scene load_steps=21 format=3 uid="uid://b265ke8cr3dgr"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_4g2n0"]
 [ext_resource type="Shader" path="res://shaders/post_process.gdshader" id="1_tjung"]
@@ -128,9 +128,6 @@ corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 corner_detail = 4
 anti_aliasing_size = 0.5
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_n5fsj"]
-load_path = "res://.godot/imported/splash_logo.png-bc4fafe7056a0f6fe87f3c5574907244.ctex"
 
 [node name="Main" type="Node"]
 script = ExtResource("1_4g2n0")
@@ -438,8 +435,6 @@ offset_top = -4.0
 offset_right = 159.0
 offset_bottom = 111.0
 scale = Vector2(2, 2)
-texture = SubResource("CompressedTexture2D_n5fsj")
-stretch_mode = 6
 
 [node name="RichTextLabel" type="RichTextLabel" parent="UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(320, 0)

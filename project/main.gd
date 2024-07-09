@@ -202,7 +202,7 @@ func m8_audio_connect(device: String) -> void:
 
 	if is_audio_connecting: return
 	is_audio_connecting = true
-	AudioServer.set_bus_mute(0, true)
+	audio_set_muted(true)
 
 	# if audio_monitor and is_instance_valid(audio_monitor):
 	# 	audio_monitor.stream = null
@@ -228,7 +228,7 @@ func m8_audio_connect(device: String) -> void:
 	audio_monitor.playing = true
 	m8_audio_connected = true
 	is_audio_connecting = false
-	AudioServer.set_bus_mute(0, false)
+	audio_set_muted(false)
 
 	current_audio_device = device
 	print("audio: connected to device %s" % device)
@@ -340,11 +340,26 @@ func m8_send_keyjazz(note: int, velocity: int) -> void:
 func m8_send_control(keys: int) -> void:
 	m8_client.send_input(keys)
 
+func m8_is_key_pressed(bit: int) -> bool:
+	return m8_keystate&bit
+
 func audio_get_level() -> float:
 	return audio_level
 
 func audio_get_spectrum_analyzer() -> AudioEffectSpectrumAnalyzerInstance:
 	return AudioServer.get_bus_effect_instance(1, 0)
+
+func audio_set_spectrum_analyzer_enabled(enabled: bool) -> void:
+	AudioServer.set_bus_effect_enabled(1, 0, enabled)
+
+func audio_is_spectrum_analyzer_enabled() -> bool:
+	return AudioServer.is_bus_effect_enabled(1, 0)
+
+func audio_set_muted(muted: bool) -> void:
+	AudioServer.set_bus_mute(0, muted)
+
+func audio_set_volume(volume_db: float) -> void:
+	AudioServer.set_bus_volume_db(0, volume_db)
 
 func audio_fft(from_hz: float, to_hz: float) -> float:
 	var magnitude := audio_get_spectrum_analyzer().get_magnitude_for_frequency_range(
@@ -353,48 +368,10 @@ func audio_fft(from_hz: float, to_hz: float) -> float:
 		AudioEffectSpectrumAnalyzerInstance.MAGNITUDE_AVERAGE
 	)
 	return (magnitude.x + magnitude.y) / 2.0
-
-func m8_is_key_pressed(bit: int) -> bool:
-	return m8_keystate&bit
-
 func _physics_process(delta: float) -> void:
 
-	# calculate peaks for visualizations
+	update_audio_analyzer()
 
-	# var audio_peak_raw = linear_to_db(audio_fft(1000, 2000) * 100.0)
-	var audio_peak_raw := audio_fft(visualizer_frequency_min, visualizer_frequency_max)
-	if is_nan(audio_peak_raw) or is_inf(audio_peak_raw):
-		audio_peak_raw = 0.0
-
-	# calculate ranges for audio level
-	# var audio_peak_raw = (AudioServer.get_bus_peak_volume_left_db(1, 0) + AudioServer.get_bus_peak_volume_right_db(1, 0)) / 2.0
-	audio_peak = max(audio_peak_raw, lerp(audio_peak_raw, last_peak, 0.70))
-
-	# if audio_peak_max_timer.time_left == 0.0:
-	audio_peak_max = lerp(audio_peak_raw, last_peak_max, 0.90)
-
-	if audio_peak_max < audio_peak_raw:
-		audio_peak_max = audio_peak_raw
-
-	last_peak = audio_peak
-	last_peak_max = audio_peak_max
-
-	# convert range from (audio_peak_raw, audio_peak_max) to (0, 1) and apply smoothing
-	# audio_level = pow(clamp(db_to_linear(audio_peak), 0.0, 1.0), 2)
-	audio_level_raw = clamp((audio_peak - audio_peak_raw) / (audio_peak_max - audio_peak_raw), 0.0, 1.0)
-	if is_nan(audio_level_raw):
-		audio_level_raw = 0.0
-	audio_level = max(audio_level_raw, lerp(audio_level_raw, last_audio_level, 0.95))
-	last_audio_level = audio_level
-
-	%LabelAudioPeak.text = "%06f" % audio_peak_raw
-	%LabelAudioPeakAvg.text = "%06f" % audio_peak
-	%LabelAudioPeakMax.text = "%06f" % audio_peak_max
-	%LabelAudioLevel.text = "%06f" % audio_level
-
-	%RectAudioLevel.size.x = (audio_level_raw) * 200
-	%RectAudioLevelAvg.position.x = (audio_level) * 200.0 + 88.0
-	
 	# do shader parameter responses to audio
 
 	var material_crt_filter: ShaderMaterial = %CRTShader.material
@@ -451,6 +428,46 @@ func _process(_delta: float) -> void:
 		m8_locally_controlled = false
 
 	if Input.is_action_just_pressed("force_read"): m8_client.update_texture()
+
+func update_audio_analyzer() -> void:
+
+	if !audio_is_spectrum_analyzer_enabled():
+		audio_level = 0.0
+		return
+
+	# calculate peaks for visualizations
+
+	# var audio_peak_raw = linear_to_db(audio_fft(1000, 2000) * 100.0)
+	var audio_peak_raw := audio_fft(visualizer_frequency_min, visualizer_frequency_max)
+	if is_nan(audio_peak_raw) or is_inf(audio_peak_raw):
+		audio_peak_raw = 0.0
+
+	# calculate ranges for audio level
+	audio_peak = max(audio_peak_raw, lerp(audio_peak_raw, last_peak, 0.70))
+
+	# if audio_peak_max_timer.time_left == 0.0:
+	audio_peak_max = lerp(audio_peak_raw, last_peak_max, 0.90)
+
+	if audio_peak_max < audio_peak_raw:
+		audio_peak_max = audio_peak_raw
+
+	last_peak = audio_peak
+	last_peak_max = audio_peak_max
+
+	# convert range from (audio_peak_raw, audio_peak_max) to (0, 1) and apply smoothing
+	audio_level_raw = clamp((audio_peak - audio_peak_raw) / (audio_peak_max - audio_peak_raw), 0.0, 1.0)
+	if is_nan(audio_level_raw):
+		audio_level_raw = 0.0
+	audio_level = max(audio_level_raw, lerp(audio_level_raw, last_audio_level, 0.95))
+	last_audio_level = audio_level
+
+	%LabelAudioPeak.text = "%06f" % audio_peak_raw
+	%LabelAudioPeakAvg.text = "%06f" % audio_peak
+	%LabelAudioPeakMax.text = "%06f" % audio_peak_max
+	%LabelAudioLevel.text = "%06f" % audio_level
+
+	%RectAudioLevel.size.x = (audio_level_raw) * 200
+	%RectAudioLevelAvg.position.x = (audio_level) * 200.0 + 88.0
 
 func update_keystate(keystate: int, write: bool=false) -> void:
 
