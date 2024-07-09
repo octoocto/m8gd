@@ -15,6 +15,7 @@ config/version="0.2.0"
 run/main_scene="res://main.tscn"
 config/auto_accept_quit=false
 config/features=PackedStringArray("4.2")
+boot_splash/show_image=false
 config/icon="res://assets/icon/m8_emoji.png"
 
 [audio]
