@@ -1,8 +1,9 @@
-[gd_scene load_steps=26 format=3 uid="uid://oijfxguj404r"]
+[gd_scene load_steps=25 format=3 uid="uid://oijfxguj404r"]
 
 [ext_resource type="Script" path="res://scenes/grass_scene.gd" id="1_qpev1"]
+[ext_resource type="Shader" path="res://shaders/device_screen.gdshader" id="3_jvxd3"]
 [ext_resource type="PackedScene" uid="uid://budu6000msy4d" path="res://device_model.tscn" id="4_gt2wp"]
-[ext_resource type="Shader" path="res://shaders/crt_screen.gdshader" id="5_pmegc"]
+[ext_resource type="Texture2D" uid="uid://bcsoiuuis4yx2" path="res://assets/m8_screen_placeholder.png" id="4_qxguy"]
 [ext_resource type="PackedScene" uid="uid://bckroenwlecqv" path="res://humanized_camera_3d.tscn" id="6_08s3p"]
 [ext_resource type="Texture2D" uid="uid://bbeh1e40ob3nd" path="res://assets/texture_06.png" id="7_2kg18"]
 [ext_resource type="PackedScene" uid="uid://ceqlf8kgdxjeb" path="res://grass_area.tscn" id="7_83g7i"]
@@ -23,32 +24,19 @@ volumetric_fog_albedo = Color(1, 0.28, 0.928, 1)
 volumetric_fog_detail_spread = 0.5
 adjustment_enabled = true
 
-[sub_resource type="ViewportTexture" id="ViewportTexture_t2dqp"]
-resource_local_to_scene = false
-viewport_path = NodePath(".")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_3tyua"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8tk3a"]
 resource_local_to_scene = true
 render_priority = 0
-shader = ExtResource("5_pmegc")
-shader_parameter/emission_amount = 0.25
-shader_parameter/curvature_amount_x = 0.0
-shader_parameter/curvature_amount_y = 0.0
-shader_parameter/curvature_ramp = 2.0
-shader_parameter/edge_darken = -0.25
+shader = ExtResource("3_jvxd3")
+shader_parameter/emission_amount = 0.7
+shader_parameter/edge_darken = -0.3
 shader_parameter/edge_burn = 0.0
 shader_parameter/edge_burn_ramp = 10.0
-shader_parameter/distort_amount = 0.0
-shader_parameter/distort_offset = Vector2(0, 0)
-shader_parameter/brightness = 0.001
-shader_parameter/tex = SubResource("ViewportTexture_t2dqp")
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p1skf"]
-resource_local_to_scene = true
-albedo_color = Color(0.1, 0.1, 0.1, 1)
-metallic = 0.6
-metallic_specular = 0.06
-roughness = 0.46
+shader_parameter/brightness = 0.0
+shader_parameter/backlight = false
+shader_parameter/use_linear_filter = true
+shader_parameter/texture_linear = ExtResource("4_qxguy")
+shader_parameter/texture_nearest = ExtResource("4_qxguy")
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_lyp6v"]
 dof_blur_far_enabled = true
@@ -189,8 +177,7 @@ spot_angle = 36.8368
 [node name="DeviceModel" parent="." instance=ExtResource("4_gt2wp")]
 unique_name_in_owner = true
 transform = Transform3D(35.8742, 0, 14.8596, 0, 38.83, 0, -14.8596, 0, 35.8742, -2.25, 2.51882, 0.15)
-screen_material = SubResource("ShaderMaterial_3tyua")
-keycap_material = SubResource("StandardMaterial3D_p1skf")
+screen_material = SubResource("ShaderMaterial_8tk3a")
 
 [node name="Camera3D" parent="." instance=ExtResource("6_08s3p")]
 unique_name_in_owner = true
