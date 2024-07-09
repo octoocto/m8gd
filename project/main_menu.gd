@@ -332,14 +332,6 @@ func init(p_main: M8SceneDisplay) -> void:
 
 	# Key highlight colors (also affects key overlay color)
 
-	%SliderHL_Opacity.value_changed.connect(func(value: float) -> void:
-		config.hl_opacity=value
-		%LabelHL_Opacity.text="%d%%" % (value * 100)
-		if get_device_model():
-			get_device_model().highlight_opacity=value
-	)
-	%SliderHL_Opacity.value = config.hl_opacity
-
 	%CheckButtonHL_Filters.toggled.connect(func(toggled_on: bool) -> void:
 		config.hl_filters=toggled_on
 		var index_on:=main.get_node("%VHSFilter1").get_index()
@@ -419,6 +411,25 @@ func init(p_main: M8SceneDisplay) -> void:
 	]:
 		colorpicker.get_picker().preset_added.connect(on_color_picker_add_preset)
 		colorpicker.get_picker().preset_removed.connect(on_color_picker_erase_preset)
+
+	# Model settings
+
+	%SliderHL_Opacity.value_changed.connect(func(value: float) -> void:
+		config.hl_opacity=value
+		%LabelHL_Opacity.text="%d%%" % (value * 100)
+		if get_device_model():
+			get_device_model().highlight_opacity=value
+	)
+	%SliderHL_Opacity.value = config.hl_opacity
+
+	%CheckButtonModelLinearFilter.toggled.connect(func(toggled_on: bool) -> void:
+		config.model_use_linear_filter=toggled_on
+		if get_device_model():
+			get_device_model().set_screen_filter(toggled_on)
+	)
+	%CheckButtonModelLinearFilter.button_pressed = config.model_use_linear_filter
+
+	# Key overlay settings
 
 	%CheckButtonKeyOverlayEnable.toggled.connect(func(toggled_on: bool) -> void:
 		main.key_overlay.visible=toggled_on

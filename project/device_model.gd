@@ -40,9 +40,20 @@ class_name DeviceModel extends StaticBody3D
 @onready var home_keycap_option: Vector3 = keycap_option.position
 @onready var home_keycap_edit: Vector3 = keycap_edit.position
 
-func init(display: M8SceneDisplay) -> void:
-	screen_material.set_shader_parameter("tex", display.m8_client.get_display_texture())
-	display.m8_key_changed.connect(func(key: String, pressed: bool) -> void:
+func init(main: M8SceneDisplay) -> void:
+
+	screen_material.set_shader_parameter("texture_linear", main.m8_client.get_display_texture())
+	screen_material.set_shader_parameter("texture_nearest", main.m8_client.get_display_texture())
+
+	main.m8_connected.connect(func() -> void:
+		screen_material.set_shader_parameter("backlight", true)
+	)
+
+	main.m8_disconnected.connect(func() -> void:
+		screen_material.set_shader_parameter("backlight", false)
+	)
+
+	main.m8_key_changed.connect(func(key: String, pressed: bool) -> void:
 		match key:
 			"up":
 				key_up=pressed
@@ -61,6 +72,9 @@ func init(display: M8SceneDisplay) -> void:
 			"edit":
 				key_edit=pressed
 	)
+
+func set_screen_filter(use_linear_filter: bool) -> void:
+	screen_material.set_shader_parameter("use_linear_filter", use_linear_filter)
 
 func _ready() -> void:
 	for keycap: MeshInstance3D in [

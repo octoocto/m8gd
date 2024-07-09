@@ -23,6 +23,8 @@ const M8_ACTIONS := [
 
 signal m8_key_changed(key: String, pressed: bool)
 signal m8_scene_changed
+signal m8_connected
+signal m8_disconnected
 
 @export var visualizer_ca_amount := 1.0
 @export var visualizer_glow_amount := 0.5
@@ -47,7 +49,7 @@ signal m8_scene_changed
 @onready var config := M8Config.load()
 
 @onready var m8_client := M8GD.new()
-@onready var m8_connected := false
+@onready var m8_is_connected := false
 @onready var m8_audio_connected := false
 @onready var m8_keystate: int = 0 # bitfield containing state of all 8 keys
 @onready var m8_keystate_last: int = 0
@@ -173,13 +175,14 @@ func m8_device_connect(port: String) -> void:
 		menu.set_status_serialport("Failed: failed to connect to port: %s" % port)
 		return
 
-	m8_connected = true
+	m8_is_connected = true
 	%LabelPort.text = m8_ports[0]
 	m8_client.keystate_changed.connect(on_m8_keystate_changed)
 	m8_client.system_info.connect(on_m8_system_info)
 	m8_client.font_changed.connect(on_m8_font_changed)
 	m8_client.device_disconnected.connect(on_m8_device_disconnect)
 	current_serial_device = port
+	m8_connected.emit()
 
 	print_blink("connected to M8 at %s!" % m8_ports[0])
 	menu.set_status_serialport("Connected to: %s" % m8_ports[0])
@@ -307,7 +310,7 @@ func m8_device_disconnect(wait_for_device:=true) -> void:
 ## Called when the M8 has been disconnected.
 func on_m8_device_disconnect() -> void:
 
-	m8_connected = false
+	m8_is_connected = false
 	%LabelPort.text = ""
 
 	m8_client.keystate_changed.disconnect(on_m8_keystate_changed)
@@ -319,6 +322,7 @@ func on_m8_device_disconnect() -> void:
 		m8_audio_disconnect()
 
 	current_serial_device = ""
+	m8_disconnected.emit()
 	print_blink("disconnected")
 	menu.set_status_serialport("Not connected (Disconnected)")
 
@@ -386,15 +390,15 @@ func _physics_process(delta: float) -> void:
 func _process(_delta: float) -> void:
 
 	# read and update m8 display texture every frame
-	if m8_connected and m8_client.read_serial_data():
+	if m8_is_connected and m8_client.read_serial_data():
 		m8_client.update_texture()
 
 	# auto connect to m8s
-	if !m8_connected and is_waiting_for_device:
+	if !m8_is_connected and is_waiting_for_device:
 		m8_device_connect_auto()
 
 	# auto monitor audio if m8 is connected
-	if m8_connected:
+	if m8_is_connected:
 		if m8_audio_connected:
 			m8_audio_check()
 		else:

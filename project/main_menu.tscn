@@ -386,7 +386,7 @@ layout_mode = 2
 [node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer"]
 layout_mode = 2
 bbcode_enabled = true
-text = "[b]Key Press Highlights[/b] "
+text = "[b]Model[/b] "
 fit_content = true
 
 [node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer"]
@@ -404,7 +404,7 @@ columns = 2
 [node name="Label2" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-text = "Colors"
+text = "Highlight Colors"
 
 [node name="Label3" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer"]
 layout_mode = 2
@@ -426,27 +426,44 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_bruag")
 [node name="GridContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer/GridContainer"]
+[node name="GridContainer" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer/GridContainer"]
+layout_mode = 2
+columns = 3
+
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer/GridContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 text = "Highlight Color Opacity"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer/GridContainer"]
-layout_mode = 2
-
-[node name="LabelHL_Opacity" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer/GridContainer/HBoxContainer"]
+[node name="LabelHL_Opacity" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer/GridContainer/GridContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 text = "1.00"
 horizontal_alignment = 2
 
-[node name="SliderHL_Opacity" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer/GridContainer/HBoxContainer"]
+[node name="SliderHL_Opacity" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer/GridContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 1.0
 step = 0.01
+
+[node name="Label2" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer/GridContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+tooltip_text = "If true, the screen on the M8 model will have linear texture filtering. If false, it will have nearest texture filtering."
+mouse_filter = 1
+text = "Use Linear Filter for Screen"
+
+[node name="VSeparator2" type="VSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer/GridContainer/GridContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_0w5ic")
+
+[node name="CheckButtonModelLinearFilter" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer/GridContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
 
 [node name="Control" type="Control" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer"]
 layout_mode = 2

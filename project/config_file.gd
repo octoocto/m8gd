@@ -17,6 +17,8 @@ var version: int = 0
 @export var hl_color_option := Color.WHITE
 @export var hl_color_edit := Color.WHITE
 
+@export var model_use_linear_filter := true
+
 # key overlay settings
 @export var key_overlay_enabled := false
 @export var key_overlay_style := 0
