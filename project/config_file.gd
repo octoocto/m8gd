@@ -25,6 +25,7 @@ var version: int = 0
 
 # video settings
 @export var fullscreen := false
+@export var always_on_top := false
 @export var vsync := 1
 @export var fps_cap := 0
 

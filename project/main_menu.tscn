@@ -135,8 +135,10 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
+current_tab = 5
 
 [node name="Scene" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
+visible = false
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Scene"]
@@ -902,7 +904,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Video" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
-visible = false
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Video"]
@@ -930,6 +931,22 @@ layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_4w3sk")
 
 [node name="CheckButtonFullscreen" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerVideo"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+
+[node name="Label2" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerVideo"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Always on Top"
+
+[node name="VSeparator2" type="VSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerVideo"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_4w3sk")
+
+[node name="CheckButtonAlwaysOnTop" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerVideo"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8

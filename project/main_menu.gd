@@ -139,13 +139,22 @@ func init(p_main: M8SceneDisplay) -> void:
 	# video
 
 	%CheckButtonFullscreen.toggled.connect(func(toggled_on: bool) -> void:
+		config.fullscreen=toggled_on
 		if toggled_on:
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
 		else:
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
-		config.fullscreen=toggled_on
 	)
 	%CheckButtonFullscreen.button_pressed = config.fullscreen
+
+	%CheckButtonAlwaysOnTop.toggled.connect(func(toggled_on: bool) -> void:
+		config.always_on_top=toggled_on
+		if toggled_on:
+			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_ALWAYS_ON_TOP, true)
+		else:
+			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_ALWAYS_ON_TOP, false)
+	)
+	%CheckButtonAlwaysOnTop.button_pressed = config.always_on_top
 
 	%SliderVsync.value_changed.connect(func(value: int) -> void:
 		match value:
