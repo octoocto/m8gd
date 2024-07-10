@@ -467,7 +467,7 @@ func init(p_main: M8SceneDisplay) -> void:
 	)
 	%SliderKeyOverlayStyle.value = config.key_overlay_style
 
-	# Misc
+	# Devices Tab
 	# --------------------------------------------------------------------
 
 	# serial ports
@@ -518,9 +518,11 @@ func init(p_main: M8SceneDisplay) -> void:
 		if main.current_audio_device == %ListAudioDevices.get_item_text(index):
 			%ButtonConnectAudioDevice.text="Reconnect"
 			%ButtonDisconnectAudioDevice.disabled=false
+			%ButtonHardResetAudioDevice.disabled=false
 		else:
 			%ButtonConnectAudioDevice.text="Connect"
 			%ButtonDisconnectAudioDevice.disabled=true
+			%ButtonHardResetAudioDevice.disabled=true
 	)
 
 	%ButtonRefreshAudioDevices.pressed.connect(refresh_audio_devices)
@@ -531,6 +533,17 @@ func init(p_main: M8SceneDisplay) -> void:
 		main.m8_audio_connect(text)
 		%ListAudioDevices.deselect_all()
 		%ButtonConnectAudioDevice.disabled=true
+		%ButtonHardResetAudioDevice.disabled=true
+		%ButtonConnectAudioDevice.text="Connect"
+	)
+
+	%ButtonHardResetAudioDevice.pressed.connect(func() -> void:
+		var index: int= %ListAudioDevices.get_selected_items()[0]
+		var text: String= %ListAudioDevices.get_item_text(index)
+		main.m8_audio_connect(text, true)
+		%ListAudioDevices.deselect_all()
+		%ButtonConnectAudioDevice.disabled=true
+		%ButtonHardResetAudioDevice.disabled=true
 		%ButtonConnectAudioDevice.text="Connect"
 	)
 

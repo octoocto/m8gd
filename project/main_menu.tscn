@@ -57,6 +57,11 @@ anti_aliasing = false
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_06k14"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3mi27"]
+content_margin_top = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.5, 0, 0, 1)
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_l2hi4"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bruag"]
@@ -80,11 +85,6 @@ color = Color(1, 1, 1, 0.25)
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_sgnvi"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7jqdk"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3mi27"]
-content_margin_top = 4.0
-content_margin_bottom = 4.0
-bg_color = Color(0.5, 0, 0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8epsv"]
 bg_color = Color(0, 0, 0, 0.5)
@@ -135,10 +135,8 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-current_tab = 5
 
 [node name="Scene" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
-visible = false
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Scene"]
@@ -369,6 +367,14 @@ custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 disabled = true
 text = "Disconnect"
+
+[node name="ButtonHardResetAudioDevice" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_3mi27")
+disabled = true
+text = "Hard Reset"
 
 [node name="ButtonConnectAudioDevice" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer/HBoxContainer2"]
 unique_name_in_owner = true
@@ -904,6 +910,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Video" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
+visible = false
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Video"]

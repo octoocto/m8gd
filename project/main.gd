@@ -198,44 +198,55 @@ func m8_device_connect_auto() -> void:
 	else:
 		menu.set_status_serialport("Not connected: No M8 devices found")
 
-func m8_audio_connect(device: String) -> void:
-	if !device in AudioServer.get_input_device_list():
-		menu.set_status_audiodevice("Failed: audio device not found: %s" % device)
+##
+## Connect to the audio input device with name `device_name`.
+## If `hard_reset` is true, also free and create a new AudioStreamPlayer.
+##
+func m8_audio_connect(device_name: String, hard_reset: bool=false) -> void:
+	if !device_name in AudioServer.get_input_device_list():
+		menu.set_status_audiodevice("Failed: audio device not found: %s" % device_name)
 		return
 
 	if is_audio_connecting: return
 	is_audio_connecting = true
 	audio_set_muted(true)
 
-	# if audio_monitor and is_instance_valid(audio_monitor):
-	# 	audio_monitor.stream = null
-	# 	audio_monitor.queue_free()
-	# 	remove_child(audio_monitor)
-	# 	audio_monitor = null
+	if m8_audio_connected:
+		m8_audio_disconnect()
+
+	if hard_reset and is_instance_valid(audio_monitor):
+		print("audio: removing AudioStreamPlayer")
+		remove_child(audio_monitor)
+		audio_monitor.stream = null
+		audio_monitor.queue_free()
+		audio_monitor = null
 
 	menu.set_status_audiodevice("Not connected")
 	await get_tree().create_timer(0.1).timeout
 
-	AudioServer.input_device = device
+	AudioServer.input_device = device_name
 
-	# audio_monitor = AudioStreamPlayer.new()
-	# audio_monitor.stream = AudioStreamMicrophone.new()
-	# audio_monitor.bus = "Analyzer"
-	# add_child(audio_monitor)
+	if hard_reset or !is_instance_valid(audio_monitor):
+		print("audio: adding AudioStreamPlayer")
+		audio_monitor = AudioStreamPlayer.new()
+		audio_monitor.stream = AudioStreamMicrophone.new()
+		audio_monitor.bus = "Analyzer"
+		add_child(audio_monitor)
+
 	audio_monitor.playing = false
 
 	menu.set_status_audiodevice("Starting...")
 	await get_tree().create_timer(0.1).timeout
 
-	audio_device_last = device
+	audio_device_last = device_name
 	audio_monitor.playing = true
 	m8_audio_connected = true
 	is_audio_connecting = false
 	audio_set_muted(false)
 
-	current_audio_device = device
-	print("audio: connected to device %s" % device)
-	menu.set_status_audiodevice("Connected to: %s" % device)
+	current_audio_device = device_name
+	print("audio: connected to device %s" % device_name)
+	menu.set_status_audiodevice("Connected to: %s" % device_name)
 
 ##
 ## Automatically detect and monitor an M8 audio device.
