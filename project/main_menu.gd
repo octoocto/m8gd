@@ -67,6 +67,26 @@ func init(p_main: M8SceneDisplay) -> void:
 		main.reload_scene()
 	)
 
+	%Option_SubSceneMode.add_item("Disabled", 0)
+	%Option_SubSceneMode.add_item("Floating Window", 1)
+	%Option_SubSceneMode.item_selected.connect(func(_idx: int) -> void:
+		match %Option_SubSceneMode.get_selected_id():
+			0:
+				main.set_subscene_mode(0)
+				%Button_SubSceneMenu.disabled=true
+			1:
+				main.set_subscene_mode(1)
+				%Button_SubSceneMenu.disabled=false
+		config.subscene_mode= %Option_SubSceneMode.get_selected_id()
+	)
+	%Option_SubSceneMode.selected = config.subscene_mode
+	%Option_SubSceneMode.item_selected.emit( - 1)
+
+	%Button_SubSceneMenu.pressed.connect(func() -> void:
+		visible=false
+		main.get_node("%SubSceneMenu").visible=true
+	)
+
 	# Audio Tab
 	#--------------------------------------------------------------------------
 
@@ -268,6 +288,7 @@ func init(p_main: M8SceneDisplay) -> void:
 	# Render Scale
 
 	%OptionUpscalingMethod.item_selected.connect(func(idx: int) -> void:
+		%OptionUpscalingMethod.selected=idx
 		config.scale_mode=idx
 		match idx:
 			0:
@@ -280,7 +301,7 @@ func init(p_main: M8SceneDisplay) -> void:
 				get_viewport().scaling_3d_mode=Viewport.SCALING_3D_MODE_FSR2
 				%SliderFSRSharpness.editable=true
 	)
-	%OptionUpscalingMethod.selected = config.scale_mode
+	%OptionUpscalingMethod.item_selected.emit(config.scale_mode)
 
 	%SliderRenderScale.value_changed.connect(func(value: float) -> void:
 		config.render_scale=value
@@ -789,7 +810,11 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventKey:
 		# menu on/off toggle
 		if event.pressed and event.keycode == KEY_ESCAPE:
-			visible = !visible
+			if visible:
+				visible = false
+			else:
+				main.get_node("%SubSceneMenu").visible = false
+				visible = true
 
 func _process(_delta: float) -> void:
 	%CheckButtonFullscreen.button_pressed = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN

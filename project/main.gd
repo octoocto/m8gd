@@ -1,6 +1,7 @@
 class_name M8SceneDisplay extends Node
 
 const MAIN_SCENE_PATH: String = "res://scenes/floating_scene.tscn"
+const SUB_SCENE_PATH: String = "res://scenes/simple_scene.tscn"
 
 const FONT_01_SMALL: BitMap = preload ("res://assets/m8_fonts/5_7.bmp")
 const FONT_01_BIG: BitMap = preload ("res://assets/m8_fonts/8_9.bmp")
@@ -93,6 +94,8 @@ func _ready() -> void:
 		%SplashContainer.visible=false
 	)
 
+	%SubSceneMenu.init(self)
+
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		quit()
@@ -117,25 +120,13 @@ func reload_scene() -> void:
 	if current_scene:
 		load_scene(current_scene.scene_file_path)
 
-## Load a scene from a filepath.
+## Load the main scene from a filepath.
 func load_scene(scene_path: String) -> bool:
-	# load packed scene from file
-	print("loading new scene from %s..." % scene_path)
-	var packed_scene: PackedScene = load(scene_path.trim_suffix(".remap"))
 
-	if packed_scene == null or !packed_scene is PackedScene:
+	var scene := _preload_scene(scene_path)
+
+	if !scene is M8Scene:
 		return false
-
-	_preload_scene(packed_scene)
-
-	return true
-
-func _preload_scene(packed_scene: PackedScene) -> void:
-
-	# instantiate scene
-	print("instantiating scene...")
-	var scene: M8Scene = packed_scene.instantiate()
-	assert(scene != null and scene is M8Scene)
 
 	# remove existing scene from viewport
 	if current_scene:
@@ -153,7 +144,45 @@ func _preload_scene(packed_scene: PackedScene) -> void:
 	menu.update_device_colors()
 
 	print("scene loaded!")
-	m8_scene_changed.emit(packed_scene.resource_path)
+	m8_scene_changed.emit(scene_path)
+
+	return true
+
+func _preload_scene(scene_path: String) -> M8Scene:
+
+	# load packed scene from file
+	print("loading new scene from %s..." % scene_path)
+	var packed_scene: PackedScene = load(scene_path.trim_suffix(".remap"))
+
+	if packed_scene == null or !packed_scene is PackedScene:
+		return null
+
+	# instantiate scene
+	print("instantiating scene...")
+	var scene: M8Scene = packed_scene.instantiate()
+	assert(scene != null and scene is M8Scene)
+
+	return scene
+
+# TODO: create enum for these modes
+##
+## Set the Secondary Scene mode.
+##
+func set_subscene_mode(mode: int) -> void:
+	match mode:
+		0:
+			%SubSceneContainer.visible = false
+			print("unloading sub scene")
+			for child in %SubSceneRoot.get_children():
+				%SubSceneRoot.remove_child(child)
+				child.queue_free()
+		1:
+			%SubSceneContainer.visible = true
+			print("loading sub scene")
+			var scene := _preload_scene(SUB_SCENE_PATH)
+			%SubSceneRoot.add_child(scene)
+			scene.init(self, false)
+			scene.force_integer_scale = 0
 
 ##
 ## Return all properties of a PackedScene.

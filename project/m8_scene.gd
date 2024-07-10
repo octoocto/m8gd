@@ -19,10 +19,12 @@ var spectrum_analyzer: AudioEffectSpectrumAnalyzerInstance
 
 var main: M8SceneDisplay
 
-func init(p_main: M8SceneDisplay) -> void:
+func init(p_main: M8SceneDisplay, load_parameters:=true) -> void:
 	main = p_main
 
 	var config: M8Config = main.config
+
+	if !load_parameters: return
 
 	# populate scene parameters in menu
 

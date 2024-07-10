@@ -8,6 +8,11 @@ var version: int = 0
 @export var scene_parameters := {} # Dictionary[String, Dictionary]
 @export var last_scene_path: String # path to last scene opened
 
+@export var subscene_mode := 0
+@export var subscene_anchor := 0
+@export var subscene_pos := Vector2i(0, 0)
+@export var subscene_size := Vector2i(640, 480)
+
 # device model settings
 @export var hl_opacity := 1.0
 @export var hl_filters := false
