@@ -20,9 +20,8 @@ extends M8Scene
 
 @export var model_screen_emission := 0.25:
 	set(value):
-		if %DeviceModel is DeviceModel:
-			var screen: MeshInstance3D = %DeviceModel.get_node("%Screen")
-			screen.material_override.set_shader_parameter("emission_amount", value)
+		if has_device_model():
+			get_device_model().set_screen_emission(value)
 		model_screen_emission = value
 
 @export var enable_directional_light := true:

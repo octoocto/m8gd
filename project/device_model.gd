@@ -53,6 +53,11 @@ func init(main: M8SceneDisplay) -> void:
 		screen_material.set_shader_parameter("backlight", false)
 	)
 
+	if main.m8_is_connected:
+		screen_material.set_shader_parameter("backlight", true)
+
+	screen_material.set_shader_parameter("use_linear_filter", main.config.model_use_linear_filter)
+
 	main.m8_key_changed.connect(func(key: String, pressed: bool) -> void:
 		match key:
 			"up":
@@ -73,8 +78,17 @@ func init(main: M8SceneDisplay) -> void:
 				key_edit=pressed
 	)
 
+##
+## Sets the texture filter of the screen material.
+##
 func set_screen_filter(use_linear_filter: bool) -> void:
 	screen_material.set_shader_parameter("use_linear_filter", use_linear_filter)
+
+##
+## Sets the emission of the screen material. This gives the screen a "backlight" effect.
+##
+func set_screen_emission(emission: float) -> void:
+	screen_material.set_shader_parameter("emission_amount", emission)
 
 func _ready() -> void:
 	for keycap: MeshInstance3D in [

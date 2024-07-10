@@ -217,6 +217,18 @@ func _fft(from_hz: float, to_hz: float) -> float:
 	).length()
 	return clamp(magnitude, 0, 1)
 
+##
+## Returns true if this scene contains a DeviceModel.
+##
+func has_device_model() -> bool:
+	return has_node("%DeviceModel")
+
+##
+## Returns the DeviceModel in this scene is there is one. Returns null if not.
+##
+func get_device_model() -> DeviceModel:
+	return %DeviceModel
+
 # func update_m8_color_samples():
 #	 if main.m8_display_viewport != null:
 #		 var image = receiver_texture.get_image()
