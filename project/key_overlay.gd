@@ -57,12 +57,20 @@ var color_edit := Color.WHITE:
 
 func _set_color(color: Color, panel: StyleBox, label: LabelSettings) -> void:
 	if overlay_style == 0: # boxed style
+
 		panel.bg_color = color
+		panel.border_width_bottom = 2
+
 		if color.get_luminance() > 0.5:
 			label.font_color = Color.BLACK
 		else:
 			label.font_color = Color.WHITE
+
 	else: # unboxed style
+
+		panel.bg_color = Color(0, 0, 0, 0)
+		panel.border_width_bottom = 0
+
 		color.v = max(color.v, 0.5)
 		label.font_color = color
 
@@ -189,12 +197,8 @@ func add_element(text: String, style: StyleBox, label_style: LabelSettings) -> v
 	var label := Label.new()
 	label.text = text
 
-	if overlay_style == 0:
-		panel.add_theme_stylebox_override("panel", style)
-		label.label_settings = label_style
-	else:
-		panel.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
-		label.label_settings = label_style
+	panel.add_theme_stylebox_override("panel", style)
+	label.label_settings = label_style
 
 	if current_item_count > 0:
 		var plus_label := Label.new()
