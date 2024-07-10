@@ -10,7 +10,6 @@ const REBIND_COOLDOWN := 100 # ms until can rebind again
 
 # the order of paths in scene_paths[] correspond to the items in option_scenes
 @onready var option_scenes: OptionButton = %OptionScenes
-@onready var scene_paths := []
 
 @onready var main: M8SceneDisplay
 
@@ -31,16 +30,20 @@ func init(p_main: M8SceneDisplay) -> void:
 	while path != "":
 		if path.trim_suffix(".remap").get_extension() == "tscn":
 			var scene_path := dir_scenes.get_current_dir().path_join(path).trim_suffix(".remap")
-			option_scenes.add_item(main.get_scene_name(scene_path))
-			scene_paths.append(scene_path)
+			var idx := option_scenes.item_count
+			option_scenes.add_item(main.get_scene_name(scene_path), idx)
+			option_scenes.set_item_metadata(idx, scene_path)
 			print("added scene: %s" % scene_path)
 		path = dir_scenes.get_next()
 
-	option_scenes.item_selected.connect(func(index: int) -> void:
-		if index != - 1:
-			main.load_scene(scene_paths[index])
+	option_scenes.item_selected.connect(func(idx: int) -> void:
+		if idx != - 1:
+			main.load_scene(option_scenes.get_item_metadata(idx))
 	)
-	option_scenes.selected = -1
+
+	main.m8_scene_changed.connect(func(scene_path: String) -> void:
+		option_scenes.selected=get_scene_path_idx(scene_path)
+	)
 
 	button_exit.pressed.connect(func() -> void:
 		main.quit()
@@ -659,6 +662,12 @@ func on_color_picker_erase_preset(color: Color) -> void:
 	%ColorPickerHL_Play.get_picker().erase_preset(color)
 	%ColorPickerHL_Option.get_picker().erase_preset(color)
 	%ColorPickerHL_Edit.get_picker().erase_preset(color)
+
+func get_scene_path_idx(scene_path: String) -> int:
+	for i in range(option_scenes.item_count):
+		if option_scenes.get_item_metadata(i) == scene_path:
+			return i
+	return - 1
 
 ##
 ## Try to return the device model in the current scene.

@@ -22,7 +22,7 @@ const M8_ACTIONS := [
 	"key_shift", "key_play", "key_option", "key_edit"]
 
 signal m8_key_changed(key: String, pressed: bool)
-signal m8_scene_changed
+signal m8_scene_changed(scene_path: String)
 signal m8_connected
 signal m8_disconnected
 
@@ -153,7 +153,7 @@ func _preload_scene(packed_scene: PackedScene) -> void:
 	menu.update_device_colors()
 
 	print("scene loaded!")
-	m8_scene_changed.emit()
+	m8_scene_changed.emit(packed_scene.resource_path)
 
 ##
 ## Return all properties of a PackedScene.
