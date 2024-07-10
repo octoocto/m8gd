@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://b265ke8cr3dgr"]
+[gd_scene load_steps=24 format=3 uid="uid://b265ke8cr3dgr"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_4g2n0"]
 [ext_resource type="Shader" path="res://shaders/post_process.gdshader" id="1_tjung"]
@@ -8,6 +8,7 @@
 [ext_resource type="Shader" path="res://shaders/vhs3.gdshader" id="4_tq17m"]
 [ext_resource type="PackedScene" uid="uid://d13t756slc8b0" path="res://main_menu.tscn" id="7_k5oyo"]
 [ext_resource type="PackedScene" uid="uid://ca2jqh2tc7jix" path="res://key_overlay.tscn" id="8_dnyct"]
+[ext_resource type="PackedScene" uid="uid://dv8crbibtrpck" path="res://scene_menu.tscn" id="9_bisyb"]
 [ext_resource type="PackedScene" uid="uid://dhynymx7ibupb" path="res://sub_scene_menu.tscn" id="9_hw48s"]
 
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_c3wmn"]
@@ -398,6 +399,11 @@ size_flags_horizontal = 3
 size_flags_vertical = 8
 
 [node name="SubSceneMenu" parent="UI/MarginContainer/GridContainer/VBoxContainer3" instance=ExtResource("9_hw48s")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="SceneMenu" parent="UI/MarginContainer/GridContainer/VBoxContainer3" instance=ExtResource("9_bisyb")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2

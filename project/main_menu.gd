@@ -82,9 +82,14 @@ func init(p_main: M8SceneDisplay) -> void:
 	%Option_SubSceneMode.selected = config.subscene_mode
 	%Option_SubSceneMode.item_selected.emit( - 1)
 
+	%Button_SceneMenu.pressed.connect(func() -> void:
+		visible=false
+		main.menu_scene.visible=true
+	)
+
 	%Button_SubSceneMenu.pressed.connect(func() -> void:
 		visible=false
-		main.get_node("%SubSceneMenu").visible=true
+		main.menu_subscene.visible=true
 	)
 
 	# Audio Tab
