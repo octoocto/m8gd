@@ -262,6 +262,38 @@ func init(p_main: M8SceneDisplay) -> void:
 	)
 	%CheckButtonTAA.button_pressed = config.taa
 
+	# Render Scale
+
+	%OptionUpscalingMethod.item_selected.connect(func(idx: int) -> void:
+		config.scale_mode=idx
+		match idx:
+			0:
+				get_viewport().scaling_3d_mode=Viewport.SCALING_3D_MODE_BILINEAR
+				%SliderFSRSharpness.editable=false
+			1:
+				get_viewport().scaling_3d_mode=Viewport.SCALING_3D_MODE_FSR
+				%SliderFSRSharpness.editable=true
+			2:
+				get_viewport().scaling_3d_mode=Viewport.SCALING_3D_MODE_FSR2
+				%SliderFSRSharpness.editable=true
+	)
+	%OptionUpscalingMethod.selected = config.scale_mode
+
+	%SliderRenderScale.value_changed.connect(func(value: float) -> void:
+		config.render_scale=value
+		get_viewport().scaling_3d_scale=value
+		%LabelRenderScale.text="%d%%" % (value * 100)
+	)
+	%SliderRenderScale.set_value(config.render_scale)
+
+	%SliderFSRSharpness.value_changed.connect(func(value: float) -> void:
+		config.fsr_sharpness=value
+		get_viewport().fsr_sharpness=(2.0 - (value * 2.0))
+		%LabelFSRSharpness.text="%d%%" % (value * 100)
+	)
+	%SliderFSRSharpness.set_value(config.fsr_sharpness)
+	%SliderFSRSharpness.editable = config.scale_mode != 0
+
 	# Filter / Shader Settings
 	# --------------------------------------------------------------------
 

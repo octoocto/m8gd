@@ -1046,24 +1046,24 @@ bbcode_enabled = true
 text = "[b]Graphics[/b] "
 fit_content = true
 
-[node name="GridContainerGraphics" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer"]
+[node name="GridContainer3" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer"]
 layout_mode = 2
 columns = 3
 
-[node name="Label10" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerGraphics"]
+[node name="Label10" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer3"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "MSAA
 "
 
-[node name="LabelMSAA" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerGraphics"]
+[node name="LabelMSAA" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer3"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Disabled
 "
 horizontal_alignment = 2
 
-[node name="SliderMSAA" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerGraphics"]
+[node name="SliderMSAA" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer3"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -1073,25 +1073,34 @@ max_value = 3.0
 tick_count = 4
 ticks_on_borders = true
 
-[node name="Label9" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerGraphics"]
+[node name="Label9" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer3"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "TAA"
 
-[node name="VSeparator5" type="VSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerGraphics"]
+[node name="VSeparator5" type="VSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer3"]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_4w3sk")
 
-[node name="CheckButtonTAA" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerGraphics"]
+[node name="CheckButtonTAA" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer3"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Label8" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerGraphics"]
+[node name="HSeparator7" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+theme_override_styles/separator = SubResource("StyleBoxEmpty_l2hi4")
+
+[node name="GridContainer" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer"]
+layout_mode = 2
+columns = 3
+
+[node name="Label8" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "DOF Bokeh Shape"
 
-[node name="LabelDOFShape" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerGraphics"]
+[node name="LabelDOFShape" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -1099,7 +1108,7 @@ size_flags_horizontal = 4
 text = "Hexagon"
 horizontal_alignment = 2
 
-[node name="SliderDOFShape" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerGraphics"]
+[node name="SliderDOFShape" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -1111,12 +1120,12 @@ value = 1.0
 tick_count = 3
 ticks_on_borders = true
 
-[node name="Label7" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerGraphics"]
+[node name="Label7" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "DOF Blur Quality"
 
-[node name="LabelDOFQuality" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerGraphics"]
+[node name="LabelDOFQuality" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -1124,7 +1133,7 @@ size_flags_horizontal = 4
 text = "Medium"
 horizontal_alignment = 2
 
-[node name="SliderDOFQuality" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerGraphics"]
+[node name="SliderDOFQuality" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -1134,6 +1143,85 @@ theme_override_styles/grabber_area_highlight = SubResource("StyleBoxEmpty_dnh0l"
 max_value = 3.0
 value = 2.0
 tick_count = 4
+ticks_on_borders = true
+
+[node name="HSeparator6" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+theme_override_styles/separator = SubResource("StyleBoxEmpty_l2hi4")
+
+[node name="GridContainer2" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer"]
+layout_mode = 2
+columns = 3
+
+[node name="Label12" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Upscaling Method"
+
+[node name="VSeparator6" type="VSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer2"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_4w3sk")
+
+[node name="OptionUpscalingMethod" type="OptionButton" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+item_count = 3
+popup/item_0/text = "Bilinear"
+popup/item_0/id = 0
+popup/item_1/text = "FSR 1.0"
+popup/item_1/id = 1
+popup/item_2/text = "FSR 2.2"
+popup/item_2/id = 2
+
+[node name="Label11" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Render Scale"
+
+[node name="LabelRenderScale" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+text = "100%"
+horizontal_alignment = 2
+
+[node name="SliderRenderScale" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/grabber_area = SubResource("StyleBoxEmpty_h7ijs")
+min_value = 0.25
+max_value = 2.0
+step = 0.05
+value = 1.0
+tick_count = 8
+ticks_on_borders = true
+
+[node name="Label13" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "FSR Sharpness"
+
+[node name="LabelFSRSharpness" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+text = "90%"
+horizontal_alignment = 2
+
+[node name="SliderFSRSharpness" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/grabber_area = SubResource("StyleBoxEmpty_h7ijs")
+max_value = 1.0
+step = 0.05
+value = 0.9
+editable = false
+tick_count = 11
 ticks_on_borders = true
 
 [node name="HSeparator5" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer"]

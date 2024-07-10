@@ -34,6 +34,9 @@ var version: int = 0
 @export var taa := false
 @export var dof_bokeh_shape := 1
 @export var dof_blur_quality := 2
+@export var scale_mode := 0
+@export var render_scale := 1.0
+@export var fsr_sharpness := 0.9
 
 # filter/shader settings
 @export var filter_1 := false
