@@ -155,6 +155,31 @@ func _preload_scene(packed_scene: PackedScene) -> void:
 	print("scene loaded!")
 	m8_scene_changed.emit()
 
+##
+## Return all properties of a PackedScene.
+##
+func _scene_state_get_properties(packed_scene: PackedScene) -> Dictionary:
+	var props := {}
+	var state := packed_scene.get_state()
+
+	for i in range(state.get_node_property_count(0)):
+		var k := state.get_node_property_name(0, i)
+		var v: Variant = state.get_node_property_value(0, i)
+		props[k] = v
+
+	return props
+
+##
+## Return the name of a scene.
+##
+func get_scene_name(scene_path: String) -> String:
+	var packed_scene: PackedScene = load(scene_path)
+	var props := _scene_state_get_properties(packed_scene)
+	if props.has("m8_scene_name"):
+		return props["m8_scene_name"]
+	else:
+		return scene_path.get_file().get_basename()
+
 # M8 client methods
 ################################################################################
 

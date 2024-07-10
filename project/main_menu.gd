@@ -30,8 +30,10 @@ func init(p_main: M8SceneDisplay) -> void:
 	var path := dir_scenes.get_next()
 	while path != "":
 		if path.trim_suffix(".remap").get_extension() == "tscn":
-			option_scenes.add_item(path.get_file().get_basename())
-			scene_paths.append(dir_scenes.get_current_dir().path_join(path))
+			var scene_path := dir_scenes.get_current_dir().path_join(path).trim_suffix(".remap")
+			option_scenes.add_item(main.get_scene_name(scene_path))
+			scene_paths.append(scene_path)
+			print("added scene: %s" % scene_path)
 		path = dir_scenes.get_next()
 
 	option_scenes.item_selected.connect(func(index: int) -> void:

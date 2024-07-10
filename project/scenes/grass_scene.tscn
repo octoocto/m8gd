@@ -121,6 +121,7 @@ size = Vector2(20, 20)
 
 [node name="M8Scene" type="Node3D"]
 script = ExtResource("1_qpev1")
+m8_scene_name = "Grass"
 metadata/_edit_vertical_guides_ = [640.0]
 metadata/_edit_horizontal_guides_ = [480.0]
 

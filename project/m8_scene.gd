@@ -13,6 +13,8 @@ const DEFAULT_PROFILE = "__main"
 # @export var color_fg2: Color
 # @export var color_bg: Color
 
+@export var m8_scene_name: String
+
 var spectrum_analyzer: AudioEffectSpectrumAnalyzerInstance
 
 var main: M8SceneDisplay
