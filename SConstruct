@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 import subprocess
+from pathlib import Path
 
 ADDON_DIR = "project/addons/libm8gd"
+BUILD_DIR = "build"
 TARGET_LIB = "libm8gd"
 
 env = SConscript("thirdparty/godot-cpp/SConstruct")
@@ -13,6 +15,10 @@ def call(*args) -> str:
 
 def call_split(*args) -> list[str]:
     return call(*args).split(" ")
+
+
+# create build directory if doesn't exist
+Path(BUILD_DIR).mkdir(exist_ok=True)
 
 
 USING_OSXCROSS: bool = "osxcross_sdk" in env
