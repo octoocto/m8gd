@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://da23gfk2abg5f"]
+[gd_scene load_steps=23 format=3 uid="uid://da23gfk2abg5f"]
 
 [ext_resource type="Script" path="res://scenes/floating_scene.gd" id="1_ufbfg"]
 [ext_resource type="Shader" path="res://shaders/device_screen.gdshader" id="3_o28i3"]
@@ -32,15 +32,6 @@ shader_parameter/backlight = false
 shader_parameter/use_linear_filter = true
 shader_parameter/texture_linear = ExtResource("4_0o31u")
 shader_parameter/texture_nearest = ExtResource("4_0o31u")
-
-[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_cep2e"]
-auto_exposure_scale = 0.02
-dof_blur_far_enabled = true
-dof_blur_far_distance = 15.5
-dof_blur_far_transition = 2.75
-dof_blur_near_distance = 12.5
-dof_blur_near_transition = 2.25
-dof_blur_amount = 0.5
 
 [sub_resource type="Curve" id="Curve_cgsy1"]
 _data = [Vector2(0, 0), 0.0, 0.0927835, 0, 0, Vector2(0.527778, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -144,8 +135,8 @@ transform = Transform3D(0.166916, 0.966953, -0.192722, -0.562368, 0.253919, 0.78
 light_color = Color(0.8425, 0.79, 1, 1)
 light_size = 3.0
 shadow_enabled = true
-shadow_bias = 0.08
-shadow_blur = 0.5
+shadow_opacity = 0.5
+shadow_blur = 2.18
 spot_range = 43.892
 spot_attenuation = 0.0
 spot_angle = 16.72
@@ -153,26 +144,24 @@ spot_angle_attenuation = 0.0192366
 
 [node name="LightLeft" type="SpotLight3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(0.231346, 0.952383, -0.198611, -0.918842, 0.280983, 0.27709, 0.319702, 0.118389, 0.940093, -4.77328, 3.32057, 10.2875)
+transform = Transform3D(0.819152, 0.0559714, -0.570839, -1.74011e-07, 0.995227, 0.0975829, 0.573576, -0.0799351, 0.815243, -5.5, -1, 6)
 visible = false
 light_color = Color(1, 0.11, 0.11, 1)
 light_energy = 16.0
-light_size = 3.0
+light_size = 1.0
 shadow_enabled = true
-shadow_blur = 0.5
-spot_range = 43.892
-spot_angle = 36.8368
+spot_range = 22.761
+spot_angle = 41.58
 
 [node name="LightRight" type="SpotLight3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(0.356473, 0.892189, 0.277356, -0.86415, 0.201984, 0.460919, 0.355205, -0.403983, 0.842987, 3.05577, 5.79271, 10.2875)
+transform = Transform3D(0.819152, -0.0499905, 0.571394, 0, 0.996195, 0.0871557, -0.573576, -0.0713938, 0.816035, 5.5, 1, 6)
 visible = false
 light_color = Color(0.614333, 0.11, 1, 1)
 light_energy = 6.243
-light_size = 3.0
+light_volumetric_fog_energy = 0.0
 shadow_enabled = true
-shadow_blur = 0.5
-spot_range = 43.892
+spot_range = 47.214
 spot_angle = 36.8368
 
 [node name="DeviceModel" parent="." instance=ExtResource("4_oaihv")]
@@ -180,15 +169,17 @@ unique_name_in_owner = true
 transform = Transform3D(38.83, 0, 0, 0, 6.74276, -38.24, 0, 38.2401, 6.74275, 0, 0, 0)
 screen_material = SubResource("ShaderMaterial_s84w0")
 
-[node name="CameraArm" type="Node3D" parent="."]
+[node name="Camera3D" parent="." instance=ExtResource("4_8iar1")]
 unique_name_in_owner = true
-
-[node name="Camera3D" parent="CameraArm" instance=ExtResource("4_8iar1")]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 14)
-attributes = SubResource("CameraAttributesPractical_cep2e")
+pan_range_zoomout = Vector2(10, 10)
+cam_pan_range_zoomin = Vector2(2, 7)
 dof_zoomin = 0.0
 dof_focus_distance = 14.0
+dof_blur_amount = 0.18
+arm_length = 14.0
+
+[node name="Camera3D" parent="Camera3D" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 14)
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="."]
 visible = false
@@ -220,3 +211,5 @@ size = Vector2i(640, 480)
 [node name="AudioSpectrum" parent="SubViewport" instance=ExtResource("5_ryr46")]
 unique_name_in_owner = true
 position = Vector2(320, 240)
+
+[editable path="Camera3D"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://f2tvhcv8kiuu"]
+[gd_scene load_steps=26 format=3 uid="uid://f2tvhcv8kiuu"]
 
 [ext_resource type="Script" path="res://scenes/surface_scene.gd" id="1_87ai1"]
 [ext_resource type="Shader" path="res://shaders/device_screen.gdshader" id="3_bp567"]
@@ -28,15 +28,6 @@ shader_parameter/backlight = true
 shader_parameter/use_linear_filter = true
 shader_parameter/texture_linear = ExtResource("4_3r2cc")
 shader_parameter/texture_nearest = ExtResource("4_3r2cc")
-
-[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_5h073"]
-auto_exposure_scale = 0.02
-dof_blur_far_enabled = true
-dof_blur_far_distance = 17.4
-dof_blur_far_transition = 1.0
-dof_blur_near_enabled = true
-dof_blur_near_distance = 11.4
-dof_blur_amount = 0.18
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tb1h5"]
 resource_name = "syna"
@@ -262,11 +253,11 @@ screen_material = SubResource("ShaderMaterial_4b25i")
 [node name="Camera3D" parent="." instance=ExtResource("5_jy4yn")]
 unique_name_in_owner = true
 transform = Transform3D(0.906308, -0.365998, 0.211309, 0, 0.5, 0.866025, -0.422618, -0.784885, 0.453154, 4.353, 12.615, 6.695)
-attributes = SubResource("CameraAttributesPractical_5h073")
 dof_zoomout = 3.0
 dof_zoomin = 1.5
 dof_focus_distance = 14.4
 dof_focus_width = 3.0
+dof_blur_amount = 0.18
 
 [node name="PlantModel" type="Node3D" parent="."]
 unique_name_in_owner = true
@@ -294,3 +285,5 @@ skeleton = NodePath("")
 unique_name_in_owner = true
 material_override = SubResource("StandardMaterial3D_dtr6l")
 mesh = SubResource("PlaneMesh_4c1u1")
+
+[editable path="Camera3D"]

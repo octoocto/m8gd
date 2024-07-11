@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://oijfxguj404r"]
+[gd_scene load_steps=24 format=3 uid="uid://oijfxguj404r"]
 
 [ext_resource type="Script" path="res://scenes/grass_scene.gd" id="1_qpev1"]
 [ext_resource type="Shader" path="res://shaders/device_screen.gdshader" id="3_jvxd3"]
@@ -37,15 +37,6 @@ shader_parameter/backlight = false
 shader_parameter/use_linear_filter = true
 shader_parameter/texture_linear = ExtResource("4_qxguy")
 shader_parameter/texture_nearest = ExtResource("4_qxguy")
-
-[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_lyp6v"]
-dof_blur_far_enabled = true
-dof_blur_far_distance = 13.9
-dof_blur_far_transition = 2.0
-dof_blur_near_enabled = true
-dof_blur_near_distance = 10.9
-dof_blur_near_transition = 0.6
-dof_blur_amount = 0.25
 
 [sub_resource type="Gradient" id="Gradient_1h2sb"]
 interpolation_mode = 2
@@ -183,8 +174,9 @@ screen_material = SubResource("ShaderMaterial_8tk3a")
 [node name="Camera3D" parent="." instance=ExtResource("6_08s3p")]
 unique_name_in_owner = true
 transform = Transform3D(0.994522, 0.0856243, -0.0599548, 0, 0.573576, 0.819152, 0.104528, -0.814665, 0.570434, -2.67, 12.5984, 7.73)
-attributes = SubResource("CameraAttributesPractical_lyp6v")
 dof_focus_distance = 12.4
+dof_blur_amount = null
+arm_length = 0.0
 
 [node name="GrassArea" parent="." instance=ExtResource("7_83g7i")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.311, 1.3, 2)
