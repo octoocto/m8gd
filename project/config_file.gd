@@ -8,6 +8,9 @@ var version: int = 0
 @export var scene_parameters := {} # Dictionary[String, Dictionary]
 @export var last_scene_path: String # path to last scene opened
 
+@export var camera_mouse_control := true
+@export var camera_humanize := true
+
 @export var subscene_mode := 0
 @export var subscene_anchor := 0
 @export var subscene_pos := Vector2i(0, 0)

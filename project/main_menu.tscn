@@ -180,9 +180,10 @@ text = "Configure..."
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_5cyir")
 
-[node name="Container_SceneCamera" type="HBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer"]
+[node name="Container_SceneCamera" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+columns = 2
 
 [node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/Container_SceneCamera"]
 layout_mode = 2
@@ -194,6 +195,24 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Configure..."
+
+[node name="Label2" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/Container_SceneCamera"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Enable Mouse-controlled Pan/Zooming"
+
+[node name="Check_MouseCamera" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/Container_SceneCamera"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/Container_SceneCamera"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Enable Humanized Camera Movement"
+
+[node name="Check_HumanCamera" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/Container_SceneCamera"]
+unique_name_in_owner = true
+layout_mode = 2
 
 [node name="HSeparator4" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer"]
 layout_mode = 2

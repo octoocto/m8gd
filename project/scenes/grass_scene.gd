@@ -2,16 +2,6 @@ extends M8Scene
 
 @onready var camera: HumanizedCamera3D = %Camera3D
 
-@export var enable_mouse_controlled_pan_zoom := true:
-	set(value):
-		%Camera3D.mouse_controlled_pan_zoom = value
-		enable_mouse_controlled_pan_zoom = value
-
-@export var humanized_camera_movement := true:
-	set(value):
-		%Camera3D.humanized_movement = value
-		humanized_camera_movement = value
-
 @export var model_screen_emission := 0.25:
 	set(value):
 		if has_device_model():
