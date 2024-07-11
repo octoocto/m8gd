@@ -77,28 +77,57 @@ var last_peak := 0.0
 var last_peak_max := 0.0
 var last_audio_level := 0.0
 
+func _printgreen(text: String) -> void:
+    print_rich("[color=green]%s[/color]" % text)
+
 func _ready() -> void:
+
+    var start_time := Time.get_ticks_msec()
+    var time := start_time
 
     # resize viewport with window
     DisplayServer.window_set_min_size(Vector2i(960, 640)) # 2x M8 screen size
 
     # initialize key overlay
+    _printgreen("initializing key overlay...")
     key_overlay.init(self)
+    _printgreen("initialized key overlay in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
+    time = Time.get_ticks_msec()
 
     # initialize menus
-    print("initializing menus...")
+    _printgreen("initializing main menu...")
     menu.init(self)
-    menu_scene.init(self)
-    menu_subscene.init(self)
-    menu_camera.init(self)
+    _printgreen("initialized main menu in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
+    time = Time.get_ticks_msec()
 
+    _printgreen("initializing scene menu...")
+    menu_scene.init(self)
+    _printgreen("initialized scene menu in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
+    time = Time.get_ticks_msec()
+
+    _printgreen("initializing subscene menu...")
+    menu_subscene.init(self)
+    _printgreen("initialized subscene menu in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
+    time = Time.get_ticks_msec()
+
+    _printgreen("initializing camera menu...")
+    menu_camera.init(self)
+    _printgreen("initialized camera menu in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
+    time = Time.get_ticks_msec()
+
+    _printgreen("initializing scene...")
     # initialize main scene
     if not load_scene(config.last_scene_path):
         load_scene(MAIN_SCENE_PATH)
 
+    _printgreen("initialized scene in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
+    time = Time.get_ticks_msec()
+
     %ButtonSplashClose.pressed.connect(func() -> void:
         %SplashContainer.visible=false
     )
+
+    _printgreen("finished initializing in %.3f seconds!" % ((Time.get_ticks_msec() - start_time) / 1000.0))
 
 func _notification(what: int) -> void:
     if what == NOTIFICATION_WM_CLOSE_REQUEST:
@@ -214,15 +243,27 @@ func _scene_state_get_properties(packed_scene: PackedScene) -> Dictionary:
     return props
 
 ##
+## Return a value from a .tscn file by reading and parsing the file.
+##
+func extract_scene_property(scene_path: String, property: String) -> Variant:
+    var lines := FileAccess.get_file_as_string(scene_path).split("\n", false)
+
+    for l in lines:
+        if l.contains(property):
+            var split := l.split(" = ", true, 1)
+            if split[0] == property:
+                var expr := Expression.new()
+                expr.parse(split[1])
+                return expr.execute()
+
+    return null
+
+##
 ## Return the name of a scene.
 ##
 func get_scene_name(scene_path: String) -> String:
-    var packed_scene: PackedScene = load(scene_path)
-    var props := _scene_state_get_properties(packed_scene)
-    if props.has("m8_scene_name"):
-        return props["m8_scene_name"]
-    else:
-        return scene_path.get_file().get_basename()
+    var scene_name: Variant = extract_scene_property(scene_path, "m8_scene_name")
+    return scene_name if scene_name is String else scene_path.get_file().get_basename().capitalize()
 
 # M8 client methods
 ################################################################################
