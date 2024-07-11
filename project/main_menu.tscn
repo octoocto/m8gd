@@ -561,110 +561,6 @@ size_flags_horizontal = 0
 size_flags_vertical = 0
 mouse_filter = 1
 
-[node name="ColorPickerHL_Up" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/Control"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 44.0
-offset_top = -127.0
-offset_right = 76.0
-offset_bottom = -95.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(1, 1, 1, 1)
-edit_alpha = false
-
-[node name="ColorPickerHL_Down" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/Control"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 44.0
-offset_top = -95.0
-offset_right = 76.0
-offset_bottom = -63.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(1, 1, 1, 1)
-edit_alpha = false
-
-[node name="ColorPickerHL_Left" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/Control"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 12.0
-offset_top = -95.0
-offset_right = 44.0
-offset_bottom = -63.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(1, 1, 1, 1)
-edit_alpha = false
-
-[node name="ColorPickerHL_Right" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/Control"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 76.0
-offset_top = -95.0
-offset_right = 108.0
-offset_bottom = -63.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(1, 1, 1, 1)
-edit_alpha = false
-
-[node name="ColorPickerHL_Shift" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/Control"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 44.0
-offset_top = -55.0
-offset_right = 76.0
-offset_bottom = -23.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(1, 1, 1, 1)
-edit_alpha = false
-
-[node name="ColorPickerHL_Play" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/Control"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 76.0
-offset_top = -55.0
-offset_right = 108.0
-offset_bottom = -23.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(1, 1, 1, 1)
-edit_alpha = false
-
-[node name="ColorPickerHL_Option" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/Control"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 84.0
-offset_top = -135.0
-offset_right = 116.0
-offset_bottom = -103.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(1, 1, 1, 1)
-edit_alpha = false
-
-[node name="ColorPickerHL_Edit" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/Control"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 116.0
-offset_top = -135.0
-offset_right = 148.0
-offset_bottom = -103.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(1, 1, 1, 1)
-edit_alpha = false
-
 [node name="Color_KeyUp" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/Control"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 32)
@@ -767,6 +663,110 @@ offset_bottom = -287.0
 size_flags_horizontal = 0
 size_flags_vertical = 0
 color = Color(0.0901961, 0.0901961, 0.0901961, 1)
+edit_alpha = false
+
+[node name="Color_HLUp" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 44.0
+offset_top = -127.0
+offset_right = 76.0
+offset_bottom = -95.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(1, 1, 1, 1)
+edit_alpha = false
+
+[node name="Color_HLDown" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 44.0
+offset_top = -95.0
+offset_right = 76.0
+offset_bottom = -63.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(1, 1, 1, 1)
+edit_alpha = false
+
+[node name="Color_HLLeft" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 12.0
+offset_top = -95.0
+offset_right = 44.0
+offset_bottom = -63.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(1, 1, 1, 1)
+edit_alpha = false
+
+[node name="Color_HLRight" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 76.0
+offset_top = -95.0
+offset_right = 108.0
+offset_bottom = -63.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(1, 1, 1, 1)
+edit_alpha = false
+
+[node name="Color_HLShift" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 44.0
+offset_top = -55.0
+offset_right = 76.0
+offset_bottom = -23.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(1, 1, 1, 1)
+edit_alpha = false
+
+[node name="Color_HLPlay" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 76.0
+offset_top = -55.0
+offset_right = 108.0
+offset_bottom = -23.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(1, 1, 1, 1)
+edit_alpha = false
+
+[node name="Color_HLOption" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 84.0
+offset_top = -135.0
+offset_right = 116.0
+offset_bottom = -103.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(1, 1, 1, 1)
+edit_alpha = false
+
+[node name="Color_HLEdit" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 116.0
+offset_top = -135.0
+offset_right = 148.0
+offset_bottom = -103.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(1, 1, 1, 1)
 edit_alpha = false
 
 [node name="RichTextLabel2" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer"]
