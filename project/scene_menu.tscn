@@ -34,6 +34,7 @@ columns = 3
 
 [node name="ButtonFinish" type="Button" parent="VBoxContainer"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 28)
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_0w3pk")
 text = "Finish"

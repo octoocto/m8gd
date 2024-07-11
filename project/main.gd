@@ -23,7 +23,7 @@ const M8_ACTIONS := [
     "key_shift", "key_play", "key_option", "key_edit"]
 
 signal m8_key_changed(key: String, pressed: bool)
-signal m8_scene_changed(scene_path: String)
+signal m8_scene_changed(scene_path: String, scene: M8Scene)
 signal m8_connected
 signal m8_disconnected
 
@@ -44,6 +44,7 @@ signal m8_disconnected
 @onready var menu: MainMenu = %MainMenuPanel
 @onready var menu_scene: SceneMenu = %SceneMenu
 @onready var menu_subscene: PanelContainer = %SubSceneMenu
+@onready var menu_camera: PanelContainer = %SceneCameraMenu
 
 @onready var cam_status: RichTextLabel = %CameraStatus
 @onready var cam_help: RichTextLabel = %CameraControls
@@ -87,8 +88,9 @@ func _ready() -> void:
     # initialize menus
     print("initializing menus...")
     menu.init(self)
-    %SceneMenu.init(self)
-    %SubSceneMenu.init(self)
+    menu_scene.init(self)
+    menu_subscene.init(self)
+    menu_camera.init(self)
 
     # initialize main scene
     if not load_scene(config.last_scene_path):
@@ -115,7 +117,19 @@ func print_blink(msg: String) -> void:
 
 ## Return true if user is in the menu.
 func is_menu_open() -> bool:
-    return %MainMenuPanel.visible or %SceneMenu.visible or %SubSceneMenu.visible
+    return menu.visible
+
+func is_any_menu_open() -> bool:
+    return menu.visible or menu_scene.visible or menu_subscene.visible or menu_camera.visible
+
+func menu_open() -> void:
+    menu_camera.menu_close()
+    menu_scene.visible = false
+    menu_subscene.visible = false
+    menu.visible = true
+
+func menu_close() -> void:
+    menu.visible = false
 
 ## Reload the current scene.
 func reload_scene() -> void:
@@ -145,7 +159,7 @@ func load_scene(scene_path: String) -> bool:
     menu.update_device_colors()
 
     print("scene loaded!")
-    m8_scene_changed.emit(scene_path)
+    m8_scene_changed.emit(scene_path, scene)
 
     return true
 

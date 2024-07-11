@@ -136,7 +136,7 @@ layout_mode = 2
 [node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer"]
 layout_mode = 2
 bbcode_enabled = true
-text = "[b]Current Scene[/b] "
+text = "[b]Scene[/b] "
 fit_content = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer"]
@@ -144,7 +144,7 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "Load scene"
+text = "Current Scene"
 
 [node name="OptionScenes" type="OptionButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
@@ -161,7 +161,7 @@ layout_mode = 2
 [node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Scene parameters"
+text = "Scene Parameters"
 
 [node name="ButtonResetSceneVars" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer2"]
 unique_name_in_owner = true
@@ -171,6 +171,25 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_3mi27")
 text = "Reset to Defaults"
 
 [node name="Button_SceneMenu" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Configure..."
+
+[node name="HSeparator3" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_5cyir")
+
+[node name="Container_SceneCamera" type="HBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/Container_SceneCamera"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "3D Camera"
+
+[node name="Button_SceneCameraMenu" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/Container_SceneCamera"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2

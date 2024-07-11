@@ -1,0 +1,178 @@
+[gd_scene load_steps=3 format=3 uid="uid://geilakxinhul"]
+
+[ext_resource type="Script" path="res://scene_camera_menu.gd" id="1_hvork"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_do37k"]
+bg_color = Color(0.115, 0.3, 0, 1)
+
+[node name="SceneCameraMenu" type="PanelContainer"]
+custom_minimum_size = Vector2(320, 0)
+size_flags_horizontal = 0
+size_flags_vertical = 8
+script = ExtResource("1_hvork")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="Label2" type="Label" parent="VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Position"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/GridContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/GridContainer/HBoxContainer"]
+custom_minimum_size = Vector2(16, 0)
+layout_mode = 2
+text = "X"
+horizontal_alignment = 1
+
+[node name="Spin_PosX" type="SpinBox" parent="VBoxContainer/GridContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+min_value = -100.0
+step = 0.01
+allow_greater = true
+allow_lesser = true
+suffix = "m"
+
+[node name="Label2" type="Label" parent="VBoxContainer/GridContainer/HBoxContainer"]
+custom_minimum_size = Vector2(16, 0)
+layout_mode = 2
+text = "Y"
+horizontal_alignment = 1
+
+[node name="Spin_PosY" type="SpinBox" parent="VBoxContainer/GridContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+min_value = -100.0
+step = 0.01
+allow_greater = true
+allow_lesser = true
+suffix = "m"
+
+[node name="Label3" type="Label" parent="VBoxContainer/GridContainer/HBoxContainer"]
+custom_minimum_size = Vector2(16, 0)
+layout_mode = 2
+text = "Z"
+horizontal_alignment = 1
+
+[node name="Spin_PosZ" type="SpinBox" parent="VBoxContainer/GridContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+min_value = -100.0
+step = 0.01
+allow_greater = true
+allow_lesser = true
+suffix = "m"
+
+[node name="Label3" type="Label" parent="VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Angle"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/GridContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/GridContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(16, 0)
+layout_mode = 2
+text = "P"
+horizontal_alignment = 1
+
+[node name="Spin_AngP" type="SpinBox" parent="VBoxContainer/GridContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = -360.0
+max_value = 360.0
+step = 0.1
+suffix = "deg"
+
+[node name="Label2" type="Label" parent="VBoxContainer/GridContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(16, 0)
+layout_mode = 2
+text = "Y"
+horizontal_alignment = 1
+
+[node name="Spin_AngY" type="SpinBox" parent="VBoxContainer/GridContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = -360.0
+max_value = 360.0
+step = 0.1
+suffix = "deg"
+
+[node name="Label" type="Label" parent="VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Focus"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer/GridContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/GridContainer/HBoxContainer3"]
+custom_minimum_size = Vector2(16, 0)
+layout_mode = 2
+text = "L"
+horizontal_alignment = 1
+
+[node name="Spin_FocalLength" type="SpinBox" parent="VBoxContainer/GridContainer/HBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = -10.0
+step = 0.1
+suffix = "m"
+
+[node name="Label2" type="Label" parent="VBoxContainer/GridContainer/HBoxContainer3"]
+custom_minimum_size = Vector2(16, 0)
+layout_mode = 2
+text = "W"
+horizontal_alignment = 1
+
+[node name="Spin_FocalWidth" type="SpinBox" parent="VBoxContainer/GridContainer/HBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = -0.5
+step = 0.1
+suffix = "m"
+
+[node name="Label4" type="Label" parent="VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Blur"
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer/GridContainer"]
+layout_mode = 2
+
+[node name="Label_Blur" type="Label" parent="VBoxContainer/GridContainer/HBoxContainer4"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+text = "0.00"
+
+[node name="Slider_Blur" type="HSlider" parent="VBoxContainer/GridContainer/HBoxContainer4"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+max_value = 2.0
+step = 0.01
+
+[node name="Button_Finish" type="Button" parent="VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_do37k")
+text = "Finish"

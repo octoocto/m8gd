@@ -37,13 +37,25 @@ func get_export_vars() -> Array:
 ## Returns true if this scene contains a DeviceModel.
 ##
 func has_device_model() -> bool:
-	return has_node("%DeviceModel")
+	return has_node("%DeviceModel") and %DeviceModel is DeviceModel
 
 ##
 ## Returns the DeviceModel in this scene is there is one. Returns null if not.
 ##
 func get_device_model() -> DeviceModel:
 	return %DeviceModel
+
+##
+## Returns true if this scene contains a Camera3D.
+##
+func has_3d_camera() -> bool:
+	return has_node("%Camera3D") and %Camera3D is HumanizedCamera3D
+
+##
+## Returns the Camera3D in this scene is there is one. Returns null if not.
+##
+func get_3d_camera() -> HumanizedCamera3D:
+	return %Camera3D
 
 # func update_m8_color_samples():
 #	 if main.m8_display_viewport != null:

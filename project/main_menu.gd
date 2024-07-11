@@ -41,7 +41,7 @@ func init(p_main: M8SceneDisplay) -> void:
 			main.load_scene(option_scenes.get_item_metadata(idx))
 	)
 
-	main.m8_scene_changed.connect(func(scene_path: String) -> void:
+	main.m8_scene_changed.connect(func(scene_path: String, _scene: M8Scene) -> void:
 		option_scenes.selected=get_scene_path_idx(scene_path)
 	)
 
@@ -90,6 +90,20 @@ func init(p_main: M8SceneDisplay) -> void:
 	%Button_SubSceneMenu.pressed.connect(func() -> void:
 		visible=false
 		main.menu_subscene.visible=true
+	)
+
+	main.m8_scene_changed.connect(func(_scene_path: String, scene: M8Scene) -> void:
+		if scene.has_3d_camera():
+			%Container_SceneCamera.modulate.a=1.0
+			%Button_SceneCameraMenu.disabled=false
+		else:
+			%Container_SceneCamera.modulate.a=0.5
+			%Button_SceneCameraMenu.disabled=true
+	)
+
+	%Button_SceneCameraMenu.pressed.connect(func() -> void:
+		visible=false
+		main.menu_camera.menu_open()
 	)
 
 	# Audio Tab
@@ -815,11 +829,10 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventKey:
 		# menu on/off toggle
 		if event.pressed and event.keycode == KEY_ESCAPE:
-			if visible:
-				visible = false
+			if main.is_menu_open():
+				main.menu_close()
 			else:
-				main.get_node("%SubSceneMenu").visible = false
-				visible = true
+				main.menu_open()
 
 func _process(_delta: float) -> void:
 	%CheckButtonFullscreen.button_pressed = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN

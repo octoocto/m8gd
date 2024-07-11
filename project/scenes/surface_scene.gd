@@ -12,12 +12,6 @@ extends M8Scene
 		%Camera3D.humanized_movement = value
 		humanized_camera_movement = value
 
-@export var enable_depth_of_field := true:
-	set(value):
-		%Camera3D.attributes.dof_blur_far_enabled = value
-		%Camera3D.attributes.dof_blur_near_enabled = value
-		enable_depth_of_field = value
-
 @export var model_screen_emission := 0.25:
 	set(value):
 		if has_device_model():
