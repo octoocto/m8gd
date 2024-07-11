@@ -471,6 +471,17 @@ func m8_is_key_pressed(bit: int) -> bool:
 func audio_get_level() -> float:
     return audio_level
 
+##
+## Get the peak volume of the "Analyzer" bus.
+##
+func audio_get_peak_volume() -> Vector2:
+    return Vector2(
+        # db_to_linear(AudioServer.get_bus_peak_volume_left_db(1, 0)),
+        # db_to_linear(AudioServer.get_bus_peak_volume_right_db(1, 0))
+        AudioServer.get_bus_peak_volume_left_db(1, 0),
+        AudioServer.get_bus_peak_volume_right_db(1, 0)
+    )
+
 func audio_get_spectrum_analyzer() -> AudioEffectSpectrumAnalyzerInstance:
     return AudioServer.get_bus_effect_instance(1, 0)
 

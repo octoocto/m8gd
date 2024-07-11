@@ -665,8 +665,15 @@ func init(p_main: M8SceneDisplay) -> void:
 		main.m8_audio_disconnect()
 	)
 
+	get_tree().process_frame.connect(func() -> void:
+		if main.is_menu_open():
+			var volume:=main.audio_get_peak_volume()
+			%Bar_AudioLevelL.value=volume.x
+			%Bar_AudioLevelR.value=volume.y
+	)
+
 	%TabContainer.tab_changed.connect(func(tab: int) -> void:
-		if tab == 5: # misc tab
+		if tab == 2: # misc tab
 			refresh_serial_ports.call()
 			refresh_audio_devices.call()
 	)

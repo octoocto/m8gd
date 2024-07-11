@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://d13t756slc8b0"]
+[gd_scene load_steps=27 format=3 uid="uid://d13t756slc8b0"]
 
 [ext_resource type="Script" path="res://main_menu.gd" id="1_7xjs6"]
 
@@ -51,6 +51,13 @@ bg_color = Color(0.5, 0, 0, 1)
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4w3sk"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_06k14"]
+
+[sub_resource type="Gradient" id="Gradient_t416v"]
+offsets = PackedFloat32Array(0, 0.528409, 0.754, 0.79)
+colors = PackedColorArray(0, 0.95, 1, 1, 0.0833333, 1, 0, 1, 1, 1, 0, 1, 1, 0.03, 0.03, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_55vtn"]
+gradient = SubResource("Gradient_t416v")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_l2hi4"]
 
@@ -355,11 +362,45 @@ text = "Connect"
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_06k14")
 
-[node name="RichTextLabel2" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer/HBoxContainer3"]
+custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 bbcode_enabled = true
 text = "[b]Audio Device[/b] "
 fit_content = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer/HBoxContainer3"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="Bar_AudioLevelL" type="TextureProgressBar" parent="CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer/HBoxContainer3/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+min_value = -60.0
+max_value = 0.0
+step = 0.01
+value = -45.31
+nine_patch_stretch = true
+texture_progress = SubResource("GradientTexture1D_55vtn")
+
+[node name="Bar_AudioLevelR" type="TextureProgressBar" parent="CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer/HBoxContainer3/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+min_value = -60.0
+max_value = 0.0
+step = 0.01
+value = -45.31
+nine_patch_stretch = true
+texture_progress = SubResource("GradientTexture1D_55vtn")
 
 [node name="GridContainer2" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer"]
 layout_mode = 2
