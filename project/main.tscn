@@ -488,9 +488,8 @@ text = "[center][font size=72]m8gd[/font]
 
 [table=2]
 [cell][left]Escape[/left][/cell] [cell][left]Open menu[/left][/cell]
-[cell][left]Mouse LClick[/left][/cell] [cell][left]Camera zoom[/left][/cell]
+[cell][left]Mouse LClick    [/left][/cell] [cell][left]Camera zoom[/left][/cell]
 [cell][left]Mouse Move[/left][/cell] [cell][left]Camera pan[/left][/cell]
-[cell][left]Mouse RClick (hold)[/left] [/cell][cell][left]Camera move[/left][/cell]
 [/table]
 [/center]
 "

@@ -14,6 +14,14 @@ script = ExtResource("1_hvork")
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
 
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_colors/default_color = Color(1, 1, 1, 0.75)
+theme_override_constants/line_separation = 8
+bbcode_enabled = true
+text = "[center][i]Hold RIGHT CLICK to enable WASD/Mouse controls[/i][/center]"
+fit_content = true
+
 [node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
 layout_mode = 2
 columns = 2
@@ -146,6 +154,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 min_value = -0.5
 step = 0.1
+value = 0.5
 suffix = "m"
 
 [node name="Label4" type="Label" parent="VBoxContainer/GridContainer"]
