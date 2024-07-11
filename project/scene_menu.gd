@@ -13,6 +13,9 @@ func init(p_main: M8SceneDisplay) -> void:
 		main.menu.visible=true
 	)
 
+func _scene_file_path() -> String:
+	return scene.scene_file_path
+
 func get_param_container() -> GridContainer:
 	return %SceneParamsContainer
 
@@ -39,8 +42,8 @@ func read_params_from_scene(p_scene: M8Scene) -> void:
 	scene = p_scene
 
 	# add scene parameter dict to config if not exists
-	if !config.scene_parameters.has(scene_file_path):
-		config.scene_parameters[scene_file_path] = {}
+	if !config.scene_parameters.has(_scene_file_path()):
+		config.scene_parameters[_scene_file_path()] = {}
 
 	# clear menu
 	clear_params()
@@ -72,43 +75,43 @@ func read_params_from_scene(p_scene: M8Scene) -> void:
 
 		printerr("scene: unrecognized export var type: %s" % v.hint_string)
 
-func config_get_profile(profile_name: String) -> Dictionary:
-	if !main.config.scene_parameters[scene_file_path].has(profile_name):
-		print("scene: initializing profile '%s'" % profile_name)
-		main.config.scene_parameters[scene_file_path][profile_name] = {}
-
-	var profile: Dictionary = main.config.scene_parameters[scene_file_path][profile_name]
-	assert(profile is Dictionary)
-	# print("scene: using profile '%s'" % profile_name)
-	return profile
-
-func config_delete_profile(profile_name: String) -> void:
-	if main.config.scene_parameters[scene_file_path].has(profile_name):
-		print("scene: deleting profile '%s'" % profile_name)
-		main.config.scene_parameters[scene_file_path].erase(profile_name)
-
 func config_load_profile(profile_name: String) -> void:
-	print("scene: %s: loading profile '%s'" % [scene_file_path, profile_name])
+	print("scene: %s: loading profile '%s'" % [_scene_file_path(), profile_name])
 	var export_vars := scene.get_export_vars()
 	for v: Dictionary in export_vars:
 		var property: String = v.name
-		set(property, config_get_property(profile_name, property))
+		scene.set(property, config_get_property(profile_name, property))
 
 func config_get_property(profile_name: String, property: String) -> Variant:
 	var profile := config_get_profile(profile_name)
 
 	# set parameter from config, or add parameter to config
-	if profile.has(property):
-		print("scene: %s: setting property '%s' from config" % [profile_name, property])
-	else:
+	if !profile.has(property) or profile[property] == null:
 		print("scene: %s: adding property '%s' to config" % [profile_name, property])
-		profile[property] = get(property)
+		profile[property] = scene.get(property)
+
+	print("scene: %s: setting property: %s=%s" % [profile_name, property, profile[property]])
 
 	return profile[property]
 
+func config_get_profile(profile_name: String) -> Dictionary:
+	if !main.config.scene_parameters[_scene_file_path()].has(profile_name):
+		print("scene: initializing profile '%s'" % profile_name)
+		main.config.scene_parameters[_scene_file_path()][profile_name] = {}
+
+	var profile: Dictionary = main.config.scene_parameters[_scene_file_path()][profile_name]
+	assert(profile is Dictionary)
+	# print("scene: using profile '%s'" % profile_name)
+	return profile
+
+func config_delete_profile(profile_name: String) -> void:
+	if main.config.scene_parameters[_scene_file_path()].has(profile_name):
+		print("scene: deleting profile '%s'" % profile_name)
+		main.config.scene_parameters[_scene_file_path()].erase(profile_name)
+
 func config_update_property(profile_name: String, property: String) -> void:
 	print("scene: updating property '%s' in config" % property)
-	config_get_profile(profile_name)[property] = get(property)
+	config_get_profile(profile_name)[property] = scene.get(property)
 
 func push_scene_var_bool(property: String) -> void:
 
