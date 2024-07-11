@@ -826,14 +826,6 @@ func _input(event: InputEvent) -> void:
 			end_key_rebind()
 		return
 
-	if event is InputEventKey:
-		# menu on/off toggle
-		if event.pressed and event.keycode == KEY_ESCAPE:
-			if main.is_menu_open():
-				main.menu_close()
-			else:
-				main.menu_open()
-
 func _process(_delta: float) -> void:
 	%CheckButtonFullscreen.button_pressed = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN
 	%OptionRes.disabled = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN

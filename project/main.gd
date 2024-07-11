@@ -590,3 +590,15 @@ func _input(event: InputEvent) -> void:
                 DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
             else:
                 DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+
+        if event.pressed and event.keycode == KEY_ESCAPE:
+
+            if %SplashContainer.visible:
+                %SplashContainer.visible = false
+                return
+
+            # menu on/off toggle
+            if is_menu_open():
+                menu_close()
+            else:
+                menu_open()
