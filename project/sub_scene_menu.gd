@@ -9,32 +9,6 @@ func init(main: M8SceneDisplay) -> void:
 	container = main.get_node("%SubSceneContainer")
 	viewport = main.get_node("%SubSceneRoot")
 
-	%Spin_PosX.value_changed.connect(func(value: float) -> void:
-		container.position.x=int(value)
-		config.subscene_pos.x=int(value)
-	)
-	%Spin_PosX.value = config.subscene_pos.x
-
-	%Spin_PosY.value_changed.connect(func(value: float) -> void:
-		container.position.y=int(value)
-		config.subscene_pos.y=int(value)
-	)
-	%Spin_PosY.value = config.subscene_pos.y
-
-	%Spin_SizeW.value_changed.connect(func(value: float) -> void:
-		viewport.size.x=int(value)
-		container.size.x=int(value)
-		config.subscene_size.x=int(value)
-	)
-	%Spin_SizeW.value = config.subscene_size.x
-
-	%Spin_SizeH.value_changed.connect(func(value: float) -> void:
-		viewport.size.y=int(value)
-		container.size.y=int(value)
-		config.subscene_size.y=int(value)
-	)
-	%Spin_SizeH.value = config.subscene_size.y
-
 	%Option_Anchor.add_item("Top Left", 0)
 	%Option_Anchor.set_item_metadata(0, Control.PRESET_TOP_LEFT)
 	%Option_Anchor.add_item("Top Right", 1)
@@ -57,6 +31,32 @@ func init(main: M8SceneDisplay) -> void:
 	)
 	%Option_Anchor.selected = config.subscene_anchor
 	%Option_Anchor.item_selected.emit( - 1)
+
+	%Spin_PosX.value_changed.connect(func(value: float) -> void:
+		container.position.x=int(value)
+		config.subscene_pos.x=int(value)
+	)
+	%Spin_PosX.value_changed.emit(config.subscene_pos.x)
+
+	%Spin_PosY.value_changed.connect(func(value: float) -> void:
+		container.position.y=int(value)
+		config.subscene_pos.y=int(value)
+	)
+	%Spin_PosY.value_changed.emit(config.subscene_pos.y)
+
+	%Spin_SizeW.value_changed.connect(func(value: float) -> void:
+		viewport.size.x=int(value)
+		container.size.x=int(value)
+		config.subscene_size.x=int(value)
+	)
+	%Spin_SizeW.value_changed.emit(config.subscene_size.x)
+
+	%Spin_SizeH.value_changed.connect(func(value: float) -> void:
+		viewport.size.y=int(value)
+		container.size.y=int(value)
+		config.subscene_size.y=int(value)
+	)
+	%Spin_SizeH.value_changed.emit(config.subscene_size.y)
 
 	%ButtonFinish.pressed.connect(func() -> void:
 		visible=false
