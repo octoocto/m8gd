@@ -2,6 +2,9 @@ class_name M8Config extends Resource
 
 const CONFIG_FILE_PATH := "user://config.res"
 
+const DEFAULT_COLOR_KEYCAP := Color(0.09, 0.09, 0.09)
+const DEFAULT_COLOR_BODY := Color.BLACK
+
 var version: int = 0
 
 # scene settings
@@ -17,6 +20,16 @@ var version: int = 0
 @export var subscene_size := Vector2i(640, 480)
 
 # device model settings
+@export var model_color_key_up := DEFAULT_COLOR_KEYCAP
+@export var model_color_key_down := DEFAULT_COLOR_KEYCAP
+@export var model_color_key_left := DEFAULT_COLOR_KEYCAP
+@export var model_color_key_right := DEFAULT_COLOR_KEYCAP
+@export var model_color_key_option := DEFAULT_COLOR_KEYCAP
+@export var model_color_key_edit := DEFAULT_COLOR_KEYCAP
+@export var model_color_key_shift := DEFAULT_COLOR_KEYCAP
+@export var model_color_key_play := DEFAULT_COLOR_KEYCAP
+@export var model_color_body := DEFAULT_COLOR_BODY
+
 @export var hl_opacity := 1.0
 @export var hl_filters := false
 @export var hl_color_directional := Color.WHITE

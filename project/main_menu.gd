@@ -445,6 +445,37 @@ func init(p_main: M8SceneDisplay) -> void:
 			%ThemeBGColor.color=color
 	)
 
+	# Model colors
+
+	for arr: Array in [
+		[%Color_KeyUp, "%Keycap_Up", "model_color_key_up"],
+		[%Color_KeyDown, "%Keycap_Down", "model_color_key_down"],
+		[%Color_KeyLeft, "%Keycap_Left", "model_color_key_left"],
+		[%Color_KeyRight, "%Keycap_Right", "model_color_key_right"],
+		[%Color_KeyOption, "%Keycap_Option", "model_color_key_option"],
+		[%Color_KeyEdit, "%Keycap_Edit", "model_color_key_edit"],
+		[%Color_KeyShift, "%Keycap_Shift", "model_color_key_shift"],
+		[%Color_KeyPlay, "%Keycap_Play", "model_color_key_play"],
+		[%Color_Body, "%Body", "model_color_body"],
+	]:
+		var colorpicker: ColorPickerButton = arr[0]
+		var nodepath: String = arr[1]
+		var config_prop: String = arr[2]
+
+		colorpicker.color_changed.connect(func(color: Color) -> void:
+			_model(nodepath).material_override.albedo_color=color
+			config.set(config_prop, color)
+		)
+		colorpicker.color = config.get(config_prop)
+
+		# reset to default
+		colorpicker.gui_input.connect(func(event: InputEvent) -> void:
+			if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
+				_model(nodepath).material_override.albedo_color=config.DEFAULT_COLOR_KEYCAP
+				config.set(config_prop, config.DEFAULT_COLOR_KEYCAP)
+				colorpicker.color=config.DEFAULT_COLOR_KEYCAP
+		)
+
 	# Key highlight colors (also affects key overlay color)
 
 	%CheckButtonHL_Filters.toggled.connect(func(toggled_on: bool) -> void:
@@ -467,63 +498,55 @@ func init(p_main: M8SceneDisplay) -> void:
 		%ColorPickerHL_Left.color = color
 		%ColorPickerHL_Right.color = color
 
-		if get_device_model():
-			get_device_model().get_node("%Keycap_Up").material_overlay.albedo_color = color
-			get_device_model().get_node("%Keycap_Down").material_overlay.albedo_color = color
-			get_device_model().get_node("%Keycap_Left").material_overlay.albedo_color = color
-			get_device_model().get_node("%Keycap_Right").material_overlay.albedo_color = color
-
-	%ColorPickerHL_Up.color_changed.connect(on_directional_color_changed)
-	%ColorPickerHL_Down.color_changed.connect(on_directional_color_changed)
-	%ColorPickerHL_Left.color_changed.connect(on_directional_color_changed)
-	%ColorPickerHL_Right.color_changed.connect(on_directional_color_changed)
-	%ColorPickerHL_Up.color = config.hl_color_directional
-	%ColorPickerHL_Down.color = config.hl_color_directional
-	%ColorPickerHL_Left.color = config.hl_color_directional
-	%ColorPickerHL_Right.color = config.hl_color_directional
-
-	%ColorPickerHL_Shift.color_changed.connect(func(color: Color) -> void:
-		main.key_overlay.color_shift=color
-		config.hl_color_shift=color
-		if get_device_model():
-			get_device_model().get_node("%Keycap_Shift").material_overlay.albedo_color=color
-	)
-	%ColorPickerHL_Shift.color = config.hl_color_shift
-
-	%ColorPickerHL_Play.color_changed.connect(func(color: Color) -> void:
-		main.key_overlay.color_play=color
-		config.hl_color_play=color
-		if get_device_model():
-			get_device_model().get_node("%Keycap_Play").material_overlay.albedo_color=color
-	)
-	%ColorPickerHL_Play.color = config.hl_color_play
-
-	%ColorPickerHL_Option.color_changed.connect(func(color: Color) -> void:
-		main.key_overlay.color_option=color
-		config.hl_color_option=color
-		if get_device_model():
-			get_device_model().get_node("%Keycap_Option").material_overlay.albedo_color=color
-	)
-	%ColorPickerHL_Option.color = config.hl_color_option
-
-	%ColorPickerHL_Edit.color_changed.connect(func(color: Color) -> void:
-		main.key_overlay.color_edit=color
-		config.hl_color_edit=color
-		if get_device_model():
-			get_device_model().get_node("%Keycap_Edit").material_overlay.albedo_color=color
-	)
-	%ColorPickerHL_Edit.color = config.hl_color_edit
+		if _model():
+			_model("%Keycap_Up").material_overlay.albedo_color = color
+			_model("%Keycap_Down").material_overlay.albedo_color = color
+			_model("%Keycap_Left").material_overlay.albedo_color = color
+			_model("%Keycap_Right").material_overlay.albedo_color = color
 
 	for colorpicker: ColorPickerButton in [
 		%ColorPickerHL_Up,
 		%ColorPickerHL_Down,
 		%ColorPickerHL_Left,
 		%ColorPickerHL_Right,
-		%ColorPickerHL_Shift,
-		%ColorPickerHL_Play,
-		%ColorPickerHL_Option,
-		%ColorPickerHL_Edit
 	]:
+		colorpicker.color_changed.connect(on_directional_color_changed)
+		colorpicker.color = config.hl_color_directional
+
+	%ColorPickerHL_Shift.color_changed.connect(func(color: Color) -> void:
+		main.key_overlay.color_shift=color
+		config.hl_color_shift=color
+		if _model():
+			_model("%Keycap_Shift").material_overlay.albedo_color=color
+	)
+	%ColorPickerHL_Shift.color = config.hl_color_shift
+
+	%ColorPickerHL_Play.color_changed.connect(func(color: Color) -> void:
+		main.key_overlay.color_play=color
+		config.hl_color_play=color
+		if _model():
+			_model("%Keycap_Play").material_overlay.albedo_color=color
+	)
+	%ColorPickerHL_Play.color = config.hl_color_play
+
+	%ColorPickerHL_Option.color_changed.connect(func(color: Color) -> void:
+		main.key_overlay.color_option=color
+		config.hl_color_option=color
+		if _model():
+			_model("%Keycap_Option").material_overlay.albedo_color=color
+	)
+	%ColorPickerHL_Option.color = config.hl_color_option
+
+	%ColorPickerHL_Edit.color_changed.connect(func(color: Color) -> void:
+		main.key_overlay.color_edit=color
+		config.hl_color_edit=color
+		if _model():
+			_model("%Keycap_Edit").material_overlay.albedo_color=color
+	)
+	%ColorPickerHL_Edit.color = config.hl_color_edit
+
+	# sync color presets for these colorpickers
+	for colorpicker: ColorPickerButton in get_color_pickers():
 		colorpicker.get_picker().preset_added.connect(on_color_picker_add_preset)
 		colorpicker.get_picker().preset_removed.connect(on_color_picker_erase_preset)
 
@@ -532,15 +555,15 @@ func init(p_main: M8SceneDisplay) -> void:
 	%SliderHL_Opacity.value_changed.connect(func(value: float) -> void:
 		config.hl_opacity=value
 		%LabelHL_Opacity.text="%d%%" % (value * 100)
-		if get_device_model():
-			get_device_model().highlight_opacity=value
+		if _model():
+			_model().highlight_opacity=value
 	)
 	%SliderHL_Opacity.value = config.hl_opacity
 
 	%CheckButtonModelLinearFilter.toggled.connect(func(toggled_on: bool) -> void:
 		config.model_use_linear_filter=toggled_on
-		if get_device_model():
-			get_device_model().set_screen_filter(toggled_on)
+		if _model():
+			_model().set_screen_filter(toggled_on)
 	)
 	%CheckButtonModelLinearFilter.button_pressed = config.model_use_linear_filter
 
@@ -703,25 +726,25 @@ func init(p_main: M8SceneDisplay) -> void:
 				await get_tree().physics_frame
 	)
 
+func get_color_pickers() -> Array:
+	return [
+		%Color_KeyUp, %Color_KeyDown,
+		%Color_KeyLeft, %Color_KeyRight,
+		%Color_KeyOption, %Color_KeyEdit,
+		%Color_KeyShift, %Color_KeyPlay,
+		%ColorPickerHL_Up, %ColorPickerHL_Down,
+		%ColorPickerHL_Left, %ColorPickerHL_Right,
+		%ColorPickerHL_Option, %ColorPickerHL_Edit,
+		%ColorPickerHL_Shift, %ColorPickerHL_Play
+	]
+
 func on_color_picker_add_preset(color: Color) -> void:
-	%ColorPickerHL_Up.get_picker().add_preset(color)
-	%ColorPickerHL_Down.get_picker().add_preset(color)
-	%ColorPickerHL_Left.get_picker().add_preset(color)
-	%ColorPickerHL_Right.get_picker().add_preset(color)
-	%ColorPickerHL_Shift.get_picker().add_preset(color)
-	%ColorPickerHL_Play.get_picker().add_preset(color)
-	%ColorPickerHL_Option.get_picker().add_preset(color)
-	%ColorPickerHL_Edit.get_picker().add_preset(color)
+	for colorpicker: ColorPickerButton in get_color_pickers():
+		colorpicker.get_picker().add_preset(color)
 
 func on_color_picker_erase_preset(color: Color) -> void:
-	%ColorPickerHL_Up.get_picker().erase_preset(color)
-	%ColorPickerHL_Down.get_picker().erase_preset(color)
-	%ColorPickerHL_Left.get_picker().erase_preset(color)
-	%ColorPickerHL_Right.get_picker().erase_preset(color)
-	%ColorPickerHL_Shift.get_picker().erase_preset(color)
-	%ColorPickerHL_Play.get_picker().erase_preset(color)
-	%ColorPickerHL_Option.get_picker().erase_preset(color)
-	%ColorPickerHL_Edit.get_picker().erase_preset(color)
+	for colorpicker: ColorPickerButton in get_color_pickers():
+		colorpicker.get_picker().erase_preset(color)
 
 func get_scene_path_idx(scene_path: String) -> int:
 	for i in range(option_scenes.item_count):
@@ -733,32 +756,46 @@ func get_scene_path_idx(scene_path: String) -> int:
 ## Try to return the device model in the current scene.
 ## If there isn't one, returns null.
 ##
-func get_device_model() -> DeviceModel:
-	if main.current_scene:
-		return main.current_scene.get_node("%DeviceModel")
+func _model(path: String="") -> Node:
+	if main.current_scene and main.current_scene.has_device_model():
+		if path == "":
+			return main.current_scene.get_device_model()
+		else:
+			return main.current_scene.get_device_model().get_node(path)
 	else:
 		return null
 
 func update_device_colors() -> void:
 
-	if get_device_model():
+	var config := main.config
 
-		get_device_model().highlight_opacity = %SliderHL_Opacity.value
+	if _model():
 
-		get_device_model().get_node("%Keycap_Up").material_overlay.albedo_color = %ColorPickerHL_Up.color
-		get_device_model().get_node("%Keycap_Down").material_overlay.albedo_color = %ColorPickerHL_Down.color
-		get_device_model().get_node("%Keycap_Left").material_overlay.albedo_color = %ColorPickerHL_Left.color
-		get_device_model().get_node("%Keycap_Right").material_overlay.albedo_color = %ColorPickerHL_Right.color
-		get_device_model().get_node("%Keycap_Shift").material_overlay.albedo_color = %ColorPickerHL_Shift.color
-		get_device_model().get_node("%Keycap_Play").material_overlay.albedo_color = %ColorPickerHL_Play.color
-		get_device_model().get_node("%Keycap_Option").material_overlay.albedo_color = %ColorPickerHL_Option.color
-		get_device_model().get_node("%Keycap_Edit").material_overlay.albedo_color = %ColorPickerHL_Edit.color
+		_model().highlight_opacity = %SliderHL_Opacity.value
 
-	main.key_overlay.color_directional = %ColorPickerHL_Up.color
-	main.key_overlay.color_shift = %ColorPickerHL_Shift.color
-	main.key_overlay.color_play = %ColorPickerHL_Play.color
-	main.key_overlay.color_option = %ColorPickerHL_Option.color
-	main.key_overlay.color_edit = %ColorPickerHL_Edit.color
+		# update model keycap and highlight colors
+		for arr: Array in [
+			[_model("%Keycap_Up"), config.hl_color_directional, config.model_color_key_up],
+			[_model("%Keycap_Down"), config.hl_color_directional, config.model_color_key_down],
+			[_model("%Keycap_Left"), config.hl_color_directional, config.model_color_key_left],
+			[_model("%Keycap_Right"), config.hl_color_directional, config.model_color_key_right],
+			[_model("%Keycap_Option"), config.hl_color_option, config.model_color_key_option],
+			[_model("%Keycap_Edit"), config.hl_color_edit, config.model_color_key_edit],
+			[_model("%Keycap_Shift"), config.hl_color_shift, config.model_color_key_shift],
+			[_model("%Keycap_Play"), config.hl_color_play, config.model_color_key_play],
+		]:
+			var keycap: MeshInstance3D = arr[0]
+			var color: Color = arr[2]
+			var hl_color: Color = arr[1]
+			keycap.material_override.albedo_color = color
+			keycap.material_overlay.albedo_color = hl_color
+
+	# update key overlay colors
+	main.key_overlay.color_directional = config.hl_color_directional
+	main.key_overlay.color_shift = config.hl_color_shift
+	main.key_overlay.color_play = config.hl_color_play
+	main.key_overlay.color_option = config.hl_color_option
+	main.key_overlay.color_edit = config.hl_color_edit
 
 func reset_key_rebinds() -> void:
 	for action: String in [

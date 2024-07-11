@@ -458,12 +458,12 @@ columns = 2
 [node name="Label2" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-text = "Highlight Colors"
+text = "Keycap Colors"
 
 [node name="Label3" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Settings"
+text = "Other Colors"
 
 [node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer"]
 layout_mode = 2
@@ -472,6 +472,42 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="HSeparator3" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_constants/separation = 144
+theme_override_styles/separator = SubResource("StyleBoxEmpty_bruag")
+
+[node name="GridContainer2" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer/GridContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Body Color"
+
+[node name="Color_Body" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer/GridContainer2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+
+[node name="Label4" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+text = "Highlight Colors"
+
+[node name="Label5" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Settings"
+
+[node name="HSeparator4" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer"]
+layout_mode = 2
+
+[node name="HSeparator5" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer"]
+layout_mode = 2
+
+[node name="HSeparator7" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_vertical = 8
 theme_override_constants/separation = 144
@@ -627,6 +663,110 @@ offset_bottom = -103.0
 size_flags_horizontal = 0
 size_flags_vertical = 0
 color = Color(1, 1, 1, 1)
+edit_alpha = false
+
+[node name="Color_KeyUp" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 44.0
+offset_top = -311.0
+offset_right = 76.0
+offset_bottom = -279.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(0.0901961, 0.0901961, 0.0901961, 1)
+edit_alpha = false
+
+[node name="Color_KeyDown" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 44.0
+offset_top = -279.0
+offset_right = 76.0
+offset_bottom = -247.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(0.0901961, 0.0901961, 0.0901961, 1)
+edit_alpha = false
+
+[node name="Color_KeyLeft" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 12.0
+offset_top = -279.0
+offset_right = 44.0
+offset_bottom = -247.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(0.0901961, 0.0901961, 0.0901961, 1)
+edit_alpha = false
+
+[node name="Color_KeyRight" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 76.0
+offset_top = -279.0
+offset_right = 108.0
+offset_bottom = -247.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(0.0901961, 0.0901961, 0.0901961, 1)
+edit_alpha = false
+
+[node name="Color_KeyShift" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 44.0
+offset_top = -239.0
+offset_right = 76.0
+offset_bottom = -207.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(0.0901961, 0.0901961, 0.0901961, 1)
+edit_alpha = false
+
+[node name="Color_KeyPlay" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 76.0
+offset_top = -239.0
+offset_right = 108.0
+offset_bottom = -207.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(0.0901961, 0.0901961, 0.0901961, 1)
+edit_alpha = false
+
+[node name="Color_KeyOption" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 84.0
+offset_top = -319.0
+offset_right = 116.0
+offset_bottom = -287.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(0.0901961, 0.0901961, 0.0901961, 1)
+edit_alpha = false
+
+[node name="Color_KeyEdit" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 116.0
+offset_top = -319.0
+offset_right = 148.0
+offset_bottom = -287.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(0.0901961, 0.0901961, 0.0901961, 1)
 edit_alpha = false
 
 [node name="RichTextLabel2" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer"]

@@ -78,6 +78,12 @@ func init(main: M8SceneDisplay) -> void:
 				key_edit=pressed
 	)
 
+func get_keycaps() -> Array:
+	return [
+		keycap_up, keycap_down, keycap_left, keycap_right,
+		keycap_option, keycap_edit, keycap_shift, keycap_play
+	]
+
 ##
 ## Sets the texture filter of the screen material.
 ##
@@ -91,9 +97,8 @@ func set_screen_emission(emission: float) -> void:
 	screen_material.set_shader_parameter("emission_amount", emission)
 
 func _ready() -> void:
-	for keycap: MeshInstance3D in [
-		keycap_up, keycap_down, keycap_left, keycap_right,
-		keycap_shift, keycap_play, keycap_option, keycap_edit]:
+	for keycap: MeshInstance3D in get_keycaps():
+		keycap.material_override = keycap.material_override.duplicate()
 		keycap.material_overlay = keycap.material_overlay.duplicate()
 
 func _physics_process(_delta: float) -> void:
