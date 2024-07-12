@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import subprocess
+import os
 from pathlib import Path
 
 ADDON_DIR = "project/addons/libm8gd"
@@ -21,7 +22,7 @@ def call_split(*args) -> list[str]:
 Path(BUILD_DIR).mkdir(exist_ok=True)
 
 
-USING_OSXCROSS: bool = "osxcross_sdk" in env
+USING_OSXCROSS: bool = "OSXCROSS_ROOT" in os.environ
 
 if USING_OSXCROSS:
     if env["arch"] == "universal":
@@ -55,7 +56,7 @@ env.Append(CFLAGS=CFLAGS)
 
 print("architecture: %s" % env["arch"])
 
-if USING_OSXCROSS:
+if env["platform"] == "macos" and USING_OSXCROSS:
     # explicitly link the static library
     LIB_FILE = (
         call(PKG_CONFIG, "--variable=libdir", "libserialport") + "/libserialport.a"
