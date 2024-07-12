@@ -97,7 +97,7 @@ void DisplayBuffer::draw_char(
 void DisplayBuffer::draw_waveform(
 	uint16_t x, uint16_t y,
 	uint8_t r, uint8_t g, uint8_t b,
-	uint8_t *points, uint16_t start, uint16_t end)
+	const uint8_t *points, uint16_t start, uint16_t end)
 {
 	// store last waveform width for case when waveform width is 0
 	static uint16_t last_wf_width = 0;

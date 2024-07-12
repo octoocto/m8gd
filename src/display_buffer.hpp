@@ -88,7 +88,7 @@ public:
 	void draw_waveform(
 		uint16_t x, uint16_t y,
 		uint8_t r, uint8_t g, uint8_t b,
-		uint8_t *points, uint16_t start, uint16_t end);
+		const uint8_t *points, uint16_t start, uint16_t end);
 
 	/// @brief Clear buffer with specified color in RGB8
 	void clear(uint8_t r, uint8_t g, uint8_t b)

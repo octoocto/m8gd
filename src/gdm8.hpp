@@ -22,9 +22,40 @@ public:
 	M8GDClient(M8GD *m8gd) : m8gd(m8gd) {}
 	~M8GDClient() {}
 
-	virtual libm8::Error read_command(uint8_t *cmd_buffer, const uint16_t &cmd_size) override;
-
 	virtual void on_disconnect() override;
+
+	virtual void on_draw_rect(
+		uint16_t x, uint16_t y,
+		uint16_t w, uint16_t h,
+		uint8_t r, uint8_t g, uint8_t b) override;
+
+	virtual void on_draw_rect(
+		uint16_t x, uint16_t y,
+		uint16_t w, uint16_t h) override;
+
+	virtual void on_draw_rect(
+		uint16_t x, uint16_t y,
+		uint8_t r, uint8_t g, uint8_t b) override;
+
+	virtual void on_draw_rect(uint16_t x, uint16_t y) override;
+
+	virtual void on_draw_char(
+		char c,
+		uint16_t x, uint16_t y,
+		uint8_t fg_r, uint8_t fg_g, uint8_t fg_b,
+		uint8_t bg_r, uint8_t bg_g, uint8_t bg_b) override;
+
+	virtual void on_draw_waveform(
+		uint16_t x, uint16_t y,
+		uint8_t r, uint8_t g, uint8_t b,
+		const uint8_t *points, uint16_t start, uint16_t end) override;
+
+	virtual void on_key_pressed(uint8_t keybits) override;
+
+	virtual void on_system_info(
+		libm8::HardwareModel model,
+		uint8_t fw_major, uint8_t fw_minor, uint8_t fw_patch,
+		libm8::Font font) override;
 };
 
 class M8GD : public Node
@@ -61,6 +92,7 @@ public:
 	M8GD();
 	~M8GD();
 
+public:
 	// void _ready() override;
 	// void _process(double delta) override;
 
@@ -68,8 +100,6 @@ public:
 	///        Calls read_command() if a complete command has been decoded.
 	/// @return True if the read was successful.
 	bool read();
-
-	libm8::Error read_command(uint8_t *cmd_buffer, const uint16_t &cmd_size);
 
 	/// @brief Copy the display buffer to display_texture.
 	void update_texture();
@@ -151,8 +181,6 @@ public:
 
 	/// @brief Disconnects the M8 and opens the serial port.
 	void disconnect();
-
-	void on_disconnect();
 
 	/// @brief Sends the reset display command to the M8.
 	///        This forces the M8 to re-send all draw commands through the serial port.

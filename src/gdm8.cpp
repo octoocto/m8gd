@@ -7,14 +7,69 @@
 
 using namespace godot;
 
-libm8::Error M8GDClient::read_command(uint8_t *cmd_buffer, const uint16_t &cmd_size)
-{
-	return m8gd->read_command(cmd_buffer, cmd_size);
-}
-
 void M8GDClient::on_disconnect()
 {
-	m8gd->on_disconnect();
+	print("disconnecting from port");
+	m8gd->display_buffer->clear(0, 0, 0);
+	m8gd->update_texture();
+	m8gd->emit_signal("device_disconnected");
+}
+
+void M8GDClient::on_draw_rect(
+	uint16_t x, uint16_t y,
+	uint16_t w, uint16_t h,
+	uint8_t r, uint8_t g, uint8_t b)
+{
+	m8gd->display_buffer->draw_rect(x, y, w, h, r, g, b);
+}
+
+void M8GDClient::on_draw_rect(
+	uint16_t x, uint16_t y,
+	uint16_t w, uint16_t h)
+{
+	m8gd->display_buffer->draw_rect(x, y, w, h);
+}
+
+void M8GDClient::on_draw_rect(
+	uint16_t x, uint16_t y,
+	uint8_t r, uint8_t g, uint8_t b)
+{
+	m8gd->display_buffer->draw_rect(x, y, r, g, b);
+}
+
+void M8GDClient::on_draw_rect(uint16_t x, uint16_t y)
+{
+	m8gd->display_buffer->draw_rect(x, y);
+}
+
+void M8GDClient::on_draw_char(
+	char c,
+	uint16_t x, uint16_t y,
+	uint8_t fg_r, uint8_t fg_g, uint8_t fg_b,
+	uint8_t bg_r, uint8_t bg_g, uint8_t bg_b)
+{
+	m8gd->display_buffer->draw_char(c, x, y, fg_r, fg_g, fg_b, bg_r, bg_g, bg_b);
+}
+
+void M8GDClient::on_draw_waveform(
+	uint16_t x, uint16_t y,
+	uint8_t r, uint8_t g, uint8_t b,
+	const uint8_t *points, uint16_t start, uint16_t end)
+{
+	m8gd->display_buffer->draw_waveform(x, y, r, g, b, points, start, end);
+}
+
+void M8GDClient::on_key_pressed(uint8_t keybits)
+{
+	m8gd->emit_signal("keystate_changed", (int)keybits);
+}
+
+void M8GDClient::on_system_info(
+	libm8::HardwareModel model,
+	uint8_t fw_major, uint8_t fw_minor, uint8_t fw_patch,
+	libm8::Font font)
+{
+	m8gd->set_model(model, fw_major, fw_minor, fw_patch, font);
 }
 
 void M8GD::_bind_methods()
@@ -267,19 +322,7 @@ godot::TypedArray<godot::String> M8GD::list_devices()
 
 void M8GD::disconnect()
 {
-	if (is_connected())
-	{
-		on_disconnect();
-		m8_client.disconnect();
-	}
-}
-
-void M8GD::on_disconnect()
-{
-	print("disconnecting from port");
-	display_buffer->clear(0, 0, 0);
-	update_texture();
-	emit_signal("device_disconnected");
+	m8_client.disconnect();
 }
 
 bool M8GD::connect(String target_port_name)
@@ -287,139 +330,4 @@ bool M8GD::connect(String target_port_name)
 	print("connecting to port \"%s\"...", target_port_name);
 
 	return m8_client.connect(target_port_name) == libm8::OK;
-}
-
-libm8::Error M8GD::read_command(uint8_t *cmd_buffer, const uint16_t &cmd_size)
-{
-	switch (cmd_buffer[0])
-	{
-	case libm8::DRAW_RECT:
-
-		if (cmd_size != libm8::DRAW_RECT_SIZE_1 && cmd_size != libm8::DRAW_RECT_SIZE_2 && cmd_size != libm8::DRAW_RECT_SIZE_3 && cmd_size != libm8::DRAW_RECT_SIZE_4)
-		{
-			printerr(
-				"DRAW_RECT failed: expected length %d/%d/%d/%d, got %d",
-				libm8::DRAW_RECT_SIZE_1, libm8::DRAW_RECT_SIZE_2, libm8::DRAW_RECT_SIZE_3, libm8::DRAW_RECT_SIZE_4, cmd_size);
-			printerr_bytes(cmd_buffer, cmd_size);
-			return libm8::ERR_CMD_HANDLER_INVALID_SIZE;
-		}
-		// print("received draw_rectangle_command");
-
-		switch (cmd_size)
-		{
-		case libm8::DRAW_RECT_SIZE_1:
-			display_buffer->draw_rect(
-				libm8::decode_u16(cmd_buffer, 1),
-				libm8::decode_u16(cmd_buffer, 3),
-				libm8::decode_u16(cmd_buffer, 5),
-				libm8::decode_u16(cmd_buffer, 7),
-				cmd_buffer[9],
-				cmd_buffer[10],
-				cmd_buffer[11]);
-			break;
-		case libm8::DRAW_RECT_SIZE_2:
-			display_buffer->draw_rect(
-				libm8::decode_u16(cmd_buffer, 1),
-				libm8::decode_u16(cmd_buffer, 3),
-				libm8::decode_u16(cmd_buffer, 5),
-				libm8::decode_u16(cmd_buffer, 7));
-			break;
-		case libm8::DRAW_RECT_SIZE_3:
-			display_buffer->draw_rect(
-				libm8::decode_u16(cmd_buffer, 1),
-				libm8::decode_u16(cmd_buffer, 3),
-				cmd_buffer[9],
-				cmd_buffer[10],
-				cmd_buffer[11]);
-			break;
-		case libm8::DRAW_RECT_SIZE_4:
-			display_buffer->draw_rect(
-				libm8::decode_u16(cmd_buffer, 1),
-				libm8::decode_u16(cmd_buffer, 3));
-			break;
-		}
-
-		break;
-
-	case libm8::DRAW_CHAR:
-
-		if (cmd_size != libm8::DRAW_CHAR_SIZE)
-		{
-			printerr(
-				"DRAW_CHAR failed: expected length %d, got %d",
-				libm8::DRAW_CHAR_SIZE, cmd_size);
-
-			// printerr_bytes(size, cmd_buffer);
-			return libm8::ERR_CMD_HANDLER_INVALID_SIZE;
-		}
-		// print("received draw_character_command");
-		// print("drawing character \"%c\"", cmd_buffer[1]);
-		display_buffer->draw_char(
-			cmd_buffer[1],
-			libm8::decode_u16(cmd_buffer, 2), libm8::decode_u16(cmd_buffer, 4),
-			cmd_buffer[6], cmd_buffer[7], cmd_buffer[8],
-			cmd_buffer[9], cmd_buffer[10], cmd_buffer[11]);
-
-		break;
-
-	case libm8::DRAW_OSC:
-
-		if (cmd_size < libm8::DRAW_OSC_SIZE_MIN ||
-			cmd_size > libm8::DRAW_OSC_SIZE_MAX)
-		{
-			printerr(
-				"DRAW_OSC failed: expected length between %d and %d, got %d",
-				libm8::DRAW_OSC_SIZE_MIN,
-				libm8::DRAW_OSC_SIZE_MAX, cmd_size);
-
-			printerr_bytes(cmd_buffer, cmd_size);
-			return libm8::ERR_CMD_HANDLER_INVALID_SIZE;
-		}
-		// print("received draw_oscilloscope_waveform_command");
-		display_buffer->draw_waveform(
-			0, 0,
-			cmd_buffer[1], cmd_buffer[2], cmd_buffer[3],
-			cmd_buffer, 4, cmd_size);
-		break;
-
-	case libm8::KEY_PRESS:
-	{
-		if (cmd_size != libm8::KEY_PRESS_SIZE)
-		{
-			printerr(
-				"KEY_PRESS failed: expected length %d, got %d",
-				libm8::KEY_PRESS_SIZE, cmd_size);
-			printerr_bytes(cmd_buffer, cmd_size);
-			return libm8::ERR_CMD_HANDLER_INVALID_SIZE;
-		}
-		// print("received key pressed:");
-		// print("	%s %s", std::bitset<8>(cmd_buffer[1]).to_string().c_str(), std::bitset<8>(cmd_buffer[2]).to_string().c_str());
-		emit_signal("keystate_changed", (int)cmd_buffer[1]);
-		break;
-	}
-
-	case libm8::SYSTEM_INFO:
-	{
-		if (cmd_size != libm8::SYSTEM_INFO_SIZE)
-		{
-			printerr(
-				"SYSTEM_INFO failed: expected length %d, got %d",
-				libm8::SYSTEM_INFO_SIZE, cmd_size);
-			printerr_bytes(cmd_buffer, cmd_size);
-			return libm8::ERR_CMD_HANDLER_INVALID_SIZE;
-		}
-		// print("received system_info_command");
-		set_model(
-			(libm8::HardwareModel)cmd_buffer[1],
-			cmd_buffer[2], cmd_buffer[3], cmd_buffer[4], cmd_buffer[5]);
-
-		break;
-	}
-	default:
-		printerr("received invalid command packet:");
-		printerr_bytes(cmd_buffer, cmd_size);
-		return libm8::ERR_CMD_HANDLER_INVALID_CMD;
-	}
-
-	return libm8::OK;
 }

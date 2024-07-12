@@ -212,12 +212,49 @@ namespace libm8
 		}
 
 	private: // methods to override
-		/// @brief Read and process the command buffer.
-		/// @return true if the command was successfully processed.
-		virtual Error read_command(uint8_t *cmd_buffer, const uint16_t &cmd_size) = 0;
-
 		/// @brief Called when the M8 is disconnected and port is freed.
 		virtual void on_disconnect() = 0;
+
+		/// @brief Called when the M8 sends a DRAW_RECT command. (12 bytes)
+		virtual void on_draw_rect(
+			uint16_t x, uint16_t y,
+			uint16_t w, uint16_t h,
+			uint8_t r, uint8_t g, uint8_t b) = 0;
+
+		/// @brief Called when the M8 sends a DRAW_RECT command. (9 bytes)
+		virtual void on_draw_rect(
+			uint16_t x, uint16_t y,
+			uint16_t w, uint16_t h) = 0;
+
+		/// @brief Called when the M8 sends a DRAW_RECT command. (8 bytes)
+		virtual void on_draw_rect(
+			uint16_t x, uint16_t y,
+			uint8_t r, uint8_t g, uint8_t b) = 0;
+
+		/// @brief Called when the M8 sends a DRAW_RECT command. (5 bytes)
+		virtual void on_draw_rect(uint16_t x, uint16_t y) = 0;
+
+		/// @brief Called when the M8 sends a DRAW_CHAR command.
+		virtual void on_draw_char(
+			char c,
+			uint16_t x, uint16_t y,
+			uint8_t fg_r, uint8_t fg_g, uint8_t fg_b,
+			uint8_t bg_r, uint8_t bg_g, uint8_t bg_b) = 0;
+
+		/// @brief Called when the M8 sends a DRAW_OSC command.
+		/// TODO: `start` is always 4; try to change implementation to remove this argument
+		virtual void on_draw_waveform(
+			uint16_t x, uint16_t y,
+			uint8_t r, uint8_t g, uint8_t b,
+			const uint8_t *points, uint16_t start, uint16_t end) = 0;
+
+		/// @brief Called when a key has been pressed/unpressed on the M8.
+		virtual void on_key_pressed(uint8_t keybits) = 0;
+
+		virtual void on_system_info(
+			HardwareModel model,
+			uint8_t fw_major, uint8_t fw_minor, uint8_t fw_patch,
+			Font font) = 0;
 
 	public:
 		/// @brief Send a command to the M8.
@@ -299,5 +336,9 @@ namespace libm8
 			cmd_buffer[cmd_size++] = byte;
 			return OK;
 		}
+
+		/// @brief Read and process the command buffer.
+		/// @return true if the command was successfully processed.
+		Error read_command(uint8_t *cmd_buffer, const uint16_t &cmd_size);
 	};
 }

@@ -1,5 +1,73 @@
 #include "libm8.hpp"
 
+libm8::Error libm8::Client::connect(godot::String target_port_name)
+{
+	enum sp_return result;
+
+	if (m8_port != nullptr)
+		return OK;
+
+	struct sp_port **port_list;
+
+	result = sp_list_ports(&port_list);
+	if (result != SP_OK)
+		return sp_to_m8(result);
+
+	for (int i = 0; port_list[i] != nullptr; i++)
+	{
+		struct sp_port *port = port_list[i];
+		char *port_name = sp_get_port_name(port);
+
+		if (libm8::is_m8_serial_port(port) && target_port_name == port_name)
+		{
+			sp_copy_port(port, &m8_port);
+		}
+	}
+
+	sp_free_port_list(port_list);
+
+	if (m8_port == nullptr)
+	{
+		printerr("failed to find an M8 with port \"%s\"!", target_port_name);
+		return ERR_DEVICE_NOT_FOUND;
+	}
+
+	print("opening port \"%s\"...", target_port_name);
+
+	// open M8 port
+	result = sp_open(m8_port, SP_MODE_READ_WRITE);
+	if (result != SP_OK)
+		return sp_to_m8(result);
+
+	// configure M8 port
+	result = sp_set_baudrate(m8_port, M8_SP_BAUD_RATE);
+	if (result != SP_OK)
+		return sp_to_m8(result);
+
+	result = sp_set_bits(m8_port, M8_SP_DATA_BITS);
+	if (result != SP_OK)
+		return sp_to_m8(result);
+
+	result = sp_set_parity(m8_port, M8_SP_PARITY);
+	if (result != SP_OK)
+		return sp_to_m8(result);
+
+	result = sp_set_stopbits(m8_port, M8_SP_STOP_BITS);
+	if (result != SP_OK)
+		return sp_to_m8(result);
+
+	result = sp_set_flowcontrol(m8_port, M8_SP_FLOWCONTROL);
+	if (result != SP_OK)
+		return sp_to_m8(result);
+
+	print("port successfully opened!");
+
+	send_disable_display();
+	send_enable_display();
+	send_reset_display();
+	return OK;
+}
+
 libm8::Error libm8::Client::read()
 {
 	if (!is_connected())
@@ -82,70 +150,136 @@ libm8::Error libm8::Client::read()
 	return libm8::OK;
 }
 
-libm8::Error libm8::Client::connect(godot::String target_port_name)
+libm8::Error libm8::Client::read_command(uint8_t *cmd_buffer, const uint16_t &cmd_size)
 {
-	enum sp_return result;
-
-	if (m8_port != nullptr)
-		return OK;
-
-	struct sp_port **port_list;
-
-	result = sp_list_ports(&port_list);
-	if (result != SP_OK)
-		return sp_to_m8(result);
-
-	for (int i = 0; port_list[i] != nullptr; i++)
+	switch (cmd_buffer[0])
 	{
-		struct sp_port *port = port_list[i];
-		char *port_name = sp_get_port_name(port);
+	case libm8::DRAW_RECT:
 
-		if (libm8::is_m8_serial_port(port) && target_port_name == port_name)
+		if (cmd_size != libm8::DRAW_RECT_SIZE_1 && cmd_size != libm8::DRAW_RECT_SIZE_2 && cmd_size != libm8::DRAW_RECT_SIZE_3 && cmd_size != libm8::DRAW_RECT_SIZE_4)
 		{
-			sp_copy_port(port, &m8_port);
+			printerr(
+				"DRAW_RECT failed: expected length %d/%d/%d/%d, got %d",
+				libm8::DRAW_RECT_SIZE_1, libm8::DRAW_RECT_SIZE_2, libm8::DRAW_RECT_SIZE_3, libm8::DRAW_RECT_SIZE_4, cmd_size);
+			printerr_bytes(cmd_buffer, cmd_size);
+			return libm8::ERR_CMD_HANDLER_INVALID_SIZE;
 		}
-	}
+		// print("received draw_rectangle_command");
 
-	sp_free_port_list(port_list);
+		switch (cmd_size)
+		{
+		case libm8::DRAW_RECT_SIZE_1:
+			on_draw_rect(
+				libm8::decode_u16(cmd_buffer, 1),
+				libm8::decode_u16(cmd_buffer, 3),
+				libm8::decode_u16(cmd_buffer, 5),
+				libm8::decode_u16(cmd_buffer, 7),
+				cmd_buffer[9],
+				cmd_buffer[10],
+				cmd_buffer[11]);
+			break;
+		case libm8::DRAW_RECT_SIZE_2:
+			on_draw_rect(
+				libm8::decode_u16(cmd_buffer, 1),
+				libm8::decode_u16(cmd_buffer, 3),
+				libm8::decode_u16(cmd_buffer, 5),
+				libm8::decode_u16(cmd_buffer, 7));
+			break;
+		case libm8::DRAW_RECT_SIZE_3:
+			on_draw_rect(
+				libm8::decode_u16(cmd_buffer, 1),
+				libm8::decode_u16(cmd_buffer, 3),
+				cmd_buffer[9],
+				cmd_buffer[10],
+				cmd_buffer[11]);
+			break;
+		case libm8::DRAW_RECT_SIZE_4:
+			on_draw_rect(
+				libm8::decode_u16(cmd_buffer, 1),
+				libm8::decode_u16(cmd_buffer, 3));
+			break;
+		}
 
-	if (m8_port == nullptr)
+		break;
+
+	case libm8::DRAW_CHAR:
+
+		if (cmd_size != libm8::DRAW_CHAR_SIZE)
+		{
+			printerr(
+				"DRAW_CHAR failed: expected length %d, got %d",
+				libm8::DRAW_CHAR_SIZE, cmd_size);
+
+			// printerr_bytes(size, cmd_buffer);
+			return libm8::ERR_CMD_HANDLER_INVALID_SIZE;
+		}
+		// print("received draw_character_command");
+		// print("drawing character \"%c\"", cmd_buffer[1]);
+		on_draw_char(
+			cmd_buffer[1],
+			libm8::decode_u16(cmd_buffer, 2), libm8::decode_u16(cmd_buffer, 4),
+			cmd_buffer[6], cmd_buffer[7], cmd_buffer[8],
+			cmd_buffer[9], cmd_buffer[10], cmd_buffer[11]);
+		break;
+
+	case libm8::DRAW_OSC:
+
+		if (cmd_size < libm8::DRAW_OSC_SIZE_MIN ||
+			cmd_size > libm8::DRAW_OSC_SIZE_MAX)
+		{
+			printerr(
+				"DRAW_OSC failed: expected length between %d and %d, got %d",
+				libm8::DRAW_OSC_SIZE_MIN,
+				libm8::DRAW_OSC_SIZE_MAX, cmd_size);
+
+			printerr_bytes(cmd_buffer, cmd_size);
+			return libm8::ERR_CMD_HANDLER_INVALID_SIZE;
+		}
+		// print("received draw_oscilloscope_waveform_command");
+		on_draw_waveform(
+			0, 0,
+			cmd_buffer[1], cmd_buffer[2], cmd_buffer[3],
+			cmd_buffer, 4, cmd_size);
+		break;
+
+	case libm8::KEY_PRESS:
 	{
-		printerr("failed to find an M8 with port \"%s\"!", target_port_name);
-		return ERR_DEVICE_NOT_FOUND;
+		if (cmd_size != libm8::KEY_PRESS_SIZE)
+		{
+			printerr(
+				"KEY_PRESS failed: expected length %d, got %d",
+				libm8::KEY_PRESS_SIZE, cmd_size);
+			printerr_bytes(cmd_buffer, cmd_size);
+			return libm8::ERR_CMD_HANDLER_INVALID_SIZE;
+		}
+		// print("received key pressed:");
+		// print("	%s %s", std::bitset<8>(cmd_buffer[1]).to_string().c_str(), std::bitset<8>(cmd_buffer[2]).to_string().c_str());
+		on_key_pressed(cmd_buffer[1]);
+		break;
 	}
 
-	print("opening port \"%s\"...", target_port_name);
+	case libm8::SYSTEM_INFO:
+	{
+		if (cmd_size != libm8::SYSTEM_INFO_SIZE)
+		{
+			printerr(
+				"SYSTEM_INFO failed: expected length %d, got %d",
+				libm8::SYSTEM_INFO_SIZE, cmd_size);
+			printerr_bytes(cmd_buffer, cmd_size);
+			return libm8::ERR_CMD_HANDLER_INVALID_SIZE;
+		}
+		// print("received system_info_command");
+		on_system_info(
+			(libm8::HardwareModel)cmd_buffer[1],
+			cmd_buffer[2], cmd_buffer[3], cmd_buffer[4],
+			(libm8::Font)cmd_buffer[5]);
+		break;
+	}
+	default:
+		printerr("received invalid command packet:");
+		printerr_bytes(cmd_buffer, cmd_size);
+		return libm8::ERR_CMD_HANDLER_INVALID_CMD;
+	}
 
-	// open M8 port
-	result = sp_open(m8_port, SP_MODE_READ_WRITE);
-	if (result != SP_OK)
-		return sp_to_m8(result);
-
-	// configure M8 port
-	result = sp_set_baudrate(m8_port, M8_SP_BAUD_RATE);
-	if (result != SP_OK)
-		return sp_to_m8(result);
-
-	result = sp_set_bits(m8_port, M8_SP_DATA_BITS);
-	if (result != SP_OK)
-		return sp_to_m8(result);
-
-	result = sp_set_parity(m8_port, M8_SP_PARITY);
-	if (result != SP_OK)
-		return sp_to_m8(result);
-
-	result = sp_set_stopbits(m8_port, M8_SP_STOP_BITS);
-	if (result != SP_OK)
-		return sp_to_m8(result);
-
-	result = sp_set_flowcontrol(m8_port, M8_SP_FLOWCONTROL);
-	if (result != SP_OK)
-		return sp_to_m8(result);
-
-	print("port successfully opened!");
-
-	send_disable_display();
-	send_enable_display();
-	send_reset_display();
-	return OK;
+	return libm8::OK;
 }
