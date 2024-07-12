@@ -63,7 +63,7 @@ func init(p_main: M8SceneDisplay) -> void:
 	#--------------------------------------------------------------------------
 
 	%ButtonResetSceneVars.pressed.connect(func() -> void:
-		main.current_scene.config_delete_profile(main.menu_scene.DEFAULT_PROFILE)
+		main.menu_scene.config_delete_profile(main.menu_scene.DEFAULT_PROFILE)
 		main.reload_scene()
 	)
 
@@ -100,16 +100,16 @@ func init(p_main: M8SceneDisplay) -> void:
 	%Check_MouseCamera.toggled.connect(func(toggled_on: bool) -> void:
 		if main.current_scene and main.current_scene.has_3d_camera():
 			main.current_scene.get_3d_camera().mouse_controlled_pan_zoom=toggled_on
-		config.camera_mouse_control=toggled_on
+		# config.camera_mouse_control=toggled_on
 	)
-	%Check_MouseCamera.button_pressed = config.camera_mouse_control
+	# %Check_MouseCamera.button_pressed = config.camera_mouse_control
 
 	%Check_HumanCamera.toggled.connect(func(toggled_on: bool) -> void:
 		if main.current_scene and main.current_scene.has_3d_camera():
 			main.current_scene.get_3d_camera().humanized_movement=toggled_on
-		config.camera_humanize=toggled_on
+		# config.camera_humanize=toggled_on
 	)
-	%Check_HumanCamera.button_pressed = config.camera_humanize
+	# %Check_HumanCamera.button_pressed = config.camera_humanize
 
 	main.m8_scene_changed.connect(func(_scene_path: String, scene: M8Scene) -> void:
 		if scene.has_3d_camera():
@@ -117,8 +117,8 @@ func init(p_main: M8SceneDisplay) -> void:
 			%Button_SceneCameraMenu.disabled=false
 			%Check_MouseCamera.disabled=false
 			%Check_HumanCamera.disabled=false
-			%Check_MouseCamera.toggled.emit(config.camera_mouse_control)
-			%Check_HumanCamera.toggled.emit(config.camera_humanize)
+			# %Check_MouseCamera.toggled.emit(config.camera_mouse_control)
+			# %Check_HumanCamera.toggled.emit(config.camera_humanize)
 		else:
 			%Container_SceneCamera.modulate.a=0.5
 			%Button_SceneCameraMenu.disabled=true

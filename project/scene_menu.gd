@@ -111,7 +111,7 @@ func config_get_property(property: String, default: Variant=null) -> Variant:
 		print("scene: %s: adding property '%s' to config" % [current_profile, property])
 		profile[property] = default
 
-	print("scene: profile %s: get %s=%s" % [current_profile, property, profile[property]])
+	# print("scene: profile %s: get %s=%s" % [current_profile, property, profile[property]])
 
 	return profile[property]
 
