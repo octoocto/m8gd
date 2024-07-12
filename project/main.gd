@@ -9,20 +9,10 @@ const FONT_02_SMALL: BitMap = preload ("res://assets/m8_fonts/9_9.bmp")
 const FONT_02_BOLD: BitMap = preload ("res://assets/m8_fonts/10_10.bmp")
 const FONT_02_HUGE: BitMap = preload ("res://assets/m8_fonts/12_12.bmp")
 
-const M8K_UP = 64
-const M8K_DOWN = 32
-const M8K_LEFT = 128
-const M8K_RIGHT = 4
-const M8K_SHIFT = 16
-const M8K_PLAY = 8
-const M8K_OPTION = 2
-const M8K_EDIT = 1
-
 const M8_ACTIONS := [
 	"key_up", "key_down", "key_left", "key_right",
 	"key_shift", "key_play", "key_option", "key_edit"]
 
-signal m8_key_changed(key: String, pressed: bool)
 signal m8_scene_changed(scene_path: String, scene: M8Scene)
 signal m8_connected
 signal m8_disconnected
@@ -55,9 +45,6 @@ signal m8_disconnected
 @onready var m8_client := M8GD.new()
 @onready var m8_is_connected := false
 @onready var m8_audio_connected := false
-@onready var m8_keystate: int = 0 # bitfield containing state of all 8 keys
-@onready var m8_keystate_last: int = 0
-@onready var m8_locally_controlled := false
 
 var current_serial_device: String = ""
 var current_audio_device: String = ""
@@ -123,11 +110,20 @@ func _ready() -> void:
 	_printgreen("initialized scene in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
 	time = Time.get_ticks_msec()
 
+	_printgreen("finished initializing in %.3f seconds!" % ((Time.get_ticks_msec() - start_time) / 1000.0))
+
 	%ButtonSplashClose.pressed.connect(func() -> void:
 		%SplashContainer.visible=false
 	)
 
-	_printgreen("finished initializing in %.3f seconds!" % ((Time.get_ticks_msec() - start_time) / 1000.0))
+	get_tree().process_frame.connect(func() -> void:
+		# godot action to m8 controller
+		
+		var local_keybits:=m8_get_local_keybits()
+		m8_client.send_input(local_keybits)
+
+		if Input.is_action_just_pressed("force_read"): m8_client.update_texture()
+	)
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
@@ -287,7 +283,6 @@ func m8_device_connect(port: String) -> void:
 
 	m8_is_connected = true
 	%LabelPort.text = m8_ports[0]
-	m8_client.keystate_changed.connect(on_m8_keystate_changed)
 	m8_client.system_info.connect(on_m8_system_info)
 	m8_client.font_changed.connect(on_m8_font_changed)
 	m8_client.device_disconnected.connect(on_m8_device_disconnect)
@@ -397,10 +392,6 @@ func m8_audio_check() -> void:
 			print("audio: stream stopped, reconnecting...")
 			m8_audio_connect(audio_device_last)
 
-func on_m8_keystate_changed(keystate: int) -> void:
-	update_keystate(keystate, false)
-	m8_locally_controlled = true
-
 func on_m8_system_info(hardware: String, firmware: String) -> void:
 	%LabelVersion.text = "%s %s" % [hardware, firmware]
 
@@ -434,7 +425,6 @@ func on_m8_device_disconnect() -> void:
 	m8_is_connected = false
 	%LabelPort.text = ""
 
-	m8_client.keystate_changed.disconnect(on_m8_keystate_changed)
 	m8_client.system_info.disconnect(on_m8_system_info)
 	m8_client.font_changed.disconnect(on_m8_font_changed)
 	m8_client.device_disconnected.disconnect(on_m8_device_disconnect)
@@ -465,8 +455,8 @@ func m8_send_keyjazz(note: int, velocity: int) -> void:
 func m8_send_control(keys: int) -> void:
 	m8_client.send_input(keys)
 
-func m8_is_key_pressed(bit: int) -> bool:
-	return m8_keystate&bit
+func m8_is_key_pressed(keycode: int) -> bool:
+	return m8_client.is_key_pressed(keycode)
 
 func audio_get_level() -> float:
 	return audio_level
@@ -538,32 +528,20 @@ func _process(_delta: float) -> void:
 
 	%LabelFPS.text = "%d" % Engine.get_frames_per_second()
 
-	var is_anything_pressed := false
-
-	for key: String in ["key_up", "key_down", "key_left", "key_right", "key_shift", "key_play", "key_option", "key_edit"]:
-		if Input.is_action_pressed(key):
-			is_anything_pressed = true
-			break
-
-	# godot action to m8 controller
-	if !m8_locally_controlled or m8_locally_controlled and is_anything_pressed:
-
-		var keystate := 0
-
-		if Input.is_action_pressed("key_up"): keystate += M8K_UP
-		if Input.is_action_pressed("key_down"): keystate += M8K_DOWN
-		if Input.is_action_pressed("key_left"): keystate += M8K_LEFT
-		if Input.is_action_pressed("key_right"): keystate += M8K_RIGHT
-		if Input.is_action_pressed("key_shift"): keystate += M8K_SHIFT
-		if Input.is_action_pressed("key_play"): keystate += M8K_PLAY
-		if Input.is_action_pressed("key_option"): keystate += M8K_OPTION
-		if Input.is_action_pressed("key_edit"): keystate += M8K_EDIT
-
-		update_keystate(keystate, true)
-
-		m8_locally_controlled = false
-
-	if Input.is_action_just_pressed("force_read"): m8_client.update_texture()
+##
+## Get the keybits from inputs received on this system. (Not the connected M8).
+##
+func m8_get_local_keybits() -> int:
+	var keystate := 0
+	if Input.is_action_pressed("key_up"): keystate += M8GD.M8_KEY_UP
+	if Input.is_action_pressed("key_down"): keystate += M8GD.M8_KEY_DOWN
+	if Input.is_action_pressed("key_left"): keystate += M8GD.M8_KEY_LEFT
+	if Input.is_action_pressed("key_right"): keystate += M8GD.M8_KEY_RIGHT
+	if Input.is_action_pressed("key_shift"): keystate += M8GD.M8_KEY_SHIFT
+	if Input.is_action_pressed("key_play"): keystate += M8GD.M8_KEY_PLAY
+	if Input.is_action_pressed("key_option"): keystate += M8GD.M8_KEY_OPTION
+	if Input.is_action_pressed("key_edit"): keystate += M8GD.M8_KEY_EDIT
+	return keystate
 
 func update_audio_analyzer() -> void:
 
@@ -604,34 +582,6 @@ func update_audio_analyzer() -> void:
 
 	%RectAudioLevel.size.x = (audio_level_raw) * 200
 	%RectAudioLevelAvg.position.x = (audio_level) * 200.0 + 88.0
-
-func update_keystate(keystate: int, write: bool=false) -> void:
-
-	if keystate != m8_keystate_last:
-
-		m8_keystate = keystate
-
-		if write: m8_client.send_input(m8_keystate)
-		# m8.send_input(m8_keystate)
-
-		if m8_keystate&M8K_UP and !m8_keystate_last&M8K_UP: m8_key_changed.emit("up", true)
-		if !m8_keystate&M8K_UP and m8_keystate_last&M8K_UP: m8_key_changed.emit("up", false)
-		if m8_keystate&M8K_DOWN and !m8_keystate_last&M8K_DOWN: m8_key_changed.emit("down", true)
-		if !m8_keystate&M8K_DOWN and m8_keystate_last&M8K_DOWN: m8_key_changed.emit("down", false)
-		if m8_keystate&M8K_LEFT and !m8_keystate_last&M8K_LEFT: m8_key_changed.emit("left", true)
-		if !m8_keystate&M8K_LEFT and m8_keystate_last&M8K_LEFT: m8_key_changed.emit("left", false)
-		if m8_keystate&M8K_RIGHT and !m8_keystate_last&M8K_RIGHT: m8_key_changed.emit("right", true)
-		if !m8_keystate&M8K_RIGHT and m8_keystate_last&M8K_RIGHT: m8_key_changed.emit("right", false)
-		if m8_keystate&M8K_SHIFT and !m8_keystate_last&M8K_SHIFT: m8_key_changed.emit("shift", true)
-		if !m8_keystate&M8K_SHIFT and m8_keystate_last&M8K_SHIFT: m8_key_changed.emit("shift", false)
-		if m8_keystate&M8K_PLAY and !m8_keystate_last&M8K_PLAY: m8_key_changed.emit("play", true)
-		if !m8_keystate&M8K_PLAY and m8_keystate_last&M8K_PLAY: m8_key_changed.emit("play", false)
-		if m8_keystate&M8K_OPTION and !m8_keystate_last&M8K_OPTION: m8_key_changed.emit("option", true)
-		if !m8_keystate&M8K_OPTION and m8_keystate_last&M8K_OPTION: m8_key_changed.emit("option", false)
-		if m8_keystate&M8K_EDIT and !m8_keystate_last&M8K_EDIT: m8_key_changed.emit("edit", true)
-		if !m8_keystate&M8K_EDIT and m8_keystate_last&M8K_EDIT: m8_key_changed.emit("edit", false)
-
-		m8_keystate_last = m8_keystate
 
 func _input(event: InputEvent) -> void:
 

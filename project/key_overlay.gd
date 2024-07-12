@@ -83,17 +83,20 @@ func _update_colors() -> void:
 
 func init(p_main: M8SceneDisplay) -> void:
 	main = p_main
-	main.m8_key_changed.connect(func(key: String, pressed: bool) -> void:
+	main.m8_client.key_pressed.connect(func(key: int, pressed: bool) -> void:
 		if pressed:
-			if main.m8_keystate == current_keystate:
+			if main.m8_client.get_keybits() == current_keystate:
+				# increment last item
 				inc_item()
 				return
-			elif key in ["up", "down", "left", "right"]:
-				if (main.m8_is_key_pressed(main.M8K_SHIFT) or
-					main.m8_is_key_pressed(main.M8K_EDIT)) and current_times == 1 and current_item_count == 1:
+			elif key in [M8GD.M8_KEY_UP, M8GD.M8_KEY_DOWN, M8GD.M8_KEY_LEFT, M8GD.M8_KEY_RIGHT]:
+				# update last item
+				if (main.m8_is_key_pressed(M8GD.M8_KEY_SHIFT) or
+					main.m8_is_key_pressed(M8GD.M8_KEY_SHIFT)) and current_times == 1 and current_item_count == 1:
 					print("updating item")
 					update_item()
 					return
+			# add a new item
 			add_item()
 	)
 
@@ -151,24 +154,24 @@ func update_item() -> void:
 	for child in current_item.get_children():
 		current_item.remove_child(child)
 	current_item_count = 0
-	current_keystate = main.m8_keystate
+	current_keystate = main.m8_client.get_keybits()
 
-	if main.m8_is_key_pressed(main.M8K_SHIFT):
-		add_element("SHIFT", panel_shift, label_shift)
-	if main.m8_is_key_pressed(main.M8K_OPTION):
-		add_element("OPTION", panel_option, label_option)
-	if main.m8_is_key_pressed(main.M8K_EDIT):
-		add_element("EDIT", panel_edit, label_edit)
-	if main.m8_is_key_pressed(main.M8K_PLAY):
-		add_element("PLAY", panel_play, label_play)
-	if main.m8_is_key_pressed(main.M8K_UP):
+	if main.m8_is_key_pressed(M8GD.M8_KEY_UP):
 		add_element("UP", panel_directional, label_directional)
-	if main.m8_is_key_pressed(main.M8K_DOWN):
+	if main.m8_is_key_pressed(M8GD.M8_KEY_DOWN):
 		add_element("DOWN", panel_directional, label_directional)
-	if main.m8_is_key_pressed(main.M8K_LEFT):
+	if main.m8_is_key_pressed(M8GD.M8_KEY_LEFT):
 		add_element("LEFT", panel_directional, label_directional)
-	if main.m8_is_key_pressed(main.M8K_RIGHT):
+	if main.m8_is_key_pressed(M8GD.M8_KEY_RIGHT):
 		add_element("RIGHT", panel_directional, label_directional)
+	if main.m8_is_key_pressed(M8GD.M8_KEY_OPTION):
+		add_element("OPTION", panel_option, label_option)
+	if main.m8_is_key_pressed(M8GD.M8_KEY_EDIT):
+		add_element("EDIT", panel_edit, label_edit)
+	if main.m8_is_key_pressed(M8GD.M8_KEY_SHIFT):
+		add_element("SHIFT", panel_shift, label_shift)
+	if main.m8_is_key_pressed(M8GD.M8_KEY_PLAY):
+		add_element("PLAY", panel_play, label_play)
 	
 	if current_times > 1:
 		var times_label := Label.new()

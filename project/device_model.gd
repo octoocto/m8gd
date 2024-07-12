@@ -58,24 +58,24 @@ func init(main: M8SceneDisplay) -> void:
 
 	screen_material.set_shader_parameter("use_linear_filter", main.config.model_use_linear_filter)
 
-	main.m8_key_changed.connect(func(key: String, pressed: bool) -> void:
+	main.m8_client.key_pressed.connect(func(key: int, pressed: bool) -> void:
 		match key:
-			"up":
+			M8GD.M8_KEY_UP:
 				key_up=pressed
-			"down":
+			M8GD.M8_KEY_DOWN:
 				key_down=pressed
-			"left":
+			M8GD.M8_KEY_LEFT:
 				key_left=pressed
-			"right":
+			M8GD.M8_KEY_RIGHT:
 				key_right=pressed
-			"shift":
-				key_shift=pressed
-			"play":
-				key_play=pressed
-			"option":
+			M8GD.M8_KEY_OPTION:
 				key_option=pressed
-			"edit":
+			M8GD.M8_KEY_EDIT:
 				key_edit=pressed
+			M8GD.M8_KEY_SHIFT:
+				key_shift=pressed
+			M8GD.M8_KEY_PLAY:
+				key_play=pressed
 	)
 
 func get_keycaps() -> Array:

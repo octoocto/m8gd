@@ -5,8 +5,6 @@
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <bitset>
 
-using namespace godot;
-
 void M8GDClient::on_disconnect()
 {
 	print("disconnecting from port");
@@ -62,6 +60,84 @@ void M8GDClient::on_draw_waveform(
 void M8GDClient::on_key_pressed(uint8_t keybits)
 {
 	m8gd->emit_signal("keystate_changed", (int)keybits);
+
+	const uint8_t last_keybits = m8gd->keybits;
+	const uint8_t curr_keybits = keybits;
+
+	m8gd->keybits = keybits;
+	m8gd->is_controlled_remotely = false;
+
+	if (curr_keybits & libm8::KEY_UP && !(last_keybits & libm8::KEY_UP))
+	{
+		m8gd->emit_signal("key_pressed", M8_KEY_UP, true);
+	}
+	if (!(curr_keybits & libm8::KEY_UP) && last_keybits & libm8::KEY_UP)
+	{
+		m8gd->emit_signal("key_pressed", M8_KEY_UP, false);
+	}
+
+	if (curr_keybits & libm8::KEY_DOWN && !(last_keybits & libm8::KEY_DOWN))
+	{
+		m8gd->emit_signal("key_pressed", M8_KEY_DOWN, true);
+	}
+	if (!(curr_keybits & libm8::KEY_DOWN) && last_keybits & libm8::KEY_DOWN)
+	{
+		m8gd->emit_signal("key_pressed", M8_KEY_DOWN, false);
+	}
+
+	if (curr_keybits & libm8::KEY_LEFT && !(last_keybits & libm8::KEY_LEFT))
+	{
+		m8gd->emit_signal("key_pressed", M8_KEY_LEFT, true);
+	}
+	if (!(curr_keybits & libm8::KEY_LEFT) && last_keybits & libm8::KEY_LEFT)
+	{
+		m8gd->emit_signal("key_pressed", M8_KEY_LEFT, false);
+	}
+
+	if (curr_keybits & libm8::KEY_RIGHT && !(last_keybits & libm8::KEY_RIGHT))
+	{
+		m8gd->emit_signal("key_pressed", M8_KEY_RIGHT, true);
+	}
+	if (!(curr_keybits & libm8::KEY_RIGHT) && last_keybits & libm8::KEY_RIGHT)
+	{
+		m8gd->emit_signal("key_pressed", M8_KEY_RIGHT, false);
+	}
+
+	if (curr_keybits & libm8::KEY_OPTION && !(last_keybits & libm8::KEY_OPTION))
+	{
+		m8gd->emit_signal("key_pressed", M8_KEY_OPTION, true);
+	}
+	if (!(curr_keybits & libm8::KEY_OPTION) && last_keybits & libm8::KEY_OPTION)
+	{
+		m8gd->emit_signal("key_pressed", M8_KEY_OPTION, false);
+	}
+
+	if (curr_keybits & libm8::KEY_EDIT && !(last_keybits & libm8::KEY_EDIT))
+	{
+		m8gd->emit_signal("key_pressed", M8_KEY_EDIT, true);
+	}
+	if (!(curr_keybits & libm8::KEY_EDIT) && last_keybits & libm8::KEY_EDIT)
+	{
+		m8gd->emit_signal("key_pressed", M8_KEY_EDIT, false);
+	}
+
+	if (curr_keybits & libm8::KEY_SHIFT && !(last_keybits & libm8::KEY_SHIFT))
+	{
+		m8gd->emit_signal("key_pressed", M8_KEY_SHIFT, true);
+	}
+	if (!(curr_keybits & libm8::KEY_SHIFT) && last_keybits & libm8::KEY_SHIFT)
+	{
+		m8gd->emit_signal("key_pressed", M8_KEY_SHIFT, false);
+	}
+
+	if (curr_keybits & libm8::KEY_PLAY && !(last_keybits & libm8::KEY_PLAY))
+	{
+		m8gd->emit_signal("key_pressed", M8_KEY_PLAY, true);
+	}
+	if (!(curr_keybits & libm8::KEY_PLAY) && last_keybits & libm8::KEY_PLAY)
+	{
+		m8gd->emit_signal("key_pressed", M8_KEY_PLAY, false);
+	}
 }
 
 void M8GDClient::on_system_info(
@@ -75,6 +151,15 @@ void M8GDClient::on_system_info(
 void M8GD::_bind_methods()
 {
 	ClassDB::bind_static_method("M8GD", D_METHOD("list_devices"), &M8GD::list_devices);
+
+	BIND_ENUM_CONSTANT(M8_KEY_UP);
+	BIND_ENUM_CONSTANT(M8_KEY_DOWN);
+	BIND_ENUM_CONSTANT(M8_KEY_LEFT);
+	BIND_ENUM_CONSTANT(M8_KEY_RIGHT);
+	BIND_ENUM_CONSTANT(M8_KEY_OPTION);
+	BIND_ENUM_CONSTANT(M8_KEY_EDIT);
+	BIND_ENUM_CONSTANT(M8_KEY_SHIFT);
+	BIND_ENUM_CONSTANT(M8_KEY_PLAY);
 
 	ClassDB::bind_method(D_METHOD("load_font", "bitmap"), &M8GD::load_font);
 
@@ -96,9 +181,13 @@ void M8GD::_bind_methods()
 	ClassDB::bind_method(D_METHOD("disconnect"), &M8GD::disconnect);
 	ClassDB::bind_method(D_METHOD("connect", "preferred_device"), &M8GD::connect);
 
+	ClassDB::bind_method(D_METHOD("is_key_pressed"), &M8GD::is_key_pressed);
+	ClassDB::bind_method(D_METHOD("get_keybits"), &M8GD::get_keybits);
+
 	ADD_SIGNAL(MethodInfo("system_info", PropertyInfo(Variant::STRING, "hardware"), PropertyInfo(Variant::STRING, "firmware")));
 	ADD_SIGNAL(MethodInfo("font_changed", PropertyInfo(Variant::INT, "model"), PropertyInfo(Variant::STRING, "font")));
 	ADD_SIGNAL(MethodInfo("keystate_changed", PropertyInfo(Variant::INT, "keystate")));
+	ADD_SIGNAL(MethodInfo("key_pressed", PropertyInfo(Variant::INT, "keycode"), PropertyInfo(Variant::BOOL, "pressed")));
 	ADD_SIGNAL(MethodInfo("device_disconnected"));
 }
 
@@ -266,7 +355,13 @@ void M8GD::send_keyjazz(uint8_t note, uint8_t velocity)
 
 void M8GD::send_input(uint8_t keystate)
 {
-	m8_client.send_control_keys(keystate);
+	// only receive 0b00000000 (no keys pressed) if previous call had a key press.
+	// fixes issues with mixed input from both local and remote.
+	if (is_controlled_remotely or keystate)
+	{
+		is_controlled_remotely = true;
+		m8_client.send_control_keys(keystate);
+	}
 }
 
 void M8GD::send_theme_color(uint8_t index, Color color)

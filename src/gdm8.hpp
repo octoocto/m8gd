@@ -11,6 +11,18 @@
 
 using namespace godot;
 
+enum M8_Key
+{
+	M8_KEY_UP = libm8::KEY_UP,
+	M8_KEY_DOWN = libm8::KEY_DOWN,
+	M8_KEY_LEFT = libm8::KEY_LEFT,
+	M8_KEY_RIGHT = libm8::KEY_RIGHT,
+	M8_KEY_OPTION = libm8::KEY_OPTION,
+	M8_KEY_EDIT = libm8::KEY_EDIT,
+	M8_KEY_SHIFT = libm8::KEY_SHIFT,
+	M8_KEY_PLAY = libm8::KEY_PLAY,
+};
+
 class M8GD;
 
 class M8GDClient : public libm8::Client
@@ -81,6 +93,13 @@ protected:
 	String sys_hardware = "";
 	String sys_firmware = "";
 
+	// keybits
+	uint8_t keybits = 0b00000000;
+
+	/// @brief If true, the last control input was received remotely
+	/// (`send_input()` was called).
+	bool is_controlled_remotely = false;
+
 public:
 	// config variables
 	uint8_t cfg_tx_timeout_ms = 5; // timeout ms for write calls
@@ -139,6 +158,13 @@ public:
 	/// @brief Returns true if there is an M8 currently connected.
 	/// @return
 	bool is_connected();
+
+	bool is_key_pressed(M8_Key key)
+	{
+		return keybits & key;
+	}
+
+	int get_keybits() { return keybits; }
 
 	/// @brief Send a note to play to the connected device.
 	///
@@ -209,3 +235,5 @@ private:
 		}
 	}
 };
+
+VARIANT_ENUM_CAST(M8_Key);
