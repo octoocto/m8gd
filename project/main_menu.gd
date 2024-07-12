@@ -63,7 +63,7 @@ func init(p_main: M8SceneDisplay) -> void:
 	#--------------------------------------------------------------------------
 
 	%ButtonResetSceneVars.pressed.connect(func() -> void:
-		main.current_scene.config_delete_profile(main.current_scene.DEFAULT_PROFILE)
+		main.current_scene.config_delete_profile(main.menu_scene.DEFAULT_PROFILE)
 		main.reload_scene()
 	)
 
@@ -77,10 +77,10 @@ func init(p_main: M8SceneDisplay) -> void:
 			1:
 				main.set_subscene_mode(1)
 				%Button_SubSceneMenu.disabled=false
-		config.subscene_mode= %Option_SubSceneMode.get_selected_id()
+		# config.subscene_mode= %Option_SubSceneMode.get_selected_id()
 	)
-	%Option_SubSceneMode.selected = config.subscene_mode
-	%Option_SubSceneMode.item_selected.emit( - 1)
+	# %Option_SubSceneMode.selected = config.subscene_mode
+	# %Option_SubSceneMode.item_selected.emit( - 1)
 
 	%Button_SceneMenu.pressed.connect(func() -> void:
 		visible=false

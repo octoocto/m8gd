@@ -14,11 +14,6 @@ var version: int = 0
 @export var camera_mouse_control := true
 @export var camera_humanize := true
 
-@export var subscene_mode := 0
-@export var subscene_anchor := 0
-@export var subscene_pos := Vector2i(0, 0)
-@export var subscene_size := Vector2i(640, 480)
-
 # device model settings
 @export var model_color_key_up := DEFAULT_COLOR_KEYCAP
 @export var model_color_key_down := DEFAULT_COLOR_KEYCAP

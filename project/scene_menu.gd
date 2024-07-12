@@ -3,7 +3,8 @@ class_name SceneMenu extends PanelContainer
 const DEFAULT_PROFILE := "__main"
 
 var main: M8SceneDisplay
-var scene: M8Scene
+var current_profile: String = DEFAULT_PROFILE
+var current_scene: M8Scene
 
 func init(p_main: M8SceneDisplay) -> void:
 	main = p_main
@@ -14,7 +15,7 @@ func init(p_main: M8SceneDisplay) -> void:
 	)
 
 func _scene_file_path() -> String:
-	return scene.scene_file_path
+	return current_scene.scene_file_path
 
 func get_param_container() -> GridContainer:
 	return %SceneParamsContainer
@@ -39,7 +40,7 @@ func push_param_two(left: Control, right: Control) -> void:
 func read_params_from_scene(p_scene: M8Scene) -> void:
 
 	var config := main.config
-	scene = p_scene
+	current_scene = p_scene
 
 	# add scene parameter dict to config if not exists
 	if !config.scene_parameters.has(_scene_file_path()):
@@ -54,7 +55,7 @@ func read_params_from_scene(p_scene: M8Scene) -> void:
 	regex.compile("^-?\\d+,-?\\d+$") # match "#,#" export_range patterns
 
 	# add menu items
-	var export_vars := scene.get_export_vars()
+	var export_vars := current_scene.get_export_vars()
 	for v: Dictionary in export_vars:
 		var property: String = v.name
 		if v.hint_string == "bool":
@@ -75,24 +76,17 @@ func read_params_from_scene(p_scene: M8Scene) -> void:
 
 		printerr("scene: unrecognized export var type: %s" % v.hint_string)
 
+##
+## Load a profile. Sets that profile name as the current.
+##
 func config_load_profile(profile_name: String) -> void:
 	print("scene: %s: loading profile '%s'" % [_scene_file_path(), profile_name])
-	var export_vars := scene.get_export_vars()
+	current_profile = profile_name
+	var export_vars := current_scene.get_export_vars()
 	for v: Dictionary in export_vars:
 		var property: String = v.name
-		scene.set(property, config_get_property(profile_name, property))
-
-func config_get_property(profile_name: String, property: String) -> Variant:
-	var profile := config_get_profile(profile_name)
-
-	# set parameter from config, or add parameter to config
-	if !profile.has(property) or profile[property] == null:
-		print("scene: %s: adding property '%s' to config" % [profile_name, property])
-		profile[property] = scene.get(property)
-
-	print("scene: %s: setting property: %s=%s" % [profile_name, property, profile[property]])
-
-	return profile[property]
+		var default: Variant = current_scene.get(property)
+		current_scene.set(property, config_get_property(property, default))
 
 func config_get_profile(profile_name: String) -> Dictionary:
 	if !main.config.scene_parameters[_scene_file_path()].has(profile_name):
@@ -109,9 +103,24 @@ func config_delete_profile(profile_name: String) -> void:
 		print("scene: deleting profile '%s'" % profile_name)
 		main.config.scene_parameters[_scene_file_path()].erase(profile_name)
 
-func config_update_property(profile_name: String, property: String) -> void:
-	print("scene: updating property '%s' in config" % property)
-	config_get_profile(profile_name)[property] = scene.get(property)
+func config_get_property(property: String, default: Variant=null) -> Variant:
+	var profile := config_get_profile(current_profile)
+
+	# set parameter from config, or add parameter to config
+	if !profile.has(property) or profile[property] == null:
+		print("scene: %s: adding property '%s' to config" % [current_profile, property])
+		profile[property] = default
+
+	print("scene: profile %s: get %s=%s" % [current_profile, property, profile[property]])
+
+	return profile[property]
+
+func config_set_property(property: String, value: Variant) -> void:
+	var profile := config_get_profile(current_profile)
+
+	current_scene.set(property, value) # FIXME: this line not needed if property not in scene
+	profile[property] = value
+	print("scene: profile %s: set %s=%s" % [current_profile, property, value])
 
 func push_scene_var_bool(property: String) -> void:
 
@@ -120,10 +129,9 @@ func push_scene_var_bool(property: String) -> void:
 
 	label.text = property.capitalize()
 	label.size_flags_horizontal = Control.SIZE_FILL + Control.SIZE_EXPAND
-	button.button_pressed = scene.get(property)
+	button.button_pressed = current_scene.get(property)
 	button.toggled.connect(func(toggled_on: bool) -> void:
-		scene.set(property, toggled_on)
-		config_update_property(DEFAULT_PROFILE, property)
+		config_set_property(property, toggled_on)
 	)
 
 	push_param_two(label, button)
@@ -135,10 +143,9 @@ func push_scene_var_color(property: String) -> void:
 
 	label.text = property.capitalize()
 	label.size_flags_horizontal = Control.SIZE_FILL + Control.SIZE_EXPAND
-	button.color = scene.get(property)
+	button.color = current_scene.get(property)
 	button.color_changed.connect(func(color: Color) -> void:
-		scene.set(property, color)
-		config_update_property(DEFAULT_PROFILE, property)
+		config_set_property(property, color)
 	)
 
 	push_param_two(label, button)
@@ -152,17 +159,16 @@ func push_scene_var_slider(property: String) -> void:
 	label.text = property.capitalize()
 	label.size_flags_horizontal = Control.SIZE_FILL + Control.SIZE_EXPAND
 
-	value_label.text = "%.2f" % scene.get(property)
+	value_label.text = "%.2f" % current_scene.get(property)
 	value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 
 	slider.custom_minimum_size.x = 80
 	slider.max_value = 1.0
 	slider.min_value = 0.0
 	slider.step = 0.01
-	slider.value = scene.get(property)
+	slider.value = current_scene.get(property)
 	slider.value_changed.connect(func(value: float) -> void:
-		scene.set(property, value)
-		config_update_property(DEFAULT_PROFILE, property)
+		config_set_property(property, value)
 		value_label.text="%.2f" % value
 	)
 
@@ -177,7 +183,7 @@ func push_scene_var_int_slider(property: String, range_min: int, range_max: int)
 	label.text = property.capitalize()
 	label.size_flags_horizontal = Control.SIZE_FILL + Control.SIZE_EXPAND
 
-	value_label.text = "%d" % scene.get(property)
+	value_label.text = "%d" % current_scene.get(property)
 	value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 
 	slider.custom_minimum_size.x = 80
@@ -186,10 +192,9 @@ func push_scene_var_int_slider(property: String, range_min: int, range_max: int)
 	slider.step = 1
 	slider.tick_count = range_max - range_min
 	slider.ticks_on_borders = true
-	slider.value = scene.get(property)
+	slider.value = current_scene.get(property)
 	slider.value_changed.connect(func(value: float) -> void:
-		scene.set(property, value)
-		config_update_property(DEFAULT_PROFILE, property)
+		config_set_property(property, value)
 		value_label.text="%d" % value
 	)
 
