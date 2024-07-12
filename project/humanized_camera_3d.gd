@@ -117,14 +117,14 @@ func _mouse_position() -> Vector2:
 	# get mouse position as vector between (0, 0) and (1, 1)
 	var mouse_position := get_viewport().get_mouse_position() / Vector2(get_window().size)
 
-	# ignore mouse positions outside this range (outside the window)
-	if !is_mouse_position_in_window(mouse_position):
-		mouse_position = Vector2(0.5, 0.5)
-
 	# remap mouse position to be in range (-1, -1) to (1, 1). (0, 0) is center of the window.
 	mouse_position = (mouse_position * 2.0) - Vector2(1.0, 1.0)
 
-	return mouse_position
+	# ignore mouse positions outside this range (outside the window)
+	if !is_mouse_position_in_window(mouse_position):
+		return Vector2.ZERO
+	else:
+		return mouse_position
 
 func _new_cam_rotation(mouse_position: Vector2, mouse_clicked: bool) -> Vector3:
 
