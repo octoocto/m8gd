@@ -6,61 +6,37 @@
 
 DisplayBuffer::DisplayBuffer(int width, int height) : width(width), height(height)
 {
-	bytes = godot::PackedByteArray();
-	bytes.resize(width * height * 4);
+	byte_array = godot::PackedByteArray();
+	byte_array.resize(width * height * 4);
+	bytes = byte_array.ptrw();
 }
 
 DisplayBuffer::~DisplayBuffer() {}
 
-void DisplayBuffer::draw_rect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint8_t r, uint8_t g, uint8_t b)
+void DisplayBuffer::draw_rect(int x, int y, int w, int h, uint8_t r, uint8_t g, uint8_t b)
 {
-	last_r = r;
-	last_g = g;
-	last_b = b;
+	y = y + screen_offset_y;
 
 	// save color as background color if was a fullscreen rect
-	if (x == 0 && y == 0 && w >= width && h >= height)
+	if (x == 0 && y <= 0 && w == width && h >= height)
 	{
 		bg_r = r;
 		bg_g = g;
 		bg_b = b;
 	}
-	else
-	{
-		x += x_offset;
-		y += y_offset;
-	}
 
-	uint8_t *data = bytes.ptrw();
-
-	// uint32_t color = rgb_to_rgba(r, g, b);
 	for (int i = x; i < x + w && x < width; i++)
 	{
 		for (int j = y; j < y + h && y < height; j++)
 		{
-			set_pixel(data, i, j, r, g, b);
+			set_pixel(i, j, r, g, b);
 		}
 	}
 }
 
-void DisplayBuffer::draw_rect(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
-{
-	draw_rect(x, y, w, h, last_r, last_g, last_b);
-}
-
-void DisplayBuffer::draw_rect(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b)
-{
-	draw_rect(x, y, 1, 1, r, g, b);
-}
-
-void DisplayBuffer::draw_rect(uint16_t x, uint16_t y)
-{
-	draw_rect(x, y, 1, 1, last_r, last_g, last_b);
-}
-
 void DisplayBuffer::draw_char(
 	uint8_t ch,
-	uint16_t x, uint16_t y,
+	int x, int y,
 	uint8_t fg_r, uint8_t fg_g, uint8_t fg_b,
 	uint8_t bg_r, uint8_t bg_g, uint8_t bg_b)
 {
@@ -73,10 +49,10 @@ void DisplayBuffer::draw_char(
 	int x0 = (ch % FONT_SHEET_COLS) * font_w;
 	int y0 = (ch / FONT_SHEET_COLS) * font_h;
 
-	x += x_offset;
-	y += font_y_offset + y_offset;
+	y += font_offset_y + screen_offset_y;
 
-	uint8_t *data = bytes.ptrw();
+	// skip drawing bg if fg color = bg color
+	bool draw_bg = (fg_r != bg_r || fg_g != bg_g || fg_b != bg_b);
 
 	for (int i = 0; i < font_w; i++)
 	{
@@ -84,50 +60,45 @@ void DisplayBuffer::draw_char(
 		{
 			if (font_bitmap->get_bit(x0 + i, y0 + j))
 			{
-				set_pixel(data, x + i, y + j, fg_r, fg_g, fg_b);
+				set_pixel(x + i, y + j, fg_r, fg_g, fg_b);
 			}
-			else
+			else if (draw_bg)
 			{
-				set_pixel(data, x + i, y + j, this->bg_r, this->bg_g, this->bg_b);
+				set_pixel(x + i, y + j, bg_r, bg_g, bg_b);
 			}
 		}
 	}
 }
 
 void DisplayBuffer::draw_waveform(
-	uint16_t x, uint16_t y,
+	int x, int y,
 	uint8_t r, uint8_t g, uint8_t b,
-	const uint8_t *points, uint16_t start, uint16_t end)
+	const uint8_t *points, uint16_t size)
 {
 	// store last waveform width for case when waveform width is 0
-	static uint16_t last_wf_width = 0;
-	uint16_t wf_width = end - start;
+	static uint16_t last_wf_size = 0;
 
-	if (wf_width == 0)
+	int wf_size = size;
+
+	if (wf_size == 0)
 	{
-		wf_width = last_wf_width;
+		wf_size = last_wf_size;
 	}
+	last_wf_size = wf_size;
 
-	int wf_offset = width - (wf_width); // x-offset of waveform
+	int offset_x = width - wf_size;
 
 	// clear region with background color
-	draw_rect(
-		x - x_offset + wf_offset, y - y_offset,
-		wf_width, waveform_max,
-		bg_r, bg_g, bg_b);
+	draw_rect(x + offset_x, y - screen_offset_y, wf_size, waveform_max + 1, bg_r, bg_g, bg_b);
 
-	if (wf_width > 0)
+	// draw points in waveform
+	for (int i = 0; i < size; i++)
 	{
-		uint8_t *data = bytes.ptrw();
-
-		for (int i = 0; i < end - start; i++)
+		uint8_t ampl = points[i];
+		if (ampl > waveform_max)
 		{
-			uint8_t ampl = points[i + start];
-			if (ampl > waveform_max - 1)
-				ampl = waveform_max - 1;
-			set_pixel(data, x + i + wf_offset, y + ampl, r, g, b);
+			ampl = waveform_max;
 		}
-
-		last_wf_width = wf_width;
+		set_pixel(x + offset_x + i, y + ampl, r, g, b);
 	}
 }

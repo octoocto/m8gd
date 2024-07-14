@@ -13,8 +13,8 @@
 // max zero-byte reads before automatically disconnecting
 #define MAX_ZERO_READS 1024
 
-// #define M8_SP_BAUD_RATE 115200
-#define M8_SP_BAUD_RATE 9600
+#define M8_SP_BAUD_RATE 115200
+// #define M8_SP_BAUD_RATE 9600
 #define M8_SP_DATA_BITS 8
 #define M8_SP_PARITY SP_PARITY_NONE
 #define M8_SP_STOP_BITS 1
@@ -45,16 +45,16 @@ namespace libm8
 
 	struct FontParameters
 	{
-		int8_t screen_x_offset, screen_y_offset; // offset of all draw calls
-		int8_t font_y_offset;					 // y-offset of fonts
-		uint8_t waveform_max;					 // max height of waveform
+		int8_t screen_y_offset; // offset of all draw calls
+		int8_t font_y_offset;	// y-offset of fonts
+		uint8_t waveform_max;	// max height of waveform
 	};
 
-	const FontParameters FONT_01_SMALL = {0, 0, 3, 24};
-	const FontParameters FONT_01_BIG = {0, -40, 4, 22};
-	const FontParameters FONT_02_SMALL = {0, -2, 5, 38};
-	const FontParameters FONT_02_BOLD = {0, -2, 4, 38};
-	const FontParameters FONT_02_HUGE = {0, -54, 4, 24};
+	const FontParameters FONT_01_SMALL = {0, 3, 24};
+	const FontParameters FONT_01_BIG = {-40, 4, 22};
+	const FontParameters FONT_02_SMALL = {-2, 5, 38};
+	const FontParameters FONT_02_BOLD = {-2, 4, 38};
+	const FontParameters FONT_02_HUGE = {-54, 4, 24};
 
 	enum Keys
 	{
@@ -221,18 +221,18 @@ namespace libm8
 			uint16_t w, uint16_t h,
 			uint8_t r, uint8_t g, uint8_t b) = 0;
 
-		/// @brief Called when the M8 sends a DRAW_RECT command. (9 bytes)
-		virtual void on_draw_rect(
-			uint16_t x, uint16_t y,
-			uint16_t w, uint16_t h) = 0;
+		// /// @brief Called when the M8 sends a DRAW_RECT command. (9 bytes)
+		// virtual void on_draw_rect(
+		// 	uint16_t x, uint16_t y,
+		// 	uint16_t w, uint16_t h) = 0;
 
-		/// @brief Called when the M8 sends a DRAW_RECT command. (8 bytes)
-		virtual void on_draw_rect(
-			uint16_t x, uint16_t y,
-			uint8_t r, uint8_t g, uint8_t b) = 0;
+		// /// @brief Called when the M8 sends a DRAW_RECT command. (8 bytes)
+		// virtual void on_draw_rect(
+		// 	uint16_t x, uint16_t y,
+		// 	uint8_t r, uint8_t g, uint8_t b) = 0;
 
-		/// @brief Called when the M8 sends a DRAW_RECT command. (5 bytes)
-		virtual void on_draw_rect(uint16_t x, uint16_t y) = 0;
+		// /// @brief Called when the M8 sends a DRAW_RECT command. (5 bytes)
+		// virtual void on_draw_rect(uint16_t x, uint16_t y) = 0;
 
 		/// @brief Called when the M8 sends a DRAW_CHAR command.
 		virtual void on_draw_char(
@@ -246,7 +246,7 @@ namespace libm8
 		virtual void on_draw_waveform(
 			uint16_t x, uint16_t y,
 			uint8_t r, uint8_t g, uint8_t b,
-			const uint8_t *points, uint16_t start, uint16_t end) = 0;
+			const uint8_t *points, uint16_t size) = 0;
 
 		/// @brief Called when a key has been pressed/unpressed on the M8.
 		virtual void on_key_pressed(uint8_t keybits) = 0;

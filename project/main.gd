@@ -511,9 +511,7 @@ func _physics_process(delta: float) -> void:
 
 func _process(_delta: float) -> void:
 
-	# read and update m8 display texture every frame
-	if m8_is_connected and m8_client.read_serial_data():
-		m8_client.update_texture()
+	m8_client.update()
 
 	# auto connect to m8s
 	if !m8_is_connected and is_waiting_for_device:

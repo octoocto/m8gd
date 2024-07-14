@@ -86,11 +86,8 @@ libm8::Error libm8::Client::read()
 		{
 			// bytes_read is a libserialport error code
 			libm8::Error error = sp_to_m8((sp_return)bytes_read);
-			if (error == libm8::ERR_SP_INVALID_ARGS)
-			{
-				printerr("port invalid, disconnecting...");
-				disconnect();
-			}
+			printerr("read error (code=%d), disconnecting...", error);
+			disconnect();
 			return error;
 		}
 		else if (bytes_read > 0)
@@ -110,6 +107,7 @@ libm8::Error libm8::Client::read()
 					case libm8::SLIP_END: // end of command, process cmd_buffer
 						read_command(cmd_buffer, cmd_size);
 						cmd_size = 0; // effectively reset the cmd_buffer
+						memset(cmd_buffer, 0, CMD_BUFFER_SIZE * sizeof(*cmd_buffer));
 						break;
 					case libm8::SLIP_ESC: // escape
 						is_slip_escaped = true;
@@ -166,6 +164,10 @@ libm8::Error libm8::Client::read_command(uint8_t *cmd_buffer, const uint16_t &cm
 		}
 		// print("received draw_rectangle_command");
 
+		static uint8_t last_r = 0;
+		static uint8_t last_g = 0;
+		static uint8_t last_b = 0;
+
 		switch (cmd_size)
 		{
 		case libm8::DRAW_RECT_SIZE_1:
@@ -177,26 +179,42 @@ libm8::Error libm8::Client::read_command(uint8_t *cmd_buffer, const uint16_t &cm
 				cmd_buffer[9],
 				cmd_buffer[10],
 				cmd_buffer[11]);
+			last_r = cmd_buffer[9];
+			last_g = cmd_buffer[10];
+			last_b = cmd_buffer[11];
 			break;
 		case libm8::DRAW_RECT_SIZE_2:
 			on_draw_rect(
 				libm8::decode_u16(cmd_buffer, 1),
 				libm8::decode_u16(cmd_buffer, 3),
 				libm8::decode_u16(cmd_buffer, 5),
-				libm8::decode_u16(cmd_buffer, 7));
+				libm8::decode_u16(cmd_buffer, 7),
+				last_r,
+				last_g,
+				last_b);
 			break;
 		case libm8::DRAW_RECT_SIZE_3:
 			on_draw_rect(
 				libm8::decode_u16(cmd_buffer, 1),
 				libm8::decode_u16(cmd_buffer, 3),
-				cmd_buffer[9],
-				cmd_buffer[10],
-				cmd_buffer[11]);
+				1,
+				1,
+				cmd_buffer[5],
+				cmd_buffer[6],
+				cmd_buffer[7]);
+			last_r = cmd_buffer[5];
+			last_g = cmd_buffer[6];
+			last_b = cmd_buffer[7];
 			break;
 		case libm8::DRAW_RECT_SIZE_4:
 			on_draw_rect(
 				libm8::decode_u16(cmd_buffer, 1),
-				libm8::decode_u16(cmd_buffer, 3));
+				libm8::decode_u16(cmd_buffer, 3),
+				1,
+				1,
+				last_r,
+				last_g,
+				last_b);
 			break;
 		}
 
@@ -239,7 +257,7 @@ libm8::Error libm8::Client::read_command(uint8_t *cmd_buffer, const uint16_t &cm
 		on_draw_waveform(
 			0, 0,
 			cmd_buffer[1], cmd_buffer[2], cmd_buffer[3],
-			cmd_buffer, 4, cmd_size);
+			&cmd_buffer[4], cmd_size - 4);
 		break;
 
 	case libm8::KEY_PRESS:

@@ -41,16 +41,6 @@ public:
 		uint16_t w, uint16_t h,
 		uint8_t r, uint8_t g, uint8_t b) override;
 
-	virtual void on_draw_rect(
-		uint16_t x, uint16_t y,
-		uint16_t w, uint16_t h) override;
-
-	virtual void on_draw_rect(
-		uint16_t x, uint16_t y,
-		uint8_t r, uint8_t g, uint8_t b) override;
-
-	virtual void on_draw_rect(uint16_t x, uint16_t y) override;
-
 	virtual void on_draw_char(
 		char c,
 		uint16_t x, uint16_t y,
@@ -60,7 +50,7 @@ public:
 	virtual void on_draw_waveform(
 		uint16_t x, uint16_t y,
 		uint8_t r, uint8_t g, uint8_t b,
-		const uint8_t *points, uint16_t start, uint16_t end) override;
+		const uint8_t *points, uint16_t size) override;
 
 	virtual void on_key_pressed(uint8_t keybits) override;
 
@@ -113,15 +103,7 @@ public:
 
 public:
 	// void _ready() override;
-	// void _process(double delta) override;
-
-	/// @brief Attempt to read SLIP encoded data from the M8.
-	///        Calls read_command() if a complete command has been decoded.
-	/// @return True if the read was successful.
-	bool read();
-
-	/// @brief Copy the display buffer to display_texture.
-	void update_texture();
+	void update();
 
 	/// @brief Gets the M8 display texture.
 	/// @return
@@ -218,6 +200,14 @@ public:
 	void enable_and_reset_display();
 
 private:
+	/// @brief Attempt to read SLIP encoded data from the M8.
+	///        Calls read_command() if a complete command has been decoded.
+	/// @return True if the read was successful.
+	bool read();
+
+	/// @brief Copy the display buffer to display_texture.
+	void copy_buffer_to_texture();
+
 	String get_model_name(libm8::HardwareModel model)
 	{
 		switch (model)

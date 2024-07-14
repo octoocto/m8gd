@@ -9,7 +9,7 @@ void M8GDClient::on_disconnect()
 {
 	print("disconnecting from port");
 	m8gd->display_buffer->clear(0, 0, 0);
-	m8gd->update_texture();
+	m8gd->copy_buffer_to_texture();
 	m8gd->emit_signal("device_disconnected");
 }
 
@@ -19,25 +19,6 @@ void M8GDClient::on_draw_rect(
 	uint8_t r, uint8_t g, uint8_t b)
 {
 	m8gd->display_buffer->draw_rect(x, y, w, h, r, g, b);
-}
-
-void M8GDClient::on_draw_rect(
-	uint16_t x, uint16_t y,
-	uint16_t w, uint16_t h)
-{
-	m8gd->display_buffer->draw_rect(x, y, w, h);
-}
-
-void M8GDClient::on_draw_rect(
-	uint16_t x, uint16_t y,
-	uint8_t r, uint8_t g, uint8_t b)
-{
-	m8gd->display_buffer->draw_rect(x, y, r, g, b);
-}
-
-void M8GDClient::on_draw_rect(uint16_t x, uint16_t y)
-{
-	m8gd->display_buffer->draw_rect(x, y);
 }
 
 void M8GDClient::on_draw_char(
@@ -52,9 +33,9 @@ void M8GDClient::on_draw_char(
 void M8GDClient::on_draw_waveform(
 	uint16_t x, uint16_t y,
 	uint8_t r, uint8_t g, uint8_t b,
-	const uint8_t *points, uint16_t start, uint16_t end)
+	const uint8_t *points, uint16_t size)
 {
-	m8gd->display_buffer->draw_waveform(x, y, r, g, b, points, start, end);
+	m8gd->display_buffer->draw_waveform(x, y, r, g, b, points, size);
 }
 
 void M8GDClient::on_key_pressed(uint8_t keybits)
@@ -163,7 +144,6 @@ void M8GD::_bind_methods()
 
 	ClassDB::bind_method(D_METHOD("load_font", "bitmap"), &M8GD::load_font);
 
-	ClassDB::bind_method(D_METHOD("update_texture"), &M8GD::update_texture);
 	ClassDB::bind_method(D_METHOD("get_display_texture"), &M8GD::get_display_texture);
 
 	ClassDB::bind_method(D_METHOD("get_background_color"), &M8GD::get_background_color);
@@ -175,7 +155,7 @@ void M8GD::_bind_methods()
 	ClassDB::bind_method(D_METHOD("send_disable_display"), &M8GD::send_disable_display);
 	ClassDB::bind_method(D_METHOD("send_reset_display"), &M8GD::reset_display);
 
-	ClassDB::bind_method(D_METHOD("read_serial_data"), &M8GD::read);
+	ClassDB::bind_method(D_METHOD("update"), &M8GD::update);
 	ClassDB::bind_method(D_METHOD("is_connected"), &M8GD::is_connected);
 
 	ClassDB::bind_method(D_METHOD("disconnect"), &M8GD::disconnect);
@@ -262,9 +242,8 @@ void M8GD::set_model(libm8::HardwareModel model,
 
 		libm8::FontParameters font_params = libm8::get_font_params(model, font);
 
-		display_buffer->x_offset = font_params.screen_x_offset;
-		display_buffer->y_offset = font_params.screen_y_offset;
-		display_buffer->font_y_offset = font_params.font_y_offset;
+		display_buffer->screen_offset_y = font_params.screen_y_offset;
+		display_buffer->font_offset_y = font_params.font_y_offset;
 		display_buffer->waveform_max = font_params.waveform_max;
 	}
 }
@@ -292,9 +271,19 @@ void M8GD::set_display_size(uint16_t width, uint16_t height)
 	}
 }
 
-void M8GD::update_texture()
+void M8GD::update()
 {
-	display_image->set_data(display_buffer->width, display_buffer->height, false, Image::FORMAT_RGBA8, display_buffer->bytes);
+	if (m8_client.is_connected())
+	{
+		read();
+	}
+
+	copy_buffer_to_texture();
+}
+
+void M8GD::copy_buffer_to_texture()
+{
+	display_image->set_data(display_buffer->width, display_buffer->height, false, Image::FORMAT_RGBA8, display_buffer->byte_array);
 	display_texture->update(display_image);
 }
 
@@ -357,7 +346,7 @@ void M8GD::send_input(uint8_t keystate)
 {
 	// only receive 0b00000000 (no keys pressed) if previous call had a key press.
 	// fixes issues with mixed input from both local and remote.
-	if (is_controlled_remotely or keystate)
+	if (is_controlled_remotely || keystate)
 	{
 		is_controlled_remotely = true;
 		m8_client.send_control_keys(keystate);
