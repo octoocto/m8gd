@@ -7,6 +7,9 @@ const DEFAULT_COLOR_BODY := Color.BLACK
 
 var version: int = 0
 
+# general settings
+@export var splash_show := true
+
 # scene settings
 @export var scene_parameters := {} # Dictionary[String, Dictionary]
 @export var last_scene_path: String # path to last scene opened

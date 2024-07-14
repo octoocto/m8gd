@@ -112,9 +112,15 @@ func _ready() -> void:
 
 	_printgreen("finished initializing in %.3f seconds!" % ((Time.get_ticks_msec() - start_time) / 1000.0))
 
+	%Check_SplashDoNotShow.toggled.connect(func(toggle_mode: bool) -> void:
+		config.splash_show=!toggle_mode
+	)
+
 	%ButtonSplashClose.pressed.connect(func() -> void:
 		%SplashContainer.visible=false
 	)
+
+	%SplashContainer.visible = config.splash_show
 
 	get_tree().process_frame.connect(func() -> void:
 		# godot action to m8 controller
