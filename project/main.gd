@@ -464,6 +464,13 @@ func m8_send_control(keys: int) -> void:
 func m8_is_key_pressed(keycode: int) -> bool:
 	return m8_client.is_key_pressed(keycode)
 
+func m8_get_color_palette() -> Array:
+	return [
+		m8_client.get_pixel(0, 0),
+		m8_client.get_pixel(10, 35),
+		m8_client.get_pixel(279, 46),
+	]
+
 func audio_get_level() -> float:
 	return audio_level
 
@@ -531,6 +538,12 @@ func _process(_delta: float) -> void:
 			m8_audio_connect_auto()
 
 	%LabelFPS.text = "%d" % Engine.get_frames_per_second()
+
+	var palette := m8_get_color_palette()
+
+	%Color_Palette1.color = palette[0]
+	%Color_Palette2.color = palette[1]
+	%Color_Palette3.color = palette[2]
 
 ##
 ## Get the keybits from inputs received on this system. (Not the connected M8).

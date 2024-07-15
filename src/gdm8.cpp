@@ -147,6 +147,7 @@ void M8GD::_bind_methods()
 	ClassDB::bind_method(D_METHOD("get_display_texture"), &M8GD::get_display_texture);
 
 	ClassDB::bind_method(D_METHOD("get_background_color"), &M8GD::get_background_color);
+	ClassDB::bind_method(D_METHOD("get_pixel"), &M8GD::get_pixel);
 
 	ClassDB::bind_method(D_METHOD("send_keyjazz", "note", "velocity"), &M8GD::send_keyjazz);
 	ClassDB::bind_method(D_METHOD("send_input", "input_code"), &M8GD::send_input);
@@ -298,6 +299,16 @@ Color M8GD::get_background_color()
 		display_buffer->bg_r / 255.0,
 		display_buffer->bg_g / 255.0,
 		display_buffer->bg_b / 255.0,
+		1.0);
+}
+
+Color M8GD::get_pixel(int x, int y)
+{
+	color c = display_buffer->get_pixel(x, y);
+	return Color(
+		c.r / 255.0,
+		c.g / 255.0,
+		c.b / 255.0,
 		1.0);
 }
 

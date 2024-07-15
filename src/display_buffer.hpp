@@ -5,6 +5,13 @@
 #define FONT_SHEET_COLS 16
 #define FONT_SHEET_ROWS 8
 
+struct color
+{
+	uint8_t r;
+	uint8_t g;
+	uint8_t b;
+};
+
 class DisplayBuffer
 {
 public:
@@ -41,6 +48,24 @@ public:
 		bytes[offset + 1] = g;
 		bytes[offset + 2] = b;
 		bytes[offset + 3] = 0xFF;
+	}
+
+	color get_pixel(uint16_t x, uint16_t y)
+	{
+		if (x >= width)
+		{
+			x = width - 1;
+		}
+		if (y >= height)
+		{
+			y = height - 1;
+		}
+
+		int offset = (x + y * width) * 4;
+		return color{
+			bytes[offset + 0],
+			bytes[offset + 1],
+			bytes[offset + 2]};
 	}
 
 	void set_font(godot::Ref<godot::BitMap> bitmap)

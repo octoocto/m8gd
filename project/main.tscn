@@ -146,11 +146,6 @@ anti_aliasing_size = 0.5
 
 [node name="Main" type="Node"]
 script = ExtResource("1_4g2n0")
-visualizer_ca_amount = null
-visualizer_glow_amount = null
-visualizer_brightness_amount = null
-visualizer_frequency_min = null
-visualizer_frequency_max = null
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 unique_name_in_owner = true
@@ -434,6 +429,25 @@ ANG	%+04.0f %+04.0f
 LEN		%03.1f
 "
 fit_content = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/MarginContainer/GridContainer/VBoxContainer3"]
+visible = false
+layout_mode = 2
+
+[node name="Color_Palette1" type="ColorRect" parent="UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+
+[node name="Color_Palette2" type="ColorRect" parent="UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+
+[node name="Color_Palette3" type="ColorRect" parent="UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
 
 [node name="VBoxContainer4" type="VBoxContainer" parent="UI/MarginContainer/GridContainer"]
 layout_mode = 2

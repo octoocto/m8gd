@@ -133,6 +133,12 @@ public:
 	/// @return the background color
 	Color get_background_color();
 
+	/// @brief Get the color of a specific pixel in the M8 display.
+	/// @param x
+	/// @param y
+	/// @return the color at this pixel
+	Color get_pixel(int x, int y);
+
 	/// @brief Load a font from a bitmap file.
 	/// @param bitmap
 	void load_font(Ref<BitMap> bitmap);
