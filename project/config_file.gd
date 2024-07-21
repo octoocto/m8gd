@@ -2,7 +2,7 @@ class_name M8Config extends Resource
 
 const CONFIG_FILE_PATH := "user://config.res"
 
-const DEFAULT_COLOR_KEYCAP := Color(0.09, 0.09, 0.09)
+const DEFAULT_COLOR_KEYCAP := Color.BLACK
 const DEFAULT_COLOR_BODY := Color.BLACK
 
 var version: int = 0
