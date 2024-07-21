@@ -68,6 +68,9 @@ func init(p_main: M8SceneDisplay, load_parameters:=true) -> void:
 	%DeviceModel.init(main)
 	camera.init(main)
 
+	if load_parameters:
+		main.menu_scene.read_params_from_scene(self)
+
 func _physics_process(delta: float) -> void:
 
 	if main.is_menu_open(): return

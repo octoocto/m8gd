@@ -507,6 +507,16 @@ func audio_fft(from_hz: float, to_hz: float) -> float:
 		AudioEffectSpectrumAnalyzerInstance.MAGNITUDE_AVERAGE
 	)
 	return (magnitude.x + magnitude.y) / 2.0
+
+func open_file_dialog(fn: Callable) -> void:
+	var callback := func(path: String) -> void:
+		fn.call(path)
+	%FileDialog.file_selected.connect(callback, CONNECT_ONE_SHOT)
+	%FileDialog.canceled.connect(func() -> void:
+		%FileDialog.files_selected.disconnect(callback)
+	, CONNECT_ONE_SHOT)
+	%FileDialog.show()
+
 func _physics_process(delta: float) -> void:
 
 	update_audio_analyzer()
@@ -569,30 +579,35 @@ func update_audio_analyzer() -> void:
 	# calculate peaks for visualizations
 
 	# var audio_peak_raw = linear_to_db(audio_fft(1000, 2000) * 100.0)
-	var audio_peak_raw := audio_fft(visualizer_frequency_min, visualizer_frequency_max)
-	if is_nan(audio_peak_raw) or is_inf(audio_peak_raw):
-		audio_peak_raw = 0.0
+	# var audio_peak_raw := audio_fft(visualizer_frequency_min, visualizer_frequency_max)
+	# if is_nan(audio_peak_raw) or is_inf(audio_peak_raw):
+	# 	audio_peak_raw = 0.0
 
-	# calculate ranges for audio level
-	audio_peak = max(audio_peak_raw, lerp(audio_peak_raw, last_peak, 0.70))
+	# # calculate ranges for audio level
+	# audio_peak = max(audio_peak_raw, lerp(audio_peak_raw, last_peak, 0.70))
 
-	# if audio_peak_max_timer.time_left == 0.0:
-	audio_peak_max = lerp(audio_peak_raw, last_peak_max, 0.90)
+	# # if audio_peak_max_timer.time_left == 0.0:
+	# audio_peak_max = lerp(audio_peak_raw, last_peak_max, 0.90)
 
-	if audio_peak_max < audio_peak_raw:
-		audio_peak_max = audio_peak_raw
+	# if audio_peak_max < audio_peak_raw:
+	# 	audio_peak_max = audio_peak_raw
 
-	last_peak = audio_peak
-	last_peak_max = audio_peak_max
+	# last_peak = audio_peak
+	# last_peak_max = audio_peak_max
 
-	# convert range from (audio_peak_raw, audio_peak_max) to (0, 1) and apply smoothing
-	audio_level_raw = clamp((audio_peak - audio_peak_raw) / (audio_peak_max - audio_peak_raw), 0.0, 1.0)
-	if is_nan(audio_level_raw):
-		audio_level_raw = 0.0
-	audio_level = max(audio_level_raw, lerp(audio_level_raw, last_audio_level, 0.95))
+	# # convert range from (audio_peak_raw, audio_peak_max) to (0, 1) and apply smoothing
+	# audio_level_raw = clamp((audio_peak - audio_peak_raw) / (audio_peak_max - audio_peak_raw), 0.0, 1.0)
+	# if is_nan(audio_level_raw):
+	# 	audio_level_raw = 0.0
+	# audio_level = max(audio_level_raw, lerp(audio_level_raw, last_audio_level, 0.95))
+	# last_audio_level = audio_level
+
+	var peak = db_to_linear((audio_get_peak_volume().x + audio_get_peak_volume().y) / 2.0)
+	audio_level = lerp(audio_level, peak, 0.2)
+	audio_level = max(audio_level, peak)
 	last_audio_level = audio_level
 
-	%LabelAudioPeak.text = "%06f" % audio_peak_raw
+	# %LabelAudioPeak.text = "%06f" % audio_peak_raw
 	%LabelAudioPeakAvg.text = "%06f" % audio_peak
 	%LabelAudioPeakMax.text = "%06f" % audio_peak_max
 	%LabelAudioLevel.text = "%06f" % audio_level
@@ -603,6 +618,17 @@ func update_audio_analyzer() -> void:
 func _input(event: InputEvent) -> void:
 
 	if event is InputEventKey:
+		# screenshot F12
+		if event.pressed and event.keycode == KEY_F12:
+			var id := 1
+			var name := "%d.png" % id
+
+			while FileAccess.file_exists(name):
+				id += 1
+				name = "%d.png" % id
+
+			get_viewport().get_texture().get_image().save_png(name)
+
 		# fullscreen ALT+ENTER toggle
 		if event.pressed and event.keycode == KEY_ENTER and event.alt_pressed:
 			if DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_WINDOWED:

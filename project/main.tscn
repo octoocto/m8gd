@@ -32,9 +32,11 @@ corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
 [sub_resource type="Theme" id="Theme_gulif"]
+Button/font_sizes/font_size = 14
 CheckButton/colors/font_color = Color(1, 1, 1, 1)
 HSeparator/constants/separation = 16
 HSeparator/styles/separator = SubResource("StyleBoxLine_l1801")
+Label/font_sizes/font_size = 14
 MarginContainer/constants/margin_bottom = 16
 MarginContainer/constants/margin_left = 32
 MarginContainer/constants/margin_right = 32
@@ -155,7 +157,21 @@ bus = &"Analyzer"
 [node name="SceneRoot" type="Node" parent="."]
 unique_name_in_owner = true
 
-[node name="UI" type="Control" parent="."]
+[node name="FileDialog" type="FileDialog" parent="."]
+unique_name_in_owner = true
+title = "Open a File"
+position = Vector2i(0, 36)
+size = Vector2i(392, 159)
+ok_button_text = "Open"
+dialog_hide_on_ok = true
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.png, *.jpg, *.jpeg, *.ogv; Supported Filetypes")
+use_native_dialog = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="UI" type="Control" parent="CanvasLayer"]
 unique_name_in_owner = true
 layout_mode = 3
 anchors_preset = 15
@@ -165,21 +181,21 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = SubResource("Theme_gulif")
 
-[node name="SubSceneContainer" type="SubViewportContainer" parent="UI"]
+[node name="SubSceneContainer" type="SubViewportContainer" parent="CanvasLayer/UI"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
 offset_right = 640.0
 offset_bottom = 480.0
 
-[node name="SubSceneRoot" type="SubViewport" parent="UI/SubSceneContainer"]
+[node name="SubSceneRoot" type="SubViewport" parent="CanvasLayer/UI/SubSceneContainer"]
 unique_name_in_owner = true
 disable_3d = true
 handle_input_locally = false
 size = Vector2i(640, 480)
 render_target_update_mode = 0
 
-[node name="VHSFilter1" type="ColorRect" parent="UI"]
+[node name="VHSFilter1" type="ColorRect" parent="CanvasLayer/UI"]
 unique_name_in_owner = true
 visible = false
 material = SubResource("ShaderMaterial_x0ssf")
@@ -190,10 +206,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="BackBufferCopy2" type="BackBufferCopy" parent="UI/VHSFilter1"]
+[node name="BackBufferCopy2" type="BackBufferCopy" parent="CanvasLayer/UI/VHSFilter1"]
 copy_mode = 2
 
-[node name="VHSFilter2" type="ColorRect" parent="UI"]
+[node name="VHSFilter2" type="ColorRect" parent="CanvasLayer/UI"]
 unique_name_in_owner = true
 visible = false
 material = SubResource("ShaderMaterial_i0wc8")
@@ -204,10 +220,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="BackBufferCopy" type="BackBufferCopy" parent="UI/VHSFilter2"]
+[node name="BackBufferCopy" type="BackBufferCopy" parent="CanvasLayer/UI/VHSFilter2"]
 copy_mode = 2
 
-[node name="VHSFilter3" type="ColorRect" parent="UI"]
+[node name="VHSFilter3" type="ColorRect" parent="CanvasLayer/UI"]
 unique_name_in_owner = true
 visible = false
 material = SubResource("ShaderMaterial_j82o4")
@@ -218,10 +234,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="BackBufferCopy2" type="BackBufferCopy" parent="UI/VHSFilter3"]
+[node name="BackBufferCopy2" type="BackBufferCopy" parent="CanvasLayer/UI/VHSFilter3"]
 copy_mode = 2
 
-[node name="Filter4" type="ColorRect" parent="UI"]
+[node name="Filter4" type="ColorRect" parent="CanvasLayer/UI"]
 unique_name_in_owner = true
 visible = false
 material = SubResource("ShaderMaterial_pe34f")
@@ -233,10 +249,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="BackBufferCopy" type="BackBufferCopy" parent="UI/Filter4"]
+[node name="BackBufferCopy" type="BackBufferCopy" parent="CanvasLayer/UI/Filter4"]
 copy_mode = 2
 
-[node name="CRTShader" type="ColorRect" parent="UI"]
+[node name="CRTShader" type="ColorRect" parent="CanvasLayer/UI"]
 unique_name_in_owner = true
 visible = false
 material = SubResource("ShaderMaterial_fpc4l")
@@ -247,10 +263,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="BackBufferCopy" type="BackBufferCopy" parent="UI/CRTShader"]
+[node name="BackBufferCopy" type="BackBufferCopy" parent="CanvasLayer/UI/CRTShader"]
 copy_mode = 2
 
-[node name="KeyOverlay" parent="UI" instance=ExtResource("8_dnyct")]
+[node name="KeyOverlay" parent="CanvasLayer/UI" instance=ExtResource("8_dnyct")]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(240, 0)
@@ -267,7 +283,7 @@ grow_vertical = 0
 size_flags_horizontal = 8
 size_flags_vertical = 10
 
-[node name="MarginContainer" type="MarginContainer" parent="UI"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -275,23 +291,23 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="GridContainer" type="GridContainer" parent="UI/MarginContainer"]
+[node name="GridContainer" type="GridContainer" parent="CanvasLayer/UI/MarginContainer"]
 layout_mode = 2
 columns = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer/GridContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/MarginContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 alignment = 1
 
-[node name="DebugLabels" type="Control" parent="UI/MarginContainer/GridContainer/VBoxContainer"]
+[node name="DebugLabels" type="Control" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer"]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
 
-[node name="LabelFPS" type="Label" parent="UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
+[node name="LabelFPS" type="Label" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
 unique_name_in_owner = true
 layout_mode = 2
 offset_top = 4.0
@@ -300,7 +316,7 @@ offset_bottom = 27.0
 size_flags_horizontal = 0
 size_flags_vertical = 2
 
-[node name="LabelVersion" type="Label" parent="UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
+[node name="LabelVersion" type="Label" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
 unique_name_in_owner = true
 layout_mode = 2
 offset_top = 32.0
@@ -309,7 +325,7 @@ offset_bottom = 55.0
 size_flags_vertical = 10
 vertical_alignment = 2
 
-[node name="LabelPort" type="Label" parent="UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
+[node name="LabelPort" type="Label" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
 unique_name_in_owner = true
 layout_mode = 2
 offset_top = 64.0
@@ -319,7 +335,7 @@ size_flags_vertical = 10
 text = "*no device"
 vertical_alignment = 2
 
-[node name="LabelAudioPeak" type="Label" parent="UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
+[node name="LabelAudioPeak" type="Label" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
 unique_name_in_owner = true
 layout_mode = 2
 offset_top = 96.0
@@ -329,7 +345,7 @@ size_flags_vertical = 10
 text = "0.0 dB"
 vertical_alignment = 2
 
-[node name="LabelAudioPeakAvg" type="Label" parent="UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
+[node name="LabelAudioPeakAvg" type="Label" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
 unique_name_in_owner = true
 modulate = Color(0.75, 0.75, 1, 1)
 layout_mode = 2
@@ -340,7 +356,7 @@ size_flags_vertical = 10
 text = "0.0 dB"
 vertical_alignment = 2
 
-[node name="LabelAudioPeakMax" type="Label" parent="UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
+[node name="LabelAudioPeakMax" type="Label" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
 unique_name_in_owner = true
 modulate = Color(1, 0.75, 0.75, 1)
 layout_mode = 2
@@ -351,7 +367,7 @@ size_flags_vertical = 10
 text = "0.0 dB"
 vertical_alignment = 2
 
-[node name="LabelAudioLevel" type="Label" parent="UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
+[node name="LabelAudioLevel" type="Label" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
 unique_name_in_owner = true
 modulate = Color(0.75, 1, 0.75, 1)
 layout_mode = 2
@@ -362,7 +378,7 @@ size_flags_vertical = 10
 text = "0.0 dB"
 vertical_alignment = 2
 
-[node name="RectAudioLevel" type="ColorRect" parent="UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
+[node name="RectAudioLevel" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 88.0
@@ -371,7 +387,7 @@ offset_right = 96.0
 offset_bottom = 172.0
 color = Color(0.5, 1, 0.5, 1)
 
-[node name="RectAudioLevelAvg" type="ColorRect" parent="UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
+[node name="RectAudioLevelAvg" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 88.0
@@ -379,7 +395,7 @@ offset_top = 156.0
 offset_right = 96.0
 offset_bottom = 172.0
 
-[node name="CameraControls" type="RichTextLabel" parent="UI/MarginContainer/GridContainer/VBoxContainer"]
+[node name="CameraControls" type="RichTextLabel" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -389,36 +405,36 @@ Mouse		Look
 MWheel 	Adjust focus distance"
 fit_content = true
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="UI/MarginContainer/GridContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/UI/MarginContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="VBoxContainer3" type="VBoxContainer" parent="UI/MarginContainer/GridContainer"]
+[node name="VBoxContainer3" type="VBoxContainer" parent="CanvasLayer/UI/MarginContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 8
 
-[node name="SceneCameraMenu" parent="UI/MarginContainer/GridContainer/VBoxContainer3" instance=ExtResource("8_v4lip")]
+[node name="SceneCameraMenu" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3" instance=ExtResource("8_v4lip")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="SubSceneMenu" parent="UI/MarginContainer/GridContainer/VBoxContainer3" instance=ExtResource("9_hw48s")]
+[node name="SubSceneMenu" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3" instance=ExtResource("9_hw48s")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="SceneMenu" parent="UI/MarginContainer/GridContainer/VBoxContainer3" instance=ExtResource("9_bisyb")]
+[node name="SceneMenu" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3" instance=ExtResource("9_bisyb")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="LabelStatus" type="Label" parent="UI/MarginContainer/GridContainer/VBoxContainer3"]
+[node name="LabelStatus" type="Label" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="CameraStatus" type="RichTextLabel" parent="UI/MarginContainer/GridContainer/VBoxContainer3"]
+[node name="CameraStatus" type="RichTextLabel" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -430,36 +446,36 @@ LEN		%03.1f
 "
 fit_content = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/MarginContainer/GridContainer/VBoxContainer3"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3"]
 visible = false
 layout_mode = 2
 
-[node name="Color_Palette1" type="ColorRect" parent="UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+[node name="Color_Palette1" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 
-[node name="Color_Palette2" type="ColorRect" parent="UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+[node name="Color_Palette2" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 
-[node name="Color_Palette3" type="ColorRect" parent="UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+[node name="Color_Palette3" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 
-[node name="VBoxContainer4" type="VBoxContainer" parent="UI/MarginContainer/GridContainer"]
+[node name="VBoxContainer4" type="VBoxContainer" parent="CanvasLayer/UI/MarginContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="MainMenuPanel" parent="UI" instance=ExtResource("7_k5oyo")]
+[node name="MainMenuPanel" parent="CanvasLayer/UI" instance=ExtResource("7_k5oyo")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
 
-[node name="SplashContainer" type="CenterContainer" parent="UI"]
+[node name="SplashContainer" type="CenterContainer" parent="CanvasLayer/UI"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -468,28 +484,28 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="UI/SplashContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/UI/SplashContainer"]
 custom_minimum_size = Vector2(320, 240)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_lbvov")
 
-[node name="MarginContainer" type="MarginContainer" parent="UI/SplashContainer/PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/SplashContainer/PanelContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 64
 theme_override_constants/margin_top = 64
 theme_override_constants/margin_right = 64
 theme_override_constants/margin_bottom = 64
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/SplashContainer/PanelContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer"]
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="Control" type="Control" parent="UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="Control" type="Control" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer"]
 visible = false
 custom_minimum_size = Vector2(320, 240)
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer/Control"]
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer/Control"]
 modulate = Color(1, 0.890196, 0.831373, 1)
 texture_filter = 1
 layout_mode = 0
@@ -499,7 +515,7 @@ offset_right = 159.0
 offset_bottom = 111.0
 scale = Vector2(2, 2)
 
-[node name="RichTextLabel" type="RichTextLabel" parent="UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
 bbcode_enabled = true
@@ -514,19 +530,19 @@ text = "[center][font size=72]m8gd[/font]
 "
 fit_content = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Do not show next time"
 
-[node name="Check_SplashDoNotShow" type="CheckButton" parent="UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="Check_SplashDoNotShow" type="CheckButton" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="ButtonSplashClose" type="Button" parent="UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="ButtonSplashClose" type="Button" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Dismiss"

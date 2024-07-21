@@ -6,6 +6,10 @@ var main: M8SceneDisplay
 var current_profile: String = DEFAULT_PROFILE
 var current_scene: M8Scene
 
+signal setting_changed(setting: String, value: Variant)
+
+signal setting_editable(setting: String, editable: bool)
+
 func init(p_main: M8SceneDisplay) -> void:
 	main = p_main
 
@@ -21,23 +25,37 @@ func get_param_container() -> GridContainer:
 	return %SceneParamsContainer
 
 func clear_params() -> void:
+	for dict: Dictionary in setting_changed.get_connections():
+		setting_changed.disconnect(dict.callable)
+
+	for dict: Dictionary in setting_editable.get_connections():
+		setting_editable.disconnect(dict.callable)
+
 	for c in get_param_container().get_children():
 		get_param_container().remove_child(c)
 		c.queue_free()
 
-func push_param(left: Control, middle: Control, right: Control) -> void:
-	get_param_container().add_child(left)
-	get_param_container().add_child(middle)
-	get_param_container().add_child(right)
+func push_param(left: Control, middle: Control, right: Control) -> HBoxContainer:
+	right.custom_minimum_size.x = 80
 
-func push_param_two(left: Control, right: Control) -> void:
-	var empty_sep := VSeparator.new()
-	empty_sep.add_theme_stylebox_override("separator", StyleBoxEmpty.new())
-	get_param_container().add_child(left)
-	get_param_container().add_child(empty_sep)
-	get_param_container().add_child(right)
+	var container := HBoxContainer.new()
+	container.add_child(left)
+	container.add_child(middle)
+	container.add_child(right)
+	get_param_container().add_child(container)
+
+	return container
 
 func read_params_from_scene(p_scene: M8Scene) -> void:
+
+	init_profile(p_scene)
+
+	# add menu items
+	var export_vars := current_scene.get_export_vars()
+	for v: Dictionary in export_vars:
+		add_export_var(v.name)
+
+func init_profile(p_scene: M8Scene, profile:=DEFAULT_PROFILE) -> void:
 
 	var config := main.config
 	current_scene = p_scene
@@ -49,7 +67,14 @@ func read_params_from_scene(p_scene: M8Scene) -> void:
 	# clear menu
 	clear_params()
 
-	config_load_profile(DEFAULT_PROFILE)
+	config_load_profile(profile)
+
+##
+## Add a UI setting from a scene's export variable.
+## [property] must match the name of an export var that exists
+## in the current scene.
+##
+func add_export_var(property: String) -> void:
 
 	var regex := RegEx.new()
 	regex.compile("^-?\\d+,-?\\d+$") # match "#,#" export_range patterns
@@ -57,22 +82,38 @@ func read_params_from_scene(p_scene: M8Scene) -> void:
 	# add menu items
 	var export_vars := current_scene.get_export_vars()
 	for v: Dictionary in export_vars:
-		var property: String = v.name
-		if v.hint_string == "bool":
-			push_scene_var_bool(property)
-			continue
-		if v.hint_string == "Color":
-			push_scene_var_color(property)
-			continue
-		if v.hint_string == "float":
-			push_scene_var_slider(property)
+		if v.name != property:
 			continue
 
+		if v.hint_string == "bool":
+			var default: bool = current_scene.get(property)
+			push_scene_var_bool(property, default, func(toggle_mode: bool) -> void:
+				current_scene.set(property, toggle_mode)
+			)
+			break
+
+		if v.hint_string == "Color":
+			var default: Color = current_scene.get(property)
+			push_scene_var_color(property, default, func(color: Color) -> void:
+				current_scene.set(property, color))
+			break
+
+		if v.hint_string == "float":
+			var default: float = current_scene.get(property)
+			push_scene_var_slider(property, default, func(value: float) -> void:
+				current_scene.set(property, value)
+			)
+			break
+
+		# @export_range() variables
 		if regex.search(v.hint_string):
 			var range_min := int(v.hint_string.split(",")[0])
 			var range_max := int(v.hint_string.split(",")[1])
-			push_scene_var_int_slider(property, range_min, range_max)
-			continue
+			var default: int = current_scene.get(property)
+			push_scene_var_int_slider(property, default, range_min, range_max, func(value: float) -> void:
+				current_scene.set(property, value)
+			)
+			break
 
 		printerr("scene: unrecognized export var type: %s" % v.hint_string)
 
@@ -117,85 +158,222 @@ func config_get_property(property: String, default: Variant=null) -> Variant:
 
 func config_set_property(property: String, value: Variant) -> void:
 	var profile := config_get_profile(current_profile)
-
-	current_scene.set(property, value) # FIXME: this line not needed if property not in scene
 	profile[property] = value
 	print("scene: profile %s: set %s=%s" % [current_profile, property, value])
+	setting_changed.emit(property, value)
 
-func push_scene_var_bool(property: String) -> void:
+func push_scene_var_bool(setting: String, default: bool, fn: Callable) -> void:
+	var cont := push_param(
+		_label(setting),
+		_spacer(),
+		_check(setting, default, fn)
+	)
+	setting_editable.connect(func(p_setting: String, editable: bool) -> void:
+		if p_setting == setting and is_instance_valid(cont):
+			cont.modulate.a=1.0 if editable else 0.5
+	)
 
+func push_scene_var_color(setting: String, default: Color, fn: Callable) -> void:
+	var cont := push_param(
+		_label(setting),
+		_spacer(),
+		_colorpicker(setting, default, fn)
+	)
+	setting_editable.connect(func(p_setting: String, editable: bool) -> void:
+		if p_setting == setting and is_instance_valid(cont):
+			cont.modulate.a=1.0 if editable else 0.5
+	)
+
+func push_scene_var_slider(setting: String, default: float, fn: Callable) -> void:
+	var label := _label(setting)
+	var slider := _slider(setting, default, 0.0, 1.0, 0.01, fn)
+	var value_label := _slider_label(slider, "%.2f")
+	var cont := push_param(label, value_label, slider)
+	setting_editable.connect(func(p_setting: String, editable: bool) -> void:
+		if p_setting == setting and is_instance_valid(cont):
+			cont.modulate.a=1.0 if editable else 0.5
+	)
+
+func push_scene_var_int_slider(setting: String, default: int, range_min: int, range_max: int, fn: Callable) -> void:
+	var label := _label(setting)
+	var slider := _int_slider(setting, default, range_min, range_max, fn)
+	var value_label := _slider_label(slider, "%d")
+	var cont := push_param(label, value_label, slider)
+	setting_editable.connect(func(p_setting: String, editable: bool) -> void:
+		if p_setting == setting and is_instance_valid(cont):
+			cont.modulate.a=1.0 if editable else 0.5
+	)
+
+func add_option(setting: String, default: int, items: Array, fn: Callable) -> void:
+	var cont := push_param(
+		_label(setting),
+		_spacer(),
+		_option(setting, default, items, fn)
+	)
+	setting_editable.connect(func(p_setting: String, editable: bool) -> void:
+		if p_setting == setting and is_instance_valid(cont):
+			cont.modulate.a=1.0 if editable else 0.5
+	)
+
+func add_file(setting: String, default: String, fn: Callable) -> void:
+	var cont := push_param(
+		_label(setting),
+		_spacer(),
+		_file(setting, default, fn)
+	)
+	setting_editable.connect(func(p_setting: String, editable: bool) -> void:
+		if p_setting == setting and is_instance_valid(cont):
+			cont.modulate.a=1.0 if editable else 0.5
+	)
+
+func add_section(title: String) -> void:
+	var label := RichTextLabel.new()
+	label.fit_content = true
+	label.bbcode_enabled = true
+	label.text = "[b]%s[/b]" % title
+	label.size_flags_horizontal = Control.SIZE_FILL + Control.SIZE_EXPAND
+	get_param_container().add_child(label)
+
+func reg_link_editable(from_setting: String, to_setting: String) -> void:
+	setting_editable.emit(to_setting, bool(config_get_property(from_setting)))
+	setting_changed.connect(func(setting: String, value: Variant) -> void:
+		if setting == from_setting:
+			setting_editable.emit(to_setting, bool(value))
+	)
+
+func _label(text: String) -> Label:
 	var label := Label.new()
+	label.text = text.capitalize()
+	label.size_flags_horizontal = Control.SIZE_FILL + Control.SIZE_EXPAND
+	return label
+
+func _slider_label(slider: HSlider, format: String) -> Label:
+	var label := Label.new()
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	label.text = format % slider.value
+	slider.value_changed.connect(func(value: float) -> void:
+		label.text=format % value
+	)
+	return label
+
+func _spacer() -> VSeparator:
+	var empty_sep := VSeparator.new()
+	empty_sep.add_theme_stylebox_override("separator", StyleBoxEmpty.new())
+	return empty_sep
+
+func _check(setting: String, default: bool, fn: Callable) -> CheckButton:
 	var button := CheckButton.new()
 
-	label.text = property.capitalize()
-	label.size_flags_horizontal = Control.SIZE_FILL + Control.SIZE_EXPAND
-	button.button_pressed = current_scene.get(property)
-	button.toggled.connect(func(toggled_on: bool) -> void:
-		config_set_property(property, toggled_on)
+	button.toggled.connect(func(toggle_mode: bool) -> void:
+		config_set_property(setting, toggle_mode)
+	)
+	button.toggled.connect(fn)
+	button.button_pressed = config_get_property(setting, default)
+	button.toggled.emit(button.button_pressed)
+
+	setting_editable.connect(func(p_setting: String, editable: bool) -> void:
+		if p_setting == setting and is_instance_valid(button):
+			button.disabled=!editable
 	)
 
-	push_param_two(label, button)
+	return button
 
-func push_scene_var_color(property: String) -> void:
-
-	var label := Label.new()
+func _colorpicker(setting: String, default: Color, fn: Callable) -> ColorPickerButton:
 	var button := ColorPickerButton.new()
 
-	label.text = property.capitalize()
-	label.size_flags_horizontal = Control.SIZE_FILL + Control.SIZE_EXPAND
-	button.color = current_scene.get(property)
 	button.color_changed.connect(func(color: Color) -> void:
-		config_set_property(property, color)
+		config_set_property(setting, color)
+	)
+	button.color_changed.connect(fn)
+	button.color = config_get_property(setting, default)
+	button.color_changed.emit(button.color)
+
+	setting_editable.connect(func(p_setting: String, editable: bool) -> void:
+		if p_setting == setting and is_instance_valid(button):
+			button.disabled=!editable
 	)
 
-	push_param_two(label, button)
+	return button
 
-func push_scene_var_slider(property: String) -> void:
-
-	var label := Label.new()
-	var value_label := Label.new()
+func _slider(setting: String, default: float, range_min: float, range_max: float, step: float, fn: Callable) -> HSlider:
 	var slider := HSlider.new()
+	slider.max_value = range_max
+	slider.min_value = range_min
+	slider.step = step
 
-	label.text = property.capitalize()
-	label.size_flags_horizontal = Control.SIZE_FILL + Control.SIZE_EXPAND
-
-	value_label.text = "%.2f" % current_scene.get(property)
-	value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-
-	slider.custom_minimum_size.x = 80
-	slider.max_value = 1.0
-	slider.min_value = 0.0
-	slider.step = 0.01
-	slider.value = current_scene.get(property)
 	slider.value_changed.connect(func(value: float) -> void:
-		config_set_property(property, value)
-		value_label.text="%.2f" % value
+		config_set_property(setting, value)
+	)
+	slider.value_changed.connect(fn)
+	slider.value = config_get_property(setting, default)
+	slider.value_changed.emit(slider.value)
+
+	setting_editable.connect(func(p_setting: String, editable: bool) -> void:
+		if p_setting == setting and is_instance_valid(slider):
+			slider.editable=editable
 	)
 
-	push_param(label, value_label, slider)
+	return slider
 
-func push_scene_var_int_slider(property: String, range_min: int, range_max: int) -> void:
-
-	var label := Label.new()
-	var value_label := Label.new()
+func _int_slider(setting: String, default: int, range_min: int, range_max: int, fn: Callable) -> HSlider:
 	var slider := HSlider.new()
-
-	label.text = property.capitalize()
-	label.size_flags_horizontal = Control.SIZE_FILL + Control.SIZE_EXPAND
-
-	value_label.text = "%d" % current_scene.get(property)
-	value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-
-	slider.custom_minimum_size.x = 80
 	slider.max_value = range_max
 	slider.min_value = range_min
 	slider.step = 1
-	slider.tick_count = range_max - range_min
+	slider.tick_count = (range_max - range_min)
 	slider.ticks_on_borders = true
-	slider.value = current_scene.get(property)
+
 	slider.value_changed.connect(func(value: float) -> void:
-		config_set_property(property, value)
-		value_label.text="%d" % value
+		config_set_property(setting, int(value))
+	)
+	slider.value_changed.connect(fn)
+	slider.value = config_get_property(setting, default)
+	slider.value_changed.emit(slider.value)
+
+	setting_editable.connect(func(p_setting: String, editable: bool) -> void:
+		if p_setting == setting and is_instance_valid(slider):
+			slider.editable=editable
 	)
 
-	push_param(label, value_label, slider)
+	return slider
+
+func _option(setting: String, default: int, items: Array, fn: Callable) -> OptionButton:
+	var option := OptionButton.new()
+	for item: String in items:
+		option.add_item(item)
+
+	option.item_selected.connect(func(index: int) -> void:
+		config_set_property(setting, index)
+	)
+	option.item_selected.connect(fn)
+	option.selected = config_get_property(setting, default)
+	option.item_selected.emit(option.selected)
+
+	setting_editable.connect(func(p_setting: String, editable: bool) -> void:
+		if p_setting == setting and is_instance_valid(option):
+			option.disabled=!editable
+	)
+
+	return option
+
+func _file(setting: String, default: String, fn: Callable) -> Button:
+	var button := Button.new()
+	var on_file_selected := func(path: String) -> void:
+			config_set_property(setting, path)
+			button.text = path.get_file()
+			fn.call(path)
+
+	button.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+
+	button.pressed.connect(func() -> void:
+		print("opening file dialog")
+		main.open_file_dialog(on_file_selected)
+	)
+	on_file_selected.call(config_get_property(setting, default))
+
+	setting_editable.connect(func(p_setting: String, editable: bool) -> void:
+		if p_setting == setting and is_instance_valid(button):
+			button.disabled=!editable
+	)
+
+	return button

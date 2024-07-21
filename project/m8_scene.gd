@@ -15,11 +15,8 @@ class_name M8Scene extends Node3D
 
 var main: M8SceneDisplay
 
-func init(p_main: M8SceneDisplay, load_parameters:=true) -> void:
+func init(p_main: M8SceneDisplay, _load_parameters:=true) -> void:
 	main = p_main
-
-	if load_parameters:
-		main.menu_scene.read_params_from_scene(self)
 
 ##
 ## Returns this scene's property list, but only exported variables.

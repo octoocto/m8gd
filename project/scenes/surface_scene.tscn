@@ -12,7 +12,7 @@ tonemap_mode = 2
 sdfgi_enabled = true
 fog_light_color = Color(0, 0, 0, 1)
 fog_density = 0.001
-volumetric_fog_albedo = Color(0.2385, 0.1925, 0.25, 1)
+volumetric_fog_albedo = Color(0.114897, 0.114897, 0.114897, 1)
 volumetric_fog_ambient_inject = 0.53
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4b25i"]

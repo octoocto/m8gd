@@ -10,6 +10,9 @@ func init(p_main: M8SceneDisplay, load_parameters:=true) -> void:
 	# %TextureRect.texture = _display.m8_display_texture
 	%TextureRect.texture = main.m8_client.get_display_texture()
 
+	if load_parameters:
+		main.menu_scene.read_params_from_scene(self)
+
 func get_auto_integer_scale() -> int:
 
 	var window_size: Vector2i = get_viewport().size
