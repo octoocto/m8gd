@@ -34,6 +34,8 @@ public:
 	uint8_t bg_g = 0;
 	uint8_t bg_b = 0;
 
+	uint8_t bg_alpha = 0xFF;
+
 	DisplayBuffer(int width, int height);
 	~DisplayBuffer();
 
@@ -47,7 +49,15 @@ public:
 		bytes[offset + 0] = r;
 		bytes[offset + 1] = g;
 		bytes[offset + 2] = b;
-		bytes[offset + 3] = 0xFF;
+
+		if (r == bg_r && g == bg_g && b == bg_b)
+		{
+			bytes[offset + 3] = bg_alpha;
+		}
+		else
+		{
+			bytes[offset + 3] = 0xFF;
+		}
 	}
 
 	color get_pixel(uint16_t x, uint16_t y)
@@ -67,6 +77,8 @@ public:
 			bytes[offset + 1],
 			bytes[offset + 2]};
 	}
+
+	void set_background_alpha(uint8_t a);
 
 	void set_font(godot::Ref<godot::BitMap> bitmap)
 	{

@@ -133,6 +133,8 @@ public:
 	/// @return the background color
 	Color get_background_color();
 
+	void set_background_alpha(float alpha);
+
 	/// @brief Get the color of a specific pixel in the M8 display.
 	/// @param x
 	/// @param y

@@ -147,6 +147,7 @@ void M8GD::_bind_methods()
 	ClassDB::bind_method(D_METHOD("get_display_texture"), &M8GD::get_display_texture);
 
 	ClassDB::bind_method(D_METHOD("get_background_color"), &M8GD::get_background_color);
+	ClassDB::bind_method(D_METHOD("set_background_alpha"), &M8GD::set_background_alpha);
 	ClassDB::bind_method(D_METHOD("get_pixel"), &M8GD::get_pixel);
 
 	ClassDB::bind_method(D_METHOD("send_keyjazz", "note", "velocity"), &M8GD::send_keyjazz);
@@ -253,13 +254,17 @@ void M8GD::set_display_size(uint16_t width, uint16_t height)
 {
 	print("setting display buffer size to (%d, %d)", width, height);
 
+	uint8_t bg_alpha = 0xFF;
+
 	if (display_buffer != nullptr)
 	{
+		bg_alpha = display_buffer->bg_alpha;
 		delete display_buffer;
 	}
 
 	display_buffer = new DisplayBuffer(width, height);
 	display_buffer->set_font(font_bitmap);
+	display_buffer->set_background_alpha(bg_alpha);
 	display_image = Image::create(width, height, false, Image::FORMAT_RGBA8);
 
 	if (display_texture == nullptr)
@@ -300,6 +305,16 @@ Color M8GD::get_background_color()
 		display_buffer->bg_g / 255.0,
 		display_buffer->bg_b / 255.0,
 		1.0);
+}
+
+void M8GD::set_background_alpha(float a)
+{
+	if (a < 0.0)
+		a == 0.0;
+	if (a > 1.0)
+		a == 1.0;
+
+	display_buffer->set_background_alpha((uint8_t)(a * 255));
 }
 
 Color M8GD::get_pixel(int x, int y)

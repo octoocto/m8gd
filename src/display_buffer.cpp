@@ -13,6 +13,23 @@ DisplayBuffer::DisplayBuffer(int width, int height) : width(width), height(heigh
 
 DisplayBuffer::~DisplayBuffer() {}
 
+void DisplayBuffer::set_background_alpha(uint8_t a)
+{
+	bg_alpha = a;
+
+	// update colors in image buffer
+	for (int i = 0; i < width; i++)
+	{
+		for (int j = 0; j < height; j++)
+		{
+			color c = get_pixel(i, j);
+			set_pixel(i, j, c.r, c.g, c.b);
+		}
+	}
+
+	print("set background alpha to %d", a);
+}
+
 void DisplayBuffer::draw_rect(int x, int y, int w, int h, uint8_t r, uint8_t g, uint8_t b)
 {
 	y = y + screen_offset_y;
