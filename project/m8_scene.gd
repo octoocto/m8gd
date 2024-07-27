@@ -54,6 +54,29 @@ func has_3d_camera() -> bool:
 func get_3d_camera() -> HumanizedCamera3D:
 	return %Camera3D
 
+##
+## Load an image or video and apply its texture to a texture rect, if possible.
+##
+func load_media_to_texture_rect(path: String, vsp: VideoStreamPlayer=null) -> Texture2D:
+
+	if is_instance_valid(vsp):
+		vsp.stop()
+
+	# try to load an image from this path
+	var ext := path.get_extension()
+	match ext:
+		"png", "jpg", "jpeg", "hdr":
+			print("scene: loading image")
+			var image := Image.load_from_file(path)
+			return ImageTexture.create_from_image(image)
+		"ogv":
+			print("scene: loading video")
+			vsp.stream = load(path)
+			vsp.play()
+			return vsp.get_video_texture()
+
+	return null
+
 # func update_m8_color_samples():
 #	 if main.m8_display_viewport != null:
 #		 var image = receiver_texture.get_image()

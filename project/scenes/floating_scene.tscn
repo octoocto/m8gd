@@ -1,8 +1,7 @@
-[gd_scene load_steps=27 format=3 uid="uid://da23gfk2abg5f"]
+[gd_scene load_steps=26 format=3 uid="uid://da23gfk2abg5f"]
 
 [ext_resource type="Script" path="res://scenes/floating_scene.gd" id="1_ufbfg"]
 [ext_resource type="Texture2D" uid="uid://d01h4xbn66tpi" path="res://assets/texture_07.png" id="2_yqhq4"]
-[ext_resource type="Texture2D" uid="uid://cjofxcdudb1k5" path="res://assets/backgrounds/metro_vijzelgracht_4k.hdr" id="3_7yo63"]
 [ext_resource type="Shader" path="res://shaders/device_screen.gdshader" id="3_o28i3"]
 [ext_resource type="Texture2D" uid="uid://bcsoiuuis4yx2" path="res://assets/m8_screen_placeholder.png" id="4_0o31u"]
 [ext_resource type="PackedScene" uid="uid://bckroenwlecqv" path="res://humanized_camera_3d.tscn" id="4_8iar1"]
@@ -11,14 +10,15 @@
 [ext_resource type="Shader" path="res://shaders/crt_screen.gdshader" id="5_t84je"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_h8o1l"]
-panorama = ExtResource("3_7yo63")
 
 [sub_resource type="Sky" id="Sky_m7fe1"]
 sky_material = SubResource("PanoramaSkyMaterial_h8o1l")
 
 [sub_resource type="Environment" id="Environment_dmk2d"]
+background_mode = 2
 sky = SubResource("Sky_m7fe1")
 sky_rotation = Vector3(0, 0.401426, 0)
+reflected_light_source = 1
 tonemap_mode = 2
 fog_light_color = Color(0.1176, 0.41552, 0.49, 1)
 fog_density = 0.001
@@ -137,7 +137,7 @@ volume_db = -80.0
 expand = true
 loop = true
 
-[node name="BGImageTexture" type="TextureRect" parent="CanvasLayer"]
+[node name="BGTextureRect" type="TextureRect" parent="CanvasLayer"]
 unique_name_in_owner = true
 visible = false
 anchors_preset = 15

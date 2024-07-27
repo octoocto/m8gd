@@ -115,48 +115,32 @@ func init(p_main: M8SceneDisplay, load_parameters:=true) -> void:
 		main.menu_scene.add_section("Background")
 		main.menu_scene.add_option("background_mode", 0, [
 			"Solid Color",
-			"Panorama",
-			"Media",
+			"Custom File",
+			"Custom File (Panorama)",
 		], func(index: int) -> void:
-			%BGImageTexture.visible=false
+			%BGTextureRect.visible=false
 			%BGVideoStreamPlayer.visible=false
 			%WorldEnvironment.environment.background_mode=Environment.BG_CLEAR_COLOR
 			%WorldEnvironment.environment.ambient_light_source=Environment.AMBIENT_SOURCE_DISABLED
-
 			match index:
 				0:
 					%WorldEnvironment.environment.background_mode=Environment.BG_COLOR
 				1:
-					%WorldEnvironment.environment.background_mode=Environment.BG_SKY
-				2:
 					%WorldEnvironment.environment.background_mode=Environment.BG_CANVAS
-					%BGImageTexture.visible=true
+					%BGTextureRect.visible=true
 					if %BGVideoStreamPlayer.is_playing():
 						%BGVideoStreamPlayer.visible=true
+				2:
+					%WorldEnvironment.environment.background_mode=Environment.BG_SKY
 
 			background_mode=index
 		)
+
 		main.menu_scene.add_export_var("solid_background_color")
 		main.menu_scene.add_file("background_file", "", func(path: String) -> void:
-			%BGVideoStreamPlayer.stop()
-			# try to load an image from this path
-			var ext:=path.get_extension()
-			match ext:
-				"png", "jpg", "jpeg":
-					print("loading image")
-					var image:=Image.load_from_file(path)
-					%BGImageTexture.texture=ImageTexture.create_from_image(image)
-					if background_mode == 2:
-						# %BGImageTexture.visible=true
-						%BGVideoStreamPlayer.visible=false
-				"ogv":
-					print("loading video")
-					%BGVideoStreamPlayer.stream=load(path)
-					%BGVideoStreamPlayer.play()
-					%BGImageTexture.texture= %BGVideoStreamPlayer.get_video_texture()
-					if background_mode == 2:
-						# %BGImageTexture.visible=false
-						%BGVideoStreamPlayer.visible=true
+			var texture:=load_media_to_texture_rect(path, %BGVideoStreamPlayer)
+			%BGTextureRect.texture=texture
+			%WorldEnvironment.environment.sky.sky_material.panorama=texture
 		)
 
 		main.menu_scene.add_section("Lights")
