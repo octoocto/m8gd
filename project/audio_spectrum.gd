@@ -42,6 +42,10 @@ func _draw() -> void:
 
 	for i in range(logspace.size() - 1):
 
+		if i >= last_peaks.size():
+			last_peaks.resize(spectrum_res)
+			last_peaks.fill(0.0)
+
 		var magnitude := main.audio_fft(logspace[i], logspace[i + 1])
 		var height: float = clamp((spectrum_db_min + linear_to_db(magnitude)) / spectrum_db_min, 0.0, 1.0) * spectrum_height
 
@@ -64,7 +68,7 @@ func _draw() -> void:
 
 	if type == Type.BAR:
 		# polygon_points.push_front(Vector2(0, -0.01))
-		# polygon_points[0].y = 0
+		polygon_points[0].y = 0
 		if mirror:
 			# polygon_points[- 1].y = 0
 			var mirrored_points := polygon_points.map(func(vec: Vector2) -> Vector2:
