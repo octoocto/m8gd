@@ -89,6 +89,7 @@ var version: int = 0
 
 # contains key bindings
 @export var action_events := {} # Dictionary[String, Array]
+@export var virtual_keyboard_enabled := false
 
 func save() -> void:
 	var error := ResourceSaver.save(self, CONFIG_FILE_PATH)

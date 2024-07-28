@@ -422,6 +422,10 @@ func init(p_main: M8SceneDisplay) -> void:
 	# Keybindings
 	# --------------------------------------------------------------------
 
+	_connect_check("virtual_keyboard_enabled", %Check_VirtualKeyboard, func(value: bool) -> void:
+		main.m8_virtual_keyboard_enabled=value
+	)
+
 	get_tree().physics_frame.connect(func() -> void:
 		%ButtonBindUp1.text=get_key_bind("key_up", 0)
 		%ButtonBindUp2.text=get_key_bind("key_up", 1)
