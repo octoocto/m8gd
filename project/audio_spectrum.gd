@@ -68,9 +68,9 @@ func _draw() -> void:
 
 	if type == Type.BAR:
 		# polygon_points.push_front(Vector2(0, -0.01))
-		polygon_points[0].y = 0
+		if line_width > 0:
+			polygon_points[0].y = 0
 		if mirror:
-			# polygon_points[- 1].y = 0
 			var mirrored_points := polygon_points.map(func(vec: Vector2) -> Vector2:
 				return vec.reflect(Vector2.UP)
 			)
