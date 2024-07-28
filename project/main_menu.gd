@@ -375,35 +375,49 @@ func init(p_main: M8SceneDisplay) -> void:
 	# Filter / Shader Settings
 	# --------------------------------------------------------------------
 
-	%CheckButtonFilter1.toggled.connect(func(toggled_on: bool) -> void:
-		main.get_node("%VHSFilter1").visible=toggled_on
-		config.filter_1=toggled_on
+	_connect_check("filter_1", %CheckButtonFilter1, func(value: bool) -> void:
+		main.get_node("%VHSFilter1").visible=value
 	)
-	%CheckButtonFilter1.button_pressed = config.filter_1
+	_connect_check("filter_2", %CheckButtonFilter2, func(value: bool) -> void:
+		main.get_node("%VHSFilter2").visible=value
+	)
+	_connect_check("filter_3", %CheckButtonFilter3, func(value: bool) -> void:
+		main.get_node("%VHSFilter3").visible=value
+	)
+	_connect_check("filter_4", %CheckButtonFilter4, func(value: bool) -> void:
+		main.get_node("%Filter4").visible=value
+	)
+	_connect_check("crt_filter", %CheckButtonFilter5, func(value: bool) -> void:
+		main.get_node("%CRTShader").visible=value
+	)
+	_connect_check("filter_noise", %Check_FilterNoise, func(value: bool) -> void:
+		main.get_node("%NoiseShader").visible=value
+	)
 
-	%CheckButtonFilter2.toggled.connect(func(toggled_on: bool) -> void:
-		main.get_node("%VHSFilter2").visible=toggled_on
-		config.filter_2=toggled_on
+	_connect_slider("pp_vhs_smear", %Slider_ShaderSmearAmount, func(value: float) -> void:
+		main.get_node("%VHSFilter1").material.set_shader_parameter("smear", value)
 	)
-	%CheckButtonFilter2.button_pressed = config.filter_2
-
-	%CheckButtonFilter3.toggled.connect(func(toggled_on: bool) -> void:
-		main.get_node("%VHSFilter3").visible=toggled_on
-		config.filter_3=toggled_on
+	_connect_check_to_control_editable( %CheckButtonFilter1, %Slider_ShaderSmearAmount)
+	_connect_slider("pp_vhs_wiggle", %Slider_ShaderWiggleAmount, func(value: float) -> void:
+		main.get_node("%VHSFilter1").material.set_shader_parameter("wiggle", value)
 	)
-	%CheckButtonFilter3.button_pressed = config.filter_3
-
-	%CheckButtonFilter4.toggled.connect(func(toggled_on: bool) -> void:
-		main.get_node("%Filter4").visible=toggled_on
-		config.filter_4=toggled_on
+	_connect_check_to_control_editable( %CheckButtonFilter1, %Slider_ShaderWiggleAmount)
+	_connect_slider("pp_vhs_noise_crease_opacity", %Slider_ShaderNoiseCreaseOpacity, func(value: float) -> void:
+		main.get_node("%VHSFilter2").material.set_shader_parameter("crease_opacity", value)
 	)
-	%CheckButtonFilter4.button_pressed = config.filter_4
-
-	%CheckButtonFilter5.toggled.connect(func(toggled_on: bool) -> void:
-		main.get_node("%CRTShader").visible=toggled_on
-		config.crt_filter=toggled_on
+	_connect_check_to_control_editable( %CheckButtonFilter2, %Slider_ShaderNoiseCreaseOpacity)
+	_connect_slider("pp_vhs_tape_crease_amount", %Slider_ShaderTapeCreaseAmount, func(value: float) -> void:
+		main.get_node("%VHSFilter2").material.set_shader_parameter("tape_crease_smear", value)
 	)
-	%CheckButtonFilter5.button_pressed = config.crt_filter
+	_connect_check_to_control_editable( %CheckButtonFilter2, %Slider_ShaderTapeCreaseAmount)
+	_connect_slider("pp_crt_curvature", %Slider_ShaderCurvatureAmount, func(value: float) -> void:
+		main.get_node("%CRTShader").material.set_shader_parameter("warp_amount", value)
+	)
+	_connect_check_to_control_editable( %CheckButtonFilter5, %Slider_ShaderCurvatureAmount)
+	_connect_slider("pp_vignette_amount", %Slider_ShaderVignetteAmount, func(value: float) -> void:
+		main.get_node("%CRTShader").material.set_shader_parameter("vignette_opacity", value)
+	)
+	_connect_check_to_control_editable( %CheckButtonFilter5, %Slider_ShaderVignetteAmount)
 
 	# Keybindings
 	# --------------------------------------------------------------------
@@ -741,6 +755,35 @@ func init(p_main: M8SceneDisplay) -> void:
 			for j in range(delay_frames):
 				await get_tree().physics_frame
 	)
+
+## Connect a Slider to a config setting and callback function.
+func _connect_slider(setting: String, slider: Slider, fn: Callable) -> void:
+	slider.value_changed.connect(func(value: float) -> void:
+		fn.call(value)
+		main.config.set(setting, value)
+	)
+	slider.value = main.config.get(setting)
+
+## Connect a CheckButton to a config setting and callback function.
+func _connect_check(setting: String, check: CheckButton, fn: Callable) -> void:
+	check.toggled.connect(func(toggled_on: bool) -> void:
+		fn.call(toggled_on)
+		main.config.set(setting, toggled_on)
+	)
+	check.button_pressed = main.config.get(setting)
+
+## Connect a CheckButton to a Range or Button. If the CheckButton is off, disable the Range/Button.
+func _connect_check_to_control_editable(check: CheckButton, control: Control) -> void:
+	if control is Slider:
+		check.toggled.connect(func(toggled_on: bool) -> void:
+			control.editable=toggled_on
+		)
+		control.editable = check.button_pressed
+	elif control is Button:
+		check.toggled.connect(func(toggled_on: bool) -> void:
+			control.disabled=!toggled_on
+		)
+		control.disabled = !check.button_pressed
 
 func get_color_pickers() -> Array:
 	return [

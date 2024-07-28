@@ -65,6 +65,14 @@ var version: int = 0
 @export var filter_3 := false
 @export var filter_4 := false
 @export var crt_filter := false
+@export var filter_noise := false
+
+@export var pp_vhs_smear := 1.0
+@export var pp_vhs_wiggle := 0.03
+@export var pp_vhs_noise_crease_opacity := 0.5
+@export var pp_vhs_tape_crease_amount := 0.2
+@export var pp_crt_curvature := 0.5
+@export var pp_vignette_amount := 0.5
 
 # visualizer settings
 @export var audio_analyzer_enabled := false

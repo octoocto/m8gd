@@ -132,8 +132,10 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
+current_tab = 4
 
 [node name="Scene" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
+visible = false
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Scene"]
@@ -1066,7 +1068,6 @@ layout_mode = 2
 text = "Reset to Defaults"
 
 [node name="Shaders" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
-visible = false
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Shaders"]
@@ -1092,6 +1093,38 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Shaders/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+bbcode_enabled = true
+text = "	[font size=12]Smear Amount[/font]"
+fit_content = true
+
+[node name="Slider_ShaderSmearAmount" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Shaders/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 2.0
+step = 0.2
+value = 1.0
+tick_count = 11
+ticks_on_borders = true
+
+[node name="RichTextLabel6" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Shaders/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+bbcode_enabled = true
+text = "	[font size=12]Wiggle Amount[/font]"
+fit_content = true
+
+[node name="Slider_ShaderWiggleAmount" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Shaders/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 0.2
+step = 0.01
+value = 0.03
+tick_count = 11
+ticks_on_borders = true
+
 [node name="Label2" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Shaders/VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -1102,10 +1135,42 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="RichTextLabel4" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Shaders/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+bbcode_enabled = true
+text = "	[font size=12]Noise Crease Opacity[/font]"
+fit_content = true
+
+[node name="Slider_ShaderNoiseCreaseOpacity" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Shaders/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 1.0
+step = 0.1
+value = 0.5
+tick_count = 11
+ticks_on_borders = true
+
+[node name="RichTextLabel5" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Shaders/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+bbcode_enabled = true
+text = "	[font size=12]Tape Crease Amount[/font]"
+fit_content = true
+
+[node name="Slider_ShaderTapeCreaseAmount" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Shaders/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 1.0
+step = 0.1
+value = 0.2
+tick_count = 11
+ticks_on_borders = true
+
 [node name="Label3" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Shaders/VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "CRT Pixelization"
+text = "CRT Scan Lines"
 
 [node name="CheckButtonFilter3" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Shaders/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
@@ -1128,6 +1193,48 @@ size_flags_horizontal = 3
 text = "CRT Curvature Warping"
 
 [node name="CheckButtonFilter5" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Shaders/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Shaders/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+bbcode_enabled = true
+text = "	[font size=12]Curvature Warp Amount[/font]"
+fit_content = true
+
+[node name="Slider_ShaderCurvatureAmount" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Shaders/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 1.0
+step = 0.1
+value = 0.5
+tick_count = 11
+ticks_on_borders = true
+
+[node name="RichTextLabel3" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Shaders/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+bbcode_enabled = true
+text = "	[font size=12]Vignette Amount[/font]"
+fit_content = true
+
+[node name="Slider_ShaderVignetteAmount" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Shaders/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 1.0
+step = 0.1
+value = 0.5
+tick_count = 11
+ticks_on_borders = true
+
+[node name="Label8" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Shaders/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Noise Filter"
+
+[node name="Check_FilterNoise" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Shaders/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
