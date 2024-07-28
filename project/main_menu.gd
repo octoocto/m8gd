@@ -241,12 +241,17 @@ func init(p_main: M8SceneDisplay) -> void:
 	# Window resolution
 	# ------------------------------------------------------------------------
 
-	%OptionRes.select(0)
-
-	get_tree().physics_frame.connect(func() -> void:
-		var wsize:=DisplayServer.window_get_size()
-		%OptionRes.set_item_text(0, "%dx%d" % [wsize.x, wsize.y])
+	%Spin_WindowW.value_changed.connect(func(value: float) -> void:
+		var win_size:=DisplayServer.window_get_size()
+		DisplayServer.window_set_size(Vector2i(int(value), win_size.y))
 	)
+	%Spin_WindowW.value = config.window_width
+
+	%Spin_WindowH.value_changed.connect(func(value: float) -> void:
+		var win_size:=DisplayServer.window_get_size()
+		DisplayServer.window_set_size(Vector2i(win_size.x, int(value)))
+	)
+	%Spin_WindowH.value = config.window_height
 
 	%OptionRes.item_selected.connect(func(index: int) -> void:
 		match index:
@@ -258,6 +263,16 @@ func init(p_main: M8SceneDisplay) -> void:
 			8: DisplayServer.window_set_size(Vector2i(1920, 1280))
 		%OptionRes.select(0)
 	)
+	%OptionRes.select(0)
+
+	get_window().size_changed.connect(func() -> void:
+		var win_size:=DisplayServer.window_get_size()
+		%Spin_WindowW.value=win_size.x
+		%Spin_WindowH.value=win_size.y
+		config.window_width=win_size.x
+		config.window_height=win_size.y
+	)
+	DisplayServer.window_set_size(Vector2i(config.window_width, config.window_height))
 
 	%SliderFPSCap.value_changed.connect(func(value: float) -> void:
 		if value > 0 and value < 15: value=15

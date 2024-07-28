@@ -1191,12 +1191,34 @@ text = "Window Size"
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_4w3sk")
 
-[node name="OptionRes" type="OptionButton" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerVideo"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerVideo"]
+layout_mode = 2
+
+[node name="Spin_WindowW" type="SpinBox" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerVideo/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+min_value = 960.0
+max_value = 3840.0
+value = 960.0
+allow_greater = true
+
+[node name="Spin_WindowH" type="SpinBox" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerVideo/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+min_value = 640.0
+max_value = 2160.0
+value = 640.0
+allow_greater = true
+
+[node name="OptionRes" type="OptionButton" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerVideo/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 item_count = 9
-popup/item_0/text = ""
+selected = 0
+popup/item_0/text = "Presets"
 popup/item_0/id = 8
 popup/item_0/disabled = true
 popup/item_1/text = "Model 01"
