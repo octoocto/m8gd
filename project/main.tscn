@@ -1,11 +1,13 @@
-[gd_scene load_steps=25 format=3 uid="uid://b265ke8cr3dgr"]
+[gd_scene load_steps=28 format=3 uid="uid://b265ke8cr3dgr"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_4g2n0"]
 [ext_resource type="Shader" path="res://shaders/post_process.gdshader" id="1_tjung"]
 [ext_resource type="Shader" path="res://shaders/crt.gdshader" id="2_2rjfu"]
 [ext_resource type="Shader" path="res://shaders/vhs.gdshader" id="2_34vyn"]
+[ext_resource type="Texture2D" uid="uid://7y0rs0v6d4nk" path="res://assets/noise.png" id="4_gv8ps"]
 [ext_resource type="Shader" path="res://shaders/vhs2.gdshader" id="4_ioov3"]
 [ext_resource type="Shader" path="res://shaders/vhs3.gdshader" id="4_tq17m"]
+[ext_resource type="Shader" path="res://shaders/screen_blur.gdshader" id="7_5hn1q"]
 [ext_resource type="PackedScene" uid="uid://d13t756slc8b0" path="res://main_menu.tscn" id="7_k5oyo"]
 [ext_resource type="PackedScene" uid="uid://ca2jqh2tc7jix" path="res://key_overlay.tscn" id="8_dnyct"]
 [ext_resource type="PackedScene" uid="uid://geilakxinhul" path="res://scene_camera_menu.tscn" id="8_v4lip"]
@@ -50,58 +52,45 @@ shader_parameter/wiggle_speed = 25.0
 shader_parameter/smear = 1.0
 shader_parameter/blur_samples = 15
 
-[sub_resource type="Gradient" id="Gradient_bdoh7"]
-interpolation_color_space = 2
-offsets = PackedFloat32Array(0, 0.794258, 1)
-colors = PackedColorArray(1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1)
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_0dh6t"]
-noise_type = 3
-frequency = 0.1
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_8or2m"]
-color_ramp = SubResource("Gradient_bdoh7")
-noise = SubResource("FastNoiseLite_0dh6t")
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_i0wc8"]
 shader = ExtResource("2_34vyn")
-shader_parameter/vhs_resolution = Vector2(320, 240)
-shader_parameter/samples = 4
+shader_parameter/vhs_resolution = Vector2(960, 720)
+shader_parameter/samples = 2
 shader_parameter/crease_noise = 1.0
 shader_parameter/crease_opacity = 0.5
 shader_parameter/filter_intensity = 0.0
 shader_parameter/tape_crease_smear = 0.2
 shader_parameter/tape_crease_intensity = 0.0
-shader_parameter/tape_crease_jitter = 0.5
+shader_parameter/tape_crease_jitter = 0.1
 shader_parameter/tape_crease_speed = 0.5
-shader_parameter/tape_crease_discoloration = 0.5
+shader_parameter/tape_crease_discoloration = 0.0
 shader_parameter/bottom_border_thickness = 6.0
 shader_parameter/bottom_border_jitter = 24.0
 shader_parameter/noise_intensity = 0.0
-shader_parameter/noise_texture = SubResource("NoiseTexture2D_8or2m")
+shader_parameter/noise_texture = ExtResource("4_gv8ps")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_j82o4"]
 shader = ExtResource("4_tq17m")
-shader_parameter/res = Vector2(640, 480)
-shader_parameter/mask_type = 1
-shader_parameter/bloom_type = 1
-shader_parameter/hardScan = -8.0
+shader_parameter/res = Vector2(960, 720)
+shader_parameter/mask_type = 0
+shader_parameter/bloom_type = 0
+shader_parameter/hardScan = -4.0
 shader_parameter/hardPix = -2.0
 shader_parameter/hardBloomScan = -2.0
 shader_parameter/hardBloomPix = -1.5
 shader_parameter/bloomAmount = 16.0
 shader_parameter/warp = Vector2(500, 500)
-shader_parameter/maskDark = 0.758
-shader_parameter/maskLight = 1.75
+shader_parameter/maskDark = 1.0
+shader_parameter/maskLight = 2.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_pe34f"]
 shader = ExtResource("1_tjung")
 shader_parameter/effect = -1.0
 shader_parameter/effect_scale = 1.0
 shader_parameter/crop = 1.0
-shader_parameter/warp_amount = -1.05
+shader_parameter/warp_amount = -0.885
 shader_parameter/warp_aspect = 1.0
-shader_parameter/border_alpha = 1.0
+shader_parameter/border_alpha = -1.145
 shader_parameter/ca_amount = 0.0
 shader_parameter/mirror_blur = 0.5
 shader_parameter/reflection_amount = 0.39
@@ -112,11 +101,11 @@ shader_parameter/border_shadow_ramp = 0.485
 shader_parameter/vignette_ramp = 0.16
 shader_parameter/vignette_range = 1.045
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_fpc4l"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_udd8c"]
 shader = ExtResource("2_2rjfu")
 shader_parameter/overlay = false
 shader_parameter/scanlines_opacity = 0.0
-shader_parameter/scanlines_width = 0.0
+shader_parameter/scanlines_width = 0.25
 shader_parameter/grille_opacity = 0.0
 shader_parameter/resolution = Vector2(640, 480)
 shader_parameter/pixelate = false
@@ -124,17 +113,37 @@ shader_parameter/roll = false
 shader_parameter/roll_speed = 8.0
 shader_parameter/roll_size = 15.0
 shader_parameter/roll_variation = 1.8
-shader_parameter/distort_intensity = 0.002
+shader_parameter/distort_intensity = 0.05
 shader_parameter/noise_opacity = 0.0
 shader_parameter/noise_speed = 5.0
 shader_parameter/static_noise_intensity = 0.0
 shader_parameter/aberration = 0.03
 shader_parameter/brightness = 1.0
 shader_parameter/discolor = false
-shader_parameter/warp_amount = 0.923
+shader_parameter/warp_amount = 0.5
 shader_parameter/clip_warp = false
-shader_parameter/vignette_intensity = 5.0
-shader_parameter/vignette_opacity = 0.05
+shader_parameter/vignette_intensity = 0.4
+shader_parameter/vignette_opacity = 0.5
+
+[sub_resource type="Gradient" id="Gradient_2ccln"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_np6uh"]
+frequency = 1.0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_m6tfj"]
+width = 4096
+height = 4096
+color_ramp = SubResource("Gradient_2ccln")
+noise = SubResource("FastNoiseLite_np6uh")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_aaaol"]
+shader = ExtResource("7_5hn1q")
+shader_parameter/blur_amount = 0.0
+shader_parameter/tint_color = Color(1, 1, 1, 1)
+shader_parameter/tint_amount = 0.0
+shader_parameter/brightness = 1.0
+shader_parameter/noise_strength = 0.015
+shader_parameter/noise_texture = SubResource("NoiseTexture2D_m6tfj")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lbvov"]
 bg_color = Color(0, 0, 0, 0.5)
@@ -166,7 +175,7 @@ ok_button_text = "Open"
 dialog_hide_on_ok = true
 file_mode = 0
 access = 2
-filters = PackedStringArray("*.png, *.jpg, *.jpeg, *.ogv; Supported Filetypes")
+filters = PackedStringArray("*.png, *.jpg, *.jpeg, *.hdr, *.ogv; Supported Filetypes")
 use_native_dialog = true
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
@@ -255,7 +264,7 @@ copy_mode = 2
 [node name="CRTShader" type="ColorRect" parent="CanvasLayer/UI"]
 unique_name_in_owner = true
 visible = false
-material = SubResource("ShaderMaterial_fpc4l")
+material = SubResource("ShaderMaterial_udd8c")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -264,6 +273,20 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="BackBufferCopy" type="BackBufferCopy" parent="CanvasLayer/UI/CRTShader"]
+copy_mode = 2
+
+[node name="NoiseShader" type="ColorRect" parent="CanvasLayer/UI"]
+unique_name_in_owner = true
+visible = false
+material = SubResource("ShaderMaterial_aaaol")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BackBufferCopy" type="BackBufferCopy" parent="CanvasLayer/UI/NoiseShader"]
 copy_mode = 2
 
 [node name="KeyOverlay" parent="CanvasLayer/UI" instance=ExtResource("8_dnyct")]

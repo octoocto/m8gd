@@ -523,9 +523,8 @@ func _physics_process(delta: float) -> void:
 
 	# do shader parameter responses to audio
 
-	var material_crt_filter: ShaderMaterial = %CRTShader.material
-	material_crt_filter.set_shader_parameter("aberration", audio_level * visualizer_ca_amount)
-	material_crt_filter.set_shader_parameter("brightness", 1.0 + (audio_level * visualizer_brightness_amount))
+	%CRTShader.material.set_shader_parameter("aberration", audio_level * visualizer_ca_amount)
+	%NoiseShader.material.set_shader_parameter("brightness", 1.0 + (audio_level * visualizer_brightness_amount))
 
 	# fade out status message
 
