@@ -132,10 +132,8 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-current_tab = 4
 
 [node name="Scene" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
-visible = false
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Scene"]
@@ -1068,6 +1066,7 @@ layout_mode = 2
 text = "Reset to Defaults"
 
 [node name="Shaders" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
+visible = false
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Shaders"]

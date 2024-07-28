@@ -80,7 +80,7 @@ func add_export_var(property: String) -> void:
 	var regex_float_range := RegEx.new()
 
 	regex_int_range.compile("^-?\\d+,-?\\d+$") # match "#,#" export_range patterns
-	regex_float_range.compile("^-?\\d+,-?\\d+,-?\\d+[.]?\\d*$") # match "#,#,#" export_range patterns
+	regex_float_range.compile("^-?\\d+[.]?\\d*,-?\\d+[.]?\\d*,-?\\d+[.]?\\d*$") # match "#,#,#" export_range patterns
 
 	# add menu items
 	var export_vars := current_scene.get_export_vars()

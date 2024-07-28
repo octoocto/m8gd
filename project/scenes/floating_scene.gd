@@ -34,6 +34,26 @@ extends M8Scene
 		%AudioSpectrum.interlace = value
 		audio_spectrum_interlace = value
 
+@export_range(0, 10) var jumbotron_distortion_amount := 3:
+	set(value):
+		jumbotron_distortion_amount = value
+		%DisplayMesh.material_override.set_shader_parameter("distort_amount", value)
+
+@export_range(0.75, 2.0, 0.05) var jumbotron_size := 0.75:
+	set(value):
+		jumbotron_size = value
+		%DisplayMesh.scale = Vector3(value, value, value)
+
+@export_range(0.0, 2.0, 0.1) var jumbotron_brightness := 0.3:
+	set(value):
+		jumbotron_brightness = value
+		%DisplayMesh.material_override.set_shader_parameter("brightness", value)
+
+@export_range(0.0, 2.0, 0.1) var jumbotron_contrast := 1.2:
+	set(value):
+		jumbotron_contrast = value
+		%DisplayMesh.material_override.set_shader_parameter("contrast", value)
+
 @export var solid_background_color := Color.BLACK:
 	set(value):
 		%WorldEnvironment.environment.background_color = value
@@ -111,6 +131,10 @@ func init(p_main: M8SceneDisplay, load_parameters:=true) -> void:
 				1:
 					%DisplayMesh.visible=true
 		)
+		main.menu_scene.add_export_var("jumbotron_size")
+		main.menu_scene.add_export_var("jumbotron_brightness")
+		main.menu_scene.add_export_var("jumbotron_contrast")
+		main.menu_scene.add_export_var("jumbotron_distortion_amount")
 
 		main.menu_scene.add_section("Background")
 		main.menu_scene.add_option("background_mode", 0, [

@@ -96,15 +96,16 @@ noise = SubResource("FastNoiseLite_uwqla")
 render_priority = 0
 shader = ExtResource("5_t84je")
 shader_parameter/emission_amount = 1.0
-shader_parameter/curvature_amount_x = -22.575
-shader_parameter/curvature_amount_y = -14.1
+shader_parameter/curvature_amount_x = -22.0
+shader_parameter/curvature_amount_y = -14.0
 shader_parameter/curvature_ramp = 2.0
 shader_parameter/edge_darken = 0.0
 shader_parameter/edge_burn = 0.0
 shader_parameter/edge_burn_ramp = 0.0
 shader_parameter/distort_amount = 3.0
 shader_parameter/distort_offset = Vector2(0, 0)
-shader_parameter/brightness = -0.25
+shader_parameter/brightness = 0.3
+shader_parameter/contrast = 1.1
 shader_parameter/distort_texture = SubResource("NoiseTexture2D_6kjnt")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_rbhh0"]
@@ -225,7 +226,7 @@ draw_pass_1 = SubResource("QuadMesh_5vrwp")
 
 [node name="DisplayMesh" type="MeshInstance3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(0.745, 0, 0, 0, -3.2565e-08, -0.745, 0, 0.745, -3.2565e-08, 0, 0, -20)
+transform = Transform3D(0.75, 0, 0, 0, -3.27835e-08, -0.75, 0, 0.75, -3.27835e-08, 0, 0, -20)
 visible = false
 material_override = SubResource("ShaderMaterial_nx6w6")
 mesh = SubResource("PlaneMesh_rbhh0")

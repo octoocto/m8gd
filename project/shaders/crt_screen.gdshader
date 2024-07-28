@@ -14,7 +14,8 @@ uniform float edge_burn_ramp = 10.0;
 uniform float distort_amount = 1.0;
 uniform vec2 distort_offset = vec2(0);
 
-uniform float brightness = 0.0;
+uniform float brightness: hint_range(0.0, 2.0) = 1.0;
+uniform float contrast: hint_range(0.0, 2.0) = 1.0;
 
 uniform sampler2D tex: source_color, filter_linear, repeat_disable;
 uniform sampler2D noise_texture: source_color, filter_nearest;
@@ -28,7 +29,9 @@ void vertex() {
 
 void fragment() {
 	vec2 distort_uv = vec2(texture(distort_texture, vec2(-TIME * 0.1, UV.y - TIME * 0.7)).x * 0.005, 0.0) * distort_amount + distort_offset;
-	ALBEDO = clamp((texture(tex, UV + distort_uv).rgb + brightness) * 1.0, 0.0, 1.0);
+	ALBEDO = texture(tex, UV + distort_uv).rgb;
+	ALBEDO = mix(vec3(0.0), ALBEDO, brightness);
+	ALBEDO = mix(vec3(0.5), ALBEDO, contrast);
 
 	ALBEDO -= pow(abs(UV.x - 0.5), 7) * edge_darken;
 	ALBEDO -= pow(abs(UV.y - 0.5), 6) * edge_darken;
@@ -37,6 +40,8 @@ void fragment() {
 	ALBEDO -= pow(abs(UV.y - 0.5) * 2.0, edge_burn_ramp) * edge_burn;
 
 	ALBEDO *= texture(noise_texture, UV).rgb;
+	
+	ALBEDO = clamp(ALBEDO, 0.0, 1.0);
 
 	EMISSION = ALBEDO * emission_amount;
 
