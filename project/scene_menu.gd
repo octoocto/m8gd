@@ -76,8 +76,11 @@ func init_profile(p_scene: M8Scene, profile:=DEFAULT_PROFILE) -> void:
 ##
 func add_export_var(property: String) -> void:
 
-	var regex := RegEx.new()
-	regex.compile("^-?\\d+,-?\\d+$") # match "#,#" export_range patterns
+	var regex_int_range := RegEx.new()
+	var regex_float_range := RegEx.new()
+
+	regex_int_range.compile("^-?\\d+,-?\\d+$") # match "#,#" export_range patterns
+	regex_float_range.compile("^-?\\d+,-?\\d+,-?\\d+[.]?\\d*$") # match "#,#,#" export_range patterns
 
 	# add menu items
 	var export_vars := current_scene.get_export_vars()
@@ -90,29 +93,53 @@ func add_export_var(property: String) -> void:
 			push_scene_var_bool(property, default, func(toggle_mode: bool) -> void:
 				current_scene.set(property, toggle_mode)
 			)
+			current_scene.set(property, config_get_property(property, default))
+			break
+
+		if v.hint_string == "float":
+			var default: float = current_scene.get(property)
+			push_scene_var_slider(property, default, 0.0, 1.0, 0.01, func(value: float) -> void:
+				current_scene.set(property, value)
+			)
+			current_scene.set(property, config_get_property(property, default))
 			break
 
 		if v.hint_string == "Color":
 			var default: Color = current_scene.get(property)
 			push_scene_var_color(property, default, func(color: Color) -> void:
-				current_scene.set(property, color))
+				current_scene.set(property, color)
+			)
+			current_scene.set(property, config_get_property(property, default))
 			break
 
-		if v.hint_string == "float":
-			var default: float = current_scene.get(property)
-			push_scene_var_slider(property, default, func(value: float) -> void:
-				current_scene.set(property, value)
+		if v.hint_string == "Vector2i":
+			var default: Vector2i = current_scene.get(property)
+			push_setting_vec2i(property, default, func(vec: Vector2i) -> void:
+				current_scene.set(property, vec)
 			)
+			current_scene.set(property, config_get_property(property, default))
 			break
 
 		# @export_range() variables
-		if regex.search(v.hint_string):
+		if regex_int_range.search(v.hint_string):
 			var range_min := int(v.hint_string.split(",")[0])
 			var range_max := int(v.hint_string.split(",")[1])
 			var default: int = current_scene.get(property)
 			push_scene_var_int_slider(property, default, range_min, range_max, func(value: float) -> void:
 				current_scene.set(property, value)
 			)
+			current_scene.set(property, config_get_property(property, default))
+			break
+
+		if regex_float_range.search(v.hint_string):
+			var range_min := float(v.hint_string.split(",")[0])
+			var range_max := float(v.hint_string.split(",")[1])
+			var step := float(v.hint_string.split(",")[2])
+			var default: int = current_scene.get(property)
+			push_scene_var_slider(property, default, range_min, range_max, step, func(value: float) -> void:
+				current_scene.set(property, value)
+			)
+			current_scene.set(property, config_get_property(property, default))
 			break
 
 		printerr("scene: unrecognized export var type: %s" % v.hint_string)
@@ -184,9 +211,9 @@ func push_scene_var_color(setting: String, default: Color, fn: Callable) -> void
 			cont.modulate.a=1.0 if editable else 0.5
 	)
 
-func push_scene_var_slider(setting: String, default: float, fn: Callable) -> void:
+func push_scene_var_slider(setting: String, default: float, range_min: float, range_max: float, step: float, fn: Callable) -> void:
 	var label := _label(setting)
-	var slider := _slider(setting, default, 0.0, 1.0, 0.01, fn)
+	var slider := _slider(setting, default, range_min, range_max, step, fn)
 	var value_label := _slider_label(slider, "%.2f")
 	var cont := push_param(label, value_label, slider)
 	setting_editable.connect(func(p_setting: String, editable: bool) -> void:
@@ -199,6 +226,15 @@ func push_scene_var_int_slider(setting: String, default: int, range_min: int, ra
 	var slider := _int_slider(setting, default, range_min, range_max, fn)
 	var value_label := _slider_label(slider, "%d")
 	var cont := push_param(label, value_label, slider)
+	setting_editable.connect(func(p_setting: String, editable: bool) -> void:
+		if p_setting == setting and is_instance_valid(cont):
+			cont.modulate.a=1.0 if editable else 0.5
+	)
+
+func push_setting_vec2i(setting: String, default: Vector2i, fn: Callable) -> void:
+	var label := _label(setting)
+	var hbox := _vec2i(setting, default, fn)
+	var cont := push_param(label, _spacer(), hbox)
 	setting_editable.connect(func(p_setting: String, editable: bool) -> void:
 		if p_setting == setting and is_instance_valid(cont):
 			cont.modulate.a=1.0 if editable else 0.5
@@ -336,6 +372,49 @@ func _int_slider(setting: String, default: int, range_min: int, range_max: int, 
 	)
 
 	return slider
+
+func _vec2i(setting: String, default: Vector2i, fn: Callable) -> HBoxContainer:
+	var hbox := HBoxContainer.new()
+	var spin_x := SpinBox.new()
+	var spin_y := SpinBox.new()
+	hbox.add_child(spin_x)
+	hbox.add_child(spin_y)
+
+	spin_x.value_changed.connect(func(value: float) -> void:
+		var vec2i: Vector2i=config_get_property(setting, default)
+		vec2i.x=int(value)
+		config_set_property(setting, vec2i)
+		fn.call(vec2i)
+	)
+	spin_x.min_value = -3000
+	spin_x.max_value = 3000
+	spin_x.allow_lesser = true
+	spin_x.allow_greater = true
+	spin_x.select_all_on_focus = true
+	spin_x.value = config_get_property(setting, default).x
+
+	spin_y.value_changed.connect(func(value: float) -> void:
+		var vec2i: Vector2i=config_get_property(setting, default)
+		vec2i.y=int(value)
+		config_set_property(setting, vec2i)
+		fn.call(vec2i)
+	)
+	spin_y.min_value = -3000
+	spin_y.max_value = 3000
+	spin_y.allow_lesser = true
+	spin_y.allow_greater = true
+	spin_y.select_all_on_focus = true
+	spin_y.value = config_get_property(setting, default).y
+
+	setting_editable.connect(func(p_setting: String, editable: bool) -> void:
+		if p_setting == setting:
+			if is_instance_valid(spin_x):
+				spin_x.editable=editable
+			if is_instance_valid(spin_y):
+				spin_y.editable=editable
+	)
+
+	return hbox
 
 func _option(setting: String, default: int, items: Array, fn: Callable) -> OptionButton:
 	var option := OptionButton.new()

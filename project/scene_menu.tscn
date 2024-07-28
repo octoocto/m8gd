@@ -20,6 +20,7 @@ theme_override_constants/separation = 8
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
 custom_minimum_size = Vector2(320, 320)
 layout_mode = 2
+mouse_filter = 2
 horizontal_scroll_mode = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/ScrollContainer"]

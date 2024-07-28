@@ -70,12 +70,16 @@ func load_media_to_texture_rect(path: String, vsp: VideoStreamPlayer=null) -> Te
 			var image := Image.load_from_file(path)
 			return ImageTexture.create_from_image(image)
 		"ogv":
-			print("scene: loading video")
-			vsp.stream = load(path)
-			vsp.play()
-			return vsp.get_video_texture()
+			if is_instance_valid(vsp):
+				print("scene: loading video")
+				vsp.stream = load(path)
+				vsp.play()
+				return vsp.get_video_texture()
 
 	return null
+
+func get_setting(setting: String) -> Variant:
+	return main.menu_scene.config_get_property(setting)
 
 # func update_m8_color_samples():
 #	 if main.m8_display_viewport != null:
