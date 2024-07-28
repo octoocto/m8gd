@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scenes/floating_scene.gd" id="1_ufbfg"]
 [ext_resource type="Texture2D" uid="uid://d01h4xbn66tpi" path="res://assets/texture_07.png" id="2_yqhq4"]
 [ext_resource type="Shader" path="res://shaders/device_screen.gdshader" id="3_o28i3"]
-[ext_resource type="Texture2D" uid="uid://bcsoiuuis4yx2" path="res://assets/m8_screen_placeholder.png" id="4_0o31u"]
+[ext_resource type="Texture2D" uid="uid://ras5y3yqijkx" path="res://assets/m8_screen_placeholder.png" id="4_0o31u"]
 [ext_resource type="PackedScene" uid="uid://bckroenwlecqv" path="res://humanized_camera_3d.tscn" id="4_8iar1"]
 [ext_resource type="PackedScene" uid="uid://budu6000msy4d" path="res://device_model.tscn" id="4_oaihv"]
 [ext_resource type="PackedScene" uid="uid://263mog4cxgwr" path="res://audio_spectrum.tscn" id="5_ryr46"]
