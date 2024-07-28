@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://f2tvhcv8kiuu"]
+[gd_scene load_steps=42 format=3 uid="uid://f2tvhcv8kiuu"]
 
 [ext_resource type="Script" path="res://scenes/surface_scene.gd" id="1_87ai1"]
 [ext_resource type="Shader" path="res://shaders/device_screen.gdshader" id="3_bp567"]
@@ -6,6 +6,8 @@
 [ext_resource type="Texture2D" uid="uid://bcsoiuuis4yx2" path="res://assets/m8_screen_placeholder.png" id="4_3r2cc"]
 [ext_resource type="PackedScene" uid="uid://bckroenwlecqv" path="res://humanized_camera_3d.tscn" id="5_jy4yn"]
 [ext_resource type="Texture2D" uid="uid://sw144ksus5yx" path="res://assets/succulent_plants/textures/taniku01-tex_baseColor.png" id="6_uda7r"]
+[ext_resource type="PackedScene" uid="uid://ceqlf8kgdxjeb" path="res://grass_area.tscn" id="8_srvcg"]
+[ext_resource type="Shader" path="res://grass_area.gdshader" id="9_uucvv"]
 
 [sub_resource type="Environment" id="Environment_ayqpk"]
 tonemap_mode = 2
@@ -181,7 +183,8 @@ noise = SubResource("FastNoiseLite_5i8xb")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dtr6l"]
 albedo_color = Color(0, 0, 0, 1)
-roughness = 0.8
+metallic_specular = 0.25
+roughness = 0.43
 normal_enabled = true
 normal_scale = 2.0
 normal_texture = SubResource("NoiseTexture2D_80gxc")
@@ -189,6 +192,90 @@ uv1_triplanar = true
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_4c1u1"]
 size = Vector2(200, 200)
+
+[sub_resource type="Gradient" id="Gradient_ful20"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0, 0.401914, 1)
+colors = PackedColorArray(0, 0.66, 0.363, 1, 0.0042, 0.21, 0.16884, 1, 0, 0.0158333, 0.05, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_o6olw"]
+resource_local_to_scene = true
+gradient = SubResource("Gradient_ful20")
+
+[sub_resource type="Gradient" id="Gradient_5offb"]
+colors = PackedColorArray(0.25, 0.25, 0.25, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_s73vr"]
+noise_type = 3
+frequency = 0.0161
+offset = Vector3(-351.18, 0, 0)
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_b4fil"]
+seamless = true
+normalize = false
+color_ramp = SubResource("Gradient_5offb")
+noise = SubResource("FastNoiseLite_s73vr")
+
+[sub_resource type="Gradient" id="Gradient_bnue4"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.464968)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_1ikkl"]
+gradient = SubResource("Gradient_bnue4")
+width = 128
+height = 128
+fill = 2
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.6, 0.5)
+metadata/_snap_enabled = true
+
+[sub_resource type="Gradient" id="Gradient_mmq47"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_3605e"]
+noise_type = 3
+frequency = 0.004
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_otixg"]
+resource_local_to_scene = true
+seamless = true
+color_ramp = SubResource("Gradient_mmq47")
+noise = SubResource("FastNoiseLite_3605e")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wnfn1"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("9_uucvv")
+shader_parameter/uv_offset = -0.1
+shader_parameter/heightmap_offset = Vector2(40.11, 40.015)
+shader_parameter/heightmap_scale = Vector2(1.65, 1.125)
+shader_parameter/heightmap_strength = 1.7
+shader_parameter/wind_dir = Vector2(1, 1)
+shader_parameter/wind_strength = 2.0
+shader_parameter/wind_speed = 10.0
+shader_parameter/proximity_fade_distance = 0.5
+shader_parameter/distance_fade_min = 0.0
+shader_parameter/distance_fade_max = 0.0
+shader_parameter/color_ramp = SubResource("GradientTexture1D_o6olw")
+shader_parameter/wind_noise = SubResource("NoiseTexture2D_otixg")
+shader_parameter/heightmap = SubResource("NoiseTexture2D_b4fil")
+shader_parameter/heightmap_mask = SubResource("GradientTexture2D_1ikkl")
+
+[sub_resource type="Curve" id="Curve_y7obg"]
+_data = [Vector2(0, 0), 0.0, 5.75705, 0, 0, Vector2(0.485294, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -0.0962715, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e6yxm"]
+billboard_mode = 2
+grow_amount = -3.725
+
+[sub_resource type="RibbonTrailMesh" id="RibbonTrailMesh_xwsvd"]
+material = SubResource("StandardMaterial3D_e6yxm")
+shape = 0
+size = 0.25
+sections = 3
+section_length = 0.8
+section_segments = 1
+curve = SubResource("Curve_y7obg")
 
 [node name="M8Scene" type="Node3D"]
 script = ExtResource("1_87ai1")
@@ -285,5 +372,13 @@ skeleton = NodePath("")
 unique_name_in_owner = true
 material_override = SubResource("StandardMaterial3D_dtr6l")
 mesh = SubResource("PlaneMesh_4c1u1")
+
+[node name="GrassArea" parent="." instance=ExtResource("8_srvcg")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5, 0)
+material_override = SubResource("ShaderMaterial_wnfn1")
+extents = Vector3(20, 0, 20)
+grass_mesh = SubResource("RibbonTrailMesh_xwsvd")
+num_meshes = 32000
 
 [editable path="Camera3D"]

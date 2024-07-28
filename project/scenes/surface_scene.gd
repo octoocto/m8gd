@@ -13,6 +13,11 @@ extends M8Scene
 		surface_color = value
 		%SurfaceMesh.material_override.albedo_color = value
 
+@export var enable_grass := false:
+	set(value):
+		enable_grass = value
+		%GrassArea.visible = value
+
 @export var enable_plant := true:
 	set(value):
 		enable_plant = value

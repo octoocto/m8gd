@@ -1,19 +1,21 @@
 shader_type spatial;
 //render_mode unshaded;
 //render_mode depth_draw_always;
-//render_mode depth_draw_always;
+render_mode depth_draw_always;
 render_mode diffuse_lambert_wrap;
 
 uniform sampler2D color_ramp: hint_default_white, source_color, repeat_disable;
 uniform sampler2D wind_noise: hint_default_white, repeat_enable;
 uniform float uv_offset = 0;
 uniform vec2 heightmap_offset = vec2(0);
+uniform vec2 heightmap_scale = vec2(1);
 uniform float heightmap_strength = 1.0;
 uniform vec2 wind_dir = vec2(1.0, 1.0);
 uniform float wind_strength = 4.0;
 uniform float wind_speed = 10;
 
 uniform sampler2D heightmap: hint_default_black, repeat_enable;
+uniform sampler2D heightmap_mask: hint_default_white, repeat_disable;
 
 uniform sampler2D depth_texture: hint_depth_texture, repeat_enable;
 uniform float proximity_fade_distance = 0.0;
@@ -41,19 +43,15 @@ void vertex() {
 	MODELVIEW_MATRIX = VIEW_MATRIX * mat4(vec4(normalize(cross(vec3(0.0, 1.0, 0.0), INV_VIEW_MATRIX[2].xyz)), 0.0), vec4(0.0, 1.0, 0.0, 0.0), vec4(normalize(cross(INV_VIEW_MATRIX[0].xyz, vec3(0.0, 1.0, 0.0))), 0.0), MODEL_MATRIX[3]);
 
 	VERTEX += wind_bump;
-	VERTEX.y += -0.5 + (texture(heightmap, (w_vert.xz + heightmap_offset) / 80.0).r * heightmap_strength) * 2.0;
+	vec2 heightmap_uv = ((w_vert.xz * heightmap_scale) + heightmap_offset) / 80.0;
+	float h = texture(heightmap, heightmap_uv).r * texture(heightmap_mask, heightmap_uv).r * heightmap_strength;
+	VERTEX.y += -0.5 + h;
 }
 
 void fragment() {
 	vec3 w_uv = (INV_VIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	w_uv.y = 0.5 - w_uv.y / 4.0;
 	//ALBEDO = texture(color_ramp, vec2(w_uv.y, 0)).rgb + (texture(wind_noise, w_uv.xy * 50.0).rgb - 0.5) * 0.02;
-
-	// proximity fade code
-	//float depth_tex = textureLod(depth_texture, SCREEN_UV, 0.0).r;
-	//vec4 world_pos = INV_PROJECTION_MATRIX * vec4(SCREEN_UV * 2.0-1.0, depth_tex, 1.0);
-	//world_pos.xyz /= world_pos.w;
-	//ALPHA *= clamp(1.0 - smoothstep(world_pos.z + proximity_fade_distance, world_pos.z, VERTEX.z), 0.0, 1.0);
 
 	// dither distance fade code
 	float fade_distance = length(VERTEX);
@@ -62,7 +60,16 @@ void fragment() {
 	if (fade < 0.001 || fade < fract(magic.z * fract(dot(FRAGCOORD.xy, magic.xy)))) {
 		discard;
 	}
-
+	
+	// proximity fade code
+	float depth_tex = textureLod(depth_texture, SCREEN_UV, 0.0).r;
+	vec4 world_pos = INV_PROJECTION_MATRIX * vec4(SCREEN_UV * 2.0-1.0, depth_tex, 1.0);
+	world_pos.xyz /= world_pos.w;
+	float prox_fade = clamp(1.0 - smoothstep(world_pos.z + proximity_fade_distance, world_pos.z, VERTEX.z), 0.0, 1.0);
+	if (prox_fade < 0.001 || prox_fade < fract(magic.z * fract(dot(FRAGCOORD.xy, magic.xy)))) {
+		discard;
+	}
+	
 	ALBEDO = texture(color_ramp, vec2(w_uv.y + uv_offset, 0)).rgb;
 
 	ROUGHNESS = 1.0;
