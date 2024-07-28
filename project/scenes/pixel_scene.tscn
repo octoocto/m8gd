@@ -1,0 +1,290 @@
+[gd_scene load_steps=28 format=3 uid="uid://bu28kwqtn6cdg"]
+
+[ext_resource type="Script" path="res://scenes/pixel_scene.gd" id="1_4jmsl"]
+[ext_resource type="Texture2D" uid="uid://ras5y3yqijkx" path="res://assets/m8_screen_placeholder.png" id="2_0qctg"]
+[ext_resource type="PackedScene" uid="uid://263mog4cxgwr" path="res://audio_spectrum.tscn" id="3_6dnic"]
+[ext_resource type="Shader" path="res://shaders/panel_blur.gdshader" id="4_7e2xd"]
+[ext_resource type="Shader" path="res://shaders/screen_blur.gdshader" id="4_rkdfl"]
+
+[sub_resource type="Gradient" id="Gradient_2ccln"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_np6uh"]
+frequency = 1.0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ar7yb"]
+width = 2048
+height = 2048
+invert = true
+color_ramp = SubResource("Gradient_2ccln")
+noise = SubResource("FastNoiseLite_np6uh")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rqrn1"]
+shader = ExtResource("4_rkdfl")
+shader_parameter/blur_amount = 3.5
+shader_parameter/tint_color = Color(1, 1, 1, 1)
+shader_parameter/tint_amount = 1.0
+shader_parameter/brightness = 0.9
+shader_parameter/noise_strength = 0.01
+shader_parameter/noise_texture = SubResource("NoiseTexture2D_ar7yb")
+
+[sub_resource type="Gradient" id="Gradient_bpb5k"]
+colors = PackedColorArray(1, 1, 1, 0.733333, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_cr42f"]
+gradient = SubResource("Gradient_bpb5k")
+
+[sub_resource type="Curve" id="Curve_bkq7t"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 1, Vector2(1, 1), 0.0, 0.0, 1, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_1wmgg"]
+_data = [Vector2(0, 1), 11.875, 0.0435278, 1, 0, Vector2(1, 0), -2.86281, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_5tacs"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 1, Vector2(1, 1), 0.0, 0.0, 1, 0]
+point_count = 2
+
+[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_nxmid"]
+curve_x = SubResource("Curve_bkq7t")
+curve_y = SubResource("Curve_1wmgg")
+curve_z = SubResource("Curve_5tacs")
+
+[sub_resource type="Curve" id="Curve_3tapi"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 1.4, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_n1tqi"]
+curve = SubResource("Curve_3tapi")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_7s7jc"]
+particle_flag_align_y = true
+particle_flag_disable_z = true
+emission_shape_offset = Vector3(4, 0, 0)
+emission_shape = 3
+emission_box_extents = Vector3(1280, 0, 1)
+direction = Vector3(0.1, 1, 0)
+spread = 5.0
+initial_velocity_min = 100.0
+initial_velocity_max = 250.0
+gravity = Vector3(0, 0, 0)
+scale_curve = SubResource("CurveXYZTexture_nxmid")
+color_ramp = SubResource("GradientTexture1D_cr42f")
+turbulence_enabled = true
+turbulence_influence_min = 0.01
+turbulence_influence_max = 0.01
+turbulence_influence_over_life = SubResource("CurveTexture_n1tqi")
+
+[sub_resource type="Gradient" id="Gradient_2grph"]
+offsets = PackedFloat32Array(0, 0.9, 0.99)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 0.25, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_2g3t7"]
+gradient = SubResource("Gradient_2grph")
+width = 1
+fill_to = Vector2(0, 1)
+
+[sub_resource type="Gradient" id="Gradient_6ry5x"]
+offsets = PackedFloat32Array(0, 0.397436, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_qqlib"]
+gradient = SubResource("Gradient_6ry5x")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_aspjq"]
+particle_flag_disable_z = true
+emission_shape_offset = Vector3(4, 0, 0)
+emission_shape = 3
+emission_box_extents = Vector3(320, 240, 1)
+direction = Vector3(1, 1, 0)
+spread = 180.0
+initial_velocity_max = 25.0
+gravity = Vector3(0, 0, 0)
+color_ramp = SubResource("GradientTexture1D_qqlib")
+turbulence_enabled = true
+turbulence_influence_min = 0.01
+turbulence_influence_max = 0.01
+turbulence_influence_over_life = SubResource("CurveTexture_n1tqi")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_y1b4h"]
+shader = ExtResource("4_7e2xd")
+shader_parameter/blur_amount = 5.231
+shader_parameter/panel_color = Color(0, 0, 0, 1)
+shader_parameter/panel_opacity = 1.0
+shader_parameter/noise_strength = 0.005
+shader_parameter/noise_texture = SubResource("NoiseTexture2D_ar7yb")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_410rj"]
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+corner_detail = 6
+anti_aliasing = false
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k66bi"]
+atlas = ExtResource("2_0qctg")
+region = Rect2(0, 0, 320, 240)
+
+[sub_resource type="Environment" id="Environment_nwhd1"]
+ambient_light_source = 1
+reflected_light_source = 1
+glow_enabled = true
+glow_levels/1 = 1.0
+glow_levels/3 = 0.25
+glow_levels/5 = 0.0
+glow_bloom = 0.8
+glow_blend_mode = 4
+
+[node name="M8Scene" type="Node3D"]
+script = ExtResource("1_4jmsl")
+m8_scene_name = "Pixel Art"
+metadata/_edit_vertical_guides_ = [640.0]
+metadata/_edit_horizontal_guides_ = [480.0]
+
+[node name="BGVideoStreamPlayer" type="VideoStreamPlayer" parent="."]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+volume_db = -80.0
+expand = true
+loop = true
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+unique_name_in_owner = true
+size_flags_horizontal = 2
+size_flags_vertical = 2
+
+[node name="Control" type="Control" parent="CenterContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="CenterContainer/Control"]
+unique_name_in_owner = true
+texture_filter = 1
+layout_mode = 1
+offset_right = 640.0
+offset_bottom = 480.0
+scale = Vector2(2, 2)
+
+[node name="SubViewport" type="SubViewport" parent="CenterContainer/Control/SubViewportContainer"]
+unique_name_in_owner = true
+disable_3d = true
+transparent_bg = true
+handle_input_locally = false
+snap_2d_transforms_to_pixel = true
+snap_2d_vertices_to_pixel = true
+canvas_item_default_texture_filter = 0
+size = Vector2i(640, 480)
+render_target_update_mode = 4
+
+[node name="BGColorRect" type="ColorRect" parent="CenterContainer/Control/SubViewportContainer/SubViewport"]
+unique_name_in_owner = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BGTextureRect" type="TextureRect" parent="CenterContainer/Control/SubViewportContainer/SubViewport"]
+unique_name_in_owner = true
+texture_filter = 2
+clip_contents = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+expand_mode = 1
+stretch_mode = 6
+
+[node name="BGShader" type="ColorRect" parent="CenterContainer/Control/SubViewportContainer/SubViewport"]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_rqrn1")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="AudioSpectrum" parent="CenterContainer/Control/SubViewportContainer/SubViewport" instance=ExtResource("3_6dnic")]
+unique_name_in_owner = true
+visible = false
+position = Vector2(320, 240)
+spectrum_res = 240
+spectrum_freq_min = 10000.0
+spectrum_freq_max = 800.0
+spectrum_height = 640.0
+spectrum_smoothing = 0.6
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="CenterContainer/Control/SubViewportContainer/SubViewport"]
+unique_name_in_owner = true
+visible = false
+modulate = Color(1, 0.9, 0.917, 1)
+position = Vector2(0, -32)
+amount = 128
+amount_ratio = 0.1
+process_material = SubResource("ParticleProcessMaterial_7s7jc")
+texture = SubResource("GradientTexture2D_2g3t7")
+lifetime = 5.0
+randomness = 0.5
+fixed_fps = 60
+
+[node name="GPUParticles2D2" type="GPUParticles2D" parent="CenterContainer/Control/SubViewportContainer/SubViewport"]
+unique_name_in_owner = true
+visible = false
+position = Vector2(320, 240)
+amount = 32
+process_material = SubResource("ParticleProcessMaterial_aspjq")
+lifetime = 10.0
+randomness = 0.5
+fixed_fps = 60
+trail_lifetime = 0.5
+trail_sections = 2
+trail_section_subdivisions = 1
+
+[node name="BackBufferCopy" type="BackBufferCopy" parent="CenterContainer/Control/SubViewportContainer/SubViewport"]
+position = Vector2(320, 240)
+copy_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer/Control/SubViewportContainer/SubViewport"]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_y1b4h")
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -176.0
+offset_top = -136.0
+offset_right = 176.0
+offset_bottom = 136.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_410rj")
+
+[node name="DisplayTextureRect" type="TextureRect" parent="CenterContainer/Control/SubViewportContainer/SubViewport/PanelContainer"]
+unique_name_in_owner = true
+texture_filter = 1
+custom_minimum_size = Vector2(320, 240)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = SubResource("AtlasTexture_k66bi")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="CenterContainer/Control/SubViewportContainer/SubViewport"]
+environment = SubResource("Environment_nwhd1")
