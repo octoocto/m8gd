@@ -832,6 +832,8 @@ func update_device_colors() -> void:
 
 		_model().highlight_opacity = %SliderHL_Opacity.value
 
+		_model("%Body").material_override.albedo_color = config.model_color_body
+
 		# update model keycap and highlight colors
 		for arr: Array in [
 			[_model("%Keycap_Up"), config.hl_color_directional, config.model_color_key_up],
