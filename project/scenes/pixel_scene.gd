@@ -17,8 +17,7 @@ extends M8Scene
 	set(value):
 		panel_integer_scale = value
 		if is_inside_tree():
-			var display_size := main.m8_client.get_display_texture().get_size()
-			%DisplayTextureRect.custom_minimum_size = display_size * value
+			update_panel_size()
 
 @export var panel_offset: Vector2i = Vector2i.ZERO:
 	set(value):
@@ -81,7 +80,7 @@ extends M8Scene
 
 @onready var panel: PanelContainer = %PanelContainer
 
-func init(p_main: M8SceneDisplay, load_parameters:=true) -> void:
+func init(p_main: M8SceneDisplay, load_parameters := true) -> void:
 	super(p_main, load_parameters)
 
 	%AudioSpectrum.init(main)
@@ -123,18 +122,18 @@ func init(p_main: M8SceneDisplay, load_parameters:=true) -> void:
 		], func(index: int) -> void:
 			match index:
 				0:
-					%BGTextureRect.visible=false
+					%BGTextureRect.visible = false
 				1:
-					%BGTextureRect.visible=true
-					%BGTextureRect.texture=main.m8_client.get_display_texture()
+					%BGTextureRect.visible = true
+					%BGTextureRect.texture = main.m8_client.get_display_texture()
 				2:
-					%BGTextureRect.visible=true
-					%BGTextureRect.texture=load_media_to_texture_rect(get_setting("background_file"), %BGVideoStreamPlayer)
+					%BGTextureRect.visible = true
+					%BGTextureRect.texture = load_media_to_texture_rect(get_setting("background_file"), %BGVideoStreamPlayer)
 		)
 
 		main.menu_scene.add_file("background_file", "", func(path: String) -> void:
 			if get_setting("background_mode") == 2:
-				%BGTextureRect.texture=load_media_to_texture_rect(path, %BGVideoStreamPlayer)
+				%BGTextureRect.texture = load_media_to_texture_rect(path, %BGVideoStreamPlayer)
 		)
 
 		main.menu_scene.add_export_var("background_brightness")
@@ -142,6 +141,11 @@ func init(p_main: M8SceneDisplay, load_parameters:=true) -> void:
 		main.menu_scene.add_export_var("background_blur_amount")
 
 	update_viewport_size()
+	update_panel_size()
+
+	main.m8_system_info_received.connect(func(_hw: String, _fw: String) -> void:
+		update_panel_size()
+	)
 
 func get_auto_integer_scale() -> int:
 
@@ -170,6 +174,10 @@ func update_viewport_size() -> void:
 	%GPUParticles2D2.process_material.emission_box_extents.x = viewport_size.x / 2.0
 	%GPUParticles2D2.process_material.emission_box_extents.y = viewport_size.y / 2.0
 
+func update_panel_size() -> void:
+	var display_size := main.m8_client.get_display_texture().get_size()
+	%DisplayTextureRect.custom_minimum_size = display_size * panel_integer_scale
+
 func _process(_delta: float) -> void:
 
 	# RenderingServer.set_default_clear_color(main.m8_client.get_background_color())
@@ -189,7 +197,7 @@ func _process(_delta: float) -> void:
 	%GPUParticles2D2.speed_scale = 0.5 + main.audio_get_level() * 1.5
 	%GPUParticles2D2.amount_ratio = 0.5 + main.audio_get_level() * 0.5
 
-	%AudioSpectrum.modulate.a = pow(main.audio_get_level(), 3)
+	# %AudioSpectrum.modulate.a = pow(main.audio_get_level(), 3)
 
 	# if force_integer_scale == 0:
 	# 	%TextureRect.custom_minimum_size = %TextureRect.texture.get_size() * get_auto_integer_scale();

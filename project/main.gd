@@ -14,6 +14,7 @@ const M8_ACTIONS := [
 	"key_shift", "key_play", "key_option", "key_edit"]
 
 signal m8_scene_changed(scene_path: String, scene: M8Scene)
+signal m8_system_info_received(hardware: String, firmware: String)
 signal m8_connected
 signal m8_disconnected
 
@@ -403,6 +404,7 @@ func m8_audio_check() -> void:
 
 func on_m8_system_info(hardware: String, firmware: String) -> void:
 	%LabelVersion.text = "%s %s" % [hardware, firmware]
+	m8_system_info_received.emit(hardware, firmware)
 
 func on_m8_font_changed(model: String, font: int) -> void:
 	# switch between small/big fonts (Model_01)
@@ -468,11 +470,12 @@ func m8_is_key_pressed(keycode: int) -> bool:
 	return m8_client.is_key_pressed(keycode)
 
 func m8_get_color_palette() -> Array:
-	return [
-		m8_client.get_pixel(0, 0),
-		m8_client.get_pixel(10, 35),
-		m8_client.get_pixel(279, 46),
-	]
+	return m8_client.get_colors()
+	# return [
+	# 	m8_client.get_pixel(0, 0),
+	# 	m8_client.get_pixel(10, 35),
+	# 	m8_client.get_pixel(279, 46),
+	# ]
 
 func audio_get_level() -> float:
 	return audio_level
@@ -553,9 +556,11 @@ func _process(_delta: float) -> void:
 
 	var palette := m8_get_color_palette()
 
-	%Color_Palette1.color = palette[0]
-	%Color_Palette2.color = palette[1]
-	%Color_Palette3.color = palette[2]
+	if palette.size() < 16:
+		for i in range(16):
+			get_node("%%Color_Palette%d"% (i+1)).color = Color(0, 0, 0, 0)
+		for i in range(palette.size()):
+			get_node("%%Color_Palette%d"% (i+1)).color = palette[i]
 
 ##
 ## Get the keybits from inputs received on this system. (Not the connected M8).
