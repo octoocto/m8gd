@@ -42,6 +42,15 @@ void DisplayBuffer::draw_rect(int x, int y, int w, int h, uint8_t r, uint8_t g, 
 		bg_b = b;
 	}
 
+	if (
+		(w == 24 && h == 7) ||
+		(w == 30 && h == 9) ||
+		(w == 36 && h == 11) ||
+		(w == 45 && h == 13))
+	{
+		append_color(r, g, b);
+	}
+
 	for (int i = x; i < x + w && x < width; i++)
 	{
 		for (int j = y; j < y + h && y < height; j++)
@@ -85,6 +94,15 @@ void DisplayBuffer::draw_char(
 			}
 		}
 	}
+
+	// if (fg_r != 0x70 || fg_g != 0xB0 || fg_b != 0x08)
+	// {
+	// 	append_color(fg_r, fg_g, fg_b);
+	// }
+	// else
+	// {
+	// 	print("green size: %d, %d", x, y);
+	// }
 }
 
 void DisplayBuffer::draw_waveform(

@@ -128,10 +128,9 @@ public:
 	/// @param bigfont
 	void set_model(libm8::HardwareModel model, uint8_t fw_1, uint8_t fw_2, uint8_t fw_3, uint8_t font);
 
-	/// @brief Get the background color of the M8. This is updated when a
-	///        fullscreen rect is drawn.
-	/// @return the background color
-	Color get_background_color();
+	/// @brief Get the M8's theme colors.
+	/// @return An array of 13 colors
+	PackedColorArray get_theme_colors();
 
 	void set_background_alpha(float alpha);
 

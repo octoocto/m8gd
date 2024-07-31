@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <godot_cpp/classes/image_texture.hpp>
 #include <godot_cpp/classes/bit_map.hpp>
+#include "utilities.hpp"
 
 #define FONT_SHEET_COLS 16
 #define FONT_SHEET_ROWS 8
@@ -36,6 +37,8 @@ public:
 
 	uint8_t bg_alpha = 0xFF;
 
+	godot::PackedColorArray colors;
+
 	DisplayBuffer(int width, int height);
 	~DisplayBuffer();
 
@@ -57,6 +60,20 @@ public:
 		else
 		{
 			bytes[offset + 3] = 0xFF;
+		}
+	}
+
+	void append_color(uint8_t r, uint8_t g, uint8_t b)
+	{
+		if (colors.size() < 16)
+		{
+			godot::Color color = godot::Color::hex((uint32_t(r) << 24) | (uint32_t(g) << 16) | (uint32_t(b) << 8) | uint32_t(0xFF));
+			colors.append(color);
+			// if (!colors.has(color))
+			// {
+			// 	colors.append(color);
+			// 	// print("adding color: %02X%02X%02X", r, g, b);
+			// }
 		}
 	}
 

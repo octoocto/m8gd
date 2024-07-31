@@ -469,13 +469,8 @@ func m8_send_control(keys: int) -> void:
 func m8_is_key_pressed(keycode: int) -> bool:
 	return m8_client.is_key_pressed(keycode)
 
-func m8_get_color_palette() -> Array:
-	return m8_client.get_colors()
-	# return [
-	# 	m8_client.get_pixel(0, 0),
-	# 	m8_client.get_pixel(10, 35),
-	# 	m8_client.get_pixel(279, 46),
-	# ]
+func m8_get_theme_colors() -> PackedColorArray:
+	return m8_client.get_theme_colors()
 
 func audio_get_level() -> float:
 	return audio_level
@@ -527,6 +522,8 @@ func _physics_process(delta: float) -> void:
 
 	update_audio_analyzer()
 
+	var modulate_color := m8_client.get_theme_colors()[0]
+
 	# do shader parameter responses to audio
 
 	%CRTShader.material.set_shader_parameter("aberration", audio_level * visualizer_ca_amount)
@@ -554,7 +551,7 @@ func _process(_delta: float) -> void:
 
 	%LabelFPS.text = "%d" % Engine.get_frames_per_second()
 
-	var palette := m8_get_color_palette()
+	var palette := m8_get_theme_colors()
 
 	if palette.size() < 16:
 		for i in range(16):

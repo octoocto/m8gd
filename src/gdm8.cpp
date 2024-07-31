@@ -146,7 +146,7 @@ void M8GD::_bind_methods()
 
 	ClassDB::bind_method(D_METHOD("get_display_texture"), &M8GD::get_display_texture);
 
-	ClassDB::bind_method(D_METHOD("get_background_color"), &M8GD::get_background_color);
+	ClassDB::bind_method(D_METHOD("get_theme_colors"), &M8GD::get_theme_colors);
 	ClassDB::bind_method(D_METHOD("set_background_alpha"), &M8GD::set_background_alpha);
 	ClassDB::bind_method(D_METHOD("get_pixel"), &M8GD::get_pixel);
 
@@ -248,6 +248,8 @@ void M8GD::set_model(libm8::HardwareModel model,
 		display_buffer->font_offset_y = font_params.font_y_offset;
 		display_buffer->waveform_max = font_params.waveform_max;
 	}
+
+	display_buffer->colors.clear();
 }
 
 void M8GD::set_display_size(uint16_t width, uint16_t height)
@@ -298,13 +300,21 @@ Ref<ImageTexture> M8GD::get_display_texture()
 	return display_texture;
 }
 
-Color M8GD::get_background_color()
+PackedColorArray M8GD::get_theme_colors()
 {
-	return Color(
-		display_buffer->bg_r / 255.0,
-		display_buffer->bg_g / 255.0,
-		display_buffer->bg_b / 255.0,
-		1.0);
+	if (display_buffer->colors.size() < 13)
+	{
+		PackedColorArray colors;
+		colors.resize(13);
+		colors.fill(Color(1, 1, 1));
+		colors[0] = Color(
+			display_buffer->bg_r / 255.0,
+			display_buffer->bg_g / 255.0,
+			display_buffer->bg_b / 255.0,
+			1.0);
+		return colors;
+	}
+	return display_buffer->colors;
 }
 
 void M8GD::set_background_alpha(float a)

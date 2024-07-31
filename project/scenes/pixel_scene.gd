@@ -181,13 +181,14 @@ func update_panel_size() -> void:
 func _process(_delta: float) -> void:
 
 	# RenderingServer.set_default_clear_color(main.m8_client.get_background_color())
-	%BGColorRect.color = main.m8_client.get_background_color()
+	var bg_color: Color = main.m8_get_theme_colors()[0]
+	%BGColorRect.color = bg_color
 
-	var modulate_color := main.m8_client.get_background_color()
+	var modulate_color := bg_color
 	# modulate_color.v = 1.0
 	%BGShader.material.set_shader_parameter("tint_color", modulate_color)
 
-	%PanelContainer.material.set_shader_parameter("panel_color", main.m8_client.get_background_color())
+	%PanelContainer.material.set_shader_parameter("panel_color", bg_color)
 
 	%GPUParticles2D.modulate.a = 0.0 + pow(main.audio_get_level(), 2) * 1.0
 	%GPUParticles2D.amount_ratio = 0.1 + main.audio_get_level() * 0.9

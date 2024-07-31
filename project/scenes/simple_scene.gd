@@ -26,7 +26,7 @@ func get_auto_integer_scale() -> int:
 
 func _process(_delta: float) -> void:
 
-	RenderingServer.set_default_clear_color(main.m8_client.get_background_color())
+	RenderingServer.set_default_clear_color(main.m8_client.get_theme_colors()[0])
 
 	if force_integer_scale == 0:
 		%TextureRect.custom_minimum_size = %TextureRect.texture.get_size() * get_auto_integer_scale();
