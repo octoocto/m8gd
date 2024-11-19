@@ -16,9 +16,9 @@ float rand(vec2 co) {
 
 void fragment() {
 	COLOR = textureLod(SCREEN_TEXTURE, SCREEN_UV, blur_amount);
-	
+
 	COLOR.rgb = mix(COLOR.rgb, panel_color, panel_opacity);
-	
+
 	vec3 noise = texture(noise_texture, SCREEN_UV).rgb - vec3(0.5);
 	COLOR.rgb = mix(COLOR.rgb, COLOR.rgb + noise, noise_strength);
 }

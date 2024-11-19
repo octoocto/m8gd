@@ -149,33 +149,34 @@ func _populate_overlay_properties() -> void:
 			var propkey := _get_prop_key(overlay_target, propname)
 			var value: Variant = overlay_target.get(propname)
 			var hint: PropertyHint = prop.hint
+			var type: PropertyHint = prop.type
 			var hint_string: String = prop.hint_string
 
 			match hint:
 				PropertyHint.PROPERTY_HINT_NONE: # prop only has a type
-					match hint_string:
-						"Vector2i":
+					match type:
+						TYPE_VECTOR2I:
 							var node := MenuUtils.create_vec2i(propkey, propname, value, func(v: Vector2i) -> void:
 								overlay_target.set(propname, v)
 							)
 							%ParamContainer.add_child(node)
-						"bool":
+						TYPE_BOOL:
 							var node := MenuUtils.create_check(propkey, propname, value, func(v: bool) -> void:
 								overlay_target.set(propname, v)
 							)
 							%ParamContainer.add_child(node)
-						"int":
+						TYPE_INT:
 							var node := MenuUtils.create_spinbox(propkey, propname, "", value, 1.0, func(v: float) -> void:
 								overlay_target.set(propname, v)
 							)
 							%ParamContainer.add_child(node)
-						"float":
+						TYPE_FLOAT:
 							var node := MenuUtils.create_spinbox(propkey, propname, "", value, 0.1, func(v: float) -> void:
 								overlay_target.set(propname, v)
 							)
 							%ParamContainer.add_child(node)
 						var x:
-							assert(false, "Unrecognized property type when populating menu: %s" % x)
+							assert(false, "Unrecognized property type when populating menu: name=%s, hint=%s, hint_string=%s, %s" % [propname, hint, x, prop])
 				PropertyHint.PROPERTY_HINT_RANGE: # prop using @export_range
 					var split := hint_string.split(",")
 					var mn := int(split[0])

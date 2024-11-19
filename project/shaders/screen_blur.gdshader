@@ -27,7 +27,7 @@ vec2 uv_rotate(vec2 uv, vec2 pivot, float rotation) {
 
 void fragment() {
 	COLOR = textureLod(SCREEN_TEXTURE, SCREEN_UV, blur_amount);
-	
+
 	if(tint_amount > 0.0) {
 		vec3 desaturated = vec3(dot(COLOR.rgb, vec3(0.299, 0.587, 0.114)));
 		COLOR.rgb = mix(COLOR.rgb, desaturated * tint_color, tint_amount);

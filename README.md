@@ -18,7 +18,7 @@ This repository consists of the C++ library and GDExtension `libm8gd` that acts 
 - Scons (`python -m pip install scons`)
 - pkg-config
 - libserialport
-- [Godot 4.2.2-stable](https://godotengine.org/download/archive/4.2.2-stable/)
+- [Godot 4.3-stable](https://godotengine.org/download/archive/4.3-stable/)
 - a desktop environment
 
 If on Windows, a MSYS2/MinGW64 installation is recommended when compiling.
@@ -93,7 +93,7 @@ Click "Download and Install" to install the export templates. After it is finish
 
 ##### B. Download and Installing manually
 
-Download the export templates from [here](https://github.com/godotengine/godot-builds/releases/download/4.2.2-stable/Godot_v4.2.2-stable_export_templates.tpz). This is a `.tpz` file which is just a renamed `.zip` file.
+Download the export templates from [here](https://github.com/godotengine/godot-builds/releases/download/4.3-stable/Godot_v4.3-stable_export_templates.tpz). This is a `.tpz` file which is just a renamed `.zip` file.
 
 Extract the `.tpz` file to get a folder named `templates`. This folder should be renamed to `4.2.2.stable`.
 

@@ -14,8 +14,8 @@ func init(p_main: M8SceneDisplay) -> void:
 	main = p_main
 
 	%ButtonFinish.pressed.connect(func() -> void:
-		visible=false
-		main.menu.visible=true
+		visible = false
+		main.menu.visible = true
 	)
 
 func _scene_file_path() -> String:
@@ -55,7 +55,7 @@ func read_params_from_scene(p_scene: M8Scene) -> void:
 	for v: Dictionary in export_vars:
 		add_export_var(v.name)
 
-func init_profile(p_scene: M8Scene, profile:=DEFAULT_PROFILE) -> void:
+func init_profile(p_scene: M8Scene, profile := DEFAULT_PROFILE) -> void:
 
 	var config := main.config
 	current_scene = p_scene
@@ -88,7 +88,7 @@ func add_export_var(property: String) -> void:
 		if v.name != property:
 			continue
 
-		if v.hint_string == "bool":
+		if v.type == TYPE_INT:
 			var default: bool = current_scene.get(property)
 			push_scene_var_bool(property, default, func(toggle_mode: bool) -> void:
 				current_scene.set(property, toggle_mode)
@@ -96,7 +96,7 @@ func add_export_var(property: String) -> void:
 			current_scene.set(property, config_get_property(property, default))
 			break
 
-		if v.hint_string == "float":
+		if v.type == TYPE_FLOAT:
 			var default: float = current_scene.get(property)
 			push_scene_var_slider(property, default, 0.0, 1.0, 0.01, func(value: float) -> void:
 				current_scene.set(property, value)
@@ -104,7 +104,7 @@ func add_export_var(property: String) -> void:
 			current_scene.set(property, config_get_property(property, default))
 			break
 
-		if v.hint_string == "Color":
+		if v.type == TYPE_COLOR:
 			var default: Color = current_scene.get(property)
 			push_scene_var_color(property, default, func(color: Color) -> void:
 				current_scene.set(property, color)
@@ -112,7 +112,7 @@ func add_export_var(property: String) -> void:
 			current_scene.set(property, config_get_property(property, default))
 			break
 
-		if v.hint_string == "Vector2i":
+		if v.type == TYPE_VECTOR2I:
 			var default: Vector2i = current_scene.get(property)
 			push_setting_vec2i(property, default, func(vec: Vector2i) -> void:
 				current_scene.set(property, vec)
@@ -171,7 +171,7 @@ func config_delete_profile(profile_name: String) -> void:
 		print("scene: deleting profile '%s'" % profile_name)
 		main.config.scene_parameters[_scene_file_path()].erase(profile_name)
 
-func config_get_property(property: String, default: Variant=null) -> Variant:
+func config_get_property(property: String, default: Variant = null) -> Variant:
 	var profile := config_get_profile(current_profile)
 
 	# set parameter from config, or add parameter to config
@@ -197,7 +197,7 @@ func push_scene_var_bool(setting: String, default: bool, fn: Callable) -> void:
 	)
 	setting_editable.connect(func(p_setting: String, editable: bool) -> void:
 		if p_setting == setting and is_instance_valid(cont):
-			cont.modulate.a=1.0 if editable else 0.5
+			cont.modulate.a = 1.0 if editable else 0.5
 	)
 
 func push_scene_var_color(setting: String, default: Color, fn: Callable) -> void:
@@ -208,7 +208,7 @@ func push_scene_var_color(setting: String, default: Color, fn: Callable) -> void
 	)
 	setting_editable.connect(func(p_setting: String, editable: bool) -> void:
 		if p_setting == setting and is_instance_valid(cont):
-			cont.modulate.a=1.0 if editable else 0.5
+			cont.modulate.a = 1.0 if editable else 0.5
 	)
 
 func push_scene_var_slider(setting: String, default: float, range_min: float, range_max: float, step: float, fn: Callable) -> void:
@@ -218,7 +218,7 @@ func push_scene_var_slider(setting: String, default: float, range_min: float, ra
 	var cont := push_param(label, value_label, slider)
 	setting_editable.connect(func(p_setting: String, editable: bool) -> void:
 		if p_setting == setting and is_instance_valid(cont):
-			cont.modulate.a=1.0 if editable else 0.5
+			cont.modulate.a = 1.0 if editable else 0.5
 	)
 
 func push_scene_var_int_slider(setting: String, default: int, range_min: int, range_max: int, fn: Callable) -> void:
@@ -228,7 +228,7 @@ func push_scene_var_int_slider(setting: String, default: int, range_min: int, ra
 	var cont := push_param(label, value_label, slider)
 	setting_editable.connect(func(p_setting: String, editable: bool) -> void:
 		if p_setting == setting and is_instance_valid(cont):
-			cont.modulate.a=1.0 if editable else 0.5
+			cont.modulate.a = 1.0 if editable else 0.5
 	)
 
 func push_setting_vec2i(setting: String, default: Vector2i, fn: Callable) -> void:
@@ -237,7 +237,7 @@ func push_setting_vec2i(setting: String, default: Vector2i, fn: Callable) -> voi
 	var cont := push_param(label, _spacer(), hbox)
 	setting_editable.connect(func(p_setting: String, editable: bool) -> void:
 		if p_setting == setting and is_instance_valid(cont):
-			cont.modulate.a=1.0 if editable else 0.5
+			cont.modulate.a = 1.0 if editable else 0.5
 	)
 
 func add_option(setting: String, default: int, items: Array, fn: Callable) -> void:
@@ -248,7 +248,7 @@ func add_option(setting: String, default: int, items: Array, fn: Callable) -> vo
 	)
 	setting_editable.connect(func(p_setting: String, editable: bool) -> void:
 		if p_setting == setting and is_instance_valid(cont):
-			cont.modulate.a=1.0 if editable else 0.5
+			cont.modulate.a = 1.0 if editable else 0.5
 	)
 
 func add_file(setting: String, default: String, fn: Callable) -> void:
@@ -259,7 +259,7 @@ func add_file(setting: String, default: String, fn: Callable) -> void:
 	)
 	setting_editable.connect(func(p_setting: String, editable: bool) -> void:
 		if p_setting == setting and is_instance_valid(cont):
-			cont.modulate.a=1.0 if editable else 0.5
+			cont.modulate.a = 1.0 if editable else 0.5
 	)
 
 func add_section(title: String) -> void:
@@ -288,7 +288,7 @@ func _slider_label(slider: HSlider, format: String) -> Label:
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	label.text = format % slider.value
 	slider.value_changed.connect(func(value: float) -> void:
-		label.text=format % value
+		label.text = format % value
 	)
 	return label
 
@@ -309,7 +309,7 @@ func _check(setting: String, default: bool, fn: Callable) -> CheckButton:
 
 	setting_editable.connect(func(p_setting: String, editable: bool) -> void:
 		if p_setting == setting and is_instance_valid(button):
-			button.disabled=!editable
+			button.disabled = !editable
 	)
 
 	return button
@@ -326,7 +326,7 @@ func _colorpicker(setting: String, default: Color, fn: Callable) -> ColorPickerB
 
 	setting_editable.connect(func(p_setting: String, editable: bool) -> void:
 		if p_setting == setting and is_instance_valid(button):
-			button.disabled=!editable
+			button.disabled = !editable
 	)
 
 	return button
@@ -346,7 +346,7 @@ func _slider(setting: String, default: float, range_min: float, range_max: float
 
 	setting_editable.connect(func(p_setting: String, editable: bool) -> void:
 		if p_setting == setting and is_instance_valid(slider):
-			slider.editable=editable
+			slider.editable = editable
 	)
 
 	return slider
@@ -368,7 +368,7 @@ func _int_slider(setting: String, default: int, range_min: int, range_max: int, 
 
 	setting_editable.connect(func(p_setting: String, editable: bool) -> void:
 		if p_setting == setting and is_instance_valid(slider):
-			slider.editable=editable
+			slider.editable = editable
 	)
 
 	return slider
@@ -381,8 +381,8 @@ func _vec2i(setting: String, default: Vector2i, fn: Callable) -> HBoxContainer:
 	hbox.add_child(spin_y)
 
 	spin_x.value_changed.connect(func(value: float) -> void:
-		var vec2i: Vector2i=config_get_property(setting, default)
-		vec2i.x=int(value)
+		var vec2i: Vector2i = config_get_property(setting, default)
+		vec2i.x = int(value)
 		config_set_property(setting, vec2i)
 		fn.call(vec2i)
 	)
@@ -394,8 +394,8 @@ func _vec2i(setting: String, default: Vector2i, fn: Callable) -> HBoxContainer:
 	spin_x.value = config_get_property(setting, default).x
 
 	spin_y.value_changed.connect(func(value: float) -> void:
-		var vec2i: Vector2i=config_get_property(setting, default)
-		vec2i.y=int(value)
+		var vec2i: Vector2i = config_get_property(setting, default)
+		vec2i.y = int(value)
 		config_set_property(setting, vec2i)
 		fn.call(vec2i)
 	)
@@ -409,9 +409,9 @@ func _vec2i(setting: String, default: Vector2i, fn: Callable) -> HBoxContainer:
 	setting_editable.connect(func(p_setting: String, editable: bool) -> void:
 		if p_setting == setting:
 			if is_instance_valid(spin_x):
-				spin_x.editable=editable
+				spin_x.editable = editable
 			if is_instance_valid(spin_y):
-				spin_y.editable=editable
+				spin_y.editable = editable
 	)
 
 	return hbox
@@ -430,7 +430,7 @@ func _option(setting: String, default: int, items: Array, fn: Callable) -> Optio
 
 	setting_editable.connect(func(p_setting: String, editable: bool) -> void:
 		if p_setting == setting and is_instance_valid(option):
-			option.disabled=!editable
+			option.disabled = !editable
 	)
 
 	return option
@@ -452,7 +452,7 @@ func _file(setting: String, default: String, fn: Callable) -> Button:
 
 	setting_editable.connect(func(p_setting: String, editable: bool) -> void:
 		if p_setting == setting and is_instance_valid(button):
-			button.disabled=!editable
+			button.disabled = !editable
 	)
 
 	return button
