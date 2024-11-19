@@ -2,7 +2,16 @@ class_name M8KeyOverlay extends Control
 
 const MAX_ITEMS := 10
 
-@export_enum("Boxed", "Unboxed") var overlay_style: int = 0:
+enum Style {Boxed, Simple}
+
+@export var draw_bounds := false
+
+@export var position_offset: Vector2i = Vector2i(0, 0):
+	set(value):
+		position_offset = value
+		_update_overlay()
+
+@export var overlay_style := Style.Boxed:
 	set(value):
 		overlay_style = value
 		_update_colors()
@@ -81,6 +90,22 @@ func _update_colors() -> void:
 	color_option = color_option
 	color_edit = color_edit
 
+
+func _update_overlay() -> void:
+	if is_inside_tree():
+		%ControlOffset.size = size
+		%ControlOffset.position = position_offset
+		%Control.size = Vector2(0, size.y)
+		%Control.position = Vector2.ZERO
+		%VBoxContainer.size = size
+		%VBoxContainer.position = Vector2.ZERO
+		anchors_preset = anchors_preset
+
+
+func overlay_get_properties() -> Array[String]:
+	return ["overlay_style"]
+
+
 func init(p_main: M8SceneDisplay) -> void:
 	main = p_main
 	main.m8_client.key_pressed.connect(func(key: int, pressed: bool) -> void:
@@ -100,6 +125,15 @@ func init(p_main: M8SceneDisplay) -> void:
 			add_item()
 	)
 
+	_update_overlay()
+
+func _draw() -> void:
+	if draw_bounds:
+		draw_rect(Rect2(position_offset, size), Color.WHITE, false)
+
+func _process(_delta: float) -> void:
+	queue_redraw()
+		
 ##
 ## Delete all items.
 ##
@@ -131,11 +165,11 @@ func add_item() -> void:
 	current_item_count = 0
 	%VBoxContainer.add_child(current_item)
 	update_item()
-	%Control.position.y += 30
 
-	if anim_tween: anim_tween.kill()
-	anim_tween = create_tween()
-	anim_tween.tween_property( %Control, "position:y", -40, 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	# if anim_tween: anim_tween.kill()
+	# anim_tween = create_tween()
+	# %Control.position.y += 30
+	# anim_tween.tween_property(%Control, "position:y", -40, 0.2).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 
 	if current_fade_tween: current_fade_tween.kill()
 	current_fade_tween = create_tween()

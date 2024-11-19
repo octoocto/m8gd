@@ -13,8 +13,16 @@ uniform sampler2D noise_texture: filter_nearest;
 uniform float noise_strength = 0.015;
 
 
-float rand(vec2 co) {
-    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+
+vec2 uv_rotate(vec2 uv, vec2 pivot, float rotation) {
+	mat2 rotation_matrix=mat2(
+		vec2(sin(rotation),-cos(rotation)),
+		vec2(cos(rotation),sin(rotation))
+	);
+	uv -= pivot;
+	uv= uv*rotation_matrix;
+	uv += pivot;
+	return uv;
 }
 
 void fragment() {
@@ -26,7 +34,6 @@ void fragment() {
 	}
 
 	COLOR.rgb = mix(vec3(0), COLOR.rgb, brightness);
-
 	vec3 noise = texture(noise_texture, SCREEN_UV).rgb - vec3(0.5);
 	COLOR.rgb = mix(COLOR.rgb, COLOR.rgb + noise, noise_strength);
 }

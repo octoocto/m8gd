@@ -134,8 +134,10 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
+current_tab = 2
 
 [node name="Scene" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
+visible = false
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Scene"]
@@ -185,11 +187,8 @@ custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
 text = "Configure..."
 
-[node name="HSeparator5" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer"]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_5cyir")
-
 [node name="GridContainer" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer"]
+visible = false
 layout_mode = 2
 columns = 3
 
@@ -248,6 +247,123 @@ text = "Enable Humanized Camera Movement"
 [node name="Check_HumanCamera" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/Container_SceneCamera"]
 unique_name_in_owner = true
 layout_mode = 2
+
+[node name="HSeparator5" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_5cyir")
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer"]
+layout_mode = 2
+bbcode_enabled = true
+text = "[b]Overlays[/b] "
+fit_content = true
+
+[node name="GridContainer2" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer"]
+layout_mode = 2
+columns = 3
+
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/GridContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Audio Spectrum"
+
+[node name="Check_OverlaySpectrum" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/GridContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Button_OverlaySpectrumConfig" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/GridContainer2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+disabled = true
+text = "Configure..."
+
+[node name="Label2" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/GridContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Audio Waveform"
+
+[node name="Check_OverlayWaveform" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/GridContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Button_OverlayWaveformConfig" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/GridContainer2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+disabled = true
+text = "Configure..."
+
+[node name="Label3" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/GridContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "M8 Screen Display"
+
+[node name="Check_OverlayDisplay" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/GridContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Button_OverlayDisplayConfig" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/GridContainer2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+disabled = true
+text = "Configure..."
+
+[node name="Label4" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/GridContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Key Display"
+
+[node name="Check_OverlayKeys" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/GridContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Button_OverlayKeysConfig" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/GridContainer2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+disabled = true
+text = "Configure..."
+
+[node name="HSeparator4" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_5cyir")
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Integer Scale"
+
+[node name="Label_OverlayIntegerScale" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+text = "1x"
+
+[node name="Slider_OverlayIntegerScale" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 3.0
+tick_count = 4
+ticks_on_borders = true
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Apply Filters"
+
+[node name="Check_OverlayFilters" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer4"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="HSeparator2" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer"]
 layout_mode = 2
@@ -469,7 +585,6 @@ disabled = true
 text = "Connect"
 
 [node name="Model" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
-visible = false
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Model"]
@@ -809,64 +924,16 @@ color = Color(1, 1, 1, 1)
 edit_alpha = false
 
 [node name="RichTextLabel2" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer"]
+visible = false
 layout_mode = 2
 bbcode_enabled = true
 text = "[b]Key Overlay[/b] "
 fit_content = true
 
 [node name="HSeparator2" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer"]
+visible = false
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_06k14")
-
-[node name="GridContainer2" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer"]
-layout_mode = 2
-columns = 3
-
-[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Key Overlay Enabled"
-
-[node name="VSeparator2" type="VSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer2"]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_0w5ic")
-
-[node name="CheckButtonKeyOverlayEnable" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer2"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Label3" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer2"]
-custom_minimum_size = Vector2(40, 0)
-layout_mode = 2
-text = "Use Screen Filters"
-
-[node name="VSeparator" type="VSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer2"]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_0w5ic")
-
-[node name="CheckButtonHL_Filters" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer2"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Label2" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Style"
-
-[node name="LabelKeyOverlayStyle" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer2"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Boxed"
-horizontal_alignment = 2
-
-[node name="SliderKeyOverlayStyle" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Model/VBoxContainer/GridContainer2"]
-unique_name_in_owner = true
-layout_mode = 2
-max_value = 1.0
-tick_count = 2
 
 [node name="Controls" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
 visible = false

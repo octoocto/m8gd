@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://dq6heks88e2ip"]
+
+[ext_resource type="Script" path="res://overlays/audio_waveform.gd" id="1_es30f"]
+[ext_resource type="Shader" path="res://overlays/audio_spectrum.gdshader" id="1_xvcfl"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_opvfq"]
+shader = ExtResource("1_xvcfl")
+shader_parameter/blend_soft_light = true
+
+[node name="AudioWaveform" type="Control"]
+material = SubResource("ShaderMaterial_opvfq")
+layout_mode = 3
+anchors_preset = 0
+offset_right = 320.0
+offset_bottom = 25.0
+script = ExtResource("1_es30f")

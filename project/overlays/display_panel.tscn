@@ -1,0 +1,50 @@
+[gd_scene load_steps=7 format=3 uid="uid://bkmg6tijdna2y"]
+
+[ext_resource type="Shader" uid="uid://df8ql2iwe7kys" path="res://overlays/overlay_display_panel.tres" id="1_hikxj"]
+[ext_resource type="Texture2D" uid="uid://ras5y3yqijkx" path="res://assets/m8_screen_placeholder.png" id="2_dqr0t"]
+[ext_resource type="Script" path="res://overlays/display_panel.gd" id="2_yhulq"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lw18t"]
+shader = ExtResource("1_hikxj")
+shader_parameter/panel_color = Color(1, 1, 1, 1)
+shader_parameter/panel_opacity = 1.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hl16s"]
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+corner_detail = 6
+anti_aliasing = false
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_87cwd"]
+atlas = ExtResource("2_dqr0t")
+region = Rect2(0, 0, 320, 240)
+
+[node name="Display" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("2_yhulq")
+
+[node name="DisplayPanel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_lw18t")
+layout_mode = 0
+offset_right = 352.0
+offset_bottom = 272.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_hl16s")
+
+[node name="DisplayTextureRect" type="TextureRect" parent="DisplayPanel"]
+unique_name_in_owner = true
+texture_filter = 1
+custom_minimum_size = Vector2(320, 240)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = SubResource("AtlasTexture_87cwd")
+expand_mode = 1
+stretch_mode = 6

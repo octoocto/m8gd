@@ -1,18 +1,21 @@
-[gd_scene load_steps=28 format=3 uid="uid://b265ke8cr3dgr"]
+[gd_scene load_steps=35 format=3 uid="uid://b265ke8cr3dgr"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_4g2n0"]
 [ext_resource type="Shader" path="res://shaders/post_process.gdshader" id="1_tjung"]
 [ext_resource type="Shader" path="res://shaders/crt.gdshader" id="2_2rjfu"]
 [ext_resource type="Shader" path="res://shaders/vhs.gdshader" id="2_34vyn"]
+[ext_resource type="PackedScene" uid="uid://263mog4cxgwr" path="res://overlays/audio_spectrum.tscn" id="2_tbmna"]
 [ext_resource type="Texture2D" uid="uid://7y0rs0v6d4nk" path="res://assets/noise.png" id="4_gv8ps"]
 [ext_resource type="Shader" path="res://shaders/vhs2.gdshader" id="4_ioov3"]
+[ext_resource type="PackedScene" uid="uid://bkmg6tijdna2y" path="res://overlays/display_panel.tscn" id="4_nrhlm"]
 [ext_resource type="Shader" path="res://shaders/vhs3.gdshader" id="4_tq17m"]
+[ext_resource type="PackedScene" uid="uid://dq6heks88e2ip" path="res://overlays/audio_waveform.tscn" id="5_p87tv"]
 [ext_resource type="Shader" path="res://shaders/screen_blur.gdshader" id="7_5hn1q"]
 [ext_resource type="PackedScene" uid="uid://d13t756slc8b0" path="res://main_menu.tscn" id="7_k5oyo"]
-[ext_resource type="PackedScene" uid="uid://ca2jqh2tc7jix" path="res://key_overlay.tscn" id="8_dnyct"]
+[ext_resource type="PackedScene" uid="uid://ca2jqh2tc7jix" path="res://overlays/key_overlay.tscn" id="8_dnyct"]
 [ext_resource type="PackedScene" uid="uid://geilakxinhul" path="res://scene_camera_menu.tscn" id="8_v4lip"]
 [ext_resource type="PackedScene" uid="uid://dv8crbibtrpck" path="res://scene_menu.tscn" id="9_bisyb"]
-[ext_resource type="PackedScene" uid="uid://dhynymx7ibupb" path="res://sub_scene_menu.tscn" id="9_hw48s"]
+[ext_resource type="PackedScene" uid="uid://bebvc2datqp85" path="res://menu_overlay.tscn" id="16_4bi6d"]
 
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_c3wmn"]
 
@@ -44,6 +47,27 @@ MarginContainer/constants/margin_left = 32
 MarginContainer/constants/margin_right = 32
 MarginContainer/constants/margin_top = 16
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_hbdmc")
+
+[sub_resource type="Gradient" id="Gradient_v10jr"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ieww8"]
+frequency = 1.0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_lsac7"]
+width = 2048
+height = 2048
+invert = true
+color_ramp = SubResource("Gradient_v10jr")
+noise = SubResource("FastNoiseLite_ieww8")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dw8ip"]
+shader = ExtResource("7_5hn1q")
+shader_parameter/blur_amount = 0.0
+shader_parameter/tint_color = Color(1, 1, 1, 1)
+shader_parameter/tint_amount = 0.0
+shader_parameter/brightness = 1.2
+shader_parameter/noise_strength = 0.0
+shader_parameter/noise_texture = SubResource("NoiseTexture2D_lsac7")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_x0ssf"]
 shader = ExtResource("4_ioov3")
@@ -204,6 +228,106 @@ handle_input_locally = false
 size = Vector2i(640, 480)
 render_target_update_mode = 0
 
+[node name="BackBufferCopy" type="BackBufferCopy" parent="CanvasLayer/UI"]
+copy_mode = 2
+
+[node name="BGShader" type="ColorRect" parent="CanvasLayer/UI"]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_dw8ip")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="OverlayContainer" type="CenterContainer" parent="CanvasLayer/UI"]
+unique_name_in_owner = true
+z_index = 1
+layout_mode = 0
+size_flags_horizontal = 2
+size_flags_vertical = 2
+
+[node name="OverlayControl" type="Control" parent="CanvasLayer/UI/OverlayContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="OverlaySubViewportContainer" type="SubViewportContainer" parent="CanvasLayer/UI/OverlayContainer/OverlayControl"]
+unique_name_in_owner = true
+texture_filter = 1
+layout_mode = 1
+offset_right = 640.0
+offset_bottom = 480.0
+
+[node name="OverlaySubViewport" type="SubViewport" parent="CanvasLayer/UI/OverlayContainer/OverlayControl/OverlaySubViewportContainer"]
+unique_name_in_owner = true
+disable_3d = true
+transparent_bg = true
+handle_input_locally = false
+snap_2d_transforms_to_pixel = true
+snap_2d_vertices_to_pixel = true
+canvas_item_default_texture_filter = 0
+size = Vector2i(640, 480)
+render_target_update_mode = 4
+
+[node name="OverlayAudioSpectrum" parent="CanvasLayer/UI/OverlayContainer/OverlayControl/OverlaySubViewportContainer/OverlaySubViewport" instance=ExtResource("2_tbmna")]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 160.0
+offset_bottom = 160.0
+grow_horizontal = 1
+grow_vertical = 1
+analyzer_freq_max = 6000
+analyzer_smoothing = 0.945
+style_rows = 9
+style_mirror = true
+style_reverse = true
+style_peak_to_alpha_amount = 1.0
+style_bar_centered = true
+style_bar_interlace = true
+style_line_width = 2.0
+style_color_high_cutoff = 0.75
+
+[node name="OverlayDisplayPanel" parent="CanvasLayer/UI/OverlayContainer/OverlayControl/OverlaySubViewportContainer/OverlaySubViewport" instance=ExtResource("4_nrhlm")]
+unique_name_in_owner = true
+visible = false
+
+[node name="OverlayAudioWaveform" parent="CanvasLayer/UI/OverlayContainer/OverlayControl/OverlaySubViewportContainer/OverlaySubViewport" instance=ExtResource("5_p87tv")]
+unique_name_in_owner = true
+visible = false
+offset_bottom = 32.0
+analyzer_sample_rate = 120.0
+style_reverse = true
+style_bar_centered = true
+
+[node name="KeyOverlay" parent="CanvasLayer/UI/OverlayContainer/OverlayControl/OverlaySubViewportContainer/OverlaySubViewport" instance=ExtResource("8_dnyct")]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -240.0
+offset_top = -240.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 0
+grow_vertical = 0
+size_flags_horizontal = 8
+size_flags_vertical = 10
+position_offset = Vector2i(-30, -100)
+
+[node name="BackBufferCopy2" type="BackBufferCopy" parent="CanvasLayer/UI"]
+copy_mode = 2
+
 [node name="VHSFilter1" type="ColorRect" parent="CanvasLayer/UI"]
 unique_name_in_owner = true
 visible = false
@@ -287,24 +411,8 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="BackBufferCopy" type="BackBufferCopy" parent="CanvasLayer/UI/NoiseShader"]
-copy_mode = 2
-
-[node name="KeyOverlay" parent="CanvasLayer/UI" instance=ExtResource("8_dnyct")]
-unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(240, 0)
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -240.0
-offset_right = 0.0
-grow_horizontal = 0
-grow_vertical = 0
-size_flags_horizontal = 8
-size_flags_vertical = 10
+copy_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI"]
 layout_mode = 1
@@ -443,12 +551,12 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="SubSceneMenu" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3" instance=ExtResource("9_hw48s")]
+[node name="SceneMenu" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3" instance=ExtResource("9_bisyb")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="SceneMenu" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3" instance=ExtResource("9_bisyb")]
+[node name="MenuOverlay" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3" instance=ExtResource("16_4bi6d")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -472,21 +580,103 @@ fit_content = true
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3"]
 visible = false
 layout_mode = 2
+theme_override_constants/separation = 0
 
 [node name="Color_Palette1" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(64, 64)
+custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
+color = Color(1, 1, 1, 0)
 
 [node name="Color_Palette2" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(64, 64)
+custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
+color = Color(1, 1, 1, 0)
 
 [node name="Color_Palette3" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(64, 64)
+custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
+color = Color(1, 1, 1, 0)
+
+[node name="Color_Palette4" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 64)
+layout_mode = 2
+color = Color(1, 1, 1, 0)
+
+[node name="Color_Palette5" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 64)
+layout_mode = 2
+color = Color(1, 1, 1, 0)
+
+[node name="Color_Palette6" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 64)
+layout_mode = 2
+color = Color(1, 1, 1, 0)
+
+[node name="Color_Palette7" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 64)
+layout_mode = 2
+color = Color(1, 1, 1, 0)
+
+[node name="Color_Palette8" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 64)
+layout_mode = 2
+color = Color(1, 1, 1, 0)
+
+[node name="Color_Palette9" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 64)
+layout_mode = 2
+color = Color(1, 1, 1, 0)
+
+[node name="Color_Palette10" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 64)
+layout_mode = 2
+color = Color(1, 1, 1, 0)
+
+[node name="Color_Palette11" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 64)
+layout_mode = 2
+color = Color(1, 1, 1, 0)
+
+[node name="Color_Palette12" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 64)
+layout_mode = 2
+color = Color(1, 1, 1, 0)
+
+[node name="Color_Palette13" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 64)
+layout_mode = 2
+color = Color(1, 1, 1, 0)
+
+[node name="Color_Palette14" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 64)
+layout_mode = 2
+color = Color(1, 1, 1, 0)
+
+[node name="Color_Palette15" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 64)
+layout_mode = 2
+color = Color(1, 1, 1, 0)
+
+[node name="Color_Palette16" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 64)
+layout_mode = 2
+color = Color(1, 1, 1, 0)
 
 [node name="VBoxContainer4" type="VBoxContainer" parent="CanvasLayer/UI/MarginContainer/GridContainer"]
 layout_mode = 2
@@ -496,10 +686,12 @@ size_flags_vertical = 3
 [node name="MainMenuPanel" parent="CanvasLayer/UI" instance=ExtResource("7_k5oyo")]
 unique_name_in_owner = true
 visible = false
+z_index = 1
 layout_mode = 1
 
 [node name="SplashContainer" type="CenterContainer" parent="CanvasLayer/UI"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

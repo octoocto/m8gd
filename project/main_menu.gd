@@ -37,12 +37,12 @@ func init(p_main: M8SceneDisplay) -> void:
 		path = dir_scenes.get_next()
 
 	option_scenes.item_selected.connect(func(idx: int) -> void:
-		if idx != - 1:
+		if idx != -1:
 			main.load_scene(option_scenes.get_item_metadata(idx))
 	)
 
 	main.m8_scene_changed.connect(func(scene_path: String, _scene: M8Scene) -> void:
-		option_scenes.selected=get_scene_path_idx(scene_path)
+		option_scenes.selected = get_scene_path_idx(scene_path)
 	)
 
 	button_exit.pressed.connect(func() -> void:
@@ -50,7 +50,7 @@ func init(p_main: M8SceneDisplay) -> void:
 	)
 
 	%ButtonClose.pressed.connect(func() -> void:
-		visible=false
+		visible = false
 	)
 
 	%DisplayRect.texture = main.m8_client.get_display_texture()
@@ -67,63 +67,110 @@ func init(p_main: M8SceneDisplay) -> void:
 		main.reload_scene()
 	)
 
+	# TODO: remove subscene code
+
 	%Option_SubSceneMode.add_item("Disabled", 0)
 	%Option_SubSceneMode.add_item("Floating Window", 1)
 	%Option_SubSceneMode.item_selected.connect(func(_idx: int) -> void:
-		match %Option_SubSceneMode.get_selected_id():
+		match%Option_SubSceneMode.get_selected_id():
 			0:
 				main.set_subscene_mode(0)
-				%Button_SubSceneMenu.disabled=true
+				%Button_SubSceneMenu.disabled = true
 			1:
 				main.set_subscene_mode(1)
-				%Button_SubSceneMenu.disabled=false
+				%Button_SubSceneMenu.disabled = false
 		# config.subscene_mode= %Option_SubSceneMode.get_selected_id()
 	)
 	# %Option_SubSceneMode.selected = config.subscene_mode
 	# %Option_SubSceneMode.item_selected.emit( - 1)
 
-	%Button_SceneMenu.pressed.connect(func() -> void:
-		visible=false
-		main.menu_scene.visible=true
+	_config_connect("overlay_scale", %Slider_OverlayIntegerScale, func(value: float) -> void:
+		%Label_OverlayIntegerScale.text = "%dx" % value
+		main.overlay_integer_zoom = int(value)
 	)
 
-	%Button_SubSceneMenu.pressed.connect(func() -> void:
-		visible=false
-		main.menu_subscene.visible=true
+	_config_connect("overlay_apply_filters", %Check_OverlayFilters, func(value: bool) -> void:
+		main.get_node("%OverlayContainer").z_index = 0 if value else 1
+	)
+
+	_config_connect("overlay_spectrum", %Check_OverlaySpectrum, func(toggled: bool) -> void:
+		main.overlay_spectrum.visible = toggled
+	)
+	_connect_check_to_control_editable(%Check_OverlaySpectrum, %Button_OverlaySpectrumConfig)
+	%Button_OverlaySpectrumConfig.pressed.connect(func() -> void:
+		visible = false
+		main.menu_overlay.menu_open(main.overlay_spectrum)
+	)
+
+	_config_connect("overlay_waveform", %Check_OverlayWaveform, func(toggled: bool) -> void:
+		main.overlay_waveform.visible = toggled
+	)
+	_connect_check_to_control_editable(%Check_OverlayWaveform, %Button_OverlayWaveformConfig)
+	%Button_OverlayWaveformConfig.pressed.connect(func() -> void:
+		visible = false
+		main.menu_overlay.menu_open(main.overlay_waveform)
+	)
+
+	_config_connect("overlay_display", %Check_OverlayDisplay, func(toggled: bool) -> void:
+		main.overlay_display.visible = toggled
+	)
+	_connect_check_to_control_editable(%Check_OverlayDisplay, %Button_OverlayDisplayConfig)
+	%Button_OverlayDisplayConfig.pressed.connect(func() -> void:
+		visible = false
+		main.menu_overlay.menu_open(main.overlay_display)
+	)
+
+	# Key overlay settings
+
+	_config_connect("overlay_key", %Check_OverlayKeys, func(toggled: bool) -> void:
+		print("setting key overlay visible to %s" % toggled)
+		main.key_overlay.visible = toggled
+		if toggled == false:
+			main.key_overlay.clear()
+	)
+	_connect_check_to_control_editable(%Check_OverlayKeys, %Button_OverlayKeysConfig)
+	%Button_OverlayKeysConfig.pressed.connect(func() -> void:
+		visible = false
+		main.menu_overlay.menu_open(main.key_overlay)
+	)
+
+	%Button_SceneMenu.pressed.connect(func() -> void:
+		visible = false
+		main.menu_scene.visible = true
 	)
 
 	%Button_SceneCameraMenu.pressed.connect(func() -> void:
-		visible=false
+		visible = false
 		main.menu_camera.menu_open()
 	)
 
 	%Check_MouseCamera.toggled.connect(func(toggled_on: bool) -> void:
 		if main.current_scene and main.current_scene.has_3d_camera():
-			main.current_scene.get_3d_camera().mouse_controlled_pan_zoom=toggled_on
+			main.current_scene.get_3d_camera().mouse_controlled_pan_zoom = toggled_on
 		# config.camera_mouse_control=toggled_on
 	)
 	# %Check_MouseCamera.button_pressed = config.camera_mouse_control
 
 	%Check_HumanCamera.toggled.connect(func(toggled_on: bool) -> void:
 		if main.current_scene and main.current_scene.has_3d_camera():
-			main.current_scene.get_3d_camera().humanized_movement=toggled_on
+			main.current_scene.get_3d_camera().humanized_movement = toggled_on
 		# config.camera_humanize=toggled_on
 	)
 	# %Check_HumanCamera.button_pressed = config.camera_humanize
 
 	main.m8_scene_changed.connect(func(_scene_path: String, scene: M8Scene) -> void:
 		if scene.has_3d_camera():
-			%Container_SceneCamera.modulate.a=1.0
-			%Button_SceneCameraMenu.disabled=false
-			%Check_MouseCamera.disabled=false
-			%Check_HumanCamera.disabled=false
+			%Container_SceneCamera.modulate.a = 1.0
+			%Button_SceneCameraMenu.disabled = false
+			%Check_MouseCamera.disabled = false
+			%Check_HumanCamera.disabled = false
 			# %Check_MouseCamera.toggled.emit(config.camera_mouse_control)
 			# %Check_HumanCamera.toggled.emit(config.camera_humanize)
 		else:
-			%Container_SceneCamera.modulate.a=0.5
-			%Button_SceneCameraMenu.disabled=true
-			%Check_MouseCamera.disabled=true
-			%Check_HumanCamera.disabled=true
+			%Container_SceneCamera.modulate.a = 0.5
+			%Button_SceneCameraMenu.disabled = true
+			%Check_MouseCamera.disabled = true
+			%Check_HumanCamera.disabled = true
 	)
 
 	# Audio Tab
@@ -132,11 +179,11 @@ func init(p_main: M8SceneDisplay) -> void:
 	# volume
 
 	slider_volume.value_changed.connect(func(value: float) -> void:
-		var volume_db: float=linear_to_db(pow(value, 2))
+		var volume_db: float = linear_to_db(pow(value, 2))
 		print("volume = %f" % volume_db)
 		main.audio_set_volume(volume_db)
-		%LabelVolume.text="%d%% (%05.2f dB)" % [round(slider_volume.value / slider_volume.max_value * 100), volume_db]
-		config.volume=value
+		%LabelVolume.text = "%d%% (%05.2f dB)" % [round(slider_volume.value / slider_volume.max_value * 100), volume_db]
+		config.volume = value
 	)
 	slider_volume.value = config.volume
 	slider_volume.value_changed.emit(config.volume)
@@ -162,38 +209,38 @@ func init(p_main: M8SceneDisplay) -> void:
 	audio_latency_update_timer.start(1.0)
 	audio_latency_update_timer.timeout.connect(func() -> void:
 		if visible:
-			%LineEditAudioLatency.placeholder_text="%f ms" % AudioServer.get_output_latency()
+			%LineEditAudioLatency.placeholder_text = "%f ms" % AudioServer.get_output_latency()
 	)
 
 	%CheckButtonEnableSA.toggled.connect(func(toggled_on: bool) -> void:
 		main.audio_set_spectrum_analyzer_enabled(toggled_on)
-		config.audio_analyzer_enabled=toggled_on
+		config.audio_analyzer_enabled = toggled_on
 	)
 	%CheckButtonEnableSA.button_pressed = config.audio_analyzer_enabled
 
 	%SpinBoxAVMinFreq.value_changed.connect(func(value: int) -> void:
-		main.visualizer_frequency_min=value
-		config.audio_analyzer_min_freq=value
+		main.visualizer_frequency_min = value
+		config.audio_analyzer_min_freq = value
 	)
 	%SpinBoxAVMinFreq.value = config.audio_analyzer_min_freq
 
 	%SpinBoxAVMaxFreq.value_changed.connect(func(value: int) -> void:
-		main.visualizer_frequency_max=value
-		config.audio_analyzer_max_freq=value
+		main.visualizer_frequency_max = value
+		config.audio_analyzer_max_freq = value
 	)
 	%SpinBoxAVMaxFreq.value = config.audio_analyzer_max_freq
 
 	%SliderAVBrightness.value_changed.connect(func(value: float) -> void:
-		main.visualizer_brightness_amount=value
-		%LabelAVBrightness.text="%d%%" % (value * 100.0)
-		config.audio_to_brightness=value
+		main.visualizer_brightness_amount = value
+		%LabelAVBrightness.text = "%d%%" % (value * 100.0)
+		config.audio_to_brightness = value
 	)
 	%SliderAVBrightness.value = config.audio_to_brightness
 
 	%SliderAVCA.value_changed.connect(func(value: float) -> void:
-		main.visualizer_ca_amount=value
-		%LabelAVCA.text="%d%%" % (value * 1000.0)
-		config.audio_to_ca=value
+		main.visualizer_ca_amount = value
+		%LabelAVCA.text = "%d%%" % (value * 1000.0)
+		config.audio_to_ca = value
 	)
 	%SliderAVCA.value = config.audio_to_ca
 
@@ -203,7 +250,7 @@ func init(p_main: M8SceneDisplay) -> void:
 	# video
 
 	%CheckButtonFullscreen.toggled.connect(func(toggled_on: bool) -> void:
-		config.fullscreen=toggled_on
+		config.fullscreen = toggled_on
 		if toggled_on:
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
 		else:
@@ -212,7 +259,7 @@ func init(p_main: M8SceneDisplay) -> void:
 	%CheckButtonFullscreen.button_pressed = config.fullscreen
 
 	%CheckButtonAlwaysOnTop.toggled.connect(func(toggled_on: bool) -> void:
-		config.always_on_top=toggled_on
+		config.always_on_top = toggled_on
 		if toggled_on:
 			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_ALWAYS_ON_TOP, true)
 		else:
@@ -224,17 +271,17 @@ func init(p_main: M8SceneDisplay) -> void:
 		match value:
 			1:
 				DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED)
-				%LabelVsync.text="Enabled"
+				%LabelVsync.text = "Enabled"
 			2:
 				DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_MAILBOX)
-				%LabelVsync.text="Mailbox"
+				%LabelVsync.text = "Mailbox"
 			3:
 				DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ADAPTIVE)
-				%LabelVsync.text="Adaptive"
+				%LabelVsync.text = "Adaptive"
 			0, _:
 				DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
-				%LabelVsync.text="Disabled"
-		config.vsync=value
+				%LabelVsync.text = "Disabled"
+		config.vsync = value
 	)
 	%SliderVsync.value = config.vsync
 
@@ -242,13 +289,13 @@ func init(p_main: M8SceneDisplay) -> void:
 	# ------------------------------------------------------------------------
 
 	%Spin_WindowW.value_changed.connect(func(value: float) -> void:
-		var win_size:=DisplayServer.window_get_size()
+		var win_size := DisplayServer.window_get_size()
 		DisplayServer.window_set_size(Vector2i(int(value), win_size.y))
 	)
 	%Spin_WindowW.value = config.window_width
 
 	%Spin_WindowH.value_changed.connect(func(value: float) -> void:
-		var win_size:=DisplayServer.window_get_size()
+		var win_size := DisplayServer.window_get_size()
 		DisplayServer.window_set_size(Vector2i(win_size.x, int(value)))
 	)
 	%Spin_WindowH.value = config.window_height
@@ -266,18 +313,18 @@ func init(p_main: M8SceneDisplay) -> void:
 	%OptionRes.select(0)
 
 	get_window().size_changed.connect(func() -> void:
-		var win_size:=DisplayServer.window_get_size()
-		%Spin_WindowW.value=win_size.x
-		%Spin_WindowH.value=win_size.y
-		config.window_width=win_size.x
-		config.window_height=win_size.y
+		var win_size := DisplayServer.window_get_size()
+		%Spin_WindowW.value = win_size.x
+		%Spin_WindowH.value = win_size.y
+		config.window_width = win_size.x
+		config.window_height = win_size.y
 	)
 	DisplayServer.window_set_size(Vector2i(config.window_width, config.window_height))
 
 	%SliderFPSCap.value_changed.connect(func(value: float) -> void:
-		if value > 0 and value < 15: value=15
-		Engine.max_fps=int(value)
-		config.fps_cap=int(value)
+		if value > 0 and value < 15: value = 15
+		Engine.max_fps = int(value)
+		config.fps_cap = int(value)
 	)
 	%SliderFPSCap.value = config.fps_cap
 
@@ -287,12 +334,12 @@ func init(p_main: M8SceneDisplay) -> void:
 		RenderingServer.camera_attributes_set_dof_blur_bokeh_shape(value)
 		match value:
 			RenderingServer.DOF_BOKEH_BOX:
-				%LabelDOFShape.text="Box"
+				%LabelDOFShape.text = "Box"
 			RenderingServer.DOF_BOKEH_HEXAGON:
-				%LabelDOFShape.text="Hexagon"
+				%LabelDOFShape.text = "Hexagon"
 			RenderingServer.DOF_BOKEH_CIRCLE:
-				%LabelDOFShape.text="Circle"
-		config.dof_bokeh_shape=value
+				%LabelDOFShape.text = "Circle"
+		config.dof_bokeh_shape = value
 	)
 	%SliderDOFShape.value = config.dof_bokeh_shape
 
@@ -300,14 +347,14 @@ func init(p_main: M8SceneDisplay) -> void:
 		RenderingServer.camera_attributes_set_dof_blur_quality(value, true)
 		match value:
 			RenderingServer.DOF_BLUR_QUALITY_VERY_LOW:
-				%LabelDOFQuality.text="Very Low"
+				%LabelDOFQuality.text = "Very Low"
 			RenderingServer.DOF_BLUR_QUALITY_LOW:
-				%LabelDOFQuality.text="Low"
+				%LabelDOFQuality.text = "Low"
 			RenderingServer.DOF_BLUR_QUALITY_MEDIUM:
-				%LabelDOFQuality.text="Medium"
+				%LabelDOFQuality.text = "Medium"
 			RenderingServer.DOF_BLUR_QUALITY_HIGH:
-				%LabelDOFQuality.text="High"
-		config.dof_blur_quality=value
+				%LabelDOFQuality.text = "High"
+		config.dof_blur_quality = value
 	)
 	%SliderDOFQuality.value = config.dof_blur_quality
 
@@ -316,58 +363,58 @@ func init(p_main: M8SceneDisplay) -> void:
 	%SliderMSAA.value_changed.connect(func(value: int) -> void:
 		match value:
 			0:
-				get_viewport().msaa_3d=Viewport.MSAA_DISABLED
-				%LabelMSAA.text="Disabled"
+				get_viewport().msaa_3d = Viewport.MSAA_DISABLED
+				%LabelMSAA.text = "Disabled"
 			1:
-				get_viewport().msaa_3d=Viewport.MSAA_2X
-				%LabelMSAA.text="2X"
+				get_viewport().msaa_3d = Viewport.MSAA_2X
+				%LabelMSAA.text = "2X"
 			2:
-				get_viewport().msaa_3d=Viewport.MSAA_4X
-				%LabelMSAA.text="4X"
+				get_viewport().msaa_3d = Viewport.MSAA_4X
+				%LabelMSAA.text = "4X"
 			3:
-				get_viewport().msaa_3d=Viewport.MSAA_8X
-				%LabelMSAA.text="8X"
-		config.msaa=value
+				get_viewport().msaa_3d = Viewport.MSAA_8X
+				%LabelMSAA.text = "8X"
+		config.msaa = value
 	)
 	%SliderMSAA.value = config.msaa
 
 	# TAA
 
 	%CheckButtonTAA.toggled.connect(func(toggled_on: bool) -> void:
-		get_viewport().use_taa=toggled_on
-		config.taa=toggled_on
+		get_viewport().use_taa = toggled_on
+		config.taa = toggled_on
 	)
 	%CheckButtonTAA.button_pressed = config.taa
 
 	# Render Scale
 
 	%OptionUpscalingMethod.item_selected.connect(func(idx: int) -> void:
-		%OptionUpscalingMethod.selected=idx
-		config.scale_mode=idx
+		%OptionUpscalingMethod.selected = idx
+		config.scale_mode = idx
 		match idx:
 			0:
-				get_viewport().scaling_3d_mode=Viewport.SCALING_3D_MODE_BILINEAR
-				%SliderFSRSharpness.editable=false
+				get_viewport().scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR
+				%SliderFSRSharpness.editable = false
 			1:
-				get_viewport().scaling_3d_mode=Viewport.SCALING_3D_MODE_FSR
-				%SliderFSRSharpness.editable=true
+				get_viewport().scaling_3d_mode = Viewport.SCALING_3D_MODE_FSR
+				%SliderFSRSharpness.editable = true
 			2:
-				get_viewport().scaling_3d_mode=Viewport.SCALING_3D_MODE_FSR2
-				%SliderFSRSharpness.editable=true
+				get_viewport().scaling_3d_mode = Viewport.SCALING_3D_MODE_FSR2
+				%SliderFSRSharpness.editable = true
 	)
 	%OptionUpscalingMethod.item_selected.emit(config.scale_mode)
 
 	%SliderRenderScale.value_changed.connect(func(value: float) -> void:
-		config.render_scale=value
-		get_viewport().scaling_3d_scale=value
-		%LabelRenderScale.text="%d%%" % (value * 100)
+		config.render_scale = value
+		get_viewport().scaling_3d_scale = value
+		%LabelRenderScale.text = "%d%%" % (value * 100)
 	)
 	%SliderRenderScale.set_value(config.render_scale)
 
 	%SliderFSRSharpness.value_changed.connect(func(value: float) -> void:
-		config.fsr_sharpness=value
-		get_viewport().fsr_sharpness=(2.0 - (value * 2.0))
-		%LabelFSRSharpness.text="%d%%" % (value * 100)
+		config.fsr_sharpness = value
+		get_viewport().fsr_sharpness = (2.0 - (value * 2.0))
+		%LabelFSRSharpness.text = "%d%%" % (value * 100)
 	)
 	%SliderFSRSharpness.set_value(config.fsr_sharpness)
 	%SliderFSRSharpness.editable = config.scale_mode != 0
@@ -375,74 +422,74 @@ func init(p_main: M8SceneDisplay) -> void:
 	# Filter / Shader Settings
 	# --------------------------------------------------------------------
 
-	_connect_check("filter_1", %CheckButtonFilter1, func(value: bool) -> void:
-		main.get_node("%VHSFilter1").visible=value
+	_config_connect("filter_1", %CheckButtonFilter1, func(value: bool) -> void:
+		main.get_node("%VHSFilter1").visible = value
 	)
-	_connect_check("filter_2", %CheckButtonFilter2, func(value: bool) -> void:
-		main.get_node("%VHSFilter2").visible=value
+	_config_connect("filter_2", %CheckButtonFilter2, func(value: bool) -> void:
+		main.get_node("%VHSFilter2").visible = value
 	)
-	_connect_check("filter_3", %CheckButtonFilter3, func(value: bool) -> void:
-		main.get_node("%VHSFilter3").visible=value
+	_config_connect("filter_3", %CheckButtonFilter3, func(value: bool) -> void:
+		main.get_node("%VHSFilter3").visible = value
 	)
-	_connect_check("filter_4", %CheckButtonFilter4, func(value: bool) -> void:
-		main.get_node("%Filter4").visible=value
+	_config_connect("filter_4", %CheckButtonFilter4, func(value: bool) -> void:
+		main.get_node("%Filter4").visible = value
 	)
-	_connect_check("crt_filter", %CheckButtonFilter5, func(value: bool) -> void:
-		main.get_node("%CRTShader").visible=value
+	_config_connect("crt_filter", %CheckButtonFilter5, func(value: bool) -> void:
+		main.get_node("%CRTShader").visible = value
 	)
-	_connect_check("filter_noise", %Check_FilterNoise, func(value: bool) -> void:
-		main.get_node("%NoiseShader").visible=value
+	_config_connect("filter_noise", %Check_FilterNoise, func(value: bool) -> void:
+		main.get_node("%NoiseShader").visible = value
 	)
 
-	_connect_slider("pp_vhs_smear", %Slider_ShaderSmearAmount, func(value: float) -> void:
+	_config_connect("pp_vhs_smear", %Slider_ShaderSmearAmount, func(value: float) -> void:
 		main.get_node("%VHSFilter1").material.set_shader_parameter("smear", value)
 	)
-	_connect_check_to_control_editable( %CheckButtonFilter1, %Slider_ShaderSmearAmount)
-	_connect_slider("pp_vhs_wiggle", %Slider_ShaderWiggleAmount, func(value: float) -> void:
+	_connect_check_to_control_editable(%CheckButtonFilter1, %Slider_ShaderSmearAmount)
+	_config_connect("pp_vhs_wiggle", %Slider_ShaderWiggleAmount, func(value: float) -> void:
 		main.get_node("%VHSFilter1").material.set_shader_parameter("wiggle", value)
 	)
-	_connect_check_to_control_editable( %CheckButtonFilter1, %Slider_ShaderWiggleAmount)
-	_connect_slider("pp_vhs_noise_crease_opacity", %Slider_ShaderNoiseCreaseOpacity, func(value: float) -> void:
+	_connect_check_to_control_editable(%CheckButtonFilter1, %Slider_ShaderWiggleAmount)
+	_config_connect("pp_vhs_noise_crease_opacity", %Slider_ShaderNoiseCreaseOpacity, func(value: float) -> void:
 		main.get_node("%VHSFilter2").material.set_shader_parameter("crease_opacity", value)
 	)
-	_connect_check_to_control_editable( %CheckButtonFilter2, %Slider_ShaderNoiseCreaseOpacity)
-	_connect_slider("pp_vhs_tape_crease_amount", %Slider_ShaderTapeCreaseAmount, func(value: float) -> void:
+	_connect_check_to_control_editable(%CheckButtonFilter2, %Slider_ShaderNoiseCreaseOpacity)
+	_config_connect("pp_vhs_tape_crease_amount", %Slider_ShaderTapeCreaseAmount, func(value: float) -> void:
 		main.get_node("%VHSFilter2").material.set_shader_parameter("tape_crease_smear", value)
 	)
-	_connect_check_to_control_editable( %CheckButtonFilter2, %Slider_ShaderTapeCreaseAmount)
-	_connect_slider("pp_crt_curvature", %Slider_ShaderCurvatureAmount, func(value: float) -> void:
+	_connect_check_to_control_editable(%CheckButtonFilter2, %Slider_ShaderTapeCreaseAmount)
+	_config_connect("pp_crt_curvature", %Slider_ShaderCurvatureAmount, func(value: float) -> void:
 		main.get_node("%CRTShader").material.set_shader_parameter("warp_amount", value)
 	)
-	_connect_check_to_control_editable( %CheckButtonFilter5, %Slider_ShaderCurvatureAmount)
-	_connect_slider("pp_vignette_amount", %Slider_ShaderVignetteAmount, func(value: float) -> void:
+	_connect_check_to_control_editable(%CheckButtonFilter5, %Slider_ShaderCurvatureAmount)
+	_config_connect("pp_vignette_amount", %Slider_ShaderVignetteAmount, func(value: float) -> void:
 		main.get_node("%CRTShader").material.set_shader_parameter("vignette_opacity", value)
 	)
-	_connect_check_to_control_editable( %CheckButtonFilter5, %Slider_ShaderVignetteAmount)
+	_connect_check_to_control_editable(%CheckButtonFilter5, %Slider_ShaderVignetteAmount)
 
 	# Keybindings
 	# --------------------------------------------------------------------
 
-	_connect_check("virtual_keyboard_enabled", %Check_VirtualKeyboard, func(value: bool) -> void:
-		main.m8_virtual_keyboard_enabled=value
+	_config_connect("virtual_keyboard_enabled", %Check_VirtualKeyboard, func(value: bool) -> void:
+		main.m8_virtual_keyboard_enabled = value
 	)
 
 	get_tree().physics_frame.connect(func() -> void:
-		%ButtonBindUp1.text=get_key_bind("key_up", 0)
-		%ButtonBindUp2.text=get_key_bind("key_up", 1)
-		%ButtonBindDown1.text=get_key_bind("key_down", 0)
-		%ButtonBindDown2.text=get_key_bind("key_down", 1)
-		%ButtonBindLeft1.text=get_key_bind("key_left", 0)
-		%ButtonBindLeft2.text=get_key_bind("key_left", 1)
-		%ButtonBindRight1.text=get_key_bind("key_right", 0)
-		%ButtonBindRight2.text=get_key_bind("key_right", 1)
-		%ButtonBindOpt1.text=get_key_bind("key_option", 0)
-		%ButtonBindOpt2.text=get_key_bind("key_option", 1)
-		%ButtonBindEdit1.text=get_key_bind("key_edit", 0)
-		%ButtonBindEdit2.text=get_key_bind("key_edit", 1)
-		%ButtonBindShift1.text=get_key_bind("key_shift", 0)
-		%ButtonBindShift2.text=get_key_bind("key_shift", 1)
-		%ButtonBindPlay1.text=get_key_bind("key_play", 0)
-		%ButtonBindPlay2.text=get_key_bind("key_play", 1)
+		%ButtonBindUp1.text = get_key_bind("key_up", 0)
+		%ButtonBindUp2.text = get_key_bind("key_up", 1)
+		%ButtonBindDown1.text = get_key_bind("key_down", 0)
+		%ButtonBindDown2.text = get_key_bind("key_down", 1)
+		%ButtonBindLeft1.text = get_key_bind("key_left", 0)
+		%ButtonBindLeft2.text = get_key_bind("key_left", 1)
+		%ButtonBindRight1.text = get_key_bind("key_right", 0)
+		%ButtonBindRight2.text = get_key_bind("key_right", 1)
+		%ButtonBindOpt1.text = get_key_bind("key_option", 0)
+		%ButtonBindOpt2.text = get_key_bind("key_option", 1)
+		%ButtonBindEdit1.text = get_key_bind("key_edit", 0)
+		%ButtonBindEdit2.text = get_key_bind("key_edit", 1)
+		%ButtonBindShift1.text = get_key_bind("key_shift", 0)
+		%ButtonBindShift2.text = get_key_bind("key_shift", 1)
+		%ButtonBindPlay1.text = get_key_bind("key_play", 0)
+		%ButtonBindPlay2.text = get_key_bind("key_play", 1)
 	)
 
 	%ButtonBindUp1.button_down.connect(start_key_rebind.bind("key_up", 0))
@@ -472,10 +519,10 @@ func init(p_main: M8SceneDisplay) -> void:
 	# Background color (read-only)
 
 	get_tree().physics_frame.connect(func() -> void:
-		var color: Color=main.m8_client.get_background_color()
+		var color: Color = main.m8_client.get_theme_colors()[0]
 		if color != %ThemeBGColor.color:
-			%LabelThemeBGColor.text="#%s" % color.to_html(false).to_upper()
-			%ThemeBGColor.color=color
+			%LabelThemeBGColor.text = "#%s" % color.to_html(false).to_upper()
+			%ThemeBGColor.color = color
 	)
 
 	# Model colors
@@ -497,7 +544,7 @@ func init(p_main: M8SceneDisplay) -> void:
 
 		colorpicker.color_changed.connect(func(color: Color) -> void:
 			if _model():
-				_model(nodepath).material_override.albedo_color=color
+				_model(nodepath).material_override.albedo_color = color
 			config.set(config_prop, color)
 		)
 		colorpicker.color = config.get(config_prop)
@@ -505,24 +552,24 @@ func init(p_main: M8SceneDisplay) -> void:
 		# reset to default
 		colorpicker.gui_input.connect(func(event: InputEvent) -> void:
 			if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
-				var color:=Color.BLACK if nodepath == "%Body" else config.DEFAULT_COLOR_KEYCAP
-				_model(nodepath).material_override.albedo_color=color
+				var color := Color.BLACK if nodepath == "%Body" else config.DEFAULT_COLOR_KEYCAP
+				_model(nodepath).material_override.albedo_color = color
 				config.set(config_prop, color)
-				colorpicker.color=color
+				colorpicker.color = color
 		)
 
 	# Key highlight colors (also affects key overlay color)
 
-	%CheckButtonHL_Filters.toggled.connect(func(toggled_on: bool) -> void:
-		config.hl_filters=toggled_on
-		var index_on:=main.get_node("%VHSFilter1").get_index()
-		var index_off:=main.get_node("%CRTShader").get_index()
-		if toggled_on:
-			main.get_node("%UI").move_child(main.key_overlay, index_on)
-		else:
-			main.get_node("%UI").move_child(main.key_overlay, index_off)
-	)
-	%CheckButtonHL_Filters.button_pressed = config.hl_filters
+	# %CheckButtonHL_Filters.toggled.connect(func(toggled_on: bool) -> void:
+	# 	config.hl_filters = toggled_on
+	# 	var index_on := main.get_node("%VHSFilter1").get_index()
+	# 	var index_off := main.get_node("%CRTShader").get_index()
+	# 	if toggled_on:
+	# 		main.get_node("%UI").move_child(main.key_overlay, index_on)
+	# 	else:
+	# 		main.get_node("%UI").move_child(main.key_overlay, index_off)
+	# )
+	# %CheckButtonHL_Filters.button_pressed = config.hl_filters
 
 	# highlight color for directional buttons
 	for colorpicker: ColorPickerButton in [
@@ -533,12 +580,12 @@ func init(p_main: M8SceneDisplay) -> void:
 	]:
 		colorpicker.color_changed.connect(func(color: Color) -> void:
 			if _model():
-				_model("%Keycap_Up").material_overlay.albedo_color=color
-				_model("%Keycap_Down").material_overlay.albedo_color=color
-				_model("%Keycap_Left").material_overlay.albedo_color=color
-				_model("%Keycap_Right").material_overlay.albedo_color=color
-			main.key_overlay.color_directional=color
-			config.hl_color_directional=color
+				_model("%Keycap_Up").material_overlay.albedo_color = color
+				_model("%Keycap_Down").material_overlay.albedo_color = color
+				_model("%Keycap_Left").material_overlay.albedo_color = color
+				_model("%Keycap_Right").material_overlay.albedo_color = color
+			main.key_overlay.color_directional = color
+			config.hl_color_directional = color
 		)
 		colorpicker.color = config.hl_color_directional
 
@@ -556,7 +603,7 @@ func init(p_main: M8SceneDisplay) -> void:
 
 		colorpicker.color_changed.connect(func(color: Color) -> void:
 			if _model():
-				_model(nodepath).material_overlay.albedo_color=color
+				_model(nodepath).material_overlay.albedo_color = color
 			main.key_overlay.set(key_overlay_prop, color)
 			config.set(config_prop, color)
 		)
@@ -565,11 +612,11 @@ func init(p_main: M8SceneDisplay) -> void:
 		# reset to default
 		colorpicker.gui_input.connect(func(event: InputEvent) -> void:
 			if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
-				var default_color:=Color.WHITE
-				_model(nodepath).material_overlay.albedo_color=default_color
+				var default_color := Color.WHITE
+				_model(nodepath).material_overlay.albedo_color = default_color
 				main.key_overlay.set(key_overlay_prop, default_color)
 				config.set(config_prop, default_color)
-				colorpicker.color=default_color
+				colorpicker.color = default_color
 		)
 
 	# sync color presets for all colorpickers
@@ -580,39 +627,19 @@ func init(p_main: M8SceneDisplay) -> void:
 	# Model settings
 
 	%SliderHL_Opacity.value_changed.connect(func(value: float) -> void:
-		config.hl_opacity=value
-		%LabelHL_Opacity.text="%d%%" % (value * 100)
+		config.hl_opacity = value
+		%LabelHL_Opacity.text = "%d%%" % (value * 100)
 		if _model():
-			_model().highlight_opacity=value
+			_model().highlight_opacity = value
 	)
 	%SliderHL_Opacity.value = config.hl_opacity
 
 	%CheckButtonModelLinearFilter.toggled.connect(func(toggled_on: bool) -> void:
-		config.model_use_linear_filter=toggled_on
+		config.model_use_linear_filter = toggled_on
 		if _model():
 			_model().set_screen_filter(toggled_on)
 	)
 	%CheckButtonModelLinearFilter.button_pressed = config.model_use_linear_filter
-
-	# Key overlay settings
-
-	%CheckButtonKeyOverlayEnable.toggled.connect(func(toggled_on: bool) -> void:
-		main.key_overlay.visible=toggled_on
-		if toggled_on == false:
-			main.key_overlay.clear()
-		config.key_overlay_enabled=toggled_on
-	)
-	%CheckButtonKeyOverlayEnable.button_pressed = config.key_overlay_enabled
-
-	%SliderKeyOverlayStyle.value_changed.connect(func(value: int) -> void:
-		main.key_overlay.overlay_style=value
-		config.key_overlay_style=value
-		if value == 0:
-			%LabelKeyOverlayStyle.text="Boxed"
-		else:
-			%LabelKeyOverlayStyle.text="Unboxed"
-	)
-	%SliderKeyOverlayStyle.value = config.key_overlay_style
 
 	# Devices Tab
 	# --------------------------------------------------------------------
@@ -627,24 +654,24 @@ func init(p_main: M8SceneDisplay) -> void:
 	refresh_serial_ports.call()
 
 	%ListSerialPorts.item_selected.connect(func(index: int) -> void:
-		%ButtonConnectSerialPort.disabled=false
+		%ButtonConnectSerialPort.disabled = false
 		if main.current_serial_device == %ListSerialPorts.get_item_text(index):
-			%ButtonConnectSerialPort.text="Reconnect"
-			%ButtonDisconnectSerialPort.disabled=false
+			%ButtonConnectSerialPort.text = "Reconnect"
+			%ButtonDisconnectSerialPort.disabled = false
 		else:
-			%ButtonConnectSerialPort.text="Connect"
-			%ButtonDisconnectSerialPort.disabled=true
+			%ButtonConnectSerialPort.text = "Connect"
+			%ButtonDisconnectSerialPort.disabled = true
 	)
 
 	%ButtonRefreshSerialPorts.pressed.connect(refresh_serial_ports)
 
 	%ButtonConnectSerialPort.pressed.connect(func() -> void:
-		var index: int= %ListSerialPorts.get_selected_items()[0]
-		var text: String= %ListSerialPorts.get_item_text(index)
+		var index: int = %ListSerialPorts.get_selected_items()[0]
+		var text: String = %ListSerialPorts.get_item_text(index)
 		main.m8_device_connect(text)
 		%ListSerialPorts.deselect_all()
-		%ButtonConnectSerialPort.disabled=true
-		%ButtonConnectSerialPort.text="Connect"
+		%ButtonConnectSerialPort.disabled = true
+		%ButtonConnectSerialPort.text = "Connect"
 	)
 
 	%ButtonDisconnectSerialPort.pressed.connect(func() -> void:
@@ -661,37 +688,37 @@ func init(p_main: M8SceneDisplay) -> void:
 	refresh_audio_devices.call()
 
 	%ListAudioDevices.item_selected.connect(func(index: int) -> void:
-		%ButtonConnectAudioDevice.disabled=false
+		%ButtonConnectAudioDevice.disabled = false
 		if main.current_audio_device == %ListAudioDevices.get_item_text(index):
-			%ButtonConnectAudioDevice.text="Reconnect"
-			%ButtonDisconnectAudioDevice.disabled=false
-			%ButtonHardResetAudioDevice.disabled=false
+			%ButtonConnectAudioDevice.text = "Reconnect"
+			%ButtonDisconnectAudioDevice.disabled = false
+			%ButtonHardResetAudioDevice.disabled = false
 		else:
-			%ButtonConnectAudioDevice.text="Connect"
-			%ButtonDisconnectAudioDevice.disabled=true
-			%ButtonHardResetAudioDevice.disabled=true
+			%ButtonConnectAudioDevice.text = "Connect"
+			%ButtonDisconnectAudioDevice.disabled = true
+			%ButtonHardResetAudioDevice.disabled = true
 	)
 
 	%ButtonRefreshAudioDevices.pressed.connect(refresh_audio_devices)
 
 	%ButtonConnectAudioDevice.pressed.connect(func() -> void:
-		var index: int= %ListAudioDevices.get_selected_items()[0]
-		var text: String= %ListAudioDevices.get_item_text(index)
+		var index: int = %ListAudioDevices.get_selected_items()[0]
+		var text: String = %ListAudioDevices.get_item_text(index)
 		main.m8_audio_connect(text)
 		%ListAudioDevices.deselect_all()
-		%ButtonConnectAudioDevice.disabled=true
-		%ButtonHardResetAudioDevice.disabled=true
-		%ButtonConnectAudioDevice.text="Connect"
+		%ButtonConnectAudioDevice.disabled = true
+		%ButtonHardResetAudioDevice.disabled = true
+		%ButtonConnectAudioDevice.text = "Connect"
 	)
 
 	%ButtonHardResetAudioDevice.pressed.connect(func() -> void:
-		var index: int= %ListAudioDevices.get_selected_items()[0]
-		var text: String= %ListAudioDevices.get_item_text(index)
+		var index: int = %ListAudioDevices.get_selected_items()[0]
+		var text: String = %ListAudioDevices.get_item_text(index)
 		main.m8_audio_connect(text, true)
 		%ListAudioDevices.deselect_all()
-		%ButtonConnectAudioDevice.disabled=true
-		%ButtonHardResetAudioDevice.disabled=true
-		%ButtonConnectAudioDevice.text="Connect"
+		%ButtonConnectAudioDevice.disabled = true
+		%ButtonHardResetAudioDevice.disabled = true
+		%ButtonConnectAudioDevice.text = "Connect"
 	)
 
 	%ButtonDisconnectAudioDevice.pressed.connect(func() -> void:
@@ -700,9 +727,9 @@ func init(p_main: M8SceneDisplay) -> void:
 
 	get_tree().process_frame.connect(func() -> void:
 		if main.is_menu_open():
-			var volume:=main.audio_get_peak_volume()
-			%Bar_AudioLevelL.value=volume.x
-			%Bar_AudioLevelR.value=volume.y
+			var volume := main.audio_get_peak_volume()
+			%Bar_AudioLevelL.value = volume.x
+			%Bar_AudioLevelR.value = volume.y
 	)
 
 	%TabContainer.tab_changed.connect(func(tab: int) -> void:
@@ -715,8 +742,8 @@ func init(p_main: M8SceneDisplay) -> void:
 	# --------------------------------------------------------------------
 
 	%CheckButtonDebug.toggled.connect(func(toggled_on: bool) -> void:
-		main.get_node("%DebugLabels").visible=toggled_on
-		config.debug_info=toggled_on
+		main.get_node("%DebugLabels").visible = toggled_on
+		config.debug_info = toggled_on
 	)
 	%CheckButtonDebug.button_pressed = config.debug_info
 
@@ -725,23 +752,23 @@ func init(p_main: M8SceneDisplay) -> void:
 	%ButtonM8Reset.pressed.connect(main.m8_send_reset_display)
 
 	%SpinBoxM8Keys.value_changed.connect(func(value: float) -> void:
-		%LabelM8KeysBinary.text=String.num_int64(int(value), 2).pad_zeros(8)
+		%LabelM8KeysBinary.text = String.num_int64(int(value), 2).pad_zeros(8)
 	)
 
 	%ButtonM8Control.pressed.connect(func() -> void:
-		var keys: int= %SpinBoxM8Keys.get_line_edit().text.to_int()
+		var keys: int = %SpinBoxM8Keys.get_line_edit().text.to_int()
 		main.m8_send_control(keys)
 	)
 
 	%ButtonM8KeyJazz.pressed.connect(func() -> void:
-		var n: int= %SpinBoxM8Note.get_line_edit().text.to_int()
-		var v: int= %SpinBoxM8Vel.get_line_edit().text.to_int()
+		var n: int = %SpinBoxM8Note.get_line_edit().text.to_int()
+		var v: int = %SpinBoxM8Vel.get_line_edit().text.to_int()
 		print("debug: sending keyjazz (n=%d, v=%d)" % [n, v])
 		main.m8_send_keyjazz(n, v)
 	)
 
 	%SpinBoxM8ThemeDelay.value_changed.connect(func(value: float) -> void:
-		%LabelM8ThemeDelayMS.text="%.1fms" % (value / 60.0 * 1000.0)
+		%LabelM8ThemeDelayMS.text = "%.1fms" % (value / 60.0 * 1000.0)
 	)
 
 	var m8t_colors := [
@@ -753,39 +780,46 @@ func init(p_main: M8SceneDisplay) -> void:
 
 	%ButtonM8Theme.pressed.connect(func() -> void:
 		print("debug: sending theme colors")
-		var delay_frames: int= %SpinBoxM8ThemeDelay.get_line_edit().text.to_int()
+		var delay_frames: int = %SpinBoxM8ThemeDelay.get_line_edit().text.to_int()
 		for i: int in range(m8t_colors.size()):
 			main.m8_send_theme_color(i, m8t_colors[i].color)
 			for j in range(delay_frames):
 				await get_tree().physics_frame
 	)
 
-## Connect a Slider to a config setting and callback function.
-func _connect_slider(setting: String, slider: Slider, fn: Callable) -> void:
-	slider.value_changed.connect(func(value: float) -> void:
-		fn.call(value)
-		main.config.set(setting, value)
-	)
-	slider.value = main.config.get(setting)
+## Connect a Control node to a config setting and callback function.
+func _config_connect(setting: String, control: Control, fn: Callable) -> void:
+	main.config.assert_setting_exists(setting)
 
-## Connect a CheckButton to a config setting and callback function.
-func _connect_check(setting: String, check: CheckButton, fn: Callable) -> void:
-	check.toggled.connect(func(toggled_on: bool) -> void:
-		fn.call(toggled_on)
-		main.config.set(setting, toggled_on)
-	)
-	check.button_pressed = main.config.get(setting)
+	if control is Slider:
+		control.value_changed.connect(func(value: float) -> void:
+			fn.call(value)
+			main.config.set(setting, value)
+		)
+		control.set_value_no_signal(main.config.get(setting))
+		control.value_changed.emit(control.value)
+
+	elif control is CheckButton:
+		control.toggled.connect(func(toggled_on: bool) -> void:
+			fn.call(toggled_on)
+			main.config.set(setting, toggled_on)
+		)
+		control.set_pressed_no_signal(main.config.get(setting))
+		control.toggled.emit(control.button_pressed)
+
+	else:
+		assert(false, "Tried to connect setting to unrecognized node.")
 
 ## Connect a CheckButton to a Range or Button. If the CheckButton is off, disable the Range/Button.
 func _connect_check_to_control_editable(check: CheckButton, control: Control) -> void:
 	if control is Slider:
 		check.toggled.connect(func(toggled_on: bool) -> void:
-			control.editable=toggled_on
+			control.editable = toggled_on
 		)
 		control.editable = check.button_pressed
 	elif control is Button:
 		check.toggled.connect(func(toggled_on: bool) -> void:
-			control.disabled=!toggled_on
+			control.disabled = !toggled_on
 		)
 		control.disabled = !check.button_pressed
 
@@ -813,13 +847,13 @@ func get_scene_path_idx(scene_path: String) -> int:
 	for i in range(option_scenes.item_count):
 		if option_scenes.get_item_metadata(i) == scene_path:
 			return i
-	return - 1
+	return -1
 
 ##
 ## Try to return the device model in the current scene.
 ## If there isn't one, returns null.
 ##
-func _model(path: String="") -> Node:
+func _model(path: String = "") -> Node:
 	if main.current_scene and main.current_scene.has_device_model():
 		if path == "":
 			return main.current_scene.get_device_model()

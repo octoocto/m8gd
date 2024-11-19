@@ -17,6 +17,14 @@ var version: int = 0
 @export var camera_mouse_control := true
 @export var camera_humanize := true
 
+# overlay settings
+@export var overlay_scale := 1
+@export var overlay_apply_filters := true
+@export var overlay_spectrum := false
+@export var overlay_waveform := false
+@export var overlay_display := false
+@export var overlay_key := false
+
 # device model settings
 @export var model_color_key_up := DEFAULT_COLOR_KEYCAP
 @export var model_color_key_down := DEFAULT_COLOR_KEYCAP
@@ -75,7 +83,7 @@ var version: int = 0
 @export var pp_vignette_amount := 0.5
 
 # visualizer settings
-@export var audio_analyzer_enabled := false
+@export var audio_analyzer_enabled := true
 @export var audio_analyzer_min_freq: int = 800
 @export var audio_analyzer_max_freq: int = 1200
 @export var audio_to_brightness := 0.1
@@ -90,6 +98,11 @@ var version: int = 0
 # contains key bindings
 @export var action_events := {} # Dictionary[String, Array]
 @export var virtual_keyboard_enabled := false
+
+## Returns true if this script contains a default for the given setting.
+##
+func assert_setting_exists(setting: String) -> void:
+	assert(get(setting) != null, "Setting %s does not exist, must define in config_file.gd" % setting)
 
 func save() -> void:
 	var error := ResourceSaver.save(self, CONFIG_FILE_PATH)

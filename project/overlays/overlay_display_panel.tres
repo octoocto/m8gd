@@ -1,0 +1,11 @@
+[gd_resource type="Shader" format=3 uid="uid://df8ql2iwe7kys"]
+
+[resource]
+code = "shader_type canvas_item;
+
+uniform vec3 panel_color: source_color = vec3(0);
+uniform float panel_opacity: hint_range(0.0, 1.0) = 1.0;
+
+void fragment() {
+	COLOR = vec4(panel_color, panel_opacity);
+}"

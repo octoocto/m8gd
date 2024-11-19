@@ -24,18 +24,28 @@ signal m8_disconnected
 @export var visualizer_frequency_min := 0
 @export var visualizer_frequency_max := 400
 
+@export var overlay_integer_zoom: int = 2:
+	set(value):
+		overlay_integer_zoom = value
+		if is_inside_tree():
+			_overlay_update_viewport_size()
+
 @onready var audio_monitor: AudioStreamPlayer = %AudioStreamPlayer
 
 # @onready var scene_viewport: SubViewport = %SceneViewport
 @onready var scene_root: Node = %SceneRoot
 @onready var current_scene: M8Scene = null
 
+# overlays
 @onready var key_overlay: M8KeyOverlay = %KeyOverlay
+@onready var overlay_spectrum: Control = %OverlayAudioSpectrum
+@onready var overlay_waveform: Control = %OverlayAudioWaveform
+@onready var overlay_display: Control = %OverlayDisplayPanel
 
 @onready var menu: MainMenu = %MainMenuPanel
 @onready var menu_scene: SceneMenu = %SceneMenu
-@onready var menu_subscene: PanelContainer = %SubSceneMenu
 @onready var menu_camera: PanelContainer = %SceneCameraMenu
+@onready var menu_overlay: PanelContainer = %MenuOverlay
 
 @onready var cam_status: RichTextLabel = %CameraStatus
 @onready var cam_help: RichTextLabel = %CameraControls
@@ -81,6 +91,12 @@ func _ready() -> void:
 	# resize viewport with window
 	DisplayServer.window_set_min_size(Vector2i(960, 640)) # 2x M8 screen size
 
+	# initialize utility scripts
+	_printgreen("initializing util scripts...")
+	MenuUtils.init(self)
+	_printgreen("initialized key overlay in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
+	time = Time.get_ticks_msec()
+
 	# initialize key overlay
 	_printgreen("initializing key overlay...")
 	key_overlay.init(self)
@@ -98,11 +114,6 @@ func _ready() -> void:
 	_printgreen("initialized scene menu in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
 	time = Time.get_ticks_msec()
 
-	_printgreen("initializing subscene menu...")
-	menu_subscene.init(self)
-	_printgreen("initialized subscene menu in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
-	time = Time.get_ticks_msec()
-
 	_printgreen("initializing camera menu...")
 	menu_camera.init(self)
 	_printgreen("initialized camera menu in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
@@ -112,8 +123,17 @@ func _ready() -> void:
 	# initialize main scene
 	if not load_scene(config.last_scene_path):
 		load_scene(MAIN_SCENE_PATH)
-
 	_printgreen("initialized scene in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
+	time = Time.get_ticks_msec()
+
+	_printgreen("initializing overlays...")
+	_overlay_init()
+	menu_overlay.init(self)
+	menu_overlay.init_overlay(overlay_display)
+	menu_overlay.init_overlay(key_overlay)
+	menu_overlay.init_overlay(overlay_spectrum)
+	menu_overlay.init_overlay(overlay_waveform)
+	_printgreen("initialized overlays in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
 	time = Time.get_ticks_msec()
 
 	_printgreen("finished initializing in %.3f seconds!" % ((Time.get_ticks_msec() - start_time) / 1000.0))
@@ -233,6 +253,33 @@ func set_subscene_mode(mode: int) -> void:
 			%SubSceneRoot.add_child(scene)
 			scene.init(self, false)
 			scene.force_integer_scale = 0
+
+func _overlay_init() -> void:
+
+	m8_client.set_background_alpha(0)
+	%OverlayAudioSpectrum.init(self)
+	%OverlayAudioWaveform.init(self)
+	%OverlayDisplayPanel.init(self)
+	_overlay_update_viewport_size()
+
+	get_window().size_changed.connect(func() -> void:
+		_overlay_update_viewport_size()
+	)
+
+
+func _overlay_update_viewport_size() -> void:
+
+	var window_size := get_window().get_size()
+	var viewport_size := Vector2i((window_size / float(overlay_integer_zoom)).ceil())
+
+	%OverlaySubViewport.set_size(viewport_size)
+
+	%OverlaySubViewportContainer.scale = Vector2(overlay_integer_zoom, overlay_integer_zoom)
+
+	%OverlayControl.custom_minimum_size = window_size * overlay_integer_zoom
+
+	%OverlayContainer.set_anchors_preset(Control.PRESET_FULL_RECT)
+	%OverlayContainer.set_anchors_preset(Control.PRESET_TOP_LEFT)
 
 ##
 ## Return all properties of a PackedScene.
