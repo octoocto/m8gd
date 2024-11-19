@@ -1,13 +1,35 @@
-[gd_scene load_steps=26 format=3 uid="uid://da23gfk2abg5f"]
+[gd_scene load_steps=31 format=3 uid="uid://da23gfk2abg5f"]
 
 [ext_resource type="Script" path="res://scenes/floating_scene.gd" id="1_ufbfg"]
 [ext_resource type="Texture2D" uid="uid://d01h4xbn66tpi" path="res://assets/texture_07.png" id="2_yqhq4"]
+[ext_resource type="Shader" path="res://shaders/screen_blur.gdshader" id="3_nedee"]
 [ext_resource type="Shader" path="res://shaders/device_screen.gdshader" id="3_o28i3"]
 [ext_resource type="Texture2D" uid="uid://ras5y3yqijkx" path="res://assets/m8_screen_placeholder.png" id="4_0o31u"]
 [ext_resource type="PackedScene" uid="uid://bckroenwlecqv" path="res://humanized_camera_3d.tscn" id="4_8iar1"]
 [ext_resource type="PackedScene" uid="uid://budu6000msy4d" path="res://device_model.tscn" id="4_oaihv"]
-[ext_resource type="PackedScene" uid="uid://263mog4cxgwr" path="res://audio_spectrum.tscn" id="5_ryr46"]
+[ext_resource type="PackedScene" uid="uid://263mog4cxgwr" path="res://overlays/audio_spectrum.tscn" id="5_ryr46"]
 [ext_resource type="Shader" path="res://shaders/crt_screen.gdshader" id="5_t84je"]
+
+[sub_resource type="Gradient" id="Gradient_1mc0v"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_d2j5s"]
+frequency = 1.0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_t5wih"]
+width = 2048
+height = 2048
+invert = true
+color_ramp = SubResource("Gradient_1mc0v")
+noise = SubResource("FastNoiseLite_d2j5s")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fmvik"]
+shader = ExtResource("3_nedee")
+shader_parameter/blur_amount = 0.0
+shader_parameter/tint_color = Color(1, 1, 1, 1)
+shader_parameter/tint_amount = 0.0
+shader_parameter/brightness = 1.0
+shader_parameter/noise_strength = 0.0
+shader_parameter/noise_texture = SubResource("NoiseTexture2D_t5wih")
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_h8o1l"]
 
@@ -140,7 +162,6 @@ loop = true
 
 [node name="BGTextureRect" type="TextureRect" parent="CanvasLayer"]
 unique_name_in_owner = true
-visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -149,6 +170,15 @@ grow_vertical = 2
 texture = ExtResource("2_yqhq4")
 expand_mode = 1
 stretch_mode = 6
+
+[node name="BGShader" type="ColorRect" parent="CanvasLayer"]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_fmvik")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 unique_name_in_owner = true
@@ -246,6 +276,14 @@ size = Vector2i(640, 480)
 
 [node name="AudioSpectrum" parent="SubViewport" instance=ExtResource("5_ryr46")]
 unique_name_in_owner = true
-position = Vector2(320, 240)
+offset_left = -320.0
+offset_top = -120.0
+offset_right = 320.0
+offset_bottom = 120.0
+type = 2
+style_mirror = true
+style_reverse = true
+style_peak_to_alpha_amount = 0.5
+style_bar_centered = true
 
 [editable path="Camera3D"]

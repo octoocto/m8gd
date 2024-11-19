@@ -1,22 +1,23 @@
-[gd_scene load_steps=28 format=3 uid="uid://bu28kwqtn6cdg"]
+[gd_scene load_steps=32 format=3 uid="uid://bu28kwqtn6cdg"]
 
 [ext_resource type="Script" path="res://scenes/pixel_scene.gd" id="1_4jmsl"]
 [ext_resource type="Texture2D" uid="uid://ras5y3yqijkx" path="res://assets/m8_screen_placeholder.png" id="2_0qctg"]
-[ext_resource type="PackedScene" uid="uid://263mog4cxgwr" path="res://audio_spectrum.tscn" id="3_6dnic"]
+[ext_resource type="PackedScene" uid="uid://dq6heks88e2ip" path="res://overlays/audio_waveform.tscn" id="3_2lr8w"]
+[ext_resource type="PackedScene" uid="uid://263mog4cxgwr" path="res://overlays/audio_spectrum.tscn" id="3_6dnic"]
 [ext_resource type="Shader" path="res://shaders/panel_blur.gdshader" id="4_7e2xd"]
 [ext_resource type="Shader" path="res://shaders/screen_blur.gdshader" id="4_rkdfl"]
 
-[sub_resource type="Gradient" id="Gradient_2ccln"]
+[sub_resource type="Gradient" id="Gradient_gskhf"]
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_np6uh"]
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ee18n"]
 frequency = 1.0
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ar7yb"]
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_uag16"]
 width = 2048
 height = 2048
 invert = true
-color_ramp = SubResource("Gradient_2ccln")
-noise = SubResource("FastNoiseLite_np6uh")
+color_ramp = SubResource("Gradient_gskhf")
+noise = SubResource("FastNoiseLite_ee18n")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rqrn1"]
 shader = ExtResource("4_rkdfl")
@@ -25,12 +26,12 @@ shader_parameter/tint_color = Color(1, 1, 1, 1)
 shader_parameter/tint_amount = 1.0
 shader_parameter/brightness = 0.9
 shader_parameter/noise_strength = 0.01
-shader_parameter/noise_texture = SubResource("NoiseTexture2D_ar7yb")
+shader_parameter/noise_texture = SubResource("NoiseTexture2D_uag16")
 
 [sub_resource type="Gradient" id="Gradient_bpb5k"]
 colors = PackedColorArray(1, 1, 1, 0.733333, 1, 1, 1, 0)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_cr42f"]
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_g6t2j"]
 gradient = SubResource("Gradient_bpb5k")
 
 [sub_resource type="Curve" id="Curve_bkq7t"]
@@ -45,7 +46,7 @@ point_count = 2
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 1, Vector2(1, 1), 0.0, 0.0, 1, 0]
 point_count = 2
 
-[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_nxmid"]
+[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_gyb5b"]
 curve_x = SubResource("Curve_bkq7t")
 curve_y = SubResource("Curve_1wmgg")
 curve_z = SubResource("Curve_5tacs")
@@ -54,7 +55,7 @@ curve_z = SubResource("Curve_5tacs")
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 1.4, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_n1tqi"]
+[sub_resource type="CurveTexture" id="CurveTexture_ft3b6"]
 curve = SubResource("Curve_3tapi")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_7s7jc"]
@@ -68,19 +69,19 @@ spread = 5.0
 initial_velocity_min = 100.0
 initial_velocity_max = 250.0
 gravity = Vector3(0, 0, 0)
-scale_curve = SubResource("CurveXYZTexture_nxmid")
-color_ramp = SubResource("GradientTexture1D_cr42f")
+scale_curve = SubResource("CurveXYZTexture_gyb5b")
+color_ramp = SubResource("GradientTexture1D_g6t2j")
 turbulence_enabled = true
 turbulence_influence_min = 0.01
 turbulence_influence_max = 0.01
-turbulence_influence_over_life = SubResource("CurveTexture_n1tqi")
+turbulence_influence_over_life = SubResource("CurveTexture_ft3b6")
 
-[sub_resource type="Gradient" id="Gradient_2grph"]
+[sub_resource type="Gradient" id="Gradient_eovfv"]
 offsets = PackedFloat32Array(0, 0.9, 0.99)
 colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 0.25, 1, 1, 1, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_2g3t7"]
-gradient = SubResource("Gradient_2grph")
+gradient = SubResource("Gradient_eovfv")
 width = 1
 fill_to = Vector2(0, 1)
 
@@ -88,7 +89,7 @@ fill_to = Vector2(0, 1)
 offsets = PackedFloat32Array(0, 0.397436, 1)
 colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_qqlib"]
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_1e6fx"]
 gradient = SubResource("Gradient_6ry5x")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_aspjq"]
@@ -100,11 +101,23 @@ direction = Vector3(1, 1, 0)
 spread = 180.0
 initial_velocity_max = 25.0
 gravity = Vector3(0, 0, 0)
-color_ramp = SubResource("GradientTexture1D_qqlib")
+color_ramp = SubResource("GradientTexture1D_1e6fx")
 turbulence_enabled = true
 turbulence_influence_min = 0.01
 turbulence_influence_max = 0.01
-turbulence_influence_over_life = SubResource("CurveTexture_n1tqi")
+turbulence_influence_over_life = SubResource("CurveTexture_ft3b6")
+
+[sub_resource type="Gradient" id="Gradient_2ccln"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_np6uh"]
+frequency = 1.0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_5dadj"]
+width = 2048
+height = 2048
+invert = true
+color_ramp = SubResource("Gradient_2ccln")
+noise = SubResource("FastNoiseLite_np6uh")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y1b4h"]
 shader = ExtResource("4_7e2xd")
@@ -112,7 +125,7 @@ shader_parameter/blur_amount = 5.231
 shader_parameter/panel_color = Color(0, 0, 0, 1)
 shader_parameter/panel_opacity = 1.0
 shader_parameter/noise_strength = 0.005
-shader_parameter/noise_texture = SubResource("NoiseTexture2D_ar7yb")
+shader_parameter/noise_texture = SubResource("NoiseTexture2D_5dadj")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_410rj"]
 content_margin_left = 16.0
@@ -193,6 +206,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+color = Color(1, 1, 1, 0)
 
 [node name="BGTextureRect" type="TextureRect" parent="CenterContainer/Control/SubViewportContainer/SubViewport"]
 unique_name_in_owner = true
@@ -216,16 +230,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="AudioSpectrum" parent="CenterContainer/Control/SubViewportContainer/SubViewport" instance=ExtResource("3_6dnic")]
-unique_name_in_owner = true
-visible = false
-position = Vector2(320, 240)
-spectrum_res = 240
-spectrum_freq_min = 10000.0
-spectrum_freq_max = 800.0
-spectrum_height = 640.0
-spectrum_smoothing = 0.6
 
 [node name="GPUParticles2D" type="GPUParticles2D" parent="CenterContainer/Control/SubViewportContainer/SubViewport"]
 unique_name_in_owner = true
@@ -257,6 +261,20 @@ trail_section_subdivisions = 1
 position = Vector2(320, 240)
 copy_mode = 2
 
+[node name="AudioSpectrum" parent="CenterContainer/Control/SubViewportContainer/SubViewport" instance=ExtResource("3_6dnic")]
+unique_name_in_owner = true
+visible = false
+offset_left = 130.0
+offset_top = -188.0
+offset_right = 250.0
+offset_bottom = 37.9999
+type = 0
+style_rows = 9
+style_mirror = true
+style_reverse = true
+style_peak_to_alpha_amount = 1.0
+style_bar_centered = true
+
 [node name="PanelContainer" type="PanelContainer" parent="CenterContainer/Control/SubViewportContainer/SubViewport"]
 unique_name_in_owner = true
 material = SubResource("ShaderMaterial_y1b4h")
@@ -285,6 +303,21 @@ size_flags_vertical = 4
 texture = SubResource("AtlasTexture_k66bi")
 expand_mode = 1
 stretch_mode = 6
+
+[node name="AudioWaveform" parent="CenterContainer/Control/SubViewportContainer/SubViewport" instance=ExtResource("3_2lr8w")]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -12.5
+offset_bottom = 12.5
+grow_vertical = 2
+analyzer_high_cutoff = 0.67
+style_reverse = true
+style_peak_to_alpha_amount = 0.0
+style_bar_centered = true
+style_line_width = -1.0
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="CenterContainer/Control/SubViewportContainer/SubViewport"]
 environment = SubResource("Environment_nwhd1")

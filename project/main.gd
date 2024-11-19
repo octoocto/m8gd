@@ -3,11 +3,11 @@ class_name M8SceneDisplay extends Node
 const MAIN_SCENE_PATH: String = "res://scenes/floating_scene.tscn"
 const SUB_SCENE_PATH: String = "res://scenes/simple_scene.tscn"
 
-const FONT_01_SMALL: BitMap = preload ("res://assets/m8_fonts/5_7.bmp")
-const FONT_01_BIG: BitMap = preload ("res://assets/m8_fonts/8_9.bmp")
-const FONT_02_SMALL: BitMap = preload ("res://assets/m8_fonts/9_9.bmp")
-const FONT_02_BOLD: BitMap = preload ("res://assets/m8_fonts/10_10.bmp")
-const FONT_02_HUGE: BitMap = preload ("res://assets/m8_fonts/12_12.bmp")
+const FONT_01_SMALL: BitMap = preload("res://assets/m8_fonts/5_7.bmp")
+const FONT_01_BIG: BitMap = preload("res://assets/m8_fonts/8_9.bmp")
+const FONT_02_SMALL: BitMap = preload("res://assets/m8_fonts/9_9.bmp")
+const FONT_02_BOLD: BitMap = preload("res://assets/m8_fonts/10_10.bmp")
+const FONT_02_HUGE: BitMap = preload("res://assets/m8_fonts/12_12.bmp")
 
 const M8_ACTIONS := [
 	"key_up", "key_down", "key_left", "key_right",
@@ -139,11 +139,11 @@ func _ready() -> void:
 	_printgreen("finished initializing in %.3f seconds!" % ((Time.get_ticks_msec() - start_time) / 1000.0))
 
 	%Check_SplashDoNotShow.toggled.connect(func(toggle_mode: bool) -> void:
-		config.splash_show=!toggle_mode
+		config.splash_show = !toggle_mode
 	)
 
 	%ButtonSplashClose.pressed.connect(func() -> void:
-		%SplashContainer.visible=false
+		%SplashContainer.visible = false
 	)
 
 	%SplashContainer.visible = config.splash_show
@@ -151,7 +151,7 @@ func _ready() -> void:
 	get_tree().process_frame.connect(func() -> void:
 		# godot action to m8 controller
 		
-		var local_keybits:=m8_get_local_keybits()
+		var local_keybits := m8_get_local_keybits()
 		m8_client.send_input(local_keybits)
 	)
 
@@ -175,12 +175,12 @@ func is_menu_open() -> bool:
 	return menu.visible
 
 func is_any_menu_open() -> bool:
-	return menu.visible or menu_scene.visible or menu_subscene.visible or menu_camera.visible
+	return menu.visible or menu_scene.visible or menu_camera.visible or menu_overlay.visible
 
 func menu_open() -> void:
 	menu_camera.menu_close()
 	menu_scene.visible = false
-	menu_subscene.visible = false
+	menu_overlay.menu_close()
 	menu.visible = true
 
 func menu_close() -> void:
@@ -364,7 +364,7 @@ func m8_device_connect_auto() -> void:
 ## Connect to the audio input device with name `device_name`.
 ## If `hard_reset` is true, also free and create a new AudioStreamPlayer.
 ##
-func m8_audio_connect(device_name: String, hard_reset: bool=false) -> void:
+func m8_audio_connect(device_name: String, hard_reset: bool = false) -> void:
 	if !device_name in AudioServer.get_input_device_list():
 		menu.set_status_audiodevice("Failed: audio device not found: %s" % device_name)
 		return
@@ -469,7 +469,7 @@ func on_m8_font_changed(model: String, font: int) -> void:
 			else:
 				m8_client.load_font(FONT_01_BIG)
 
-func m8_device_disconnect(wait_for_device:=true) -> void:
+func m8_device_disconnect(wait_for_device := true) -> void:
 	if m8_client.is_connected():
 		m8_client.disconnect()
 		on_m8_device_disconnect()
@@ -570,16 +570,19 @@ func _physics_process(delta: float) -> void:
 	update_audio_analyzer()
 
 	var modulate_color := m8_client.get_theme_colors()[0]
+	# modulate_color.v = 1.0
+	%BGShader.material.set_shader_parameter("tint_color", modulate_color)
 
 	# do shader parameter responses to audio
 
 	%CRTShader.material.set_shader_parameter("aberration", audio_level * visualizer_ca_amount)
 	%NoiseShader.material.set_shader_parameter("brightness", 1.0 + (audio_level * visualizer_brightness_amount))
+	# %BGShader.material.set_shader_parameter("brightness", 1.0 + (audio_level * visualizer_brightness_amount))
 
 	# fade out status message
 
 	if %LabelStatus.modulate.a > 0:
-		%LabelStatus.modulate.a = lerp( %LabelStatus.modulate.a, %LabelStatus.modulate.a - delta * 2.0, 0.2)
+		%LabelStatus.modulate.a = lerp(%LabelStatus.modulate.a, %LabelStatus.modulate.a - delta * 2.0, 0.2)
 
 func _process(_delta: float) -> void:
 
@@ -602,9 +605,9 @@ func _process(_delta: float) -> void:
 
 	if palette.size() < 16:
 		for i in range(16):
-			get_node("%%Color_Palette%d"% (i+1)).color = Color(0, 0, 0, 0)
+			get_node("%%Color_Palette%d" % (i + 1)).color = Color(0, 0, 0, 0)
 		for i in range(palette.size()):
-			get_node("%%Color_Palette%d"% (i+1)).color = palette[i]
+			get_node("%%Color_Palette%d" % (i + 1)).color = palette[i]
 
 ##
 ## Get the keybits from inputs received on this system. (Not the connected M8).
@@ -773,10 +776,10 @@ func _input(event: InputEvent) -> void:
 			m8_virtual_keyboard_notes.append(note)
 			print("virtual keyboard: playing note = %d" % note)
 		elif !event.pressed and m8_virtual_keyboard_notes.size() > 0:
-			var last_note: int = m8_virtual_keyboard_notes[- 1]
+			var last_note: int = m8_virtual_keyboard_notes[-1]
 			m8_virtual_keyboard_notes.erase(note)
 			if m8_virtual_keyboard_notes.size() == 0:
 				m8_send_keyjazz(255, 0)
 				print("virtual keyboard: note off")
-			elif last_note != m8_virtual_keyboard_notes[- 1]:
-				m8_send_keyjazz(m8_virtual_keyboard_notes[ - 1], m8_virtual_keyboard_velocity)
+			elif last_note != m8_virtual_keyboard_notes[-1]:
+				m8_send_keyjazz(m8_virtual_keyboard_notes[-1], m8_virtual_keyboard_velocity)

@@ -15,24 +15,25 @@ extends M8Scene
 
 @export var enable_audio_spectrum := false:
 	set(value):
-		%SpriteAudioSpectrum.visible = value
-		%AudioSpectrum.visible = value
 		enable_audio_spectrum = value
+		%AudioSpectrum.visible = value
+		%SpriteAudioSpectrum.visible = value
 
 @export var audio_spectrum_color := Color.WHITE:
 	set(value):
-		%SpriteAudioSpectrum.modulate = value
 		audio_spectrum_color = value
+		%SpriteAudioSpectrum.modulate = value
 
 @export_range(-1, 8) var audio_spectrum_width: int = 1:
 	set(value):
-		%AudioSpectrum.line_width = value
 		audio_spectrum_width = value
+		%AudioSpectrum.style_line_width = value
 
 @export var audio_spectrum_interlace := true:
 	set(value):
-		%AudioSpectrum.interlace = value
 		audio_spectrum_interlace = value
+		%AudioSpectrum.style_bar_interlace = value
+		%AudioSpectrum.style_line_interlace = value
 
 @export_range(0, 10) var jumbotron_distortion_amount := 3:
 	set(value):
@@ -94,7 +95,7 @@ extends M8Scene
 
 var background_mode := 0
 
-func init(p_main: M8SceneDisplay, load_parameters:=true) -> void:
+func init(p_main: M8SceneDisplay, load_parameters := true) -> void:
 	super(p_main, load_parameters)
 
 	%DeviceModel.init(main)
@@ -123,13 +124,13 @@ func init(p_main: M8SceneDisplay, load_parameters:=true) -> void:
 			"Disabled",
 			"M8 Display"
 		], func(index: int) -> void:
-			%DisplayMesh.visible=false
+			%DisplayMesh.visible = false
 
 			match index:
 				0:
 					pass
 				1:
-					%DisplayMesh.visible=true
+					%DisplayMesh.visible = true
 		)
 		main.menu_scene.add_export_var("jumbotron_size")
 		main.menu_scene.add_export_var("jumbotron_brightness")
@@ -142,29 +143,29 @@ func init(p_main: M8SceneDisplay, load_parameters:=true) -> void:
 			"Custom File",
 			"Custom File (Panorama)",
 		], func(index: int) -> void:
-			%BGTextureRect.visible=false
-			%BGVideoStreamPlayer.visible=false
-			%WorldEnvironment.environment.background_mode=Environment.BG_CLEAR_COLOR
-			%WorldEnvironment.environment.ambient_light_source=Environment.AMBIENT_SOURCE_DISABLED
+			%BGTextureRect.visible = false
+			%BGVideoStreamPlayer.visible = false
+			%WorldEnvironment.environment.background_mode = Environment.BG_CLEAR_COLOR
+			%WorldEnvironment.environment.ambient_light_source = Environment.AMBIENT_SOURCE_DISABLED
 			match index:
 				0:
-					%WorldEnvironment.environment.background_mode=Environment.BG_COLOR
+					%WorldEnvironment.environment.background_mode = Environment.BG_COLOR
 				1:
-					%WorldEnvironment.environment.background_mode=Environment.BG_CANVAS
-					%BGTextureRect.visible=true
+					%WorldEnvironment.environment.background_mode = Environment.BG_CANVAS
+					%BGTextureRect.visible = true
 					if %BGVideoStreamPlayer.is_playing():
-						%BGVideoStreamPlayer.visible=true
+						%BGVideoStreamPlayer.visible = true
 				2:
-					%WorldEnvironment.environment.background_mode=Environment.BG_SKY
+					%WorldEnvironment.environment.background_mode = Environment.BG_SKY
 
-			background_mode=index
+			background_mode = index
 		)
 
 		main.menu_scene.add_export_var("solid_background_color")
 		main.menu_scene.add_file("background_file", "", func(path: String) -> void:
-			var texture:=load_media_to_texture_rect(path, %BGVideoStreamPlayer)
-			%BGTextureRect.texture=texture
-			%WorldEnvironment.environment.sky.sky_material.panorama=texture
+			var texture := load_media_to_texture_rect(path, %BGVideoStreamPlayer)
+			%BGTextureRect.texture = texture
+			%WorldEnvironment.environment.sky.sky_material.panorama = texture
 		)
 
 		main.menu_scene.add_section("Lights")

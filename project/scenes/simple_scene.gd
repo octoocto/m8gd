@@ -4,7 +4,7 @@ extends M8Scene
 	set(value):
 		force_integer_scale = value
 
-func init(p_main: M8SceneDisplay, load_parameters:=true) -> void:
+func init(p_main: M8SceneDisplay, load_parameters := true) -> void:
 	super(p_main, load_parameters)
 
 	# %TextureRect.texture = _display.m8_display_texture

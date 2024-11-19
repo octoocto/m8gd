@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=3 uid="uid://f2tvhcv8kiuu"]
+[gd_scene load_steps=45 format=3 uid="uid://f2tvhcv8kiuu"]
 
 [ext_resource type="Script" path="res://scenes/surface_scene.gd" id="1_87ai1"]
 [ext_resource type="Shader" path="res://shaders/device_screen.gdshader" id="3_bp567"]
@@ -186,9 +186,25 @@ albedo_color = Color(0, 0, 0, 1)
 metallic_specular = 0.25
 roughness = 0.43
 normal_enabled = true
-normal_scale = 2.0
 normal_texture = SubResource("NoiseTexture2D_80gxc")
+uv1_scale = Vector3(2, 2, 2)
 uv1_triplanar = true
+
+[sub_resource type="Gradient" id="Gradient_onbnd"]
+interpolation_mode = 1
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 0.1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ex0d0"]
+gradient = SubResource("Gradient_onbnd")
+fill = 2
+fill_to = Vector2(1, 1)
+metadata/_snap_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qfoyt"]
+transparency = 1
+albedo_texture = SubResource("GradientTexture2D_ex0d0")
+uv1_triplanar = true
+texture_filter = 4
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_4c1u1"]
 size = Vector2(200, 200)
@@ -371,6 +387,7 @@ skeleton = NodePath("")
 [node name="SurfaceMesh" type="MeshInstance3D" parent="."]
 unique_name_in_owner = true
 material_override = SubResource("StandardMaterial3D_dtr6l")
+material_overlay = SubResource("StandardMaterial3D_qfoyt")
 mesh = SubResource("PlaneMesh_4c1u1")
 
 [node name="GrassArea" parent="." instance=ExtResource("8_srvcg")]

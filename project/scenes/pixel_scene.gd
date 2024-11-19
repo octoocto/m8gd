@@ -84,6 +84,7 @@ func init(p_main: M8SceneDisplay, load_parameters := true) -> void:
 	super(p_main, load_parameters)
 
 	%AudioSpectrum.init(main)
+	%AudioWaveform.init(main)
 
 	main.m8_client.set_background_alpha(0)
 
