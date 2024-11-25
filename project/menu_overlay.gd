@@ -8,12 +8,12 @@ var overlay_target: Control
 func _setprop(propname: String, value: Variant) -> void:
 	assert(overlay_target != null)
 	var propkey := _get_prop_key(overlay_target, propname)
-	MenuUtils._profile_set(propkey, value)
+	main.config.set_property(propkey, value)
 
 func _getprop(propname: String, default: Variant = null) -> Variant:
 	assert(overlay_target != null)
 	var propkey := _get_prop_key(overlay_target, propname)
-	return MenuUtils._profile_get(propkey, default)
+	return main.config.get_property(propkey, default)
 
 func init(p_main: M8SceneDisplay) -> void:
 	main = p_main
@@ -37,18 +37,6 @@ func init(p_main: M8SceneDisplay) -> void:
 		menu_close()
 		main.menu.visible = true
 	)
-
-## Set properties of the given overlay according to the saved config/profile.
-## (Does not set the target overlay of this menu)
-func init_overlay(overlay: Control) -> void:
-
-	overlay.anchors_preset = MenuUtils._profile_get(_get_prop_key(overlay, "anchors_preset"), overlay.anchors_preset)
-	overlay.position_offset = MenuUtils._profile_get(_get_prop_key(overlay, "position_offset"), overlay.position_offset)
-	overlay.size = MenuUtils._profile_get(_get_prop_key(overlay, "size"), overlay.size)
-
-	for propname: String in overlay.overlay_get_properties():
-		var propkey := _get_prop_key(overlay, propname)
-		overlay.set(propname, MenuUtils._profile_get(propkey, overlay.get(propname)))
 
 
 func menu_open(overlay: Control) -> void:
@@ -156,22 +144,22 @@ func _populate_overlay_properties() -> void:
 				PropertyHint.PROPERTY_HINT_NONE: # prop only has a type
 					match type:
 						TYPE_VECTOR2I:
-							var node := MenuUtils.create_vec2i(propkey, propname, value, func(v: Vector2i) -> void:
+							var node := MenuUtils.create_vec2i_prop(propkey, propname, value, func(v: Vector2i) -> void:
 								overlay_target.set(propname, v)
 							)
 							%ParamContainer.add_child(node)
 						TYPE_BOOL:
-							var node := MenuUtils.create_check(propkey, propname, value, func(v: bool) -> void:
+							var node := MenuUtils.create_bool_prop(propkey, propname, value, func(v: bool) -> void:
 								overlay_target.set(propname, v)
 							)
 							%ParamContainer.add_child(node)
 						TYPE_INT:
-							var node := MenuUtils.create_spinbox(propkey, propname, "", value, 1.0, func(v: float) -> void:
+							var node := MenuUtils.create_spinbox_prop(propkey, propname, value, 1.0, "", func(v: float) -> void:
 								overlay_target.set(propname, v)
 							)
 							%ParamContainer.add_child(node)
 						TYPE_FLOAT:
-							var node := MenuUtils.create_spinbox(propkey, propname, "", value, 0.1, func(v: float) -> void:
+							var node := MenuUtils.create_spinbox_prop(propkey, propname, value, 0.1, "", func(v: float) -> void:
 								overlay_target.set(propname, v)
 							)
 							%ParamContainer.add_child(node)
@@ -182,15 +170,15 @@ func _populate_overlay_properties() -> void:
 					var mn := int(split[0])
 					var mx := int(split[1])
 					var step := 1.0 if split.size() < 3 else float(split[2])
-					var node := MenuUtils.create_slider(propkey, propname, "%f", value, mn, mx, step, func(v: float) -> void:
+					var node := MenuUtils.create_slider_prop(propkey, propname, value, "%f", mn, mx, step, func(v: float) -> void:
 						overlay_target.set(propname, v)
 					)
 					%ParamContainer.add_child(node)
 				PropertyHint.PROPERTY_HINT_ENUM: # prop is an enum
-					var items := []
+					var items: Array[String] = []
 					for s in hint_string.split(","):
 						items.append(s.split(":")[0])
-					var node := MenuUtils.create_option(propkey, propname, int(value), items, func(v: int) -> void:
+					var node := MenuUtils.create_option_prop(propkey, propname, int(value), items, func(v: int) -> void:
 						overlay_target.set(propname, v)
 					)
 					%ParamContainer.add_child(node)

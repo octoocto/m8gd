@@ -80,8 +80,8 @@ extends M8Scene
 
 @onready var panel: PanelContainer = %PanelContainer
 
-func init(p_main: M8SceneDisplay, load_parameters := true) -> void:
-	super(p_main, load_parameters)
+func init(p_main: M8SceneDisplay) -> void:
+	super(p_main)
 
 	%AudioSpectrum.init(main)
 	%AudioWaveform.init(main)
@@ -100,53 +100,53 @@ func init(p_main: M8SceneDisplay, load_parameters := true) -> void:
 		update_viewport_size()
 	)
 
-	if load_parameters:
-		main.menu_scene.init_profile(self)
-
-		main.menu_scene.add_export_var("integer_zoom")
-
-		main.menu_scene.add_export_var("enable_particles")
-
-		main.menu_scene.add_section("Panel")
-		main.menu_scene.add_export_var("panel_integer_scale")
-		main.menu_scene.add_export_var("panel_corner_radius")
-		main.menu_scene.add_export_var("panel_padding")
-		main.menu_scene.add_export_var("panel_offset")
-		main.menu_scene.add_export_var("panel_opacity")
-		main.menu_scene.add_export_var("panel_blur_amount")
-
-		main.menu_scene.add_section("Background")
-		main.menu_scene.add_option("background_mode", 0, [
-			"M8 Background Color",
-			"M8 Display",
-			"Custom File"
-		], func(index: int) -> void:
-			match index:
-				0:
-					%BGTextureRect.visible = false
-				1:
-					%BGTextureRect.visible = true
-					%BGTextureRect.texture = main.m8_client.get_display_texture()
-				2:
-					%BGTextureRect.visible = true
-					%BGTextureRect.texture = load_media_to_texture_rect(get_setting("background_file"), %BGVideoStreamPlayer)
-		)
-
-		main.menu_scene.add_file("background_file", "", func(path: String) -> void:
-			if get_setting("background_mode") == 2:
-				%BGTextureRect.texture = load_media_to_texture_rect(path, %BGVideoStreamPlayer)
-		)
-
-		main.menu_scene.add_export_var("background_brightness")
-		main.menu_scene.add_export_var("background_theme_tint")
-		main.menu_scene.add_export_var("background_blur_amount")
-
 	update_viewport_size()
 	update_panel_size()
 
 	main.m8_system_info_received.connect(func(_hw: String, _fw: String) -> void:
 		update_panel_size()
 	)
+
+func init_menu(menu: SceneMenu) -> void:
+
+	menu.add_auto("integer_zoom")
+
+	menu.add_auto("enable_particles")
+
+	menu.add_section("Panel")
+	menu.add_auto("panel_integer_scale")
+	menu.add_auto("panel_corner_radius")
+	menu.add_auto("panel_padding")
+	menu.add_auto("panel_offset")
+	menu.add_auto("panel_opacity")
+	menu.add_auto("panel_blur_amount")
+
+	menu.add_section("Background")
+	menu.add_option_custom("background_mode", 0, [
+		"M8 Background Color",
+		"M8 Display",
+		"Custom File"
+	], func(index: int) -> void:
+		match index:
+			0:
+				%BGTextureRect.visible = false
+			1:
+				%BGTextureRect.visible = true
+				%BGTextureRect.texture = main.m8_client.get_display_texture()
+			2:
+				%BGTextureRect.visible = true
+				%BGTextureRect.texture = load_media_to_texture_rect(get_setting("background_file"), %BGVideoStreamPlayer)
+	)
+
+	menu.add_file_custom("background_file", "", func(path: String) -> void:
+		if get_setting("background_mode") == 2:
+			%BGTextureRect.texture = load_media_to_texture_rect(path, %BGVideoStreamPlayer)
+	)
+
+	menu.add_auto("background_brightness")
+	menu.add_auto("background_theme_tint")
+	menu.add_auto("background_blur_amount")
+
 
 func get_auto_integer_scale() -> int:
 

@@ -95,89 +95,89 @@ extends M8Scene
 
 var background_mode := 0
 
-func init(p_main: M8SceneDisplay, load_parameters := true) -> void:
-	super(p_main, load_parameters)
+func init(p_main: M8SceneDisplay) -> void:
+	super(p_main)
 
 	%DeviceModel.init(main)
 	%AudioSpectrum.init(main)
 	%DisplayMesh.material_override.set_shader_parameter("tex", main.m8_client.get_display_texture())
 	camera.init(main)
 
-	if load_parameters:
-		# main.menu_scene.read_params_from_scene(self)
+func init_menu(menu: SceneMenu) -> void:
 
-		main.menu_scene.init_profile(self)
+	# menu.add_exports_from(self)
+	# menu.init_profile(self)
 
-		main.menu_scene.add_export_var("model_screen_emission")
+	menu.add_auto("model_screen_emission")
 
-		main.menu_scene.add_section("Audio Spectrum")
-		main.menu_scene.add_export_var("enable_audio_spectrum")
-		main.menu_scene.add_export_var("audio_spectrum_color")
-		main.menu_scene.add_export_var("audio_spectrum_width")
-		main.menu_scene.add_export_var("audio_spectrum_interlace")
-		main.menu_scene.reg_link_editable("enable_audio_spectrum", "audio_spectrum_color")
-		main.menu_scene.reg_link_editable("enable_audio_spectrum", "audio_spectrum_width")
-		main.menu_scene.reg_link_editable("enable_audio_spectrum", "audio_spectrum_interlace")
+	menu.add_section("Audio Spectrum")
+	menu.add_auto("enable_audio_spectrum")
+	menu.add_auto("audio_spectrum_color")
+	menu.add_auto("audio_spectrum_width")
+	menu.add_auto("audio_spectrum_interlace")
+	menu.reg_link_editable("enable_audio_spectrum", "audio_spectrum_color")
+	menu.reg_link_editable("enable_audio_spectrum", "audio_spectrum_width")
+	menu.reg_link_editable("enable_audio_spectrum", "audio_spectrum_interlace")
 
-		main.menu_scene.add_section("Jumbotron")
-		main.menu_scene.add_option("jumbotron_mode", 1, [
-			"Disabled",
-			"M8 Display"
-		], func(index: int) -> void:
-			%DisplayMesh.visible = false
+	menu.add_section("Jumbotron")
+	menu.add_option_custom("jumbotron_mode", 1, [
+		"Disabled",
+		"M8 Display"
+	], func(index: int) -> void:
+		%DisplayMesh.visible = false
 
-			match index:
-				0:
-					pass
-				1:
-					%DisplayMesh.visible = true
-		)
-		main.menu_scene.add_export_var("jumbotron_size")
-		main.menu_scene.add_export_var("jumbotron_brightness")
-		main.menu_scene.add_export_var("jumbotron_contrast")
-		main.menu_scene.add_export_var("jumbotron_distortion_amount")
+		match index:
+			0:
+				pass
+			1:
+				%DisplayMesh.visible = true
+	)
+	menu.add_auto("jumbotron_size")
+	menu.add_auto("jumbotron_brightness")
+	menu.add_auto("jumbotron_contrast")
+	menu.add_auto("jumbotron_distortion_amount")
 
-		main.menu_scene.add_section("Background")
-		main.menu_scene.add_option("background_mode", 0, [
-			"Solid Color",
-			"Custom File",
-			"Custom File (Panorama)",
-		], func(index: int) -> void:
-			%BGTextureRect.visible = false
-			%BGVideoStreamPlayer.visible = false
-			%WorldEnvironment.environment.background_mode = Environment.BG_CLEAR_COLOR
-			%WorldEnvironment.environment.ambient_light_source = Environment.AMBIENT_SOURCE_DISABLED
-			match index:
-				0:
-					%WorldEnvironment.environment.background_mode = Environment.BG_COLOR
-				1:
-					%WorldEnvironment.environment.background_mode = Environment.BG_CANVAS
-					%BGTextureRect.visible = true
-					if %BGVideoStreamPlayer.is_playing():
-						%BGVideoStreamPlayer.visible = true
-				2:
-					%WorldEnvironment.environment.background_mode = Environment.BG_SKY
+	menu.add_section("Background")
+	menu.add_option_custom("background_mode", 0, [
+		"Solid Color",
+		"Custom File",
+		"Custom File (Panorama)",
+	], func(index: int) -> void:
+		%BGTextureRect.visible = false
+		%BGVideoStreamPlayer.visible = false
+		%WorldEnvironment.environment.background_mode = Environment.BG_CLEAR_COLOR
+		%WorldEnvironment.environment.ambient_light_source = Environment.AMBIENT_SOURCE_DISABLED
+		match index:
+			0:
+				%WorldEnvironment.environment.background_mode = Environment.BG_COLOR
+			1:
+				%WorldEnvironment.environment.background_mode = Environment.BG_CANVAS
+				%BGTextureRect.visible = true
+				if %BGVideoStreamPlayer.is_playing():
+					%BGVideoStreamPlayer.visible = true
+			2:
+				%WorldEnvironment.environment.background_mode = Environment.BG_SKY
 
-			background_mode = index
-		)
+		background_mode = index
+	)
 
-		main.menu_scene.add_export_var("solid_background_color")
-		main.menu_scene.add_file("background_file", "", func(path: String) -> void:
-			var texture := load_media_to_texture_rect(path, %BGVideoStreamPlayer)
-			%BGTextureRect.texture = texture
-			%WorldEnvironment.environment.sky.sky_material.panorama = texture
-		)
+	menu.add_auto("solid_background_color")
+	menu.add_file_custom("background_file", "", func(path: String) -> void:
+		var texture := load_media_to_texture_rect(path, %BGVideoStreamPlayer)
+		%BGTextureRect.texture = texture
+		%WorldEnvironment.environment.sky.sky_material.panorama = texture
+	)
 
-		main.menu_scene.add_section("Lights")
-		main.menu_scene.add_export_var("enable_lamp_light")
-		main.menu_scene.add_export_var("lamp_light_color")
-		main.menu_scene.add_export_var("enable_left_light")
-		main.menu_scene.add_export_var("left_light_color")
-		main.menu_scene.add_export_var("enable_right_light")
-		main.menu_scene.add_export_var("right_light_color")
-		main.menu_scene.reg_link_editable("enable_lamp_light", "lamp_light_color")
-		main.menu_scene.reg_link_editable("enable_left_light", "left_light_color")
-		main.menu_scene.reg_link_editable("enable_right_light", "right_light_color")
+	menu.add_section("Lights")
+	menu.add_auto("enable_lamp_light")
+	menu.add_auto("lamp_light_color")
+	menu.add_auto("enable_left_light")
+	menu.add_auto("left_light_color")
+	menu.add_auto("enable_right_light")
+	menu.add_auto("right_light_color")
+	menu.reg_link_editable("enable_lamp_light", "lamp_light_color")
+	menu.reg_link_editable("enable_left_light", "left_light_color")
+	menu.reg_link_editable("enable_right_light", "right_light_color")
 
 func _physics_process(delta: float) -> void:
 

@@ -15,7 +15,7 @@ class_name M8Scene extends Node3D
 
 var main: M8SceneDisplay
 
-func init(p_main: M8SceneDisplay, _load_parameters:=true) -> void:
+func init(p_main: M8SceneDisplay) -> void:
 	main = p_main
 
 ##
@@ -57,7 +57,7 @@ func get_3d_camera() -> HumanizedCamera3D:
 ##
 ## Load an image or video and apply its texture to a texture rect, if possible.
 ##
-func load_media_to_texture_rect(path: String, vsp: VideoStreamPlayer=null) -> Texture2D:
+func load_media_to_texture_rect(path: String, vsp: VideoStreamPlayer = null) -> Texture2D:
 
 	if is_instance_valid(vsp):
 		vsp.stop()
@@ -79,7 +79,7 @@ func load_media_to_texture_rect(path: String, vsp: VideoStreamPlayer=null) -> Te
 	return null
 
 func get_setting(setting: String) -> Variant:
-	return main.menu_scene.config_get_property(setting)
+	return main.config.get_scene_property(setting)
 
 # func update_m8_color_samples():
 #	 if main.m8_display_viewport != null:

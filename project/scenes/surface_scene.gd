@@ -67,14 +67,14 @@ extends M8Scene
 		%LightRight.light_color = value
 		%LightRight.light_energy = value.a * 16
 
-func init(p_main: M8SceneDisplay, load_parameters := true) -> void:
-	super(p_main, load_parameters)
+func init(p_main: M8SceneDisplay) -> void:
+	super(p_main)
 
 	%DeviceModel.init(main)
 	camera.init(main)
 
-	if load_parameters:
-		main.menu_scene.read_params_from_scene(self)
+func init_menu(menu: SceneMenu) -> void:
+	menu.add_exports_from(self)
 
 func _physics_process(delta: float) -> void:
 

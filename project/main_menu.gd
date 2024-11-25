@@ -67,23 +67,6 @@ func init(p_main: M8SceneDisplay) -> void:
 		main.reload_scene()
 	)
 
-	# TODO: remove subscene code
-
-	%Option_SubSceneMode.add_item("Disabled", 0)
-	%Option_SubSceneMode.add_item("Floating Window", 1)
-	%Option_SubSceneMode.item_selected.connect(func(_idx: int) -> void:
-		match%Option_SubSceneMode.get_selected_id():
-			0:
-				main.set_subscene_mode(0)
-				%Button_SubSceneMenu.disabled = true
-			1:
-				main.set_subscene_mode(1)
-				%Button_SubSceneMenu.disabled = false
-		# config.subscene_mode= %Option_SubSceneMode.get_selected_id()
-	)
-	# %Option_SubSceneMode.selected = config.subscene_mode
-	# %Option_SubSceneMode.item_selected.emit( - 1)
-
 	_config_connect("overlay_scale", %Slider_OverlayIntegerScale, func(value: float) -> void:
 		%Label_OverlayIntegerScale.text = "%dx" % value
 		main.overlay_integer_zoom = int(value)
@@ -123,10 +106,7 @@ func init(p_main: M8SceneDisplay) -> void:
 	# Key overlay settings
 
 	_config_connect("overlay_key", %Check_OverlayKeys, func(toggled: bool) -> void:
-		print("setting key overlay visible to %s" % toggled)
 		main.key_overlay.visible = toggled
-		if toggled == false:
-			main.key_overlay.clear()
 	)
 	_connect_check_to_control_editable(%Check_OverlayKeys, %Button_OverlayKeysConfig)
 	%Button_OverlayKeysConfig.pressed.connect(func() -> void:
@@ -545,16 +525,16 @@ func init(p_main: M8SceneDisplay) -> void:
 		colorpicker.color_changed.connect(func(color: Color) -> void:
 			if _model():
 				_model(nodepath).material_override.albedo_color = color
-			config.set(config_prop, color)
+			config.set_config(config_prop, color)
 		)
-		colorpicker.color = config.get(config_prop)
+		colorpicker.color = config.get_config(config_prop)
 
 		# reset to default
 		colorpicker.gui_input.connect(func(event: InputEvent) -> void:
 			if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
 				var color := Color.BLACK if nodepath == "%Body" else config.DEFAULT_COLOR_KEYCAP
 				_model(nodepath).material_override.albedo_color = color
-				config.set(config_prop, color)
+				config.set_config(config_prop, color)
 				colorpicker.color = color
 		)
 
@@ -605,9 +585,9 @@ func init(p_main: M8SceneDisplay) -> void:
 			if _model():
 				_model(nodepath).material_overlay.albedo_color = color
 			main.key_overlay.set(key_overlay_prop, color)
-			config.set(config_prop, color)
+			config.set_config(config_prop, color)
 		)
-		colorpicker.color = config.get(config_prop)
+		colorpicker.color = config.get_config(config_prop)
 
 		# reset to default
 		colorpicker.gui_input.connect(func(event: InputEvent) -> void:
@@ -615,7 +595,7 @@ func init(p_main: M8SceneDisplay) -> void:
 				var default_color := Color.WHITE
 				_model(nodepath).material_overlay.albedo_color = default_color
 				main.key_overlay.set(key_overlay_prop, default_color)
-				config.set(config_prop, default_color)
+				config.set_config(config_prop, default_color)
 				colorpicker.color = default_color
 		)
 
@@ -794,17 +774,17 @@ func _config_connect(setting: String, control: Control, fn: Callable) -> void:
 	if control is Slider:
 		control.value_changed.connect(func(value: float) -> void:
 			fn.call(value)
-			main.config.set(setting, value)
+			main.config.set_config(setting, value)
 		)
-		control.set_value_no_signal(main.config.get(setting))
+		control.set_value_no_signal(main.config.get_config(setting))
 		control.value_changed.emit(control.value)
 
 	elif control is CheckButton:
 		control.toggled.connect(func(toggled_on: bool) -> void:
 			fn.call(toggled_on)
-			main.config.set(setting, toggled_on)
+			main.config.set_config(setting, toggled_on)
 		)
-		control.set_pressed_no_signal(main.config.get(setting))
+		control.set_pressed_no_signal(main.config.get_config(setting))
 		control.toggled.emit(control.button_pressed)
 
 	else:

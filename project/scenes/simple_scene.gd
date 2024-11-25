@@ -4,14 +4,14 @@ extends M8Scene
 	set(value):
 		force_integer_scale = value
 
-func init(p_main: M8SceneDisplay, load_parameters := true) -> void:
-	super(p_main, load_parameters)
+func init(p_main: M8SceneDisplay) -> void:
+	super(p_main)
 
 	# %TextureRect.texture = _display.m8_display_texture
 	%TextureRect.texture = main.m8_client.get_display_texture()
 
-	if load_parameters:
-		main.menu_scene.read_params_from_scene(self)
+func init_menu(menu: SceneMenu) -> void:
+	menu.add_exports_from(self)
 
 func get_auto_integer_scale() -> int:
 

@@ -162,6 +162,7 @@ loop = true
 
 [node name="BGTextureRect" type="TextureRect" parent="CanvasLayer"]
 unique_name_in_owner = true
+visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -173,6 +174,7 @@ stretch_mode = 6
 
 [node name="BGShader" type="ColorRect" parent="CanvasLayer"]
 unique_name_in_owner = true
+visible = false
 material = SubResource("ShaderMaterial_fmvik")
 anchors_preset = 15
 anchor_right = 1.0
@@ -264,6 +266,7 @@ mesh = SubResource("PlaneMesh_rbhh0")
 [node name="SpriteAudioSpectrum" type="Sprite3D" parent="."]
 unique_name_in_owner = true
 transform = Transform3D(1.25, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, -4)
+visible = false
 pixel_size = 0.035
 texture_filter = 0
 texture = SubResource("ViewportTexture_fk07f")

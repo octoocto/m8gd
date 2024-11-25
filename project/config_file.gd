@@ -2,8 +2,10 @@ class_name M8Config extends Resource
 
 const CONFIG_FILE_PATH := "user://config.res"
 
+const DEFAULT_SCENE_PATH: String = "res://scenes/floating_scene.tscn"
 const DEFAULT_COLOR_KEYCAP := Color.BLACK
 const DEFAULT_COLOR_BODY := Color.BLACK
+const DEFAULT_PROFILE := "__default__"
 
 var version: int = 0
 
@@ -11,8 +13,24 @@ var version: int = 0
 @export var splash_show := true
 
 # scene settings
-@export var scene_parameters := {} # Dictionary[String, Dictionary]
-@export var last_scene_path: String # path to last scene opened
+# @export var scene_parameters := {} # Dictionary[String, Dictionary]
+# @export var last_scene_path: String # path to last scene opened
+
+## a dictionary in the form of:
+## [codeblock]
+##     profiles = {"<profile name>": profile_dict}
+## [/codeblock]
+## where [profile_dict] is a dictionary in the form of:
+## [codeblock]
+##     profile_dict = {
+##         "scene_file_path": <scene file path>,
+##         "scene_properties": {"<scene file path>": {}},
+##         # other properties (overlays, etc.)
+##         "properties": {}
+##     }
+## [/codeblock]
+@export var profiles := {}
+@export var current_profile := DEFAULT_PROFILE
 
 @export var camera_mouse_control := true
 @export var camera_humanize := true
@@ -99,6 +117,9 @@ var version: int = 0
 @export var action_events := {} # Dictionary[String, Array]
 @export var virtual_keyboard_enabled := false
 
+func _print(text: String) -> void:
+	print_rich("[color=aqua]config> %s[/color]" % text)
+
 ## Returns true if this script contains a default for the given setting.
 ##
 func assert_setting_exists(setting: String) -> void:
@@ -120,3 +141,141 @@ static func load() -> M8Config:
 	else:
 		print("using default config")
 		return M8Config.new()
+
+##
+## Get the current scene path according to the current profile and
+## the current scene in the profile.
+##
+## Intended to be used by the main function to load the initial scene.
+##
+func get_current_scene_path() -> String:
+	if DEFAULT_PROFILE not in profiles.keys():
+		init_profile(DEFAULT_PROFILE)
+		return DEFAULT_SCENE_PATH
+
+	var scene_file_path: String = profiles[current_profile]["scene_file_path"]
+	assert(scene_file_path != null)
+	return scene_file_path
+
+##
+## Create a new profile.
+## The current scene of the new profile will be the same as the one used by
+## the current profile.
+##
+func init_profile(profile_name: String) -> void:
+
+	var scene_file_path: String
+
+	# if creating the default profile, use the default scene
+	if profile_name == DEFAULT_PROFILE:
+		scene_file_path = DEFAULT_SCENE_PATH
+	else:
+		scene_file_path = get_current_scene_path()
+
+	if profile_name not in profiles.keys():
+		profiles[profile_name] = {
+			"scene_file_path": scene_file_path,
+			"scene_properties": {},
+			"properties": {}
+		}
+		_print("init profile: %s" % profile_name)
+
+##
+## Set the current profile. The saved current scene path of the new profile
+## may or may not be the same as the last profile.
+##
+## Note that this function just sets the internal config variable and
+## no actual loading is done.
+##
+func use_profile(profile_name: String) -> void:
+	init_profile(profile_name)
+	current_profile = profile_name
+	_print("USING profile: %s" % profile_name)
+
+##
+## Set the current scene for the current profile.
+##
+## Note that this function just sets the internal config variable and
+## no actual loading is done.
+##
+func use_scene(scene: M8Scene) -> void:
+	assert(scene != null)
+	profiles[current_profile]["scene_file_path"] = scene.scene_file_path
+	_print("USING scene file path: %s" % scene.scene_file_path)
+
+## Get the scene properties dict for the current profile/scene.
+func _get_scene_properties() -> Dictionary:
+	var profile: Dictionary = profiles[current_profile]
+	var scene_file_path: String = profile["scene_file_path"]
+	var scene_prop_dict: Dictionary = profile["scene_properties"]
+
+	if scene_file_path not in scene_prop_dict.keys():
+		scene_prop_dict[scene_file_path] = {}
+		_print("INIT scene props for scene: %s" % scene_file_path)
+
+	return scene_prop_dict[scene_file_path]
+
+##
+## Get a scene property for the current profile and current scene.
+## If this property doesn't exist, set it to the value from [default].
+##
+func get_scene_property(propname: String, default: Variant = null) -> Variant:
+	var scene_props: Dictionary = _get_scene_properties()
+
+	# set parameter from config, or add parameter to config
+	if !scene_props.has(propname) or scene_props[propname] == null:
+		scene_props[propname] = default
+		_print("INIT scene prop: %s = %s" % [propname, default])
+
+	# print("scene: profile %s: get %s=%s" % [current_profile, property, profile[property]])
+	_print("GET scene prop: %s, value = %s" % [propname, scene_props[propname]])
+	return scene_props[propname]
+
+##
+## Set a scene property for the current profile and current scene.
+##
+func set_scene_property(propname: String, value: Variant) -> void:
+	var scene_props: Dictionary = _get_scene_properties()
+	if !scene_props.has(propname) or scene_props[propname] != value:
+		scene_props[propname] = value
+		_print("SET scene prop: %s = %s" % [propname, value])
+
+##
+## Get a property for the current profile.
+##
+func get_property(propname: String, default: Variant = null) -> Variant:
+	var props: Dictionary = profiles[current_profile]["properties"]
+
+	# set parameter from config, or add parameter to config
+	if !props.has(propname) or props[propname] == null:
+		props[propname] = default
+		_print("INIT profile prop: %s = %s" % [propname, default])
+
+	_print("GET profile prop: %s, value = %s" % [propname, props[propname]])
+	return props[propname]
+
+##
+## Set a property for the current profile.
+##
+func set_property(propname: String, value: Variant) -> void:
+	var props: Dictionary = profiles[current_profile]["properties"]
+	if !props.has(propname) or props[propname] != value:
+		props[propname] = value
+		_print("SET profile prop: %s = %s" % [propname, value])
+
+##
+## Set a global config setting.
+##
+func set_config(property: String, value: Variant) -> void:
+	assert(property in self)
+	_print("SET global prop: %s = %s" % [property, value])
+	set(property, value)
+
+##
+## Get a global config setting.
+##
+func get_config(property: String) -> Variant:
+	assert(property in self)
+	var value: Variant = get(property)
+	_print("GET global prop: %s, value = %s" % [property, value])
+	return value

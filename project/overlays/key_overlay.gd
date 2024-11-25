@@ -64,6 +64,12 @@ var color_edit := Color.WHITE:
 @onready var current_times: int = 0 # amount of times to display for the current item
 @onready var current_item_count: int = 0 # amount of elements in the current item
 
+func _ready() -> void:
+	visibility_changed.connect(func() -> void:
+		if not visible:
+			clear()
+	)
+
 func _set_color(color: Color, panel: StyleBox, label: LabelSettings) -> void:
 	if overlay_style == 0: # boxed style
 

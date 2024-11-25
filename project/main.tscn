@@ -214,20 +214,6 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = SubResource("Theme_gulif")
 
-[node name="SubSceneContainer" type="SubViewportContainer" parent="CanvasLayer/UI"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 1
-offset_right = 640.0
-offset_bottom = 480.0
-
-[node name="SubSceneRoot" type="SubViewport" parent="CanvasLayer/UI/SubSceneContainer"]
-unique_name_in_owner = true
-disable_3d = true
-handle_input_locally = false
-size = Vector2i(640, 480)
-render_target_update_mode = 0
-
 [node name="BackBufferCopy" type="BackBufferCopy" parent="CanvasLayer/UI"]
 copy_mode = 2
 

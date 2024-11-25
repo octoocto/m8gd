@@ -121,18 +121,17 @@ func _ready() -> void:
 
 	_printgreen("initializing scene...")
 	# initialize main scene
-	if not load_scene(config.last_scene_path):
-		load_scene(MAIN_SCENE_PATH)
+	load_scene(config.get_current_scene_path())
 	_printgreen("initialized scene in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
 	time = Time.get_ticks_msec()
 
 	_printgreen("initializing overlays...")
 	_overlay_init()
 	menu_overlay.init(self)
-	menu_overlay.init_overlay(overlay_display)
-	menu_overlay.init_overlay(key_overlay)
-	menu_overlay.init_overlay(overlay_spectrum)
-	menu_overlay.init_overlay(overlay_waveform)
+	init_overlay(overlay_display)
+	init_overlay(key_overlay)
+	init_overlay(overlay_spectrum)
+	init_overlay(overlay_waveform)
 	_printgreen("initialized overlays in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
 	time = Time.get_ticks_msec()
 
@@ -155,13 +154,37 @@ func _ready() -> void:
 		m8_client.send_input(local_keybits)
 	)
 
+func _config_get_overlay_key(overlay: Control, property: String) -> String:
+	return "overlay.%s.%s" % [overlay.name, property]
+
+##
+## Get a config scene setting.
+##
+func _config_get_overlay_prop(overlay: Control, property: String) -> Variant:
+	var default: Variant = overlay.get(property)
+	property = _config_get_overlay_key(overlay, property)
+	return config.get_scene_property(property, default)
+
+##
+## Set properties of the given overlay according to the current profile/scene.
+##
+func init_overlay(overlay: Control) -> void:
+
+	overlay.anchors_preset = _config_get_overlay_prop(overlay, "anchors_preset")
+	overlay.position_offset = _config_get_overlay_prop(overlay, "position_offset")
+	overlay.size = _config_get_overlay_prop(overlay, "size")
+
+	for propname: String in overlay.overlay_get_properties():
+		var default: Variant = overlay.get(propname)
+		var propkey := _config_get_overlay_key(overlay, propname)
+		overlay.set(propname, config.get_scene_property(propkey, default))
+
+
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		quit()
 
 func quit() -> void:
-	if is_instance_valid(current_scene):
-		config.last_scene_path = current_scene.scene_file_path
 	config.save()
 	get_tree().quit()
 
@@ -212,6 +235,9 @@ func load_scene(scene_path: String) -> bool:
 	scene.init(self)
 	current_scene = scene
 	menu.update_device_colors()
+	config.use_scene(scene)
+	menu_scene.clear_params()
+	scene.init_menu(menu_scene)
 
 	print("scene loaded!")
 	m8_scene_changed.emit(scene_path, scene)
@@ -234,25 +260,6 @@ func _preload_scene(scene_path: String) -> M8Scene:
 
 	return scene
 
-# TODO: create enum for these modes
-##
-## Set the Secondary Scene mode.
-##
-func set_subscene_mode(mode: int) -> void:
-	match mode:
-		0:
-			%SubSceneContainer.visible = false
-			print("unloading sub scene")
-			for child in %SubSceneRoot.get_children():
-				%SubSceneRoot.remove_child(child)
-				child.queue_free()
-		1:
-			%SubSceneContainer.visible = true
-			print("loading sub scene")
-			var scene := _preload_scene(SUB_SCENE_PATH)
-			%SubSceneRoot.add_child(scene)
-			scene.init(self, false)
-			scene.force_integer_scale = 0
 
 func _overlay_init() -> void:
 
