@@ -207,19 +207,15 @@ func init(p_main: M8SceneDisplay) -> void:
 	)
 	%SpinBoxAVMaxFreq.value = config.audio_analyzer_max_freq
 
-	%SliderAVBrightness.value_changed.connect(func(value: float) -> void:
+	_connect_config_global("audio_to_brightness", %SliderAVBrightness, func(value: float) -> void:
 		main.visualizer_brightness_amount = value
 		%LabelAVBrightness.text = "%d%%" % (value * 100.0)
-		config.audio_to_brightness = value
 	)
-	%SliderAVBrightness.value = config.audio_to_brightness
 
-	%SliderAVCA.value_changed.connect(func(value: float) -> void:
+	_connect_config_global("audio_to_ca", %SliderAVCA, func(value: float) -> void:
 		main.visualizer_ca_amount = value
 		%LabelAVCA.text = "%d%%" % (value * 1000.0)
-		config.audio_to_ca = value
 	)
-	%SliderAVCA.value = config.audio_to_ca
 
 	# Video Tab
 	#--------------------------------------------------------------------------
