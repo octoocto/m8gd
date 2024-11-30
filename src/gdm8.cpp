@@ -18,7 +18,28 @@ void M8GDClient::on_draw_rect(
 	uint16_t w, uint16_t h,
 	uint8_t r, uint8_t g, uint8_t b)
 {
+	bool theme_completed = m8gd->display_buffer->colors.size() == 13;
+	uint8_t bg_r = m8gd->display_buffer->bg_r;
+	uint8_t bg_g = m8gd->display_buffer->bg_g;
+	uint8_t bg_b = m8gd->display_buffer->bg_b;
+
 	m8gd->display_buffer->draw_rect(x, y, w, h, r, g, b);
+
+	if (!theme_completed)
+	{
+		if (m8gd->display_buffer->colors.size() == 13)
+		{
+			// theme updated
+			m8gd->emit_signal("theme_changed", m8gd->get_theme_colors(), true);
+		}
+		else if (bg_r != m8gd->display_buffer->bg_r ||
+				 bg_g != m8gd->display_buffer->bg_g ||
+				 bg_b != m8gd->display_buffer->bg_b)
+		{
+			// background color changed
+			m8gd->emit_signal("theme_changed", m8gd->get_theme_colors(), false);
+		}
+	}
 }
 
 void M8GDClient::on_draw_char(
@@ -171,6 +192,7 @@ void M8GD::_bind_methods()
 	ADD_SIGNAL(MethodInfo("keystate_changed", PropertyInfo(Variant::INT, "keystate")));
 	ADD_SIGNAL(MethodInfo("key_pressed", PropertyInfo(Variant::INT, "keycode"), PropertyInfo(Variant::BOOL, "pressed")));
 	ADD_SIGNAL(MethodInfo("device_disconnected"));
+	ADD_SIGNAL(MethodInfo("theme_changed", PropertyInfo(Variant::PACKED_COLOR_ARRAY, "colors"), PropertyInfo(Variant::BOOL, "complete")));
 }
 
 M8GD::M8GD()

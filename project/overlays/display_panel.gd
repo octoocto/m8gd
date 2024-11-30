@@ -40,7 +40,10 @@ func init(p_main: M8SceneDisplay) -> void:
 	main = p_main
 
 	%DisplayTextureRect.texture = main.m8_client.get_display_texture()
-	_update_panel()
+
+	main.m8_theme_changed.connect(func(_colors: PackedColorArray, _complete: bool) -> void:
+		_update_panel()
+	)
 
 func overlay_get_properties() -> Array[String]:
 	return ["integer_scale", "opacity", "padding", "corner_radius"]

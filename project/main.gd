@@ -15,6 +15,8 @@ const M8_ACTIONS := [
 
 signal m8_scene_changed(scene_path: String, scene: M8Scene)
 signal m8_system_info_received(hardware: String, firmware: String)
+signal m8_font_changed
+signal m8_theme_changed(colors: PackedColorArray, complete: bool)
 signal m8_connected
 signal m8_disconnected
 
@@ -457,6 +459,7 @@ func m8_device_connect(port: String) -> void:
 	m8_client.system_info.connect(on_m8_system_info)
 	m8_client.font_changed.connect(on_m8_font_changed)
 	m8_client.device_disconnected.connect(on_m8_device_disconnect)
+	m8_client.theme_changed.connect(on_m8_theme_changed)
 	current_serial_device = port
 	m8_connected.emit()
 
@@ -583,6 +586,8 @@ func on_m8_font_changed(model: String, font: int) -> void:
 			else:
 				m8_client.load_font(FONT_01_BIG)
 
+	m8_font_changed.emit()
+
 func m8_device_disconnect(wait_for_device := true) -> void:
 	if m8_client.is_connected():
 		m8_client.disconnect()
@@ -600,6 +605,7 @@ func on_m8_device_disconnect() -> void:
 	m8_client.system_info.disconnect(on_m8_system_info)
 	m8_client.font_changed.disconnect(on_m8_font_changed)
 	m8_client.device_disconnected.disconnect(on_m8_device_disconnect)
+	m8_client.theme_changed.disconnect(on_m8_theme_changed)
 
 	if m8_audio_connected:
 		m8_audio_disconnect()
@@ -608,6 +614,9 @@ func on_m8_device_disconnect() -> void:
 	m8_disconnected.emit()
 	print_blink("disconnected")
 	menu.set_status_serialport("Not connected (Disconnected)")
+
+func on_m8_theme_changed(colors: PackedColorArray, complete: bool) -> void:
+	m8_theme_changed.emit(colors, complete)
 
 func m8_send_theme_color(index: int, color: Color) -> void:
 	m8_client.send_theme_color(index, color)
