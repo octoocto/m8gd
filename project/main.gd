@@ -825,7 +825,7 @@ func _input(event: InputEvent) -> void:
 			else:
 				menu_open()
 
-		if !m8_virtual_keyboard_enabled:
+		if !m8_virtual_keyboard_enabled or is_any_menu_open():
 			return
 
 		var note := m8_virtual_keyboard_octave * 12
