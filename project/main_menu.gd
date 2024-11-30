@@ -76,7 +76,7 @@ func init(p_main: M8SceneDisplay) -> void:
 
 	# connect button to overlay enabled/disabled
 	var _overlay_connect := func(check: CheckButton, overlay: Control) -> void:
-		var default: bool = main.get_overlay_property(main.overlay_spectrum, "enabled", overlay.visible)
+		var default: bool = main.get_overlay_property(overlay, "enabled", overlay.visible)
 		_connect(check, default, func(value: bool) -> void:
 			overlay.visible = value
 			main.set_overlay_property(overlay, "enabled", value)
