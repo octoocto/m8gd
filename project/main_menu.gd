@@ -623,12 +623,7 @@ func init(p_main: M8SceneDisplay) -> void:
 
 	# serial ports
 
-	var refresh_serial_ports := func() -> void:
-		%ListSerialPorts.clear()
-		for port in M8GD.list_devices():
-			%ListSerialPorts.add_item(port)
-
-	refresh_serial_ports.call()
+	refresh_serial_device_list()
 
 	%ListSerialPorts.item_selected.connect(func(index: int) -> void:
 		%ButtonConnectSerialPort.disabled = false
@@ -640,7 +635,7 @@ func init(p_main: M8SceneDisplay) -> void:
 			%ButtonDisconnectSerialPort.disabled = true
 	)
 
-	%ButtonRefreshSerialPorts.pressed.connect(refresh_serial_ports)
+	%ButtonRefreshSerialPorts.pressed.connect(refresh_audio_device_list)
 
 	%ButtonConnectSerialPort.pressed.connect(func() -> void:
 		var index: int = %ListSerialPorts.get_selected_items()[0]
@@ -657,12 +652,7 @@ func init(p_main: M8SceneDisplay) -> void:
 
 	# audio devices
 
-	var refresh_audio_devices := func() -> void:
-		%ListAudioDevices.clear()
-		for device in AudioServer.get_input_device_list():
-			%ListAudioDevices.add_item(device)
-
-	refresh_audio_devices.call()
+	refresh_audio_device_list()
 
 	%ListAudioDevices.item_selected.connect(func(index: int) -> void:
 		%ButtonConnectAudioDevice.disabled = false
@@ -676,7 +666,7 @@ func init(p_main: M8SceneDisplay) -> void:
 			%ButtonHardResetAudioDevice.disabled = true
 	)
 
-	%ButtonRefreshAudioDevices.pressed.connect(refresh_audio_devices)
+	%ButtonRefreshAudioDevices.pressed.connect(refresh_audio_device_list)
 
 	%ButtonConnectAudioDevice.pressed.connect(func() -> void:
 		var index: int = %ListAudioDevices.get_selected_items()[0]
@@ -709,10 +699,11 @@ func init(p_main: M8SceneDisplay) -> void:
 			%Bar_AudioLevelR.value = volume.y
 	)
 
+	# auto refresh list
 	%TabContainer.tab_changed.connect(func(tab: int) -> void:
-		if tab == 2: # misc tab
-			refresh_serial_ports.call()
-			refresh_audio_devices.call()
+		if tab == 1: # misc tab
+			refresh_audio_device_list()
+			refresh_serial_device_list()
 	)
 
 	# Debug Tab
@@ -969,6 +960,34 @@ func set_status_serialport(text: String) -> void:
 
 func set_status_audiodevice(text: String) -> void:
 	%AudioDeviceStatus.text = text
+
+##
+## Refresh the serial device list UI.
+##
+func refresh_serial_device_list() -> void:
+	%ListSerialPorts.clear()
+
+	for port in M8GD.list_devices():
+		%ListSerialPorts.add_item(port)
+
+	for i in range(%ListSerialPorts.item_count):
+		if %ListSerialPorts.get_item_text(i) == main.current_serial_device:
+			%ListSerialPorts.select(i)
+			break
+
+##
+## Refresh the audio device list UI.
+##
+func refresh_audio_device_list() -> void:
+	%ListAudioDevices.clear()
+
+	for device in AudioServer.get_input_device_list():
+		%ListAudioDevices.add_item(device)
+
+	for i in range(%ListAudioDevices.item_count):
+		if %ListAudioDevices.get_item_text(i) == main.current_audio_device:
+			%ListAudioDevices.select(i)
+			break
 
 func _input(event: InputEvent) -> void:
 	if is_key_rebinding:
