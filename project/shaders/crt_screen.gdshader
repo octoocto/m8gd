@@ -40,7 +40,7 @@ void fragment() {
 	ALBEDO -= pow(abs(UV.y - 0.5) * 2.0, edge_burn_ramp) * edge_burn;
 
 	ALBEDO *= texture(noise_texture, UV).rgb;
-	
+
 	ALBEDO = clamp(ALBEDO, 0.0, 1.0);
 
 	EMISSION = ALBEDO * emission_amount;

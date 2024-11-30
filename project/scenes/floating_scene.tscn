@@ -238,11 +238,11 @@ screen_material = SubResource("ShaderMaterial_s84w0")
 
 [node name="Camera3D" parent="." instance=ExtResource("4_8iar1")]
 unique_name_in_owner = true
+dof_blur_amount = 0.18
 pan_range_zoomout = Vector2(10, 10)
 cam_pan_range_zoomin = Vector2(2, 7)
 dof_zoomin = 0.0
 dof_focus_distance = 14.0
-dof_blur_amount = 0.18
 arm_length = 14.0
 
 [node name="Camera3D" parent="Camera3D" index="0"]
