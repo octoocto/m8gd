@@ -13,12 +13,12 @@ static func init(p_main: M8SceneDisplay) -> void:
 ## Sets a profile setting to a value (for the active profile)
 static func _profile_scene_set(property: String, value: Variant) -> void:
 	main.current_scene.set(property, value)
-	main.config.set_scene_property(property, value)
+	main.config.set_property_scene(property, value)
 
 static func _profile_scene_get(property: String, default: Variant = null) -> Variant:
 	if default == null:
 		default = main.current_scene.get(property)
-	return main.config.get_scene_property(property, default)
+	return main.config.get_property_scene(property, default)
 
 ## Return an HBoxContainer of 3 control nodes.
 static func _bundle(a: Control, b: Control, c: Control) -> HBoxContainer:

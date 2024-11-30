@@ -11,10 +11,10 @@ const PROP_HUMAN := "__cam_human"
 var main: M8SceneDisplay
 
 func _setprop(property: String, value: Variant) -> void:
-	main.config.set_scene_property(property, value)
+	main.config.set_property_scene(property, value)
 
 func _getprop(property: String, default: Variant = null) -> Variant:
-	return main.config.get_scene_property(property, default)
+	return main.config.get_property_scene(property, default)
 
 func init(p_main: M8SceneDisplay) -> void:
 	main = p_main
@@ -71,42 +71,44 @@ func init(p_main: M8SceneDisplay) -> void:
 		_setprop(PROP_HUMAN, toggled_on)
 	)
 
-	main.m8_scene_changed.connect(func(_scene_path: String, scene: M8Scene) -> void:
-
-		if !scene.has_3d_camera(): return
-
-		var cam := scene.get_3d_camera()
-
-		_getprop(PROP_POS, cam.position)
-		_getprop(PROP_ANG, cam.rotation)
-		_getprop(PROP_FLEN, cam.dof_focus_distance)
-		_getprop(PROP_FWID, cam.dof_focus_width)
-		_getprop(PROP_BLUR, cam.dof_blur_amount)
-
-		cam.position = _getprop(PROP_POS)
-		cam.rotation = _getprop(PROP_ANG)
-		cam.base_position = _getprop(PROP_POS)
-		cam.base_rotation = _getprop(PROP_ANG)
-
-		%Spin_PosX.value_changed.emit(_getprop(PROP_POS).x)
-		%Spin_PosY.value_changed.emit(_getprop(PROP_POS).y)
-		%Spin_PosZ.value_changed.emit(_getprop(PROP_POS).z)
-
-		%Spin_AngP.value_changed.emit(rad_to_deg(_getprop(PROP_ANG).x))
-		%Spin_AngY.value_changed.emit(rad_to_deg(_getprop(PROP_ANG).y))
-
-		%Spin_FocalLength.value_changed.emit(_getprop(PROP_FLEN))
-		%Spin_FocalWidth.value_changed.emit(_getprop(PROP_FWID))
-		%Slider_Blur.value_changed.emit(_getprop(PROP_BLUR))
-
-		main.menu.get_node("%Check_MouseCamera").button_pressed = _getprop(PROP_MOUSE, true)
-		main.menu.get_node("%Check_HumanCamera").button_pressed = _getprop(PROP_HUMAN, true)
-
-		cam.mouse_controlled_pan_zoom = _getprop(PROP_MOUSE)
-		cam.humanized_movement = _getprop(PROP_HUMAN)
-
-		update_fields()
+	main.m8_scene_changed.connect(func(_scene_path: String, _scene: M8Scene) -> void:
+		init_camera()
 	)
+
+func init_camera() -> void:
+
+	var cam := main.current_scene.get_3d_camera()
+	if cam == null: return
+
+	_getprop(PROP_POS, cam.position)
+	_getprop(PROP_ANG, cam.rotation)
+	_getprop(PROP_FLEN, cam.dof_focus_distance)
+	_getprop(PROP_FWID, cam.dof_focus_width)
+	_getprop(PROP_BLUR, cam.dof_blur_amount)
+
+	cam.position = _getprop(PROP_POS)
+	cam.rotation = _getprop(PROP_ANG)
+	cam.base_position = _getprop(PROP_POS)
+	cam.base_rotation = _getprop(PROP_ANG)
+
+	%Spin_PosX.value_changed.emit(_getprop(PROP_POS).x)
+	%Spin_PosY.value_changed.emit(_getprop(PROP_POS).y)
+	%Spin_PosZ.value_changed.emit(_getprop(PROP_POS).z)
+
+	%Spin_AngP.value_changed.emit(rad_to_deg(_getprop(PROP_ANG).x))
+	%Spin_AngY.value_changed.emit(rad_to_deg(_getprop(PROP_ANG).y))
+
+	%Spin_FocalLength.value_changed.emit(_getprop(PROP_FLEN))
+	%Spin_FocalWidth.value_changed.emit(_getprop(PROP_FWID))
+	%Slider_Blur.value_changed.emit(_getprop(PROP_BLUR))
+
+	main.menu.get_node("%Check_MouseCamera").button_pressed = _getprop(PROP_MOUSE, true)
+	main.menu.get_node("%Check_HumanCamera").button_pressed = _getprop(PROP_HUMAN, true)
+
+	cam.mouse_controlled_pan_zoom = _getprop(PROP_MOUSE)
+	cam.humanized_movement = _getprop(PROP_HUMAN)
+
+	update_fields()
 
 func set_fields_editable(editable: bool) -> void:
 	%Spin_PosX.editable = editable

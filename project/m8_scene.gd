@@ -79,7 +79,7 @@ func load_media_to_texture_rect(path: String, vsp: VideoStreamPlayer = null) -> 
 	return null
 
 func get_setting(setting: String) -> Variant:
-	return main.config.get_scene_property(setting)
+	return main.config.get_property_scene(setting)
 
 # func update_m8_color_samples():
 #	 if main.m8_display_viewport != null:

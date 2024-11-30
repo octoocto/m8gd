@@ -34,21 +34,21 @@ func clear_params() -> void:
 ##
 func _set_prop_from_config(propname: String) -> void:
 	var default: Variant = main.current_scene.get(propname)
-	main.current_scene.set(propname, main.config.get_scene_property(propname, default))
+	main.current_scene.set(propname, main.config.get_property_scene(propname, default))
 
 ##
 ## Set a property in the current scene and in the config.
 ##
 func _set_prop(propname: String, value: Variant) -> void:
 	main.current_scene.set(propname, value)
-	main.config.set_scene_property(propname, value)
+	main.config.set_property_scene(propname, value)
 
 ##
 ## Get the value of a property from the config.
 ##
 func _get_prop(propname: String) -> Variant:
 	var default: Variant = main.current_scene.get(propname)
-	return main.config.get_scene_property(propname, default)
+	return main.config.get_property_scene(propname, default)
 
 ##
 ## Set a custom property in ONLY the config.
@@ -56,7 +56,7 @@ func _get_prop(propname: String) -> Variant:
 ##
 func _set_prop_custom(key: String, value: Variant) -> void:
 	key = "custom.%s" % key
-	main.config.set_scene_property(key, value)
+	main.config.set_property_scene(key, value)
 
 ##
 ## Get the value of a custom property from the config.
@@ -64,7 +64,7 @@ func _set_prop_custom(key: String, value: Variant) -> void:
 ##
 func _get_prop_custom(key: String, default: Variant = null) -> Variant:
 	key = "custom.%s" % key
-	return main.config.get_scene_property(key, default)
+	return main.config.get_property_scene(key, default)
 
 
 ##

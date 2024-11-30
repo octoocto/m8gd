@@ -22,6 +22,8 @@ func init(p_main: M8SceneDisplay) -> void:
 	main = p_main
 	var config := main.config
 
+	init_menu_profiles()
+
 	# scan scenes folder
 	var dir_scenes: DirAccess = DirAccess.open(PATH_SCENES)
 
@@ -62,57 +64,52 @@ func init(p_main: M8SceneDisplay) -> void:
 	# Scene settings
 	#--------------------------------------------------------------------------
 
-	%ButtonResetSceneVars.pressed.connect(func() -> void:
-		main.menu_scene.config_delete_profile(main.menu_scene.DEFAULT_PROFILE)
-		main.reload_scene()
-	)
-
-	_config_connect("overlay_scale", %Slider_OverlayIntegerScale, func(value: float) -> void:
+	_connect_config_profile("overlay_scale", %Slider_OverlayIntegerScale, 1, func(value: float) -> void:
 		%Label_OverlayIntegerScale.text = "%dx" % value
 		main.overlay_integer_zoom = int(value)
 	)
 
-	_config_connect("overlay_apply_filters", %Check_OverlayFilters, func(value: bool) -> void:
+	_connect_config_profile("overlay_apply_filters", %Check_OverlayFilters, true, func(value: bool) -> void:
 		main.get_node("%OverlayContainer").z_index = 0 if value else 1
 	)
 
-	_config_connect("overlay_spectrum", %Check_OverlaySpectrum, func(toggled: bool) -> void:
-		main.overlay_spectrum.visible = toggled
-	)
-	_connect_check_to_control_editable(%Check_OverlaySpectrum, %Button_OverlaySpectrumConfig)
+
+	# connect button to overlay enabled/disabled
+	var _overlay_connect := func(check: CheckButton, overlay: Control) -> void:
+		var default: bool = main.get_overlay_property(main.overlay_spectrum, "enabled", overlay.visible)
+		_connect(check, default, func(value: bool) -> void:
+			overlay.visible = value
+			main.set_overlay_property(overlay, "enabled", value)
+		)
+
+	_overlay_connect.call(%Check_OverlaySpectrum, main.overlay_spectrum)
+	_link_control_to_disable(%Check_OverlaySpectrum, %Button_OverlaySpectrumConfig)
 	%Button_OverlaySpectrumConfig.pressed.connect(func() -> void:
 		visible = false
 		main.menu_overlay.menu_open(main.overlay_spectrum)
 	)
 
-	_config_connect("overlay_waveform", %Check_OverlayWaveform, func(toggled: bool) -> void:
-		main.overlay_waveform.visible = toggled
-	)
-	_connect_check_to_control_editable(%Check_OverlayWaveform, %Button_OverlayWaveformConfig)
+	_overlay_connect.call(%Check_OverlayWaveform, main.overlay_waveform)
+	_link_control_to_disable(%Check_OverlayWaveform, %Button_OverlayWaveformConfig)
 	%Button_OverlayWaveformConfig.pressed.connect(func() -> void:
 		visible = false
 		main.menu_overlay.menu_open(main.overlay_waveform)
 	)
 
-	_config_connect("overlay_display", %Check_OverlayDisplay, func(toggled: bool) -> void:
-		main.overlay_display.visible = toggled
-	)
-	_connect_check_to_control_editable(%Check_OverlayDisplay, %Button_OverlayDisplayConfig)
+	_overlay_connect.call(%Check_OverlayDisplay, main.overlay_display)
+	_link_control_to_disable(%Check_OverlayDisplay, %Button_OverlayDisplayConfig)
 	%Button_OverlayDisplayConfig.pressed.connect(func() -> void:
 		visible = false
 		main.menu_overlay.menu_open(main.overlay_display)
 	)
 
-	# Key overlay settings
-
-	_config_connect("overlay_key", %Check_OverlayKeys, func(toggled: bool) -> void:
-		main.key_overlay.visible = toggled
-	)
-	_connect_check_to_control_editable(%Check_OverlayKeys, %Button_OverlayKeysConfig)
+	_overlay_connect.call(%Check_OverlayKeys, main.key_overlay)
+	_link_control_to_disable(%Check_OverlayKeys, %Button_OverlayKeysConfig)
 	%Button_OverlayKeysConfig.pressed.connect(func() -> void:
 		visible = false
 		main.menu_overlay.menu_open(main.key_overlay)
 	)
+
 
 	%Button_SceneMenu.pressed.connect(func() -> void:
 		visible = false
@@ -402,54 +399,54 @@ func init(p_main: M8SceneDisplay) -> void:
 	# Filter / Shader Settings
 	# --------------------------------------------------------------------
 
-	_config_connect("filter_1", %CheckButtonFilter1, func(value: bool) -> void:
+	_connect_config_global("filter_1", %CheckButtonFilter1, func(value: bool) -> void:
 		main.get_node("%VHSFilter1").visible = value
 	)
-	_config_connect("filter_2", %CheckButtonFilter2, func(value: bool) -> void:
+	_connect_config_global("filter_2", %CheckButtonFilter2, func(value: bool) -> void:
 		main.get_node("%VHSFilter2").visible = value
 	)
-	_config_connect("filter_3", %CheckButtonFilter3, func(value: bool) -> void:
+	_connect_config_global("filter_3", %CheckButtonFilter3, func(value: bool) -> void:
 		main.get_node("%VHSFilter3").visible = value
 	)
-	_config_connect("filter_4", %CheckButtonFilter4, func(value: bool) -> void:
+	_connect_config_global("filter_4", %CheckButtonFilter4, func(value: bool) -> void:
 		main.get_node("%Filter4").visible = value
 	)
-	_config_connect("crt_filter", %CheckButtonFilter5, func(value: bool) -> void:
+	_connect_config_global("crt_filter", %CheckButtonFilter5, func(value: bool) -> void:
 		main.get_node("%CRTShader").visible = value
 	)
-	_config_connect("filter_noise", %Check_FilterNoise, func(value: bool) -> void:
+	_connect_config_global("filter_noise", %Check_FilterNoise, func(value: bool) -> void:
 		main.get_node("%NoiseShader").visible = value
 	)
 
-	_config_connect("pp_vhs_smear", %Slider_ShaderSmearAmount, func(value: float) -> void:
+	_connect_config_global("pp_vhs_smear", %Slider_ShaderSmearAmount, func(value: float) -> void:
 		main.get_node("%VHSFilter1").material.set_shader_parameter("smear", value)
 	)
-	_connect_check_to_control_editable(%CheckButtonFilter1, %Slider_ShaderSmearAmount)
-	_config_connect("pp_vhs_wiggle", %Slider_ShaderWiggleAmount, func(value: float) -> void:
+	_link_control_to_disable(%CheckButtonFilter1, %Slider_ShaderSmearAmount)
+	_connect_config_global("pp_vhs_wiggle", %Slider_ShaderWiggleAmount, func(value: float) -> void:
 		main.get_node("%VHSFilter1").material.set_shader_parameter("wiggle", value)
 	)
-	_connect_check_to_control_editable(%CheckButtonFilter1, %Slider_ShaderWiggleAmount)
-	_config_connect("pp_vhs_noise_crease_opacity", %Slider_ShaderNoiseCreaseOpacity, func(value: float) -> void:
+	_link_control_to_disable(%CheckButtonFilter1, %Slider_ShaderWiggleAmount)
+	_connect_config_global("pp_vhs_noise_crease_opacity", %Slider_ShaderNoiseCreaseOpacity, func(value: float) -> void:
 		main.get_node("%VHSFilter2").material.set_shader_parameter("crease_opacity", value)
 	)
-	_connect_check_to_control_editable(%CheckButtonFilter2, %Slider_ShaderNoiseCreaseOpacity)
-	_config_connect("pp_vhs_tape_crease_amount", %Slider_ShaderTapeCreaseAmount, func(value: float) -> void:
+	_link_control_to_disable(%CheckButtonFilter2, %Slider_ShaderNoiseCreaseOpacity)
+	_connect_config_global("pp_vhs_tape_crease_amount", %Slider_ShaderTapeCreaseAmount, func(value: float) -> void:
 		main.get_node("%VHSFilter2").material.set_shader_parameter("tape_crease_smear", value)
 	)
-	_connect_check_to_control_editable(%CheckButtonFilter2, %Slider_ShaderTapeCreaseAmount)
-	_config_connect("pp_crt_curvature", %Slider_ShaderCurvatureAmount, func(value: float) -> void:
+	_link_control_to_disable(%CheckButtonFilter2, %Slider_ShaderTapeCreaseAmount)
+	_connect_config_global("pp_crt_curvature", %Slider_ShaderCurvatureAmount, func(value: float) -> void:
 		main.get_node("%CRTShader").material.set_shader_parameter("warp_amount", value)
 	)
-	_connect_check_to_control_editable(%CheckButtonFilter5, %Slider_ShaderCurvatureAmount)
-	_config_connect("pp_vignette_amount", %Slider_ShaderVignetteAmount, func(value: float) -> void:
+	_link_control_to_disable(%CheckButtonFilter5, %Slider_ShaderCurvatureAmount)
+	_connect_config_global("pp_vignette_amount", %Slider_ShaderVignetteAmount, func(value: float) -> void:
 		main.get_node("%CRTShader").material.set_shader_parameter("vignette_opacity", value)
 	)
-	_connect_check_to_control_editable(%CheckButtonFilter5, %Slider_ShaderVignetteAmount)
+	_link_control_to_disable(%CheckButtonFilter5, %Slider_ShaderVignetteAmount)
 
 	# Keybindings
 	# --------------------------------------------------------------------
 
-	_config_connect("virtual_keyboard_enabled", %Check_VirtualKeyboard, func(value: bool) -> void:
+	_connect_config_global("virtual_keyboard_enabled", %Check_VirtualKeyboard, func(value: bool) -> void:
 		main.m8_virtual_keyboard_enabled = value
 	)
 
@@ -525,16 +522,16 @@ func init(p_main: M8SceneDisplay) -> void:
 		colorpicker.color_changed.connect(func(color: Color) -> void:
 			if _model():
 				_model(nodepath).material_override.albedo_color = color
-			config.set_config(config_prop, color)
+			config.set_property_global(config_prop, color)
 		)
-		colorpicker.color = config.get_config(config_prop)
+		colorpicker.color = config.get_property_global(config_prop)
 
 		# reset to default
 		colorpicker.gui_input.connect(func(event: InputEvent) -> void:
 			if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
 				var color := Color.BLACK if nodepath == "%Body" else config.DEFAULT_COLOR_KEYCAP
 				_model(nodepath).material_override.albedo_color = color
-				config.set_config(config_prop, color)
+				config.set_property_global(config_prop, color)
 				colorpicker.color = color
 		)
 
@@ -585,9 +582,9 @@ func init(p_main: M8SceneDisplay) -> void:
 			if _model():
 				_model(nodepath).material_overlay.albedo_color = color
 			main.key_overlay.set(key_overlay_prop, color)
-			config.set_config(config_prop, color)
+			config.set_property_global(config_prop, color)
 		)
-		colorpicker.color = config.get_config(config_prop)
+		colorpicker.color = config.get_property_global(config_prop)
 
 		# reset to default
 		colorpicker.gui_input.connect(func(event: InputEvent) -> void:
@@ -595,7 +592,7 @@ func init(p_main: M8SceneDisplay) -> void:
 				var default_color := Color.WHITE
 				_model(nodepath).material_overlay.albedo_color = default_color
 				main.key_overlay.set(key_overlay_prop, default_color)
-				config.set_config(config_prop, default_color)
+				config.set_property_global(config_prop, default_color)
 				colorpicker.color = default_color
 		)
 
@@ -767,31 +764,53 @@ func init(p_main: M8SceneDisplay) -> void:
 				await get_tree().physics_frame
 	)
 
-## Connect a Control node to a config setting and callback function.
-func _config_connect(setting: String, control: Control, fn: Callable) -> void:
-	main.config.assert_setting_exists(setting)
+##
+## Connect a Control node to a config global setting and callback function.
+##
+func _connect_config_global(property: String, control: Control, fn: Callable) -> void:
+	main.config.assert_setting_exists(property)
 
-	if control is Slider:
-		control.value_changed.connect(func(value: float) -> void:
-			fn.call(value)
-			main.config.set_config(setting, value)
-		)
-		control.set_value_no_signal(main.config.get_config(setting))
-		control.value_changed.emit(control.value)
+	var callback := func(value: Variant) -> void:
+		fn.call(value)
+		main.config.set_property_global(property, value)
 
-	elif control is CheckButton:
-		control.toggled.connect(func(toggled_on: bool) -> void:
-			fn.call(toggled_on)
-			main.config.set_config(setting, toggled_on)
-		)
-		control.set_pressed_no_signal(main.config.get_config(setting))
-		control.toggled.emit(control.button_pressed)
+	var default: Variant = main.config.get_property_global(property)
+
+	_connect(control, default, callback)
+
+##
+## Connect a Control node to a config global setting and callback function.
+##
+func _connect_config_profile(property: String, control: Control, default: Variant, fn: Callable) -> void:
+
+	var callback := func(value: Variant) -> void:
+		fn.call(value)
+		main.config.set_property(property, value)
+
+	default = main.config.get_property(property, default)
+
+	_connect(control, default, callback)
+
+func _connect(control: Control, default: Variant, fn: Callable) -> void:
+
+	if control is Slider: # fn should be func(value: float)
+		control.value_changed.connect(fn)
+		control.set_value_no_signal(default)
+		control.value_changed.emit(default)
+
+	elif control is CheckButton: # fn should be func(value: bool)
+		control.toggled.connect(fn)
+		control.set_pressed_no_signal(default)
+		control.toggled.emit(default)
 
 	else:
 		assert(false, "Tried to connect setting to unrecognized node.")
 
-## Connect a CheckButton to a Range or Button. If the CheckButton is off, disable the Range/Button.
-func _connect_check_to_control_editable(check: CheckButton, control: Control) -> void:
+##
+## Links the first control to enable/disable the second control.
+## First control should be a CheckButton. 
+##
+func _link_control_to_disable(check: CheckButton, control: Control) -> void:
 	if control is Slider:
 		check.toggled.connect(func(toggled_on: bool) -> void:
 			control.editable = toggled_on
@@ -966,3 +985,77 @@ func _process(_delta: float) -> void:
 	%CheckButtonFullscreen.button_pressed = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN
 	%OptionRes.disabled = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN
 	%LabelFPSCap.text = "%d" % Engine.max_fps
+
+
+##
+## Setup the profile controls. (Scene tab)
+##
+func init_menu_profiles() -> void:
+
+	var _setup_as_button := func() -> void:
+		%OptionProfiles.clear()
+		%OptionProfiles.add_item("Load profile...")
+
+	var _setup_as_list := func() -> void:
+		%OptionProfiles.clear()
+		%OptionProfiles.add_item("<default>")
+
+		for profile_name: String in main.list_profile_names():
+			%OptionProfiles.add_item(profile_name)
+
+		%OptionProfiles.select(-1)
+
+	var _update_ui := func() -> void:
+		if main.is_using_default_profile():
+			%LineEditProfileName.text = "<default>"
+			%LineEditProfileName.editable = false
+			%LineEditProfileName.select_all_on_focus = false
+			%ButtonProfileDelete.disabled = true
+		else:
+			%LineEditProfileName.text = main.get_current_profile_name()
+			%LineEditProfileName.editable = true
+			%LineEditProfileName.select_all_on_focus = true
+			%ButtonProfileDelete.disabled = false
+		_setup_as_button.call()
+
+	var _load_profile := func(profile_name: String) -> void:
+		if main.load_profile(profile_name):
+			_update_ui.call()
+
+	var _load_default_profile := func() -> void:
+		main.load_default_profile()
+		_update_ui.call()
+
+	_update_ui.call()
+
+	%OptionProfiles.item_selected.connect(func(index: int) -> void:
+		if index == 0:
+			_load_default_profile.call()
+		elif index > 0:
+			_load_profile.call(%OptionProfiles.get_item_text(index))
+
+		_setup_as_button.call()
+	)
+
+	%OptionProfiles.pressed.connect(_setup_as_list)
+	%OptionProfiles.get_popup().close_requested.connect(_setup_as_button)
+
+	%LineEditProfileName.text_submitted.connect(func(new_text: String) -> void:
+		main.rename_profile(new_text)
+		%LineEditProfileName.release_focus()
+	)
+
+	%LineEditProfileName.focus_exited.connect(_update_ui)
+
+	%ButtonProfileCreate.pressed.connect(func() -> void:
+		_load_profile.call(main.create_new_profile())
+	)
+
+	%ButtonProfileReset.pressed.connect(func() -> void:
+		main.reset_scene_to_default()
+	)
+
+	%ButtonProfileDelete.pressed.connect(func() -> void:
+		main.delete_profile(main.get_current_profile_name())
+		_update_ui.call()
+	)

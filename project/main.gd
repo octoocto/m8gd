@@ -80,8 +80,30 @@ var last_peak := 0.0
 var last_peak_max := 0.0
 var last_audio_level := 0.0
 
-func _printgreen(text: String) -> void:
+func _print(text: String) -> void:
 	print_rich("[color=green]%s[/color]" % text)
+
+##
+## Return a value from a .tscn file by reading and parsing the file.
+##
+func _extract_scene_property(scene_path: String, property: String) -> Variant:
+	var lines := FileAccess.get_file_as_string(scene_path).split("\n", false)
+
+	for l in lines:
+		if l.contains(property):
+			var split := l.split(" = ", true, 1)
+			if split[0] == property:
+				var expr := Expression.new()
+				expr.parse(split[1])
+				return expr.execute()
+
+	return null
+
+func _notification(what: int) -> void:
+	# enable quitting by clicking the X on the window.
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		quit()
+
 
 func _ready() -> void:
 
@@ -92,50 +114,46 @@ func _ready() -> void:
 	DisplayServer.window_set_min_size(Vector2i(960, 640)) # 2x M8 screen size
 
 	# initialize utility scripts
-	_printgreen("initializing util scripts...")
+	_print("initializing util scripts...")
 	MenuUtils.init(self)
-	_printgreen("initialized key overlay in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
+	_print("initialized key overlay in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
 	time = Time.get_ticks_msec()
 
 	# initialize key overlay
-	_printgreen("initializing key overlay...")
+	_print("initializing key overlay...")
 	key_overlay.init(self)
-	_printgreen("initialized key overlay in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
+	_print("initialized key overlay in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
 	time = Time.get_ticks_msec()
 
 	# initialize menus
-	_printgreen("initializing main menu...")
+	_print("initializing main menu...")
 	menu.init(self)
-	_printgreen("initialized main menu in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
+	_print("initialized main menu in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
 	time = Time.get_ticks_msec()
 
-	_printgreen("initializing scene menu...")
+	_print("initializing scene menu...")
 	menu_scene.init(self)
-	_printgreen("initialized scene menu in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
+	_print("initialized scene menu in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
 	time = Time.get_ticks_msec()
 
-	_printgreen("initializing camera menu...")
+	_print("initializing camera menu...")
 	menu_camera.init(self)
-	_printgreen("initialized camera menu in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
+	_print("initialized camera menu in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
 	time = Time.get_ticks_msec()
 
-	_printgreen("initializing scene...")
+	_print("initializing scene...")
 	# initialize main scene
 	load_scene(config.get_current_scene_path())
-	_printgreen("initialized scene in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
+	_print("initialized scene in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
 	time = Time.get_ticks_msec()
 
-	_printgreen("initializing overlays...")
-	_overlay_init()
+	_print("initializing overlays...")
 	menu_overlay.init(self)
-	init_overlay(overlay_display)
-	init_overlay(key_overlay)
-	init_overlay(overlay_spectrum)
-	init_overlay(overlay_waveform)
-	_printgreen("initialized overlays in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
+	init_overlays()
+	_print("initialized overlays in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
 	time = Time.get_ticks_msec()
 
-	_printgreen("finished initializing in %.3f seconds!" % ((Time.get_ticks_msec() - start_time) / 1000.0))
+	_print("finished initializing in %.3f seconds!" % ((Time.get_ticks_msec() - start_time) / 1000.0))
 
 	%Check_SplashDoNotShow.toggled.connect(func(toggle_mode: bool) -> void:
 		config.splash_show = !toggle_mode
@@ -153,36 +171,6 @@ func _ready() -> void:
 		var local_keybits := m8_get_local_keybits()
 		m8_client.send_input(local_keybits)
 	)
-
-func _config_get_overlay_key(overlay: Control, property: String) -> String:
-	return "overlay.%s.%s" % [overlay.name, property]
-
-##
-## Get a config scene setting.
-##
-func _config_get_overlay_prop(overlay: Control, property: String) -> Variant:
-	var default: Variant = overlay.get(property)
-	property = _config_get_overlay_key(overlay, property)
-	return config.get_scene_property(property, default)
-
-##
-## Set properties of the given overlay according to the current profile/scene.
-##
-func init_overlay(overlay: Control) -> void:
-
-	overlay.anchors_preset = _config_get_overlay_prop(overlay, "anchors_preset")
-	overlay.position_offset = _config_get_overlay_prop(overlay, "position_offset")
-	overlay.size = _config_get_overlay_prop(overlay, "size")
-
-	for propname: String in overlay.overlay_get_properties():
-		var default: Variant = overlay.get(propname)
-		var propkey := _config_get_overlay_key(overlay, propname)
-		overlay.set(propname, config.get_scene_property(propkey, default))
-
-
-func _notification(what: int) -> void:
-	if what == NOTIFICATION_WM_CLOSE_REQUEST:
-		quit()
 
 func quit() -> void:
 	config.save()
@@ -209,42 +197,23 @@ func menu_open() -> void:
 func menu_close() -> void:
 	menu.visible = false
 
-## Reload the current scene.
-func reload_scene() -> void:
-	if current_scene:
-		load_scene(current_scene.scene_file_path)
+##
+## Return the name of an M8 scene from its file.
+## The scene's formatted name is stored in the export variable [m8_scene_name].
+##
+func get_scene_name(scene_path: String) -> String:
+	var scene_name: Variant = _extract_scene_property(scene_path, "m8_scene_name")
+	if scene_name is String:
+		return scene_name
+	else:
+		# fallback name
+		return scene_path.get_file().get_basename().capitalize()
 
-## Load the main scene from a filepath.
-func load_scene(scene_path: String) -> bool:
-
-	var scene := _preload_scene(scene_path)
-
-	if !scene is M8Scene:
-		return false
-
-	# remove existing scene from viewport
-	if current_scene:
-		print("freeing current scene...")
-		scene_root.remove_child(current_scene)
-		current_scene.queue_free()
-		current_scene = null
-
-	# add new scene and initialize
-	print("adding new scene...")
-	scene_root.add_child(scene)
-	scene.init(self)
-	current_scene = scene
-	menu.update_device_colors()
-	config.use_scene(scene)
-	menu_scene.clear_params()
-	scene.init_menu(menu_scene)
-
-	print("scene loaded!")
-	m8_scene_changed.emit(scene_path, scene)
-
-	return true
-
-func _preload_scene(scene_path: String) -> M8Scene:
+##
+## Load a M8Scene node from a filepath.
+## Returns [null] if the scene is unable to load.
+##
+func _load_scene_from_file_path(scene_path: String) -> M8Scene:
 
 	# load packed scene from file
 	print("loading new scene from %s..." % scene_path)
@@ -260,18 +229,178 @@ func _preload_scene(scene_path: String) -> M8Scene:
 
 	return scene
 
+##
+## Load an M8 scene from a filepath.
+##
+## If the scene has loaded successfully, returns [true].
+## If the filepath is invalid or the scene is unable to load, returns [false].
+##
+func load_scene(scene_path: String) -> bool:
 
-func _overlay_init() -> void:
+	var scene := _load_scene_from_file_path(scene_path)
+
+	if !scene is M8Scene:
+		return false
+
+	# remove existing scene from viewport
+	if current_scene:
+		print("freeing current scene...")
+		scene_root.remove_child(current_scene)
+		current_scene.queue_free()
+		current_scene = null
+
+	# add new scene and initialize
+	print("adding new scene...")
+	scene_root.add_child(scene)
+	scene.init(self)
+	menu.update_device_colors()
+	config.use_scene(scene)
+	current_scene = scene
+
+	menu_scene.clear_params()
+	scene.init_menu(menu_scene)
+
+	print("scene loaded!")
+
+	m8_scene_changed.emit(scene_path, scene)
+
+	return true
+
+##
+## Reset the current scene's properties to their default values.
+## Clears the saved scene properties in the config file.
+##
+func reset_scene_to_default() -> void:
+	assert(current_scene)
+	config.clear_scene_parameters(current_scene)
+	load_scene(current_scene.scene_file_path)
+
+##
+## Load a profile. If the profile doesn't exist, it will be initialized with
+## the current scene and properties.
+##
+## Loading a profile will load the scene that was saved to it, as well as its
+## scene properties, and all profile properties (overlays, filters, etc).
+##
+func load_profile(profile_name: String) -> bool:
+
+	if config.current_profile == profile_name:
+		return false
+
+	print("loading profile %s..." % profile_name)
+
+	config.use_profile(profile_name)
+	var scene_path := config.get_current_scene_path()
+	assert(scene_path != null)
+
+	if scene_path != current_scene.scene_file_path:
+		load_scene(scene_path)
+	else: # just reset the scene menu (also loads properties from config)
+		current_scene.init(self)
+		menu_scene.clear_params()
+		current_scene.init_menu(menu_scene)
+
+	init_overlays()
+	init_camera()
+
+	print("profile loaded!")
+
+	return true
+
+func load_default_profile() -> void:
+	load_profile(config.DEFAULT_PROFILE)
+
+##
+## Get the name of the active profile.
+##
+func get_current_profile_name() -> String:
+	return config.current_profile
+
+func is_using_default_profile() -> bool:
+	return config.current_profile == config.DEFAULT_PROFILE
+
+func list_profile_names() -> Array:
+	return config.list_profile_names()
+
+func rename_profile(new_profile_name: String) -> void:
+	config.rename_current_profile(new_profile_name)
+
+func create_new_profile() -> String:
+	return config.create_new_profile()
+
+func delete_profile(profile_name: String) -> void:
+	if profile_name == get_current_profile_name():
+		load_default_profile()
+	config.delete_profile(profile_name)
+
+##
+## Initializes or re-initializes the state of the 3D camera.
+## The camera state will be loaded from the config.
+##
+func init_camera() -> void:
+	menu_camera.init_camera()
+
+func _get_propkey_overlay(overlay: Control, property: String) -> String:
+	return "overlay.%s.%s" % [overlay.name, property]
+
+##
+## Set properties of the given overlay according to the current profile/scene.
+##
+func _init_overlay(overlay: Control) -> void:
+
+	var _init_prop := func(property: String) -> void:
+		var default: Variant = overlay.get(property)
+		var propkey: String = _get_propkey_overlay(overlay, property)
+		overlay.set(property, config.get_property(propkey, default))
+
+	var _get_prop := func(property: String) -> Variant:
+		var default: Variant = overlay.get(property)
+		return get_overlay_property(overlay, property, default)
+
+	overlay.visible = get_overlay_property(overlay, "enabled", overlay.visible)
+	overlay.anchors_preset = _get_prop.call("anchors_preset")
+	overlay.position_offset = _get_prop.call("position_offset")
+	overlay.size = _get_prop.call("size")
+
+	for property: String in overlay.overlay_get_properties():
+		_init_prop.call(property)
+
+func set_overlay_property(overlay: Control, property: String, value: Variant) -> void:
+	var propkey := _get_propkey_overlay(overlay, property)
+	config.set_property(propkey, value)
+
+func get_overlay_property(overlay: Control, property: String, default: Variant) -> Variant:
+	var propkey: String = _get_propkey_overlay(overlay, property)
+	return config.get_property(propkey, default)
+
+##
+## Initializes or re-initializes the state of the overlays.
+## The overlays' states will be loaded from the config.
+##
+func init_overlays() -> void:
 
 	m8_client.set_background_alpha(0)
 	%OverlayAudioSpectrum.init(self)
 	%OverlayAudioWaveform.init(self)
 	%OverlayDisplayPanel.init(self)
-	_overlay_update_viewport_size()
 
-	get_window().size_changed.connect(func() -> void:
-		_overlay_update_viewport_size()
-	)
+	_init_overlay(overlay_display)
+	_init_overlay(key_overlay)
+	_init_overlay(overlay_spectrum)
+	_init_overlay(overlay_waveform)
+
+	# update buttons in main menu
+	menu.get_node("%Check_OverlayDisplay").button_pressed = overlay_display.visible
+	menu.get_node("%Check_OverlayKeys").button_pressed = key_overlay.visible
+	menu.get_node("%Check_OverlaySpectrum").button_pressed = overlay_spectrum.visible
+	menu.get_node("%Check_OverlayWaveform").button_pressed = overlay_waveform.visible
+
+	menu.get_node("%Slider_OverlayIntegerScale").value = config.get_property("overlay_scale", 1)
+	menu.get_node("%Check_OverlayFilters").button_pressed = config.get_property("overlay_apply_filters", true)
+
+	_overlay_update_viewport_size()
+	if not get_window().size_changed.is_connected(_overlay_update_viewport_size):
+		get_window().size_changed.connect(_overlay_update_viewport_size)
 
 
 func _overlay_update_viewport_size() -> void:
@@ -302,28 +431,6 @@ func _scene_state_get_properties(packed_scene: PackedScene) -> Dictionary:
 
 	return props
 
-##
-## Return a value from a .tscn file by reading and parsing the file.
-##
-func extract_scene_property(scene_path: String, property: String) -> Variant:
-	var lines := FileAccess.get_file_as_string(scene_path).split("\n", false)
-
-	for l in lines:
-		if l.contains(property):
-			var split := l.split(" = ", true, 1)
-			if split[0] == property:
-				var expr := Expression.new()
-				expr.parse(split[1])
-				return expr.execute()
-
-	return null
-
-##
-## Return the name of a scene.
-##
-func get_scene_name(scene_path: String) -> String:
-	var scene_name: Variant = extract_scene_property(scene_path, "m8_scene_name")
-	return scene_name if scene_name is String else scene_path.get_file().get_basename().capitalize()
 
 # M8 client methods
 ################################################################################

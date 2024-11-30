@@ -180,6 +180,52 @@ func init_profile(profile_name: String) -> void:
 		}
 		_print("init profile: %s" % profile_name)
 
+func list_profile_names() -> Array:
+	return profiles.keys().filter(func(profile_name: String) -> bool:
+		return profile_name != DEFAULT_PROFILE
+	)
+
+##
+## Rename the current profile.
+##
+func rename_current_profile(new_profile_name: String) -> void:
+	assert(current_profile != DEFAULT_PROFILE)
+	var old_profile_name := current_profile
+	var profile_dict: Dictionary = profiles[old_profile_name]
+	profiles[new_profile_name] = profile_dict
+	profiles.erase(old_profile_name)
+	current_profile = new_profile_name
+
+	_print("rename profile: %s -> %s" % [old_profile_name, new_profile_name])
+
+##
+## Create a new profile. A name will be generated.
+##
+func create_new_profile() -> String:
+
+	var profile_name := "new profile"
+	var iterations := 1
+
+	while true:
+		if profile_name not in profiles.keys():
+			init_profile(profile_name)
+			_print("created profile: %s" % [profile_name])
+			return profile_name
+
+		profile_name = "new profile (%d)" % iterations
+
+	assert(false)
+	return ""
+
+##
+## Delete a profile.
+##
+func delete_profile(profile_name: String) -> void:
+	assert(profile_name in profiles.keys())
+	assert(profile_name != current_profile)
+	profiles.erase(profile_name)
+	_print("deleted profile: %s" % [profile_name])
+
 ##
 ## Set the current profile. The saved current scene path of the new profile
 ## may or may not be the same as the last profile.
@@ -191,6 +237,12 @@ func use_profile(profile_name: String) -> void:
 	init_profile(profile_name)
 	current_profile = profile_name
 	_print("USING profile: %s" % profile_name)
+
+func clear_scene_parameters(scene: M8Scene) -> void:
+	var profile: Dictionary = profiles[current_profile]
+	var scene_prop_dict: Dictionary = profile["scene_properties"]
+	scene_prop_dict.erase(scene.scene_file_path)
+	_print("CLEARED scene properties for path: %s" % scene.scene_file_path)
 
 ##
 ## Set the current scene for the current profile.
@@ -219,7 +271,7 @@ func _get_scene_properties() -> Dictionary:
 ## Get a scene property for the current profile and current scene.
 ## If this property doesn't exist, set it to the value from [default].
 ##
-func get_scene_property(propname: String, default: Variant = null) -> Variant:
+func get_property_scene(propname: String, default: Variant = null) -> Variant:
 	var scene_props: Dictionary = _get_scene_properties()
 
 	# set parameter from config, or add parameter to config
@@ -234,7 +286,7 @@ func get_scene_property(propname: String, default: Variant = null) -> Variant:
 ##
 ## Set a scene property for the current profile and current scene.
 ##
-func set_scene_property(propname: String, value: Variant) -> void:
+func set_property_scene(propname: String, value: Variant) -> void:
 	var scene_props: Dictionary = _get_scene_properties()
 	if !scene_props.has(propname) or scene_props[propname] != value:
 		scene_props[propname] = value
@@ -266,7 +318,7 @@ func set_property(propname: String, value: Variant) -> void:
 ##
 ## Set a global config setting.
 ##
-func set_config(property: String, value: Variant) -> void:
+func set_property_global(property: String, value: Variant) -> void:
 	assert(property in self)
 	_print("SET global prop: %s = %s" % [property, value])
 	set(property, value)
@@ -274,7 +326,7 @@ func set_config(property: String, value: Variant) -> void:
 ##
 ## Get a global config setting.
 ##
-func get_config(property: String) -> Variant:
+func get_property_global(property: String) -> Variant:
 	assert(property in self)
 	var value: Variant = get(property)
 	_print("GET global prop: %s, value = %s" % [property, value])
