@@ -134,9 +134,10 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-current_tab = 0
+current_tab = 3
 
 [node name="Scene" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -995,7 +996,6 @@ layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_06k14")
 
 [node name="Controls" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 3
 
@@ -1198,6 +1198,12 @@ text = "Reset to Defaults"
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxLine_v2m85")
 
+[node name="RichTextLabel2" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer"]
+layout_mode = 2
+bbcode_enabled = true
+text = "[b]Virtual Keyboard[/b] "
+fit_content = true
+
 [node name="GridContainer2" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer"]
 layout_mode = 2
 columns = 2
@@ -1210,6 +1216,49 @@ text = "Enable Virtual Keyboard"
 [node name="Check_VirtualKeyboard" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_l2hi4")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer"]
+layout_mode = 2
+bbcode_enabled = true
+text = "[b]Profile Hotkeys[/b] "
+fit_content = true
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ProfileHotkeysContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 4
+
+[node name="ProfileHotkeyTemplate" type="HBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/ScrollContainer/ProfileHotkeysContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/ScrollContainer/ProfileHotkeysContainer/ProfileHotkeyTemplate"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "placeholder"
+horizontal_alignment = 2
+
+[node name="ButtonBind" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/ScrollContainer/ProfileHotkeysContainer/ProfileHotkeyTemplate"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+text_overrun_behavior = 4
+
+[node name="ButtonClear" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/ScrollContainer/ProfileHotkeysContainer/ProfileHotkeyTemplate"]
+layout_mode = 2
+text = "Clear"
 
 [node name="Shaders" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
 visible = false

@@ -31,6 +31,7 @@ var version: int = 0
 ## [/codeblock]
 @export var profiles := {}
 @export var current_profile := DEFAULT_PROFILE
+@export var profile_hotkeys := {}
 
 @export var camera_mouse_control := true
 @export var camera_humanize := true
@@ -333,3 +334,20 @@ func get_property_global(property: String) -> Variant:
 	var value: Variant = get(property)
 	_print("GET global prop: %s, value = %s" % [property, value])
 	return value
+
+func set_profile_hotkey(event: InputEvent, profile_name: String) -> void:
+	profile_hotkeys[profile_name] = event
+	_print("set profile hotkey: %s -> %s" % [event.as_text(), profile_name])
+
+func get_profile_hotkey(profile_name: String) -> Variant:
+	return profile_hotkeys.get(profile_name)
+
+func clear_profile_hotkey(profile_name: String) -> void:
+	profile_hotkeys.erase(profile_name)
+	_print("cleared profile hotkey for: %s" % profile_name)
+
+func find_profile_name_from_hotkey(event: InputEvent) -> Variant:
+	for key: String in profile_hotkeys.keys():
+		if event.is_match(profile_hotkeys[key]):
+			return key
+	return null

@@ -465,22 +465,22 @@ func init(p_main: M8SceneDisplay) -> void:
 		%ButtonBindPlay2.text = get_key_bind("key_play", 1)
 	)
 
-	%ButtonBindUp1.button_down.connect(start_key_rebind.bind("key_up", 0))
-	%ButtonBindUp2.button_down.connect(start_key_rebind.bind("key_up", 1))
-	%ButtonBindDown1.button_down.connect(start_key_rebind.bind("key_down", 0))
-	%ButtonBindDown2.button_down.connect(start_key_rebind.bind("key_down", 1))
-	%ButtonBindLeft1.button_down.connect(start_key_rebind.bind("key_left", 0))
-	%ButtonBindLeft2.button_down.connect(start_key_rebind.bind("key_left", 1))
-	%ButtonBindRight1.button_down.connect(start_key_rebind.bind("key_right", 0))
-	%ButtonBindRight2.button_down.connect(start_key_rebind.bind("key_right", 1))
-	%ButtonBindOpt1.button_down.connect(start_key_rebind.bind("key_option", 0))
-	%ButtonBindOpt2.button_down.connect(start_key_rebind.bind("key_option", 1))
-	%ButtonBindEdit1.button_down.connect(start_key_rebind.bind("key_edit", 0))
-	%ButtonBindEdit2.button_down.connect(start_key_rebind.bind("key_edit", 1))
-	%ButtonBindShift1.button_down.connect(start_key_rebind.bind("key_shift", 0))
-	%ButtonBindShift2.button_down.connect(start_key_rebind.bind("key_shift", 1))
-	%ButtonBindPlay1.button_down.connect(start_key_rebind.bind("key_play", 0))
-	%ButtonBindPlay2.button_down.connect(start_key_rebind.bind("key_play", 1))
+	%ButtonBindUp1.button_down.connect(start_rebind_action.bind("key_up", 0))
+	%ButtonBindUp2.button_down.connect(start_rebind_action.bind("key_up", 1))
+	%ButtonBindDown1.button_down.connect(start_rebind_action.bind("key_down", 0))
+	%ButtonBindDown2.button_down.connect(start_rebind_action.bind("key_down", 1))
+	%ButtonBindLeft1.button_down.connect(start_rebind_action.bind("key_left", 0))
+	%ButtonBindLeft2.button_down.connect(start_rebind_action.bind("key_left", 1))
+	%ButtonBindRight1.button_down.connect(start_rebind_action.bind("key_right", 0))
+	%ButtonBindRight2.button_down.connect(start_rebind_action.bind("key_right", 1))
+	%ButtonBindOpt1.button_down.connect(start_rebind_action.bind("key_option", 0))
+	%ButtonBindOpt2.button_down.connect(start_rebind_action.bind("key_option", 1))
+	%ButtonBindEdit1.button_down.connect(start_rebind_action.bind("key_edit", 0))
+	%ButtonBindEdit2.button_down.connect(start_rebind_action.bind("key_edit", 1))
+	%ButtonBindShift1.button_down.connect(start_rebind_action.bind("key_shift", 0))
+	%ButtonBindShift2.button_down.connect(start_rebind_action.bind("key_shift", 1))
+	%ButtonBindPlay1.button_down.connect(start_rebind_action.bind("key_play", 0))
+	%ButtonBindPlay2.button_down.connect(start_rebind_action.bind("key_play", 1))
 
 	%ButtonResetBinds.button_down.connect(reset_key_rebinds.bind());
 
@@ -919,14 +919,29 @@ func get_key_bind(action: String, index: int) -> String:
 
 	return event.as_text()
 
-func start_key_rebind(action: String, index: int) -> void:
+##
+## Open the rebind prompt. The callback function will be called
+## with the InputEvent as the first argument.
+##
+func start_rebind(fn: Callable) -> void:
+
 	# prevent opening rebind prompt too fast
 	if Time.get_ticks_msec() - last_rebind_time < REBIND_COOLDOWN:
 		return
 
 	%BindActionPopup.visible = true
 
-	key_rebind_callback = func(event: InputEvent) -> void:
+	key_rebind_callback = fn
+
+	is_key_rebinding = true
+
+##
+## Open the rebind prompt to rebind an action.
+## The index chooses which InputEvent to rebind.
+##
+func start_rebind_action(action: String, index: int = 0) -> void:
+
+	var callback := func(event: InputEvent) -> void:
 		var events := InputMap.action_get_events(action)
 
 		if events.size() <= index:
@@ -942,11 +957,24 @@ func start_key_rebind(action: String, index: int) -> void:
 
 		Input.action_release(action)
 		save_key_rebinds()
-	
-	is_key_rebinding = true
-	print("starting rebind of %s" % action)
 
-func end_key_rebind() -> void:
+	start_rebind(callback)
+
+##
+## Handles input while the rebind prompt is open. Called by [_input()].
+##
+func _handle_input_rebind(event: InputEvent) -> void:
+	if is_key_rebinding:
+		if event is InputEventKey and event.pressed:
+			if event.keycode != KEY_ESCAPE:
+				key_rebind_callback.call(event)
+			end_rebind()
+		if event is InputEventJoypadButton and event.pressed:
+			key_rebind_callback.call(event)
+			end_rebind()
+		return
+
+func end_rebind() -> void:
 	is_key_rebinding = false
 	last_rebind_time = Time.get_ticks_msec()
 	%BindActionPopup.visible = false
@@ -986,15 +1014,7 @@ func refresh_audio_device_list() -> void:
 			break
 
 func _input(event: InputEvent) -> void:
-	if is_key_rebinding:
-		if event is InputEventKey and event.pressed:
-			if event.keycode != KEY_ESCAPE:
-				key_rebind_callback.call(event)
-			end_key_rebind()
-		if event is InputEventJoypadButton and event.pressed:
-			key_rebind_callback.call(event)
-			end_key_rebind()
-		return
+	_handle_input_rebind(event)
 
 func _process(_delta: float) -> void:
 	%CheckButtonFullscreen.button_pressed = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN
@@ -1032,6 +1052,7 @@ func init_menu_profiles() -> void:
 			%LineEditProfileName.select_all_on_focus = true
 			%ButtonProfileDelete.disabled = false
 		_setup_as_button.call()
+		refresh_profile_hotkeys()
 
 	var _load_profile := func(profile_name: String) -> void:
 		if main.load_profile(profile_name):
@@ -1074,3 +1095,35 @@ func init_menu_profiles() -> void:
 		main.delete_profile(main.get_current_profile_name())
 		_update_ui.call()
 	)
+
+##
+## Recreate the profile hotkey UI with the current list of profiles and
+## their saved hotkey bindings.
+##
+func refresh_profile_hotkeys() -> void:
+	for child in %ProfileHotkeysContainer.get_children():
+		if child != %ProfileHotkeyTemplate:
+			child.queue_free()
+
+	for profile_name: String in main.list_profile_names():
+		var container: HBoxContainer = %ProfileHotkeyTemplate.duplicate()
+		var event: Variant = main.config.get_profile_hotkey(profile_name)
+		container.visible = true
+		container.get_node("Label").text = profile_name
+		if event is InputEvent:
+			container.get_node("ButtonBind").text = event.as_text()
+		else:
+			container.get_node("ButtonBind").text = "---"
+		%ProfileHotkeysContainer.add_child(container)
+
+		container.get_node("ButtonBind").pressed.connect(func() -> void:
+			start_rebind(func(e: InputEvent) -> void:
+				main.config.set_profile_hotkey(e, profile_name)
+				refresh_profile_hotkeys()
+			)
+		)
+
+		container.get_node("ButtonClear").pressed.connect(func() -> void:
+			main.config.clear_profile_hotkey(profile_name)
+			refresh_profile_hotkeys()
+		)

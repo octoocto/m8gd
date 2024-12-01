@@ -825,84 +825,118 @@ func _input(event: InputEvent) -> void:
 			else:
 				menu_open()
 
-		if !m8_virtual_keyboard_enabled or is_any_menu_open():
-			return
+	if _handle_input_profile_hotkeys(event): return
 
-		var note := m8_virtual_keyboard_octave * 12
+	if _handle_input_keyjazz(event): return
 
-		match event.physical_keycode:
-			KEY_MINUS:
-				if event.pressed and m8_virtual_keyboard_octave > 0:
-					m8_virtual_keyboard_octave -= 1
-					m8_virtual_keyboard_notes.clear()
-					print_blink("octave = %d" % m8_virtual_keyboard_octave)
-					m8_send_keyjazz(255, 0)
-				return
-			KEY_EQUAL:
-				if event.pressed and m8_virtual_keyboard_octave < 10:
-					m8_virtual_keyboard_octave += 1
-					m8_virtual_keyboard_notes.clear()
-					print_blink("octave = %d" % m8_virtual_keyboard_octave)
-					m8_send_keyjazz(255, 0)
-				return
-			KEY_BRACKETLEFT:
-				if event.pressed and m8_virtual_keyboard_velocity > 1:
-					m8_virtual_keyboard_velocity -= 1
-					print_blink("velocity = %X (%d)" % [m8_virtual_keyboard_velocity, m8_virtual_keyboard_velocity])
-				return
-			KEY_BRACKETRIGHT:
-				if event.pressed and m8_virtual_keyboard_velocity < 127:
-					m8_virtual_keyboard_velocity += 1
-					print_blink("velocity = %X (%d)" % [m8_virtual_keyboard_velocity, m8_virtual_keyboard_velocity])
-				return
-			KEY_A:
-				pass
-			KEY_W:
-				note += 1
-			KEY_S:
-				note += 2
-			KEY_E:
-				note += 3
-			KEY_D:
-				note += 4
-			KEY_F:
-				note += 5
-			KEY_T:
-				note += 6
-			KEY_G:
-				note += 7
-			KEY_Y:
-				note += 8
-			KEY_H:
-				note += 9
-			KEY_U:
-				note += 10
-			KEY_J:
-				note += 11
-			KEY_K:
-				note += 12
-			KEY_O:
-				note += 13
-			KEY_L:
-				note += 14
-			KEY_P:
-				note += 15
-			KEY_SEMICOLON:
-				note += 16
-			KEY_APOSTROPHE:
-				note += 17
-			_:
-				return
+func _handle_input_profile_hotkeys(event: InputEvent) -> bool:
 
-		if event.pressed and !event.is_echo():
-			m8_send_keyjazz(note, m8_virtual_keyboard_velocity)
-			m8_virtual_keyboard_notes.append(note)
-			print("virtual keyboard: playing note = %d" % note)
-		elif !event.pressed and m8_virtual_keyboard_notes.size() > 0:
-			var last_note: int = m8_virtual_keyboard_notes[-1]
-			m8_virtual_keyboard_notes.erase(note)
-			if m8_virtual_keyboard_notes.size() == 0:
+	if (
+		is_any_menu_open() or
+		(
+			event is not InputEventKey and
+			event is not InputEventJoypadButton
+		) or
+		!event.is_pressed() or
+		event.is_echo()
+	):
+		return false
+
+	var profile_name: Variant = config.find_profile_name_from_hotkey(event)
+	if profile_name is String:
+		print("loading profile from hotkey: %s" % profile_name)
+		load_profile(profile_name)
+		return true
+	
+	return false
+
+
+func _handle_input_keyjazz(event: InputEvent) -> bool:
+
+	if (
+		!m8_virtual_keyboard_enabled or
+		is_any_menu_open() or
+		event is not InputEventKey
+	):
+		return false
+
+	var note := m8_virtual_keyboard_octave * 12
+
+	match event.physical_keycode:
+		KEY_MINUS:
+			if event.pressed and m8_virtual_keyboard_octave > 0:
+				m8_virtual_keyboard_octave -= 1
+				m8_virtual_keyboard_notes.clear()
+				print_blink("octave = %d" % m8_virtual_keyboard_octave)
 				m8_send_keyjazz(255, 0)
-				print("virtual keyboard: note off")
-			elif last_note != m8_virtual_keyboard_notes[-1]:
-				m8_send_keyjazz(m8_virtual_keyboard_notes[-1], m8_virtual_keyboard_velocity)
+			return true
+		KEY_EQUAL:
+			if event.pressed and m8_virtual_keyboard_octave < 10:
+				m8_virtual_keyboard_octave += 1
+				m8_virtual_keyboard_notes.clear()
+				print_blink("octave = %d" % m8_virtual_keyboard_octave)
+				m8_send_keyjazz(255, 0)
+			return true
+		KEY_BRACKETLEFT:
+			if event.pressed and m8_virtual_keyboard_velocity > 1:
+				m8_virtual_keyboard_velocity -= 1
+				print_blink("velocity = %X (%d)" % [m8_virtual_keyboard_velocity, m8_virtual_keyboard_velocity])
+			return true
+		KEY_BRACKETRIGHT:
+			if event.pressed and m8_virtual_keyboard_velocity < 127:
+				m8_virtual_keyboard_velocity += 1
+				print_blink("velocity = %X (%d)" % [m8_virtual_keyboard_velocity, m8_virtual_keyboard_velocity])
+			return true
+		KEY_A:
+			pass
+		KEY_W:
+			note += 1
+		KEY_S:
+			note += 2
+		KEY_E:
+			note += 3
+		KEY_D:
+			note += 4
+		KEY_F:
+			note += 5
+		KEY_T:
+			note += 6
+		KEY_G:
+			note += 7
+		KEY_Y:
+			note += 8
+		KEY_H:
+			note += 9
+		KEY_U:
+			note += 10
+		KEY_J:
+			note += 11
+		KEY_K:
+			note += 12
+		KEY_O:
+			note += 13
+		KEY_L:
+			note += 14
+		KEY_P:
+			note += 15
+		KEY_SEMICOLON:
+			note += 16
+		KEY_APOSTROPHE:
+			note += 17
+		_:
+			return false
+
+	if event.pressed and !event.is_echo():
+		m8_send_keyjazz(note, m8_virtual_keyboard_velocity)
+		m8_virtual_keyboard_notes.append(note)
+		print("virtual keyboard: playing note = %d" % note)
+	elif !event.pressed and m8_virtual_keyboard_notes.size() > 0:
+		var last_note: int = m8_virtual_keyboard_notes[-1]
+		m8_virtual_keyboard_notes.erase(note)
+		if m8_virtual_keyboard_notes.size() == 0:
+			m8_send_keyjazz(255, 0)
+			print("virtual keyboard: note off")
+		elif last_note != m8_virtual_keyboard_notes[-1]:
+			m8_send_keyjazz(m8_virtual_keyboard_notes[-1], m8_virtual_keyboard_velocity)
+
+	return true
