@@ -117,7 +117,7 @@ var version: int = 0
 @export var action_events := {} # Dictionary[String, Array]
 @export var virtual_keyboard_enabled := false
 
-func _print(text: String) -> void:
+static func _print(text: String) -> void:
 	print_rich("[color=aqua]config> %s[/color]" % text)
 
 ## Returns true if this script contains a default for the given setting.
@@ -128,7 +128,7 @@ func assert_setting_exists(setting: String) -> void:
 func save() -> void:
 	var error := ResourceSaver.save(self, CONFIG_FILE_PATH)
 	if error == OK:
-		print("config saved")
+		_print("config saved")
 	else:
 		printerr("failed to save config: %s" % error_string(error))
 
@@ -136,11 +136,13 @@ static func load() -> M8Config:
 	if FileAccess.file_exists(CONFIG_FILE_PATH):
 		var config: M8Config = ResourceLoader.load(CONFIG_FILE_PATH)
 		assert(config is M8Config)
-		print("using config loaded from file")
+		_print("using config loaded from file")
 		return config
 	else:
-		print("using default config")
-		return M8Config.new()
+		_print("using default config")
+		var config := M8Config.new()
+		config.init_profile(DEFAULT_PROFILE)
+		return config
 
 ##
 ## Get the current scene path according to the current profile and
