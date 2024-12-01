@@ -1,0 +1,15 @@
+[gd_resource type="StandardMaterial3D" load_steps=5 format=3 uid="uid://1qarqvu22e2"]
+
+[ext_resource type="Texture2D" uid="uid://dv11e5vjgmjl6" path="res://assets/ambientcg/asphalt010/Asphalt010_2K-JPG_Color.jpg" id="1_kam1q"]
+[ext_resource type="Texture2D" uid="uid://c2lmoussricp2" path="res://assets/ambientcg/asphalt010/Asphalt010_2K-JPG_Displacement.jpg" id="2_vx812"]
+[ext_resource type="Texture2D" uid="uid://vjh43e67xd15" path="res://assets/ambientcg/asphalt010/Asphalt010_2K-JPG_NormalDX.jpg" id="3_u4u7q"]
+[ext_resource type="Texture2D" uid="uid://bgt4n4pn63np7" path="res://assets/ambientcg/asphalt010/Asphalt010_2K-JPG_Roughness.jpg" id="4_p5gpn"]
+
+[resource]
+albedo_texture = ExtResource("1_kam1q")
+roughness_texture = ExtResource("4_p5gpn")
+normal_enabled = true
+normal_texture = ExtResource("3_u4u7q")
+heightmap_texture = ExtResource("2_vx812")
+uv1_scale = Vector3(0.125, 0.125, 0.125)
+uv1_triplanar = true

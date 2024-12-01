@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=4 uid="uid://f2tvhcv8kiuu"]
+[gd_scene load_steps=39 format=4 uid="uid://f2tvhcv8kiuu"]
 
 [ext_resource type="Script" path="res://scenes/surface_scene.gd" id="1_87ai1"]
 [ext_resource type="Shader" path="res://shaders/device_screen.gdshader" id="3_bp567"]
@@ -6,16 +6,20 @@
 [ext_resource type="Texture2D" uid="uid://ras5y3yqijkx" path="res://assets/m8_screen_placeholder.png" id="4_3r2cc"]
 [ext_resource type="PackedScene" uid="uid://bckroenwlecqv" path="res://humanized_camera_3d.tscn" id="5_jy4yn"]
 [ext_resource type="Texture2D" uid="uid://sw144ksus5yx" path="res://assets/succulent_plants/textures/taniku01-tex_baseColor.png" id="6_uda7r"]
+[ext_resource type="Material" uid="uid://dv1jtj3wvh678" path="res://assets/grid_overlay.tres" id="8_pmofd"]
 [ext_resource type="PackedScene" uid="uid://ceqlf8kgdxjeb" path="res://grass_area.tscn" id="8_srvcg"]
 [ext_resource type="Shader" path="res://grass_area.gdshader" id="9_uucvv"]
 
 [sub_resource type="Environment" id="Environment_ayqpk"]
+background_mode = 1
+background_color = Color(0.15, 0.15, 0.15, 1)
 tonemap_mode = 2
-sdfgi_enabled = true
+ssao_enabled = true
 fog_light_color = Color(0, 0, 0, 1)
 fog_density = 0.001
 volumetric_fog_albedo = Color(0.114897, 0.114897, 0.114897, 1)
 volumetric_fog_ambient_inject = 0.53
+adjustment_enabled = true
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4b25i"]
 resource_local_to_scene = true
@@ -170,42 +174,6 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_ok18d")
 
-[sub_resource type="Gradient" id="Gradient_lvxcg"]
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_5i8xb"]
-frequency = 0.2
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_80gxc"]
-seamless = true
-as_normal_map = true
-color_ramp = SubResource("Gradient_lvxcg")
-noise = SubResource("FastNoiseLite_5i8xb")
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dtr6l"]
-albedo_color = Color(0, 0, 0, 1)
-metallic_specular = 0.25
-roughness = 0.43
-normal_enabled = true
-normal_texture = SubResource("NoiseTexture2D_80gxc")
-uv1_scale = Vector3(2, 2, 2)
-uv1_triplanar = true
-
-[sub_resource type="Gradient" id="Gradient_onbnd"]
-interpolation_mode = 1
-colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 0.1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_ex0d0"]
-gradient = SubResource("Gradient_onbnd")
-fill = 2
-fill_to = Vector2(1, 1)
-metadata/_snap_enabled = true
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qfoyt"]
-transparency = 1
-albedo_texture = SubResource("GradientTexture2D_ex0d0")
-uv1_triplanar = true
-texture_filter = 4
-
 [sub_resource type="PlaneMesh" id="PlaneMesh_4c1u1"]
 size = Vector2(200, 200)
 
@@ -299,14 +267,26 @@ m8_scene_name = "Surface"
 metadata/_edit_vertical_guides_ = [640.0]
 metadata/_edit_horizontal_guides_ = [480.0]
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="."]
 unique_name_in_owner = true
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+volume_db = -80.0
+expand = true
+loop = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_ayqpk")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(0.258819, -0.4609, -0.848872, 0, -0.878817, 0.477159, -0.965926, -0.123498, -0.227455, 0.087698, 4.97022, -16.5359)
-light_color = Color(1, 0.86, 0.86, 1)
+transform = Transform3D(0.477159, -0.528885, -0.701855, -6.98189e-08, -0.798635, 0.601815, -0.878817, -0.287161, -0.381076, 0.087698, 4.97022, -16.5359)
+light_color = Color(1, 0.958, 0.91, 1)
+light_energy = 2.0
 shadow_enabled = true
 shadow_bias = 0.01
 shadow_opacity = 0.83
@@ -315,6 +295,7 @@ shadow_blur = 3.0
 [node name="LightLamp" type="SpotLight3D" parent="."]
 unique_name_in_owner = true
 transform = Transform3D(0.266284, 0.95967, -0.0901449, -0.46377, 0.209544, 0.860819, 0.844991, -0.187416, 0.500865, -0.919, 16.42, 9.424)
+visible = false
 light_color = Color(0.8, 0.866667, 1, 1)
 light_size = 3.0
 shadow_enabled = true
@@ -387,8 +368,8 @@ skeleton = NodePath("")
 
 [node name="SurfaceMesh" type="MeshInstance3D" parent="."]
 unique_name_in_owner = true
-material_override = SubResource("StandardMaterial3D_dtr6l")
-material_overlay = SubResource("StandardMaterial3D_qfoyt")
+material_overlay = ExtResource("8_pmofd")
+cast_shadow = 0
 mesh = SubResource("PlaneMesh_4c1u1")
 
 [node name="GrassArea" parent="." instance=ExtResource("8_srvcg")]
