@@ -134,16 +134,20 @@ func save() -> void:
 		printerr("failed to save config: %s" % error_string(error))
 
 static func load() -> M8Config:
+	var config: M8Config = null
+
 	if FileAccess.file_exists(CONFIG_FILE_PATH):
-		var config: M8Config = ResourceLoader.load(CONFIG_FILE_PATH)
-		assert(config is M8Config)
-		_print("using config loaded from file")
-		return config
+		config = ResourceLoader.load(CONFIG_FILE_PATH)
+		if config is M8Config:
+			_print("loaded config from file")
+		else:
+			_print("unable to load config from file. creating new config")
 	else:
-		_print("using default config")
-		var config := M8Config.new()
-		config.init_profile(DEFAULT_PROFILE)
-		return config
+		config = M8Config.new()
+		_print("creating new config")
+
+	config.init_profile(DEFAULT_PROFILE)
+	return config
 
 ##
 ## Get the current scene path according to the current profile and
