@@ -32,6 +32,8 @@ signal m8_disconnected
 		if is_inside_tree():
 			_overlay_update_viewport_size()
 
+@onready var config := M8Config.load()
+
 @onready var audio_monitor: AudioStreamPlayer = %AudioStreamPlayer
 
 # @onready var scene_viewport: SubViewport = %SceneViewport
@@ -52,9 +54,6 @@ signal m8_disconnected
 @onready var cam_status: RichTextLabel = %CameraStatus
 @onready var cam_help: RichTextLabel = %CameraControls
 @onready var cam_status_template: String = cam_status.text
-
-@onready var config := M8Config.load()
-
 @onready var m8_client := M8GD.new()
 @onready var m8_is_connected := false
 @onready var m8_audio_connected := false
@@ -145,7 +144,8 @@ func _ready() -> void:
 
 	_print("initializing scene...")
 	# initialize main scene
-	load_scene(config.get_current_scene_path())
+	# load_scene(config.get_current_scene_path())
+	load_last_profile()
 	_print("initialized scene in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
 	time = Time.get_ticks_msec()
 
@@ -278,6 +278,12 @@ func reset_scene_to_default() -> void:
 	load_scene(current_scene.scene_file_path)
 
 ##
+## Load the last saved profile.
+##
+func load_last_profile() -> void:
+	load_profile(config.current_profile)
+
+##
 ## Load a profile. If the profile doesn't exist, it will be initialized with
 ## the current scene and properties.
 ##
@@ -286,16 +292,13 @@ func reset_scene_to_default() -> void:
 ##
 func load_profile(profile_name: String) -> bool:
 
-	if config.current_profile == profile_name:
-		return false
-
 	print("loading profile %s..." % profile_name)
 
 	config.use_profile(profile_name)
 	var scene_path := config.get_current_scene_path()
 	assert(scene_path != null)
 
-	if scene_path != current_scene.scene_file_path:
+	if current_scene == null or scene_path != current_scene.scene_file_path:
 		load_scene(scene_path)
 	else: # just reset the scene menu (also loads properties from config)
 		current_scene.init(self)
@@ -335,45 +338,79 @@ func delete_profile(profile_name: String) -> void:
 		load_default_profile()
 	config.delete_profile(profile_name)
 
-##
-## Initializes or re-initializes the state of the 3D camera.
-## The camera state will be loaded from the config.
-##
-func init_camera() -> void:
-	menu_camera.init_camera()
-
 func _get_propkey_overlay(overlay: Control, property: String) -> String:
 	return "overlay.%s.%s" % [overlay.name, property]
+
+func _get_propkey_camera(property: String) -> String:
+	return "camera.%s" % property
+
+
+func set_overlay_property(overlay: Control, property: String, value: Variant) -> void:
+	var propkey := _get_propkey_overlay(overlay, property)
+	config.set_property(propkey, value)
+
+func get_overlay_property(overlay: Control, property: String, default: Variant = null) -> Variant:
+	var propkey: String = _get_propkey_overlay(overlay, property)
+	if default == null:
+		default = overlay.get(property)
+	return config.get_property(propkey, default)
+
+##
+## Initialize an overlay property from the config (profile property).
+##
+## If the property already exists in the config, set the property in the overlay to that value.
+## If the property does not exist, save the current value in the overlay to the config.
+##
+func init_overlay_property(overlay: Control, property: String) -> Variant:
+	var value: Variant = get_overlay_property(overlay, property)
+	overlay.set(property, value)
+	return value
+
+func set_camera_property(property: String, value: Variant) -> void:
+	var propkey := _get_propkey_camera(property)
+	config.set_property_scene(propkey, value)
+
+
+##
+## Get a property from the config for the scene camera (scene property).
+## If the property does not exist, get the property from the current scene camera.
+##
+func get_camera_property(property: String, default: Variant = null) -> Variant:
+	var camera := get_scene_camera()
+	if camera != null:
+		var propkey: String = _get_propkey_camera(property)
+		if default == null:
+			default = camera.get(property)
+		return config.get_property_scene(propkey, default)
+	else:
+		return null
+
+##
+## Initialize a scene camera property from the config (scene property).
+##
+## If the property already exists in the config, set the camera to that value.
+## If the property does not exist, save the current value in the camera to the config.
+##
+func init_camera_property(property: String) -> Variant:
+	var camera := get_scene_camera()
+	if camera != null:
+		var value: Variant = get_camera_property(property)
+		camera.set(property, value)
+		return value
+	return null
 
 ##
 ## Set properties of the given overlay according to the current profile/scene.
 ##
 func _init_overlay(overlay: Control) -> void:
 
-	var _init_prop := func(property: String) -> void:
-		var default: Variant = overlay.get(property)
-		var propkey: String = _get_propkey_overlay(overlay, property)
-		overlay.set(property, config.get_property(propkey, default))
-
-	var _get_prop := func(property: String) -> Variant:
-		var default: Variant = overlay.get(property)
-		return get_overlay_property(overlay, property, default)
-
 	overlay.visible = get_overlay_property(overlay, "enabled", overlay.visible)
-	overlay.anchors_preset = _get_prop.call("anchors_preset")
-	overlay.position_offset = _get_prop.call("position_offset")
-	overlay.size = _get_prop.call("size")
+	overlay.anchors_preset = get_overlay_property(overlay, "anchors_preset")
+	overlay.position_offset = get_overlay_property(overlay, "position_offset")
+	overlay.size = get_overlay_property(overlay, "size")
 
 	for property: String in overlay.overlay_get_properties():
-		_init_prop.call(property)
-
-func set_overlay_property(overlay: Control, property: String, value: Variant) -> void:
-	var propkey := _get_propkey_overlay(overlay, property)
-	config.set_property(propkey, value)
-
-func get_overlay_property(overlay: Control, property: String, default: Variant) -> Variant:
-	var propkey: String = _get_propkey_overlay(overlay, property)
-	return config.get_property(propkey, default)
+		init_overlay_property(overlay, property)
 
 ##
 ## Initializes or re-initializes the state of the overlays.
@@ -404,6 +441,52 @@ func init_overlays() -> void:
 	if not get_window().size_changed.is_connected(_overlay_update_viewport_size):
 		get_window().size_changed.connect(_overlay_update_viewport_size)
 
+##
+## Get the 3D camera of the current scene.
+## Return [null] if there is no camera present in the scene.
+##
+func get_scene_camera() -> HumanizedCamera3D:
+	if current_scene:
+		return current_scene.get_3d_camera()
+	else:
+		return null
+
+##
+## Initializes or re-initializes the state of the 3D camera.
+## The camera state will be loaded from the config.
+##
+func init_camera() -> void:
+	# menu_camera.init_camera()
+	var camera := get_scene_camera()
+	if camera == null: return
+
+	var position: Vector3 = init_camera_property("position")
+	var rotation: Vector3 = init_camera_property("rotation")
+	init_camera_property("dof_focus_distance")
+	init_camera_property("dof_focus_width")
+	init_camera_property("dof_blur_amount")
+	var mouse_enabled: bool = init_camera_property("mouse_controlled_pan_zoom")
+	var humanize_enabled: bool = init_camera_property("humanized_movement")
+
+	camera.base_position = position
+	camera.base_rotation = rotation
+
+	menu.get_node("%Check_MouseCamera").button_pressed = mouse_enabled
+	menu.get_node("%Check_HumanCamera").button_pressed = humanize_enabled
+
+##
+## Save the current camera properties to the config.
+##
+func save_camera() -> void:
+
+	var camera := get_scene_camera()
+	assert(camera != null)
+
+	set_camera_property("position", camera.position)
+	set_camera_property("rotation", camera.rotation)
+	set_camera_property("dof_focus_distance", camera.dof_focus_distance)
+	set_camera_property("dof_focus_width", camera.dof_focus_width)
+	set_camera_property("dof_blur_amount", camera.dof_blur_amount)
 
 func _overlay_update_viewport_size() -> void:
 

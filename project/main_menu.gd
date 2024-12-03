@@ -121,19 +121,17 @@ func init(p_main: M8SceneDisplay) -> void:
 		main.menu_camera.menu_open()
 	)
 
-	%Check_MouseCamera.toggled.connect(func(toggled_on: bool) -> void:
+	%Check_MouseCamera.toggled.connect(func(value: bool) -> void:
 		if main.current_scene and main.current_scene.has_3d_camera():
-			main.current_scene.get_3d_camera().mouse_controlled_pan_zoom = toggled_on
-		# config.camera_mouse_control=toggled_on
+			main.set_camera_property("mouse_controlled_pan_zoom", value)
+			main.current_scene.get_3d_camera().mouse_controlled_pan_zoom = value
 	)
-	# %Check_MouseCamera.button_pressed = config.camera_mouse_control
 
-	%Check_HumanCamera.toggled.connect(func(toggled_on: bool) -> void:
+	%Check_HumanCamera.toggled.connect(func(value: bool) -> void:
 		if main.current_scene and main.current_scene.has_3d_camera():
-			main.current_scene.get_3d_camera().humanized_movement = toggled_on
-		# config.camera_humanize=toggled_on
+			main.set_camera_property("humanized_movement", value)
+			main.current_scene.get_3d_camera().humanized_movement = value
 	)
-	# %Check_HumanCamera.button_pressed = config.camera_humanize
 
 	main.m8_scene_changed.connect(func(_scene_path: String, scene: M8Scene) -> void:
 		if scene.has_3d_camera():

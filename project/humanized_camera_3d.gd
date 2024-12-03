@@ -177,7 +177,9 @@ func update_reposition(delta: float) -> void:
 			global_position -= global_transform.basis.x * delta * 10
 		if Input.is_action_pressed("cam_right"):
 			global_position += global_transform.basis.x * delta * 10
-		update_status()
+
+		main.menu_camera.update_menu()
+		main.save_camera()
 
 func reposition_start() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -216,7 +218,8 @@ func _input(event: InputEvent) -> void:
 				if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 					dof_focus_distance -= 0.1
 
-		update_status()
+			main.menu_camera.update_menu()
+			main.save_camera()
 
 	elif rclick_pressed:
 		reposition_stop()
@@ -231,6 +234,3 @@ func set_current_transform_as_base() -> void:
 	base_position = position
 	base_rotation = rotation
 	dof_zoomout = dof_focus_width
-
-func update_status() -> void:
-	main.menu_camera.update_fields()
