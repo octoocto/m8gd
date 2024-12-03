@@ -30,7 +30,7 @@ func init(p_main: M8SceneDisplay) -> void:
 	)
 
 ##
-## Called when the menu is opened.
+## Called when this menu is opened.
 ##
 func menu_open() -> void:
 	if !visible:
@@ -49,7 +49,7 @@ func menu_open_as_info() -> void:
 	%Button_Finish.visible = false
 
 ##
-## Called when the menu is closed.
+## Called when this menu is closed.
 ##
 func menu_close() -> void:
 	if visible:

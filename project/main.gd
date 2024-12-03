@@ -442,6 +442,17 @@ func init_overlays() -> void:
 		get_window().size_changed.connect(_overlay_update_viewport_size)
 
 ##
+## Save the current properties of an overlay to the config.
+##
+func save_overlay(overlay: Control) -> void:
+
+	set_overlay_property(overlay, "position_offset", overlay.position_offset)
+	set_overlay_property(overlay, "size", overlay.size)
+
+	for property: String in overlay.overlay_get_properties():
+		set_overlay_property(overlay, property, overlay.get(property))
+
+##
 ## Get the 3D camera of the current scene.
 ## Return [null] if there is no camera present in the scene.
 ##

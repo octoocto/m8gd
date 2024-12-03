@@ -5,16 +5,15 @@ var main: M8SceneDisplay
 ## The overlay element currently being edited.
 var overlay_target: Control
 
-func _setprop(propname: String, value: Variant) -> void:
-	assert(overlay_target != null)
-	var propkey := _get_prop_key(overlay_target, propname)
-	main.config.set_property(propkey, value)
 
-func _getprop(propname: String, default: Variant = null) -> Variant:
-	assert(overlay_target != null)
-	var propkey := _get_prop_key(overlay_target, propname)
-	return main.config.get_property(propkey, default)
+# disconnect all connections to this signal
+func _disconnect_all(sig: Signal) -> void:
+	for conn: Dictionary in sig.get_connections():
+		sig.disconnect(conn.callable)
 
+##
+## Called once on initial app startup.
+##
 func init(p_main: M8SceneDisplay) -> void:
 	main = p_main
 
@@ -38,17 +37,52 @@ func init(p_main: M8SceneDisplay) -> void:
 		main.menu.visible = true
 	)
 
-
+##
+## Called when this menu is opened to edit the given overlay.
+##
 func menu_open(overlay: Control) -> void:
+
 	assert(!visible, "tried to open menu when menu is already open")
 	visible = true
 
 	overlay_target = overlay
 	overlay_target.draw_bounds = true
 
-	_populate_overlay_properties()
+	update_menu()
+
+
+##
+## Called when this menu is closed
+##
+func menu_close() -> void:
+
+	visible = false
+
+	if overlay_target:
+		overlay_target.draw_bounds = false
+		overlay_target = null
+
+##
+## Update the current target overlay and the config from this menu.
+##
+func _update_overlay() -> void:
+
+	if overlay_target:
+		overlay_target.position_offset = Vector2(%Spin_PosX.value, %Spin_PosY.value)
+		overlay_target.size = Vector2(%Spin_SizeW.value, %Spin_SizeH.value)
+
+		main.save_overlay(overlay_target)
+
+##
+## Update this menu with the current target overlay and its properties.
+##
+func update_menu() -> void:
+
+	assert(overlay_target)
 
 	%LabelTarget.text = "Editing: %s" % overlay_target.name
+
+	_populate_overlay_properties()
 
 	_disconnect_all(%Spin_PosX.value_changed)
 	_disconnect_all(%Spin_PosY.value_changed)
@@ -61,20 +95,13 @@ func menu_open(overlay: Control) -> void:
 	%Spin_SizeW.value = overlay_target.size.x
 	%Spin_SizeH.value = overlay_target.size.y
 
-	%Spin_PosX.value_changed.connect(func(_value: float) -> void:
-		update_overlay()
-	)
-	%Spin_PosY.value_changed.connect(func(_value: float) -> void:
-		update_overlay()
-	)
-	%Spin_SizeW.value_changed.connect(func(_value: float) -> void:
-		update_overlay()
-	)
-	%Spin_SizeH.value_changed.connect(func(_value: float) -> void:
-		update_overlay()
-	)
+	var callback := func(_value: float) -> void:
+		_update_overlay()
 
-	overlay_target.anchors_preset = _getprop("anchors_preset", overlay_target.anchors_preset)
+	%Spin_PosX.value_changed.connect(callback)
+	%Spin_PosY.value_changed.connect(callback)
+	%Spin_SizeW.value_changed.connect(callback)
+	%Spin_SizeH.value_changed.connect(callback)
 
 	match overlay_target.anchors_preset:
 		Control.PRESET_TOP_LEFT:
@@ -96,31 +123,14 @@ func menu_open(overlay: Control) -> void:
 
 	%Option_Anchor.item_selected.connect(func(_idx: int) -> void:
 		overlay_target.anchors_preset = %Option_Anchor.get_selected_metadata()
-		_setprop("anchors_preset", overlay_target.anchors_preset)
+		_update_overlay()
 	)
 
-func menu_close() -> void:
-	visible = false
-	if overlay_target:
-		overlay_target.draw_bounds = false
-		overlay_target = null
-
-# disconnect all connections to this signal
-func _disconnect_all(sig: Signal) -> void:
-	for conn: Dictionary in sig.get_connections():
-		sig.disconnect(conn.callable)
-
-func update_overlay() -> void:
-	if overlay_target:
-		overlay_target.position_offset = Vector2(%Spin_PosX.value, %Spin_PosY.value)
-		overlay_target.size = Vector2(%Spin_SizeW.value, %Spin_SizeH.value)
-
-		_setprop("position_offset", overlay_target.position_offset)
-		_setprop("size", overlay_target.size)
-
-func _get_prop_key(overlay: Control, propname: String) -> String:
-	return "overlay.%s.%s" % [overlay.name, propname]
-
+##
+## Automatically add an overlay's additional properties as UI controls to
+## this menu.
+## The list of properties to add is taken from [overlay.overlay_get_properties()].
+##
 func _populate_overlay_properties() -> void:
 	# depopulate property container
 	for child in %ParamContainer.get_children():
@@ -134,7 +144,7 @@ func _populate_overlay_properties() -> void:
 		if prop.name in props:
 			print("overlay menu: found prop %s, hint = %s, hint_string = %s" % [prop.name, prop.hint, prop.hint_string])
 			var propname: String = prop.name
-			var propkey := _get_prop_key(overlay_target, propname)
+			var propkey := main._get_propkey_overlay(overlay_target, propname)
 			var value: Variant = overlay_target.get(propname)
 			var hint: PropertyHint = prop.hint
 			var type: PropertyHint = prop.type
