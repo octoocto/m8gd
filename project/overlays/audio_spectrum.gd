@@ -12,7 +12,7 @@ enum ColorStyle {SCOPE, METER}
 @export var analyzer_db_min: float = 60.0
 @export var analyzer_freq_min: int = 100
 @export var analyzer_freq_max: int = 10000
-@export_range(0.0, 1.0, 0.05) var analyzer_smoothing: float = 0.5
+@export_range(0.0, 1.0, 0.01) var analyzer_smoothing: float = 0.95
 
 # @export var size := Vector2i(320, 240)
 
@@ -27,8 +27,8 @@ enum ColorStyle {SCOPE, METER}
 @export var style_line_antialiased := false
 @export var style_line_width := 1.0
 @export var style_magnitude_multiplier := 1.0
-@export var style_color_style := ColorStyle.SCOPE
-@export var style_color_high_cutoff := 0.9
+@export var style_color_style := ColorStyle.METER
+@export var style_color_high_cutoff := 0.6
 
 
 var main: M8SceneDisplay

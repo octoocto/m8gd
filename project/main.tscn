@@ -270,16 +270,6 @@ offset_right = 160.0
 offset_bottom = 160.0
 grow_horizontal = 1
 grow_vertical = 1
-analyzer_freq_max = 6000
-analyzer_smoothing = 0.945
-style_rows = 9
-style_mirror = true
-style_reverse = true
-style_peak_to_alpha_amount = 1.0
-style_bar_centered = true
-style_bar_interlace = true
-style_line_width = 2.0
-style_color_high_cutoff = 0.75
 
 [node name="OverlayDisplayPanel" parent="CanvasLayer/UI/OverlayContainer/OverlayControl/OverlaySubViewportContainer/OverlaySubViewport" instance=ExtResource("4_nrhlm")]
 unique_name_in_owner = true
@@ -289,9 +279,6 @@ visible = false
 unique_name_in_owner = true
 visible = false
 offset_bottom = 32.0
-analyzer_sample_rate = 120.0
-style_reverse = true
-style_bar_centered = true
 
 [node name="KeyOverlay" parent="CanvasLayer/UI/OverlayContainer/OverlayControl/OverlaySubViewportContainer/OverlaySubViewport" instance=ExtResource("8_dnyct")]
 unique_name_in_owner = true
