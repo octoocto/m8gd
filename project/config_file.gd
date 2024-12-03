@@ -220,6 +220,7 @@ func create_new_profile() -> String:
 			return profile_name
 
 		profile_name = "new profile (%d)" % iterations
+		iterations += 1
 
 	assert(false)
 	return ""
