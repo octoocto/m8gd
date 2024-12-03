@@ -50,9 +50,9 @@ var surface_material_custom: StandardMaterial3D = null
 
 @export var directional_light_color := Color(0.9, 0.9, 1.0, 0.25):
 	set(value):
-		left_light_color = value
+		directional_light_color = value
 		%DirectionalLight3D.light_color = value
-		%DirectionalLight3D.light_energy = value.a * 4
+		%DirectionalLight3D.light_energy = value.a * 8
 	
 @export var enable_lamp_light := true:
 	set(value):
@@ -61,7 +61,7 @@ var surface_material_custom: StandardMaterial3D = null
 
 @export var lamp_light_color := Color(1, 0.9, 0.6):
 	set(value):
-		left_light_color = value
+		lamp_light_color = value
 		%LightLamp.light_color = value
 		%LightLamp.light_energy = value.a
 

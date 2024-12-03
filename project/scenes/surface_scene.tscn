@@ -286,7 +286,6 @@ environment = SubResource("Environment_ayqpk")
 unique_name_in_owner = true
 transform = Transform3D(0.477159, -0.528885, -0.701855, -6.98189e-08, -0.798635, 0.601815, -0.878817, -0.287161, -0.381076, 0.087698, 4.97022, -16.5359)
 light_color = Color(1, 0.958, 0.91, 1)
-light_energy = 2.0
 shadow_enabled = true
 shadow_bias = 0.01
 shadow_opacity = 0.83
