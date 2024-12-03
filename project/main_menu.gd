@@ -20,9 +20,107 @@ var key_rebind_callback: Callable
 func init(p_main: M8SceneDisplay) -> void:
 
 	main = p_main
-	var config := main.config
 
-	init_menu_profiles()
+	button_exit.pressed.connect(func() -> void:
+		main.quit()
+	)
+
+	%ButtonClose.pressed.connect(func() -> void:
+		visible = false
+	)
+
+	%DisplayRect.texture = main.m8_client.get_display_texture()
+
+	_init_menu_profiles()
+	_init_menu_scene()
+	_init_menu_camera()
+	_init_menu_overlays()
+	_init_menu_filters()
+	_init_menu_model()
+	_init_menu_devices()
+	_init_menu_input()
+	_init_menu_video()
+	_init_menu_audio()
+	_init_menu_debug()
+
+##
+## Setup the profile menu controls.
+##
+func _init_menu_profiles() -> void:
+
+	var _setup_as_button := func() -> void:
+		%OptionProfiles.clear()
+		%OptionProfiles.add_item("Load profile...")
+
+	var _setup_as_list := func() -> void:
+		%OptionProfiles.clear()
+		%OptionProfiles.add_item("<default>")
+
+		for profile_name: String in main.list_profile_names():
+			%OptionProfiles.add_item(profile_name)
+
+		%OptionProfiles.select(-1)
+
+	var _update_ui := func() -> void:
+		if main.is_using_default_profile():
+			%LineEditProfileName.text = "<default>"
+			%LineEditProfileName.editable = false
+			%LineEditProfileName.select_all_on_focus = false
+			%ButtonProfileDelete.disabled = true
+		else:
+			%LineEditProfileName.text = main.get_current_profile_name()
+			%LineEditProfileName.editable = true
+			%LineEditProfileName.select_all_on_focus = true
+			%ButtonProfileDelete.disabled = false
+		_setup_as_button.call()
+		refresh_profile_hotkeys()
+
+	var _load_profile := func(profile_name: String) -> void:
+		if main.load_profile(profile_name):
+			_update_ui.call()
+
+	var _load_default_profile := func() -> void:
+		main.load_default_profile()
+		_update_ui.call()
+
+	_update_ui.call()
+
+	%OptionProfiles.item_selected.connect(func(index: int) -> void:
+		if index == 0:
+			_load_default_profile.call()
+		elif index > 0:
+			_load_profile.call(%OptionProfiles.get_item_text(index))
+
+		_setup_as_button.call()
+	)
+
+	%OptionProfiles.pressed.connect(_setup_as_list)
+	%OptionProfiles.get_popup().close_requested.connect(_setup_as_button)
+
+	%LineEditProfileName.text_submitted.connect(func(new_text: String) -> void:
+		main.rename_profile(new_text)
+		%LineEditProfileName.release_focus()
+	)
+
+	%LineEditProfileName.focus_exited.connect(_update_ui)
+
+	%ButtonProfileCreate.pressed.connect(func() -> void:
+		_load_profile.call(main.create_new_profile())
+	)
+
+	%ButtonProfileReset.pressed.connect(func() -> void:
+		main.reset_scene_to_default()
+	)
+
+	%ButtonProfileDelete.pressed.connect(func() -> void:
+		main.delete_profile(main.get_current_profile_name())
+		_update_ui.call()
+	)
+
+##
+## Setup the scene menu controls.
+##
+func _init_menu_scene() -> void:
 
 	# scan scenes folder
 	var dir_scenes: DirAccess = DirAccess.open(PATH_SCENES)
@@ -47,22 +145,15 @@ func init(p_main: M8SceneDisplay) -> void:
 		option_scenes.selected = get_scene_path_idx(scene_path)
 	)
 
-	button_exit.pressed.connect(func() -> void:
-		main.quit()
-	)
-
-	%ButtonClose.pressed.connect(func() -> void:
+	%Button_SceneMenu.pressed.connect(func() -> void:
 		visible = false
+		main.menu_scene.visible = true
 	)
 
-	%DisplayRect.texture = main.m8_client.get_display_texture()
-
-	#==========================================================================
-	# OPTIONS
-	#==========================================================================
-
-	# Scene settings
-	#--------------------------------------------------------------------------
+##
+## Setup the overlay menu controls.
+##
+func _init_menu_overlays() -> void:
 
 	_connect_config_profile("overlay_scale", %Slider_OverlayIntegerScale, 1, func(value: float) -> void:
 		%Label_OverlayIntegerScale.text = "%dx" % value
@@ -110,11 +201,10 @@ func init(p_main: M8SceneDisplay) -> void:
 		main.menu_overlay.menu_open(main.key_overlay)
 	)
 
-
-	%Button_SceneMenu.pressed.connect(func() -> void:
-		visible = false
-		main.menu_scene.visible = true
-	)
+##
+## Setup the camera menu controls.
+##
+func _init_menu_camera() -> void:
 
 	%Button_SceneCameraMenu.pressed.connect(func() -> void:
 		visible = false
@@ -139,8 +229,6 @@ func init(p_main: M8SceneDisplay) -> void:
 			%Button_SceneCameraMenu.disabled = false
 			%Check_MouseCamera.disabled = false
 			%Check_HumanCamera.disabled = false
-			# %Check_MouseCamera.toggled.emit(config.camera_mouse_control)
-			# %Check_HumanCamera.toggled.emit(config.camera_humanize)
 		else:
 			%Container_SceneCamera.modulate.a = 0.5
 			%Button_SceneCameraMenu.disabled = true
@@ -148,11 +236,14 @@ func init(p_main: M8SceneDisplay) -> void:
 			%Check_HumanCamera.disabled = true
 	)
 
-	# Audio Tab
-	#--------------------------------------------------------------------------
+##
+## Setup the audio menu controls.
+##
+func _init_menu_audio() -> void:
+
+	var config := main.config
 
 	# volume
-
 	slider_volume.value_changed.connect(func(value: float) -> void:
 		var volume_db: float = linear_to_db(pow(value, 2))
 		print("volume = %f" % volume_db)
@@ -205,21 +296,14 @@ func init(p_main: M8SceneDisplay) -> void:
 	)
 	%SpinBoxAVMaxFreq.value = config.audio_analyzer_max_freq
 
-	_connect_config_global("audio_to_brightness", %SliderAVBrightness, func(value: float) -> void:
-		main.visualizer_brightness_amount = value
-		%LabelAVBrightness.text = "%d%%" % (value * 100.0)
-	)
+##
+## Setup the video menu controls.
+##
+func _init_menu_video() -> void:
 
-	_connect_config_global("audio_to_ca", %SliderAVCA, func(value: float) -> void:
-		main.visualizer_ca_amount = value
-		%LabelAVCA.text = "%d%%" % (value * 1000.0)
-	)
-
-	# Video Tab
-	#--------------------------------------------------------------------------
+	var config := main.config
 
 	# video
-
 	%CheckButtonFullscreen.toggled.connect(func(toggled_on: bool) -> void:
 		config.fullscreen = toggled_on
 		if toggled_on:
@@ -390,8 +474,10 @@ func init(p_main: M8SceneDisplay) -> void:
 	%SliderFSRSharpness.set_value(config.fsr_sharpness)
 	%SliderFSRSharpness.editable = config.scale_mode != 0
 
-	# Filter / Shader Settings
-	# --------------------------------------------------------------------
+##
+## Setup the filter menu controls.
+##
+func _init_menu_filters() -> void:
 
 	_connect_config_global("filter_1", %CheckButtonFilter1, func(value: bool) -> void:
 		main.get_node("%VHSFilter1").visible = value
@@ -437,8 +523,20 @@ func init(p_main: M8SceneDisplay) -> void:
 	)
 	_link_control_to_disable(%CheckButtonFilter5, %Slider_ShaderVignetteAmount)
 
-	# Keybindings
-	# --------------------------------------------------------------------
+	_connect_config_global("audio_to_brightness", %SliderAVBrightness, func(value: float) -> void:
+		main.visualizer_brightness_amount = value
+	)
+	_link_control_to_disable(%CheckButtonFilter5, %SliderAVBrightness)
+
+	_connect_config_global("audio_to_ca", %SliderAVCA, func(value: float) -> void:
+		main.visualizer_ca_amount = value
+	)
+	_link_control_to_disable(%CheckButtonFilter5, %SliderAVCA)
+
+##
+## Setup the input menu controls.
+##
+func _init_menu_input() -> void:
 
 	_connect_config_global("virtual_keyboard_enabled", %Check_VirtualKeyboard, func(value: bool) -> void:
 		main.m8_virtual_keyboard_enabled = value
@@ -484,9 +582,13 @@ func init(p_main: M8SceneDisplay) -> void:
 
 	load_key_rebinds()
 
-	# Model Tab - M8 model and key overlay settings
-	# --------------------------------------------------------------------
-	
+##
+## Setup the 3d model menu controls.
+##
+func _init_menu_model() -> void:
+
+	var config := main.config
+
 	# Background color (read-only)
 
 	get_tree().physics_frame.connect(func() -> void:
@@ -612,8 +714,10 @@ func init(p_main: M8SceneDisplay) -> void:
 	)
 	%CheckButtonModelLinearFilter.button_pressed = config.model_use_linear_filter
 
-	# Devices Tab
-	# --------------------------------------------------------------------
+##
+## Setup the device connection menu controls.
+##
+func _init_menu_devices() -> void:
 
 	# serial ports
 
@@ -700,8 +804,12 @@ func init(p_main: M8SceneDisplay) -> void:
 			refresh_serial_device_list()
 	)
 
-	# Debug Tab
-	# --------------------------------------------------------------------
+##
+## Setup the debug menu controls.
+##
+func _init_menu_debug() -> void:
+
+	var config := main.config
 
 	%CheckButtonDebug.toggled.connect(func(toggled_on: bool) -> void:
 		main.get_node("%DebugLabels").visible = toggled_on
@@ -1018,81 +1126,6 @@ func _process(_delta: float) -> void:
 	%CheckButtonFullscreen.button_pressed = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN
 	%OptionRes.disabled = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN
 	%LabelFPSCap.text = "%d" % Engine.max_fps
-
-
-##
-## Setup the profile controls. (Scene tab)
-##
-func init_menu_profiles() -> void:
-
-	var _setup_as_button := func() -> void:
-		%OptionProfiles.clear()
-		%OptionProfiles.add_item("Load profile...")
-
-	var _setup_as_list := func() -> void:
-		%OptionProfiles.clear()
-		%OptionProfiles.add_item("<default>")
-
-		for profile_name: String in main.list_profile_names():
-			%OptionProfiles.add_item(profile_name)
-
-		%OptionProfiles.select(-1)
-
-	var _update_ui := func() -> void:
-		if main.is_using_default_profile():
-			%LineEditProfileName.text = "<default>"
-			%LineEditProfileName.editable = false
-			%LineEditProfileName.select_all_on_focus = false
-			%ButtonProfileDelete.disabled = true
-		else:
-			%LineEditProfileName.text = main.get_current_profile_name()
-			%LineEditProfileName.editable = true
-			%LineEditProfileName.select_all_on_focus = true
-			%ButtonProfileDelete.disabled = false
-		_setup_as_button.call()
-		refresh_profile_hotkeys()
-
-	var _load_profile := func(profile_name: String) -> void:
-		if main.load_profile(profile_name):
-			_update_ui.call()
-
-	var _load_default_profile := func() -> void:
-		main.load_default_profile()
-		_update_ui.call()
-
-	_update_ui.call()
-
-	%OptionProfiles.item_selected.connect(func(index: int) -> void:
-		if index == 0:
-			_load_default_profile.call()
-		elif index > 0:
-			_load_profile.call(%OptionProfiles.get_item_text(index))
-
-		_setup_as_button.call()
-	)
-
-	%OptionProfiles.pressed.connect(_setup_as_list)
-	%OptionProfiles.get_popup().close_requested.connect(_setup_as_button)
-
-	%LineEditProfileName.text_submitted.connect(func(new_text: String) -> void:
-		main.rename_profile(new_text)
-		%LineEditProfileName.release_focus()
-	)
-
-	%LineEditProfileName.focus_exited.connect(_update_ui)
-
-	%ButtonProfileCreate.pressed.connect(func() -> void:
-		_load_profile.call(main.create_new_profile())
-	)
-
-	%ButtonProfileReset.pressed.connect(func() -> void:
-		main.reset_scene_to_default()
-	)
-
-	%ButtonProfileDelete.pressed.connect(func() -> void:
-		main.delete_profile(main.get_current_profile_name())
-		_update_ui.call()
-	)
 
 ##
 ## Recreate the profile hotkey UI with the current list of profiles and
