@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bckroenwlecqv"]
 
-[ext_resource type="Script" path="res://humanized_camera_3d.gd" id="1_idfgn"]
+[ext_resource type="Script" path="res://scene_camera_3d.gd" id="1_idfgn"]
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_wopxj"]
 auto_exposure_scale = 0.02
@@ -14,7 +14,25 @@ dof_blur_amount = 0.18
 
 [node name="Camera3D" type="Node3D"]
 script = ExtResource("1_idfgn")
-dof_blur_amount = null
+mouse_controlled_pan_zoom = true
+humanized_movement = true
+humanize_freq = 1.0
+humanize_amount = 0.05
+pan_smoothing_focused = 0.05
+pan_smoothing_unfocused = 0.01
+fov_smoothing = 0.05
+pan_range_zoomout = Vector2(5, 2)
+pan_range_zoomin = Vector2(15, 10)
+cam_pan_range_zoomout = Vector2(0, 0)
+cam_pan_range_zoomin = Vector2(0, 0)
+fov_zoomout = 30.0
+fov_zoomin = 15.0
+dof_zoomout = 1.5
+dof_zoomin = 0.5
+dof_focus_distance = 13.5
+dof_focus_width = 1.5
+dof_blur_amount = 0.18
+arm_length = 0.0
 
 [node name="Camera3D" type="Camera3D" parent="."]
 unique_name_in_owner = true

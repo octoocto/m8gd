@@ -1,5 +1,5 @@
 @tool
-class_name HumanizedCamera3D extends Node3D
+class_name M8SceneCamera3D extends Node3D
 
 @export var mouse_controlled_pan_zoom := true
 
@@ -27,24 +27,28 @@ class_name HumanizedCamera3D extends Node3D
 @export var dof_focus_distance := 13.5:
 	set(value):
 		dof_focus_distance = value
-		%Camera3D.attributes.dof_blur_far_distance = value + dof_focus_width
-		%Camera3D.attributes.dof_blur_near_distance = value - dof_focus_width
+		if is_inside_tree():
+			%Camera3D.attributes.dof_blur_far_distance = value + dof_focus_width
+			%Camera3D.attributes.dof_blur_near_distance = value - dof_focus_width
 
 @export_range(-0.5, 100, 0.1) var dof_focus_width := 1.5:
 	set(value):
 		dof_focus_width = value
-		%Camera3D.attributes.dof_blur_far_distance = dof_focus_distance + value
-		%Camera3D.attributes.dof_blur_near_distance = dof_focus_distance - value
+		if is_inside_tree():
+			%Camera3D.attributes.dof_blur_far_distance = dof_focus_distance + value
+			%Camera3D.attributes.dof_blur_near_distance = dof_focus_distance - value
 
 @export_range(0.0, 1.0, 0.01) var dof_blur_amount := 0.18:
 	set(value):
 		dof_blur_amount = value
-		%Camera3D.attributes.dof_blur_amount = value
+		if is_inside_tree():
+			%Camera3D.attributes.dof_blur_amount = value
 
 @export var arm_length := 0.0:
 	set(value):
 		arm_length = value
-		%Camera3D.position.z = arm_length
+		if is_inside_tree():
+			%Camera3D.position.z = arm_length
 
 @onready var main: M8SceneDisplay
 @onready var cam: Camera3D = %Camera3D

@@ -456,7 +456,7 @@ func save_overlay(overlay: Control) -> void:
 ## Get the 3D camera of the current scene.
 ## Return [null] if there is no camera present in the scene.
 ##
-func get_scene_camera() -> HumanizedCamera3D:
+func get_scene_camera() -> M8SceneCamera3D:
 	if current_scene:
 		return current_scene.get_3d_camera()
 	else:

@@ -1,6 +1,6 @@
 extends M8Scene
 
-@onready var camera: HumanizedCamera3D = %Camera3D
+@onready var camera: M8SceneCamera3D = %Camera3D
 
 @export var model_screen_emission := 0.25:
 	set(value):

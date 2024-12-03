@@ -5,7 +5,7 @@
 [ext_resource type="Shader" path="res://shaders/screen_blur.gdshader" id="3_nedee"]
 [ext_resource type="Shader" path="res://shaders/device_screen.gdshader" id="3_o28i3"]
 [ext_resource type="Texture2D" uid="uid://ras5y3yqijkx" path="res://assets/m8_screen_placeholder.png" id="4_0o31u"]
-[ext_resource type="PackedScene" uid="uid://bckroenwlecqv" path="res://humanized_camera_3d.tscn" id="4_8iar1"]
+[ext_resource type="PackedScene" uid="uid://bckroenwlecqv" path="res://scene_camera_3d.tscn" id="4_8iar1"]
 [ext_resource type="PackedScene" uid="uid://budu6000msy4d" path="res://device_model.tscn" id="4_oaihv"]
 [ext_resource type="PackedScene" uid="uid://263mog4cxgwr" path="res://overlays/audio_spectrum.tscn" id="5_ryr46"]
 [ext_resource type="Shader" path="res://shaders/crt_screen.gdshader" id="5_t84je"]
@@ -238,11 +238,11 @@ screen_material = SubResource("ShaderMaterial_s84w0")
 
 [node name="Camera3D" parent="." instance=ExtResource("4_8iar1")]
 unique_name_in_owner = true
-dof_blur_amount = 0.18
 pan_range_zoomout = Vector2(10, 10)
 cam_pan_range_zoomin = Vector2(2, 7)
 dof_zoomin = 0.0
 dof_focus_distance = 14.0
+dof_blur_amount = 0.18
 arm_length = 14.0
 
 [node name="Camera3D" parent="Camera3D" index="0"]
