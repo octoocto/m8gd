@@ -446,6 +446,8 @@ func init_overlays() -> void:
 ##
 func save_overlay(overlay: Control) -> void:
 
+	set_overlay_property(overlay, "enabled", overlay.visible)
+	set_overlay_property(overlay, "anchors_preset", overlay.anchors_preset)
 	set_overlay_property(overlay, "position_offset", overlay.position_offset)
 	set_overlay_property(overlay, "size", overlay.size)
 
