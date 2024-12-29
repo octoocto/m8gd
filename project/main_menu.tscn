@@ -647,139 +647,139 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Model" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer"]
+[node name="Model" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
 visible = false
 layout_mode = 2
 theme_override_constants/margin_top = 18
-metadata/_tab_index = 3
+metadata/_tab_index = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model"]
+[node name="ScrollContainer" type="ScrollContainer" parent="CenterContainer/VBoxContainer/TabContainer/Model"]
 custom_minimum_size = Vector2(0, 400)
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 text = "(Only applies to scenes with an M8 model in it.)"
 
-[node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_l2hi4")
 
-[node name="GridContainer" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer"]
+[node name="GridContainer" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 columns = 2
 
-[node name="Label2" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
+[node name="Label2" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 text = "Keycap Colors"
 
-[node name="Label3" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
+[node name="Label3" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Other Colors"
 
-[node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="HSeparator2" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
+[node name="HSeparator2" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="HSeparator3" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
+[node name="HSeparator3" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_vertical = 8
 theme_override_constants/separation = 144
 theme_override_styles/separator = SubResource("StyleBoxEmpty_bruag")
 
-[node name="GridContainer2" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
+[node name="GridContainer2" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 columns = 2
 
-[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer/GridContainer2"]
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer/GridContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Body Color"
 
-[node name="Color_Body" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer/GridContainer2"]
+[node name="Color_Body" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer/GridContainer2"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 
-[node name="Label4" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
+[node name="Label4" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 text = "Highlight Colors"
 
-[node name="Label5" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
+[node name="Label5" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Settings"
 
-[node name="HSeparator4" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
+[node name="HSeparator4" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="HSeparator5" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
+[node name="HSeparator5" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="HSeparator7" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
+[node name="HSeparator7" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_vertical = 8
 theme_override_constants/separation = 144
 theme_override_styles/separator = SubResource("StyleBoxEmpty_bruag")
 
-[node name="GridContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
+[node name="GridContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 
-[node name="GridContainer" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer/GridContainer"]
+[node name="GridContainer" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer/GridContainer"]
 layout_mode = 2
 columns = 3
 
-[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer/GridContainer/GridContainer"]
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer/GridContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 text = "Highlight Color Opacity"
 
-[node name="LabelHL_Opacity" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer/GridContainer/GridContainer"]
+[node name="LabelHL_Opacity" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer/GridContainer/GridContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 text = "1.00"
 horizontal_alignment = 2
 
-[node name="SliderHL_Opacity" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer/GridContainer/GridContainer"]
+[node name="SliderHL_Opacity" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer/GridContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 1.0
 step = 0.01
 
-[node name="Label2" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer/GridContainer/GridContainer"]
+[node name="Label2" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer/GridContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 tooltip_text = "If true, the screen on the M8 model will have linear texture filtering. If false, it will have nearest texture filtering."
 mouse_filter = 1
 text = "Use Linear Filter for Screen"
 
-[node name="VSeparator2" type="VSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer/GridContainer/GridContainer"]
+[node name="VSeparator2" type="VSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer/GridContainer/GridContainer"]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_0w5ic")
 
-[node name="CheckButtonModelLinearFilter" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer/GridContainer/GridContainer"]
+[node name="CheckButtonModelLinearFilter" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer/GridContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 button_pressed = true
 
-[node name="Control" type="Control" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer"]
+[node name="Control" type="Control" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 mouse_filter = 1
 
-[node name="Color_KeyUp" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
+[node name="Color_KeyUp" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
@@ -792,7 +792,7 @@ size_flags_vertical = 0
 color = Color(0.0901961, 0.0901961, 0.0901961, 1)
 edit_alpha = false
 
-[node name="Color_KeyDown" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
+[node name="Color_KeyDown" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
@@ -805,7 +805,7 @@ size_flags_vertical = 0
 color = Color(0.0901961, 0.0901961, 0.0901961, 1)
 edit_alpha = false
 
-[node name="Color_KeyLeft" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
+[node name="Color_KeyLeft" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
@@ -818,7 +818,7 @@ size_flags_vertical = 0
 color = Color(0.0901961, 0.0901961, 0.0901961, 1)
 edit_alpha = false
 
-[node name="Color_KeyRight" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
+[node name="Color_KeyRight" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
@@ -831,7 +831,7 @@ size_flags_vertical = 0
 color = Color(0.0901961, 0.0901961, 0.0901961, 1)
 edit_alpha = false
 
-[node name="Color_KeyShift" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
+[node name="Color_KeyShift" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
@@ -844,7 +844,7 @@ size_flags_vertical = 0
 color = Color(0.0901961, 0.0901961, 0.0901961, 1)
 edit_alpha = false
 
-[node name="Color_KeyPlay" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
+[node name="Color_KeyPlay" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
@@ -857,7 +857,7 @@ size_flags_vertical = 0
 color = Color(0.0901961, 0.0901961, 0.0901961, 1)
 edit_alpha = false
 
-[node name="Color_KeyOption" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
+[node name="Color_KeyOption" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
@@ -870,7 +870,7 @@ size_flags_vertical = 0
 color = Color(0.0901961, 0.0901961, 0.0901961, 1)
 edit_alpha = false
 
-[node name="Color_KeyEdit" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
+[node name="Color_KeyEdit" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
@@ -883,7 +883,7 @@ size_flags_vertical = 0
 color = Color(0.0901961, 0.0901961, 0.0901961, 1)
 edit_alpha = false
 
-[node name="Color_HLUp" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
+[node name="Color_HLUp" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
@@ -896,7 +896,7 @@ size_flags_vertical = 0
 color = Color(1, 1, 1, 1)
 edit_alpha = false
 
-[node name="Color_HLDown" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
+[node name="Color_HLDown" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
@@ -909,7 +909,7 @@ size_flags_vertical = 0
 color = Color(1, 1, 1, 1)
 edit_alpha = false
 
-[node name="Color_HLLeft" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
+[node name="Color_HLLeft" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
@@ -922,7 +922,7 @@ size_flags_vertical = 0
 color = Color(1, 1, 1, 1)
 edit_alpha = false
 
-[node name="Color_HLRight" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
+[node name="Color_HLRight" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
@@ -935,7 +935,7 @@ size_flags_vertical = 0
 color = Color(1, 1, 1, 1)
 edit_alpha = false
 
-[node name="Color_HLShift" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
+[node name="Color_HLShift" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
@@ -948,7 +948,7 @@ size_flags_vertical = 0
 color = Color(1, 1, 1, 1)
 edit_alpha = false
 
-[node name="Color_HLPlay" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
+[node name="Color_HLPlay" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
@@ -961,7 +961,7 @@ size_flags_vertical = 0
 color = Color(1, 1, 1, 1)
 edit_alpha = false
 
-[node name="Color_HLOption" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
+[node name="Color_HLOption" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
@@ -974,7 +974,7 @@ size_flags_vertical = 0
 color = Color(1, 1, 1, 1)
 edit_alpha = false
 
-[node name="Color_HLEdit" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
+[node name="Color_HLEdit" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
@@ -987,42 +987,42 @@ size_flags_vertical = 0
 color = Color(1, 1, 1, 1)
 edit_alpha = false
 
-[node name="RichTextLabel2" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer"]
+[node name="RichTextLabel2" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer"]
 visible = false
 layout_mode = 2
 bbcode_enabled = true
 text = "[b]Key Overlay[/b] "
 fit_content = true
 
-[node name="HSeparator2" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer"]
 visible = false
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_06k14")
 
-[node name="RichTextLabel3" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer"]
+[node name="RichTextLabel3" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 bbcode_enabled = true
 text = "[b]M8 Device Info[/b] "
 fit_content = true
 
-[node name="ContainerModel" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer"]
+[node name="ContainerModel" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 columns = 3
 
-[node name="Label5" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/ContainerModel"]
+[node name="Label5" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/ContainerModel"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "Theme BG Color"
 
-[node name="LabelThemeBGColor" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/ContainerModel"]
+[node name="LabelThemeBGColor" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/ContainerModel"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 text = "#000000"
 horizontal_alignment = 2
 
-[node name="ThemeBGColor" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/ContainerModel"]
+[node name="ThemeBGColor" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/ContainerModel"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -1032,7 +1032,7 @@ edit_alpha = false
 [node name="Devices" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
 visible = false
 layout_mode = 2
-metadata/_tab_index = 1
+metadata/_tab_index = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Devices"]
 layout_mode = 2
@@ -1218,7 +1218,7 @@ text = "Connect"
 [node name="Controls" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
 visible = false
 layout_mode = 2
-metadata/_tab_index = 2
+metadata/_tab_index = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Controls"]
 layout_mode = 2
@@ -1484,7 +1484,7 @@ text = "Clear"
 [node name="Video" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
 visible = false
 layout_mode = 2
-metadata/_tab_index = 3
+metadata/_tab_index = 4
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Video"]
 layout_mode = 2
@@ -1814,7 +1814,7 @@ ticks_on_borders = true
 [node name="Audio" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
 visible = false
 layout_mode = 2
-metadata/_tab_index = 4
+metadata/_tab_index = 5
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Audio"]
 custom_minimum_size = Vector2(300, 0)
@@ -1987,7 +1987,7 @@ value = 100.0
 [node name="Debug" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
 visible = false
 layout_mode = 2
-metadata/_tab_index = 5
+metadata/_tab_index = 6
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Debug"]
 custom_minimum_size = Vector2(300, 0)

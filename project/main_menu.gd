@@ -493,7 +493,7 @@ func _init_menu_filters() -> void:
 	var _filter_connect_slider := func(check: CheckButton, slider: Slider, filter_path: NodePath, shader_param: String) -> void:
 		var filter: ColorRect = main.get_node(filter_path)
 		assert(filter is ColorRect)
-		var default: bool = main.get_filter_shader_parameter(filter, shader_param)
+		var default: float = main.get_filter_shader_parameter(filter, shader_param)
 		_connect(slider, default, func(value: float) -> void:
 			main.set_filter_shader_parameter(filter_path, shader_param, value)
 		)
