@@ -78,7 +78,7 @@ func _update_camera() -> void:
 func update_menu() -> void:
 
 	var camera := main.get_scene_camera()
-	assert(camera != null)
+	if camera == null: return
 	
 	%Spin_PosX.set_value_no_signal(camera.position.x)
 	%Spin_PosY.set_value_no_signal(camera.position.y)
