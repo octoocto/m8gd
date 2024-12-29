@@ -20,6 +20,9 @@ signal m8_theme_changed(colors: PackedColorArray, complete: bool)
 signal m8_connected
 signal m8_disconnected
 
+## Emitted after a profile has been loaded.
+signal profile_loaded(profile_name: String)
+
 @export var visualizer_ca_amount := 1.0
 @export var visualizer_glow_amount := 0.5
 @export var visualizer_brightness_amount := 0.1
@@ -104,7 +107,6 @@ func _notification(what: int) -> void:
 	# enable quitting by clicking the X on the window.
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		quit()
-
 
 func _ready() -> void:
 
@@ -307,8 +309,10 @@ func load_profile(profile_name: String) -> bool:
 
 	init_overlays()
 	init_camera()
+	init_filters()
 
 	print("profile loaded!")
+	profile_loaded.emit(profile_name)
 
 	return true
 
@@ -344,11 +348,20 @@ func _get_propkey_overlay(overlay: Control, property: String) -> String:
 func _get_propkey_camera(property: String) -> String:
 	return "camera.%s" % property
 
+func _get_propkey_filter(filter: ColorRect, property: String) -> String:
+	return "filter.%s.%s" % [filter.name, property]
+
+func _get_propkey_filter_shader(filter: ColorRect, property: String) -> String:
+	return "filter.%s.shader.%s" % [filter.name, property]
 
 func set_overlay_property(overlay: Control, property: String, value: Variant) -> void:
 	var propkey := _get_propkey_overlay(overlay, property)
 	config.set_property(propkey, value)
 
+##
+## Get a property from the config for an overlay (profile property).
+## If the property does not exist, get the property from the overlay.
+##
 func get_overlay_property(overlay: Control, property: String, default: Variant = null) -> Variant:
 	var propkey: String = _get_propkey_overlay(overlay, property)
 	if default == null:
@@ -369,7 +382,6 @@ func init_overlay_property(overlay: Control, property: String) -> Variant:
 func set_camera_property(property: String, value: Variant) -> void:
 	var propkey := _get_propkey_camera(property)
 	config.set_property_scene(propkey, value)
-
 
 ##
 ## Get a property from the config for the scene camera (scene property).
@@ -411,6 +423,20 @@ func _init_overlay(overlay: Control) -> void:
 
 	for property: String in overlay.overlay_get_properties():
 		init_overlay_property(overlay, property)
+
+func _overlay_update_viewport_size() -> void:
+
+	var window_size := get_window().get_size()
+	var viewport_size := Vector2i((window_size / float(overlay_integer_zoom)).ceil())
+
+	%OverlaySubViewport.set_size(viewport_size)
+
+	%OverlaySubViewportContainer.scale = Vector2(overlay_integer_zoom, overlay_integer_zoom)
+
+	%OverlayControl.custom_minimum_size = window_size * overlay_integer_zoom
+
+	%OverlayContainer.set_anchors_preset(Control.PRESET_FULL_RECT)
+	%OverlayContainer.set_anchors_preset(Control.PRESET_TOP_LEFT)
 
 ##
 ## Initializes or re-initializes the state of the overlays.
@@ -501,34 +527,130 @@ func save_camera() -> void:
 	set_camera_property("dof_focus_width", camera.dof_focus_width)
 	set_camera_property("dof_blur_amount", camera.dof_blur_amount)
 
-func _overlay_update_viewport_size() -> void:
-
-	var window_size := get_window().get_size()
-	var viewport_size := Vector2i((window_size / float(overlay_integer_zoom)).ceil())
-
-	%OverlaySubViewport.set_size(viewport_size)
-
-	%OverlaySubViewportContainer.scale = Vector2(overlay_integer_zoom, overlay_integer_zoom)
-
-	%OverlayControl.custom_minimum_size = window_size * overlay_integer_zoom
-
-	%OverlayContainer.set_anchors_preset(Control.PRESET_FULL_RECT)
-	%OverlayContainer.set_anchors_preset(Control.PRESET_TOP_LEFT)
+func set_filter_property(filter: ColorRect, property: String, value: Variant = null) -> void:
+	var propkey: String = _get_propkey_filter(filter, property)
+	config.set_property(propkey, value)
 
 ##
-## Return all properties of a PackedScene.
+## Get a property from the config for a filter (profile property).
+## If the property does not exist, get the property from the filter.
 ##
-func _scene_state_get_properties(packed_scene: PackedScene) -> Dictionary:
-	var props := {}
-	var state := packed_scene.get_state()
+func get_filter_property(filter: ColorRect, property: String, default: Variant = null) -> Variant:
+	var propkey: String = _get_propkey_filter(filter, property)
+	if default == null:
+		default = filter.get(property)
+	return config.get_property(propkey, default)
 
-	for i in range(state.get_node_property_count(0)):
-		var k := state.get_node_property_name(0, i)
-		var v: Variant = state.get_node_property_value(0, i)
-		props[k] = v
+func get_filter_shader_parameter(filter: ColorRect, property: String) -> Variant:
+	var propkey: String = _get_propkey_filter_shader(filter, property)
+	var default: Variant = filter.material.get_shader_parameter(property)
+	return config.get_property(propkey, default)
 
-	return props
+##
+## Initialize a filter property from the config (profile property).
+##
+## If the property already exists in the config, set the shader parameter in the filter to that value.
+## If the property does not exist, save the current value in the filter to the config.
+##
+func load_filter_property(filter: ColorRect, property: String) -> Variant:
+	var value: Variant = get_filter_property(filter, property)
+	filter.set(property, value)
+	return value
 
+func load_filter_shader_parameter(filter: ColorRect, property: String) -> Variant:
+	var value: Variant = get_filter_shader_parameter(filter, property)
+	filter.material.set_shader_parameter(property, value)
+	return value
+
+func save_filter_property(filter: ColorRect, property: String) -> void:
+	var propkey: String = _get_propkey_filter(filter, property)
+	var value: Variant = filter.get(property)
+	config.set_property(propkey, value)
+
+func save_filter_shader_parameter(filter: ColorRect, property: String) -> void:
+	var propkey: String = _get_propkey_filter_shader(filter, property)
+	var value: Variant = filter.material.get_shader_parameter(property)
+	config.set_property(propkey, value)
+
+##
+## Set whether a filter is visible or not.
+##
+func set_filter_enabled(filter_node_path: NodePath, enabled: bool) -> void:
+	var filter: ColorRect = get_node(filter_node_path)
+	assert(filter is ColorRect)
+	filter.visible = enabled
+	save_filters()
+
+##
+## Set a shader parameter on a filter.
+##
+func set_filter_shader_parameter(filter_node_path: NodePath, param: String, value: Variant) -> void:
+	var filter: ColorRect = get_node(filter_node_path)
+	assert(filter is ColorRect)
+	filter.material.set_shader_parameter(param, value)
+	save_filters()
+
+func init_filters() -> void:
+
+	for filter: ColorRect in [%VHSFilter1, %VHSFilter2, %VHSFilter3, %Filter4, %CRTShader, %NoiseShader]:
+		load_filter_property(filter, "visible")
+
+	load_filter_shader_parameter(%VHSFilter1, "smear")
+	load_filter_shader_parameter(%VHSFilter1, "wiggle")
+
+	load_filter_shader_parameter(%VHSFilter2, "crease_opacity")
+	load_filter_shader_parameter(%VHSFilter2, "tape_crease_smear")
+
+	load_filter_shader_parameter(%CRTShader, "warp_amount")
+	load_filter_shader_parameter(%CRTShader, "vignette_opacity")
+
+	visualizer_brightness_amount = config.get_property_global("audio_to_brightness")
+	visualizer_ca_amount = config.get_property_global("audio_to_ca")
+
+func save_filters() -> void:
+
+	# config.set_property_global("filter_1", %VHSFilter1.visible)
+	# config.set_property_global("filter_2", %VHSFilter2.visible)
+	# config.set_property_global("filter_3", %VHSFilter3.visible)
+	# config.set_property_global("filter_4", %Filter4.visible)
+	# config.set_property_global("crt_filter", %CRTShader.visible)
+	# config.set_property_global("filter_noise", %NoiseShader.visible)
+
+	# config.set_property_global("pp_vhs_smear",
+	# 	%VHSFilter1.material.get_shader_parameter("smear")
+	# )
+	# config.set_property_global("pp_vhs_wiggle",
+	# 	%VHSFilter1.material.get_shader_parameter("wiggle")
+	# )
+
+	# config.set_property_global("pp_vhs_noise_crease_opacity",
+	# 	%VHSFilter2.material.get_shader_parameter("crease_opacity")
+	# )
+	# config.set_property_global("pp_vhs_tape_crease_amount",
+	# 	%VHSFilter2.material.get_shader_parameter("tape_crease_smear")
+	# )
+
+	# config.set_property_global("pp_crt_curvature",
+	# 	%CRTShader.material.get_shader_parameter("warp_amount")
+	# )
+	# config.set_property_global("pp_vignette_amount",
+	# 	%CRTShader.material.get_shader_parameter("vignette_opacity")
+	# )
+
+	for filter: ColorRect in [%VHSFilter1, %VHSFilter2, %VHSFilter3, %Filter4, %CRTShader, %NoiseShader]:
+		save_filter_property(filter, "visible")
+
+	save_filter_shader_parameter(%VHSFilter1, "smear")
+	save_filter_shader_parameter(%VHSFilter1, "wiggle")
+
+	save_filter_shader_parameter(%VHSFilter2, "crease_opacity")
+	save_filter_shader_parameter(%VHSFilter2, "tape_crease_smear")
+
+	save_filter_shader_parameter(%CRTShader, "warp_amount")
+	save_filter_shader_parameter(%CRTShader, "vignette_opacity")
+
+	config.set_property_global("audio_to_brightness", visualizer_brightness_amount)
+	config.set_property_global("audio_to_ca", visualizer_ca_amount)
 
 # M8 client methods
 ################################################################################
@@ -945,7 +1067,6 @@ func _handle_input_profile_hotkeys(event: InputEvent) -> bool:
 		return true
 	
 	return false
-
 
 func _handle_input_keyjazz(event: InputEvent) -> bool:
 

@@ -73,7 +73,7 @@ shader_parameter/noise_texture = SubResource("NoiseTexture2D_lsac7")
 shader = ExtResource("4_ioov3")
 shader_parameter/wiggle = 0.03
 shader_parameter/wiggle_speed = 25.0
-shader_parameter/smear = 1.0
+shader_parameter/smear = 0.2
 shader_parameter/blur_samples = 15
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_i0wc8"]

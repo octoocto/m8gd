@@ -164,7 +164,6 @@ func _init_menu_overlays() -> void:
 		main.get_node("%OverlayContainer").z_index = 0 if value else 1
 	)
 
-
 	# connect button to overlay enabled/disabled
 	var _overlay_connect := func(check: CheckButton, overlay: Control) -> void:
 		var default: bool = main.get_overlay_property(overlay, "enabled", overlay.visible)
@@ -479,57 +478,90 @@ func _init_menu_video() -> void:
 ##
 func _init_menu_filters() -> void:
 
-	_connect_config_global("filter_1", %CheckButtonFilter1, func(value: bool) -> void:
-		main.get_node("%VHSFilter1").visible = value
+	var _filter_connect_enable := func(check: CheckButton, filter_path: NodePath) -> void:
+		var filter: ColorRect = main.get_node(filter_path)
+		assert(filter is ColorRect)
+		var default: bool = main.get_filter_property(filter, "visible")
+		_connect(check, default, func(value: bool) -> void:
+			filter.visible = value
+			main.set_filter_property(filter, "visible", value)
+		)
+		main.profile_loaded.connect(func(_profile_name: String) -> void:
+			check.set_pressed_no_signal(filter.visible)
+		)
+
+	var _filter_connect_slider := func(check: CheckButton, slider: Slider, filter_path: NodePath, shader_param: String) -> void:
+		var filter: ColorRect = main.get_node(filter_path)
+		assert(filter is ColorRect)
+		var default: bool = main.get_filter_shader_parameter(filter, shader_param)
+		_connect(slider, default, func(value: float) -> void:
+			main.set_filter_shader_parameter(filter_path, shader_param, value)
+		)
+		_link_control_to_disable(check, slider)
+		main.profile_loaded.connect(func(_profile_name: String) -> void:
+			slider.set_value_no_signal(main.get_filter_shader_parameter(filter, shader_param))
+		)
+
+	_filter_connect_enable.call(%CheckButtonFilter1, "%VHSFilter1")
+	_filter_connect_enable.call(%CheckButtonFilter2, "%VHSFilter2")
+	_filter_connect_enable.call(%CheckButtonFilter3, "%VHSFilter3")
+	_filter_connect_enable.call(%CheckButtonFilter4, "%Filter4")
+	_filter_connect_enable.call(%CheckButtonFilter5, "%CRTShader")
+	_filter_connect_enable.call(%Check_FilterNoise, "%NoiseShader")
+
+	_filter_connect_slider.call(
+		%CheckButtonFilter1, %Slider_ShaderSmearAmount, "%VHSFilter1", "smear"
 	)
-	_connect_config_global("filter_2", %CheckButtonFilter2, func(value: bool) -> void:
-		main.get_node("%VHSFilter2").visible = value
+	_filter_connect_slider.call(
+		%CheckButtonFilter1, %Slider_ShaderWiggleAmount, "%VHSFilter1", "wiggle"
 	)
-	_connect_config_global("filter_3", %CheckButtonFilter3, func(value: bool) -> void:
-		main.get_node("%VHSFilter3").visible = value
+	_filter_connect_slider.call(
+		%CheckButtonFilter2, %Slider_ShaderNoiseCreaseOpacity, "%VHSFilter2", "crease_opacity"
 	)
-	_connect_config_global("filter_4", %CheckButtonFilter4, func(value: bool) -> void:
-		main.get_node("%Filter4").visible = value
+	_filter_connect_slider.call(
+		%CheckButtonFilter2, %Slider_ShaderTapeCreaseAmount, "%VHSFilter2", "tape_crease_smear"
 	)
-	_connect_config_global("crt_filter", %CheckButtonFilter5, func(value: bool) -> void:
-		main.get_node("%CRTShader").visible = value
+	_filter_connect_slider.call(
+		%CheckButtonFilter5, %Slider_ShaderCurvatureAmount, "%CRTShader", "warp_amount"
 	)
-	_connect_config_global("filter_noise", %Check_FilterNoise, func(value: bool) -> void:
-		main.get_node("%NoiseShader").visible = value
+	_filter_connect_slider.call(
+		%CheckButtonFilter5, %Slider_ShaderVignetteAmount, "%CRTShader", "vignette_opacity"
 	)
 
-	_connect_config_global("pp_vhs_smear", %Slider_ShaderSmearAmount, func(value: float) -> void:
-		main.get_node("%VHSFilter1").material.set_shader_parameter("smear", value)
-	)
-	_link_control_to_disable(%CheckButtonFilter1, %Slider_ShaderSmearAmount)
-	_connect_config_global("pp_vhs_wiggle", %Slider_ShaderWiggleAmount, func(value: float) -> void:
-		main.get_node("%VHSFilter1").material.set_shader_parameter("wiggle", value)
-	)
-	_link_control_to_disable(%CheckButtonFilter1, %Slider_ShaderWiggleAmount)
-	_connect_config_global("pp_vhs_noise_crease_opacity", %Slider_ShaderNoiseCreaseOpacity, func(value: float) -> void:
-		main.get_node("%VHSFilter2").material.set_shader_parameter("crease_opacity", value)
-	)
-	_link_control_to_disable(%CheckButtonFilter2, %Slider_ShaderNoiseCreaseOpacity)
-	_connect_config_global("pp_vhs_tape_crease_amount", %Slider_ShaderTapeCreaseAmount, func(value: float) -> void:
-		main.get_node("%VHSFilter2").material.set_shader_parameter("tape_crease_smear", value)
-	)
-	_link_control_to_disable(%CheckButtonFilter2, %Slider_ShaderTapeCreaseAmount)
-	_connect_config_global("pp_crt_curvature", %Slider_ShaderCurvatureAmount, func(value: float) -> void:
-		main.get_node("%CRTShader").material.set_shader_parameter("warp_amount", value)
-	)
-	_link_control_to_disable(%CheckButtonFilter5, %Slider_ShaderCurvatureAmount)
-	_connect_config_global("pp_vignette_amount", %Slider_ShaderVignetteAmount, func(value: float) -> void:
-		main.get_node("%CRTShader").material.set_shader_parameter("vignette_opacity", value)
-	)
-	_link_control_to_disable(%CheckButtonFilter5, %Slider_ShaderVignetteAmount)
+	# _connect_config_global("pp_vhs_smear", %Slider_ShaderSmearAmount, func(value: float) -> void:
+	# 	main.set_filter_parameter("%VHSFilter1", "smear", value)
+	# )
+	# _link_control_to_disable(%CheckButtonFilter1, %Slider_ShaderSmearAmount)
+	# _connect_config_global("pp_vhs_wiggle", %Slider_ShaderWiggleAmount, func(value: float) -> void:
+	# 	main.set_filter_parameter("%VHSFilter1", "wiggle", value)
+	# )
+	# _link_control_to_disable(%CheckButtonFilter1, %Slider_ShaderWiggleAmount)
+	# _connect_config_global("pp_vhs_noise_crease_opacity", %Slider_ShaderNoiseCreaseOpacity, func(value: float) -> void:
+	# 	main.set_filter_parameter("%VHSFilter2", "crease_opacity", value)
+	# )
+	# _link_control_to_disable(%CheckButtonFilter2, %Slider_ShaderNoiseCreaseOpacity)
+	# _connect_config_global("pp_vhs_tape_crease_amount", %Slider_ShaderTapeCreaseAmount, func(value: float) -> void:
+	# 	main.set_filter_parameter("%VHSFilter2", "tape_crease_smear", value)
+	# )
+	# _link_control_to_disable(%CheckButtonFilter2, %Slider_ShaderTapeCreaseAmount)
+	# _connect_config_global("pp_crt_curvature", %Slider_ShaderCurvatureAmount, func(value: float) -> void:
+	# 	main.set_filter_parameter("%CRTShader", "warp_amount", value)
+	# )
+	# _link_control_to_disable(%CheckButtonFilter5, %Slider_ShaderCurvatureAmount)
+	# _connect_config_global("pp_vignette_amount", %Slider_ShaderVignetteAmount, func(value: float) -> void:
+	# 	main.set_filter_parameter("%CRTShader", "vignette_opacity", value)
+	# )
+	# _link_control_to_disable(%CheckButtonFilter5, %Slider_ShaderVignetteAmount)
 
 	_connect_config_global("audio_to_brightness", %SliderAVBrightness, func(value: float) -> void:
 		main.visualizer_brightness_amount = value
+		main.save_filters()
 	)
 	_link_control_to_disable(%CheckButtonFilter5, %SliderAVBrightness)
 
 	_connect_config_global("audio_to_ca", %SliderAVCA, func(value: float) -> void:
 		main.visualizer_ca_amount = value
+		main.save_filters()
 	)
 	_link_control_to_disable(%CheckButtonFilter5, %SliderAVCA)
 
@@ -872,7 +904,7 @@ func _connect_config_global(property: String, control: Control, fn: Callable) ->
 	_connect(control, default, callback)
 
 ##
-## Connect a Control node to a config global setting and callback function.
+## Connect a Control node to a config profile setting and callback function.
 ##
 func _connect_config_profile(property: String, control: Control, default: Variant, fn: Callable) -> void:
 
