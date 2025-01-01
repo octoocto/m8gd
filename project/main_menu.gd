@@ -505,126 +505,106 @@ func _init_menu_input() -> void:
 ##
 func _init_menu_model() -> void:
 
-	var config := main.config
-
-	# Background color (read-only)
-
-	# get_tree().physics_frame.connect(func() -> void:
-	# 	var color: Color = main.m8_client.get_theme_colors()[0]
-	# 	if color != %ThemeBGColor.color:
-	# 		%LabelThemeBGColor.text = "#%s" % color.to_html(false).to_upper()
-	# 		%ThemeBGColor.color = color
-	# )
-
-	# Model colors
-
 	for arr: Array in [
-		[%Color_KeyUp, "%Keycap_Up", "model_color_key_up"],
-		[%Color_KeyDown, "%Keycap_Down", "model_color_key_down"],
-		[%Color_KeyLeft, "%Keycap_Left", "model_color_key_left"],
-		[%Color_KeyRight, "%Keycap_Right", "model_color_key_right"],
-		[%Color_KeyOption, "%Keycap_Option", "model_color_key_option"],
-		[%Color_KeyEdit, "%Keycap_Edit", "model_color_key_edit"],
-		[%Color_KeyShift, "%Keycap_Shift", "model_color_key_shift"],
-		[%Color_KeyPlay, "%Keycap_Play", "model_color_key_play"],
-		[%Color_Body, "%Body", "model_color_body"],
+		[%Setting_ModelColorUp, "%Keycap_Up", "model_color_key_up"],
+		[%Setting_ModelColorDown, "%Keycap_Down", "model_color_key_down"],
+		[%Setting_ModelColorLeft, "%Keycap_Left", "model_color_key_left"],
+		[%Setting_ModelColorRight, "%Keycap_Right", "model_color_key_right"],
+		[%Setting_ModelColorOption, "%Keycap_Option", "model_color_key_option"],
+		[%Setting_ModelColorEdit, "%Keycap_Edit", "model_color_key_edit"],
+		[%Setting_ModelColorShift, "%Keycap_Shift", "model_color_key_shift"],
+		[%Setting_ModelColorPlay, "%Keycap_Play", "model_color_key_play"],
+		[%Setting_ModelColorBody, "%Body", "model_color_body"]
 	]:
-		var colorpicker: ColorPickerButton = arr[0]
-		var nodepath: String = arr[1]
-		var config_prop: String = arr[2]
+		var setting: SettingBase = arr[0]
+		var node_path: String = arr[1]
+		var config_property: String = arr[2]
 
-		colorpicker.color_changed.connect(func(color: Color) -> void:
+		setting.init_config_profile(main, config_property, func(value: Color) -> void:
+			if _model(): _model(node_path).material_override.albedo_color = value
+		)
+
+	# highlight color for directional buttons (can only edit together)
+	var color_settings_highlights: Array[SettingBase] = [
+		%Setting_ModelColorHLUp,
+		%Setting_ModelColorHLDown,
+		%Setting_ModelColorHLLeft,
+		%Setting_ModelColorHLRight,
+	]
+
+	for setting in color_settings_highlights:
+		setting.init_config_profile(main, "hl_color_directional", func(value: Color) -> void:
+			for s in color_settings_highlights:
+				s.set_value_no_signal(value)
 			if _model():
-				_model(nodepath).material_override.albedo_color = color
-			config.set_property_global(config_prop, color)
+				var colors: Array[Color] = [
+					_model("%Keycap_Up").material_overlay.albedo_color,
+					_model("%Keycap_Down").material_overlay.albedo_color,
+					_model("%Keycap_Left").material_overlay.albedo_color,
+					_model("%Keycap_Right").material_overlay.albedo_color
+				]
+				_model("%Keycap_Up").material_overlay.albedo_color = Color(value, colors[0].a)
+				_model("%Keycap_Down").material_overlay.albedo_color = Color(value, colors[1].a)
+				_model("%Keycap_Left").material_overlay.albedo_color = Color(value, colors[2].a)
+				_model("%Keycap_Right").material_overlay.albedo_color = Color(value, colors[3].a)
+			main.key_overlay.color_directional = value
 		)
-		colorpicker.color = config.get_property_global(config_prop)
-
-		# reset to default
-		colorpicker.gui_input.connect(func(event: InputEvent) -> void:
-			if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
-				var color := Color.BLACK if nodepath == "%Body" else config.DEFAULT_COLOR_KEYCAP
-				_model(nodepath).material_override.albedo_color = color
-				config.set_property_global(config_prop, color)
-				colorpicker.color = color
-		)
-
-	# Key highlight colors (also affects key overlay color)
-
-	# %CheckButtonHL_Filters.toggled.connect(func(toggled_on: bool) -> void:
-	# 	config.hl_filters = toggled_on
-	# 	var index_on := main.get_node("%VHSFilter1").get_index()
-	# 	var index_off := main.get_node("%CRTShader").get_index()
-	# 	if toggled_on:
-	# 		main.get_node("%UI").move_child(main.key_overlay, index_on)
-	# 	else:
-	# 		main.get_node("%UI").move_child(main.key_overlay, index_off)
-	# )
-	# %CheckButtonHL_Filters.button_pressed = config.hl_filters
-
-	# highlight color for directional buttons
-	for colorpicker: ColorPickerButton in [
-		%Color_HLUp,
-		%Color_HLDown,
-		%Color_HLLeft,
-		%Color_HLRight,
-	]:
-		colorpicker.color_changed.connect(func(color: Color) -> void:
-			if _model():
-				_model("%Keycap_Up").material_overlay.albedo_color = color
-				_model("%Keycap_Down").material_overlay.albedo_color = color
-				_model("%Keycap_Left").material_overlay.albedo_color = color
-				_model("%Keycap_Right").material_overlay.albedo_color = color
-			main.key_overlay.color_directional = color
-			config.hl_color_directional = color
-		)
-		colorpicker.color = config.hl_color_directional
 
 	# highlight color for other buttons
 	for arr: Array in [
-		[%Color_HLOption, "%Keycap_Option", "color_option", "hl_color_option"],
-		[%Color_HLEdit, "%Keycap_Edit", "color_edit", "hl_color_edit"],
-		[%Color_HLShift, "%Keycap_Shift", "color_shift", "hl_color_shift"],
-		[%Color_HLPlay, "%Keycap_Play", "color_play", "hl_color_play"],
+		[%Setting_ModelColorHLOption, "%Keycap_Option", "color_option", "hl_color_option"],
+		[%Setting_ModelColorHLEdit, "%Keycap_Edit", "color_edit", "hl_color_edit"],
+		[%Setting_ModelColorHLShift, "%Keycap_Shift", "color_shift", "hl_color_shift"],
+		[%Setting_ModelColorHLPlay, "%Keycap_Play", "color_play", "hl_color_play"],
 	]:
-		var colorpicker: ColorPickerButton = arr[0]
-		var nodepath: String = arr[1]
-		var key_overlay_prop: String = arr[2]
-		var config_prop: String = arr[3]
+		var setting: SettingBase = arr[0]
+		var node_path: String = arr[1]
+		var overlay_prop: String = arr[2]
+		var config_property: String = arr[3]
 
-		colorpicker.color_changed.connect(func(color: Color) -> void:
-			if _model():
-				_model(nodepath).material_overlay.albedo_color = color
-			main.key_overlay.set(key_overlay_prop, color)
-			config.set_property_global(config_prop, color)
-		)
-		colorpicker.color = config.get_property_global(config_prop)
-
-		# reset to default
-		colorpicker.gui_input.connect(func(event: InputEvent) -> void:
-			if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
-				var default_color := Color.WHITE
-				_model(nodepath).material_overlay.albedo_color = default_color
-				main.key_overlay.set(key_overlay_prop, default_color)
-				config.set_property_global(config_prop, default_color)
-				colorpicker.color = default_color
+		setting.init_config_profile(main, config_property, func(value: Color) -> void:
+				# set highlight color on model and key overlay
+				if _model():
+					var color: Color = _model(node_path).material_overlay.albedo_color
+					_model(node_path).material_overlay.albedo_color = Color(value, color.a)
+				main.key_overlay.set(overlay_prop, value)
 		)
 
-	# sync color presets for all colorpickers
-	for colorpicker: ColorPickerButton in get_color_pickers():
-		colorpicker.get_picker().preset_added.connect(on_color_picker_add_preset)
-		colorpicker.get_picker().preset_removed.connect(on_color_picker_erase_preset)
+	# sync color swatches between all color pickers
+
+	var color_settings: Array[SettingColor] = [
+		%Setting_ModelColorHLUp, %Setting_ModelColorHLDown,
+		%Setting_ModelColorHLLeft, %Setting_ModelColorHLRight,
+		%Setting_ModelColorHLOption, %Setting_ModelColorHLEdit,
+		%Setting_ModelColorHLShift, %Setting_ModelColorHLPlay,
+		%Setting_ModelColorUp, %Setting_ModelColorDown,
+		%Setting_ModelColorLeft, %Setting_ModelColorRight,
+		%Setting_ModelColorOption, %Setting_ModelColorEdit,
+		%Setting_ModelColorShift, %Setting_ModelColorPlay,
+		%Setting_ModelColorBody
+	]
+
+	for setting in color_settings:
+		setting.get_color_picker().preset_added.connect(func(color: Color) -> void:
+			for s in color_settings:
+				s.get_color_picker().add_preset(color)
+		)
+		setting.get_color_picker().preset_removed.connect(func(color: Color) -> void:
+			for s in color_settings:
+				s.get_color_picker().erase_preset(color)
+		)
+
+	main.profile_loaded.connect(func(_profile_name: String) -> void:
+		for setting in color_settings: setting.reinit()
+	)
 
 	# Model settings
 
 	%Setting_ModelHighlightOpacity.init_config_profile(main, "model_hl_opacity", func(value: float) -> void:
-		if _model():
-			_model().highlight_opacity = value
+		if _model(): _model().highlight_opacity = value
 	)
-
 	%Setting_ModelScreenFilter.init_config_profile(main, "model_screen_linear_filter", func(value: bool) -> void:
-		if _model():
-			_model().set_screen_filter(value)
+		if _model(): _model().set_screen_filter(value)
 	)
 
 ##
@@ -834,27 +814,6 @@ func _link_control_to_disable(setting: Control, control: Control) -> void:
 	)
 
 	control.set(dst_property, setting.get(src_property) if !invert else !setting.get(src_property))
-
-func get_color_pickers() -> Array:
-	return [
-		%Color_KeyUp, %Color_KeyDown,
-		%Color_KeyLeft, %Color_KeyRight,
-		%Color_KeyOption, %Color_KeyEdit,
-		%Color_KeyShift, %Color_KeyPlay,
-		%Color_HLUp, %Color_HLDown,
-		%Color_HLLeft, %Color_HLRight,
-		%Color_HLOption, %Color_HLEdit,
-		%Color_HLShift, %Color_HLPlay
-	]
-
-func on_color_picker_add_preset(color: Color) -> void:
-	for colorpicker: ColorPickerButton in get_color_pickers():
-		colorpicker.get_picker().add_preset(color)
-
-func on_color_picker_erase_preset(color: Color) -> void:
-	for colorpicker: ColorPickerButton in get_color_pickers():
-		colorpicker.get_picker().erase_preset(color)
-
 
 ##
 ## Try to return the device model in the current scene.

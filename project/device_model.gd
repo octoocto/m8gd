@@ -61,21 +61,21 @@ func init(main: M8SceneDisplay) -> void:
 	main.m8_client.key_pressed.connect(func(key: int, pressed: bool) -> void:
 		match key:
 			M8GD.M8_KEY_UP:
-				key_up=pressed
+				key_up = pressed
 			M8GD.M8_KEY_DOWN:
-				key_down=pressed
+				key_down = pressed
 			M8GD.M8_KEY_LEFT:
-				key_left=pressed
+				key_left = pressed
 			M8GD.M8_KEY_RIGHT:
-				key_right=pressed
+				key_right = pressed
 			M8GD.M8_KEY_OPTION:
-				key_option=pressed
+				key_option = pressed
 			M8GD.M8_KEY_EDIT:
-				key_edit=pressed
+				key_edit = pressed
 			M8GD.M8_KEY_SHIFT:
-				key_shift=pressed
+				key_shift = pressed
 			M8GD.M8_KEY_PLAY:
-				key_play=pressed
+				key_play = pressed
 	)
 
 func get_keycaps() -> Array:

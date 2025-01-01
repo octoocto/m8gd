@@ -1,13 +1,16 @@
-[gd_scene load_steps=21 format=3 uid="uid://d13t756slc8b0"]
+[gd_scene load_steps=23 format=3 uid="uid://d13t756slc8b0"]
 
 [ext_resource type="Script" path="res://main_menu.gd" id="1_7xjs6"]
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/menu_theme.tres" id="1_qr6r4"]
 [ext_resource type="Texture2D" uid="uid://d1o5ho1s6e3vr" path="res://assets/icon/Add.png" id="2_mwqao"]
 [ext_resource type="PackedScene" uid="uid://dsgvm3dda1kjp" path="res://ui/label_header.tscn" id="3_pyc3l"]
 [ext_resource type="PackedScene" uid="uid://c5kj1uj0ohnmm" path="res://ui/setting_bool.tscn" id="5_16o8v"]
+[ext_resource type="PackedScene" uid="uid://b62oydgjq232n" path="res://ui/setting_color.tscn" id="5_i4355"]
 [ext_resource type="PackedScene" uid="uid://b1r8nehsgp111" path="res://ui/setting_number.tscn" id="6_07wpv"]
 [ext_resource type="PackedScene" uid="uid://bgsxagi62acni" path="res://ui/setting_options.tscn" id="6_mvtic"]
 [ext_resource type="PackedScene" uid="uid://bevoopcdq5dsh" path="res://ui/setting_vec2i.tscn" id="7_t1h81"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_23yct"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4w3sk"]
 
@@ -163,13 +166,13 @@ text = "M8 Model"
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3"]
-custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="Label2" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Keycap Colors / Press Highlight Colors"
+text = "Keycap / Press Highlight Colors"
 
 [node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer"]
 layout_mode = 2
@@ -180,236 +183,202 @@ size_flags_horizontal = 0
 size_flags_vertical = 0
 mouse_filter = 1
 
-[node name="Color_KeyUp" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control"]
+[node name="Setting_ModelColorUp" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control" instance=ExtResource("5_i4355")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 36.0
-offset_top = 10.0
-offset_right = 68.0
-offset_bottom = 42.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(0.0901961, 0.0901961, 0.0901961, 1)
+layout_mode = 0
+offset_left = 38.0
+offset_top = 21.0
+offset_right = 62.0
+offset_bottom = 45.0
+value = Color(0.0901961, 0.0901961, 0.0901961, 1)
 edit_alpha = false
+show_html = false
+panel_style_value = SubResource("StyleBoxEmpty_23yct")
 
-[node name="Color_KeyDown" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control"]
+[node name="Setting_ModelColorDown" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control" instance=ExtResource("5_i4355")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 36.0
-offset_top = 42.0
-offset_right = 68.0
-offset_bottom = 74.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(0.0901961, 0.0901961, 0.0901961, 1)
+layout_mode = 0
+offset_left = 38.0
+offset_top = 45.0
+offset_right = 62.0
+offset_bottom = 69.0
+value = Color(0.0901961, 0.0901961, 0.0901961, 1)
 edit_alpha = false
+show_html = false
+panel_style_value = SubResource("StyleBoxEmpty_23yct")
 
-[node name="Color_KeyLeft" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control"]
+[node name="Setting_ModelColorLeft" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control" instance=ExtResource("5_i4355")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 4.0
-offset_top = 42.0
-offset_right = 36.0
-offset_bottom = 74.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(0.0901961, 0.0901961, 0.0901961, 1)
+layout_mode = 0
+offset_left = 14.0
+offset_top = 45.0
+offset_right = 38.0
+offset_bottom = 69.0
+value = Color(0.0901961, 0.0901961, 0.0901961, 1)
 edit_alpha = false
+show_html = false
+panel_style_value = SubResource("StyleBoxEmpty_23yct")
 
-[node name="Color_KeyRight" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control"]
+[node name="Setting_ModelColorRight" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control" instance=ExtResource("5_i4355")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 68.0
-offset_top = 42.0
-offset_right = 100.0
-offset_bottom = 74.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(0.0901961, 0.0901961, 0.0901961, 1)
+layout_mode = 0
+offset_left = 62.0
+offset_top = 45.0
+offset_right = 86.0
+offset_bottom = 69.0
+value = Color(0.0901961, 0.0901961, 0.0901961, 1)
 edit_alpha = false
+show_html = false
+panel_style_value = SubResource("StyleBoxEmpty_23yct")
 
-[node name="Color_KeyShift" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control"]
+[node name="Setting_ModelColorShift" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control" instance=ExtResource("5_i4355")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 36.0
-offset_top = 82.0
-offset_right = 68.0
-offset_bottom = 114.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(0.0901961, 0.0901961, 0.0901961, 1)
+layout_mode = 0
+offset_left = 38.0
+offset_top = 77.0
+offset_right = 62.0
+offset_bottom = 101.0
+value = Color(0.0901961, 0.0901961, 0.0901961, 1)
 edit_alpha = false
+show_html = false
+panel_style_value = SubResource("StyleBoxEmpty_23yct")
 
-[node name="Color_KeyPlay" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control"]
+[node name="Setting_ModelColorPlay" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control" instance=ExtResource("5_i4355")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 68.0
-offset_top = 82.0
-offset_right = 100.0
-offset_bottom = 114.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(0.0901961, 0.0901961, 0.0901961, 1)
+layout_mode = 0
+offset_left = 62.0
+offset_top = 77.0
+offset_right = 86.0
+offset_bottom = 101.0
+value = Color(0.0901961, 0.0901961, 0.0901961, 1)
 edit_alpha = false
+show_html = false
+panel_style_value = SubResource("StyleBoxEmpty_23yct")
 
-[node name="Color_KeyOption" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control"]
+[node name="Setting_ModelColorOption" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control" instance=ExtResource("5_i4355")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 76.0
-offset_top = 2.0
-offset_right = 108.0
-offset_bottom = 34.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(0.0901961, 0.0901961, 0.0901961, 1)
+layout_mode = 0
+offset_left = 70.0
+offset_top = 13.0
+offset_right = 94.0
+offset_bottom = 37.0
+value = Color(0.0901961, 0.0901961, 0.0901961, 1)
 edit_alpha = false
+show_html = false
+panel_style_value = SubResource("StyleBoxEmpty_23yct")
 
-[node name="Color_KeyEdit" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control"]
+[node name="Setting_ModelColorEdit" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control" instance=ExtResource("5_i4355")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 108.0
-offset_top = 2.0
-offset_right = 140.0
-offset_bottom = 34.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(0.0901961, 0.0901961, 0.0901961, 1)
+layout_mode = 0
+offset_left = 94.0
+offset_top = 13.0
+offset_right = 118.0
+offset_bottom = 37.0
+value = Color(0.0901961, 0.0901961, 0.0901961, 1)
 edit_alpha = false
+show_html = false
+panel_style_value = SubResource("StyleBoxEmpty_23yct")
 
-[node name="Color_HLUp" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control"]
+[node name="Setting_ModelColorHLUp" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control" instance=ExtResource("5_i4355")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 188.0
-offset_top = 10.0
-offset_right = 220.0
-offset_bottom = 42.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(1, 1, 1, 1)
+layout_mode = 0
+offset_left = 158.0
+offset_top = 21.0
+offset_right = 182.0
+offset_bottom = 45.0
 edit_alpha = false
+show_html = false
+panel_style_value = SubResource("StyleBoxEmpty_23yct")
 
-[node name="Color_HLDown" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control"]
+[node name="Setting_ModelColorHLDown" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control" instance=ExtResource("5_i4355")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 188.0
-offset_top = 42.0
-offset_right = 220.0
-offset_bottom = 74.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(1, 1, 1, 1)
+layout_mode = 0
+offset_left = 158.0
+offset_top = 45.0
+offset_right = 182.0
+offset_bottom = 69.0
 edit_alpha = false
+show_html = false
+panel_style_value = SubResource("StyleBoxEmpty_23yct")
 
-[node name="Color_HLLeft" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control"]
+[node name="Setting_ModelColorHLLeft" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control" instance=ExtResource("5_i4355")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 156.0
-offset_top = 42.0
-offset_right = 188.0
-offset_bottom = 74.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(1, 1, 1, 1)
+layout_mode = 0
+offset_left = 134.0
+offset_top = 45.0
+offset_right = 158.0
+offset_bottom = 69.0
 edit_alpha = false
+show_html = false
+panel_style_value = SubResource("StyleBoxEmpty_23yct")
 
-[node name="Color_HLRight" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control"]
+[node name="Setting_ModelColorHLRight" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control" instance=ExtResource("5_i4355")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 220.0
-offset_top = 42.0
-offset_right = 252.0
-offset_bottom = 74.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(1, 1, 1, 1)
+layout_mode = 0
+offset_left = 182.0
+offset_top = 45.0
+offset_right = 206.0
+offset_bottom = 69.0
 edit_alpha = false
+show_html = false
+panel_style_value = SubResource("StyleBoxEmpty_23yct")
 
-[node name="Color_HLShift" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control"]
+[node name="Setting_ModelColorHLShift" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control" instance=ExtResource("5_i4355")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 188.0
-offset_top = 82.0
-offset_right = 220.0
-offset_bottom = 114.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(1, 1, 1, 1)
+layout_mode = 0
+offset_left = 158.0
+offset_top = 77.0
+offset_right = 182.0
+offset_bottom = 101.0
 edit_alpha = false
+show_html = false
+panel_style_value = SubResource("StyleBoxEmpty_23yct")
 
-[node name="Color_HLPlay" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control"]
+[node name="Setting_ModelColorHLPlay" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control" instance=ExtResource("5_i4355")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 220.0
-offset_top = 82.0
-offset_right = 252.0
-offset_bottom = 114.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(1, 1, 1, 1)
+layout_mode = 0
+offset_left = 182.0
+offset_top = 77.0
+offset_right = 206.0
+offset_bottom = 101.0
 edit_alpha = false
+show_html = false
+panel_style_value = SubResource("StyleBoxEmpty_23yct")
 
-[node name="Color_HLOption" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control"]
+[node name="Setting_ModelColorHLOption" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control" instance=ExtResource("5_i4355")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 228.0
-offset_top = 2.0
-offset_right = 260.0
-offset_bottom = 34.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(1, 1, 1, 1)
+layout_mode = 0
+offset_left = 190.0
+offset_top = 13.0
+offset_right = 214.0
+offset_bottom = 37.0
 edit_alpha = false
+show_html = false
+panel_style_value = SubResource("StyleBoxEmpty_23yct")
 
-[node name="Color_HLEdit" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control"]
+[node name="Setting_ModelColorHLEdit" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control" instance=ExtResource("5_i4355")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 260.0
-offset_top = 2.0
-offset_right = 292.0
-offset_bottom = 34.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(1, 1, 1, 1)
+layout_mode = 0
+offset_left = 214.0
+offset_top = 13.0
+offset_right = 238.0
+offset_bottom = 37.0
 edit_alpha = false
+show_html = false
+panel_style_value = SubResource("StyleBoxEmpty_23yct")
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer2"]
-layout_mode = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer2/VBoxContainer"]
-layout_mode = 2
-
-[node name="Label3" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer2/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Body Color"
-
-[node name="Color_Body" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer2/VBoxContainer/HBoxContainer"]
+[node name="Setting_ModelColorBody" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer2" instance=ExtResource("5_i4355")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
-size_flags_horizontal = 3
+value = Color(0, 0, 0, 1)
+setting_name = "Body Color"
+setting_name_min_width = 100
 
-[node name="Setting_ModelHighlightOpacity" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer2/VBoxContainer" instance=ExtResource("6_07wpv")]
+[node name="Setting_ModelHighlightOpacity" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer2" instance=ExtResource("6_07wpv")]
 unique_name_in_owner = true
 layout_mode = 2
 setting_value_min_width = 32
@@ -421,55 +390,11 @@ format_string = "%d%%"
 setting_name = "Highlight Opacity"
 setting_name_min_width = 100
 
-[node name="Setting_ModelScreenFilter" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer2/VBoxContainer" instance=ExtResource("5_16o8v")]
+[node name="Setting_ModelScreenFilter" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer2" instance=ExtResource("5_16o8v")]
 unique_name_in_owner = true
 layout_mode = 2
 setting_name = "Screen Linear Filter"
 setting_name_min_width = 100
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer2/VBoxContainer"]
-visible = false
-layout_mode = 2
-
-[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer2/VBoxContainer/HBoxContainer2"]
-layout_mode = 2
-size_flags_horizontal = 2
-text = "Highlight Color Opacity"
-
-[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer2/VBoxContainer/HBoxContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="LabelHL_Opacity" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer2/VBoxContainer/HBoxContainer2/HBoxContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(40, 0)
-layout_mode = 2
-text = "1.00"
-horizontal_alignment = 2
-
-[node name="SliderHL_Opacity" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer2/VBoxContainer/HBoxContainer2/HBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-max_value = 1.0
-step = 0.01
-
-[node name="HBoxContainer3" type="HBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer2/VBoxContainer"]
-visible = false
-layout_mode = 2
-
-[node name="Label2" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer2/VBoxContainer/HBoxContainer3"]
-layout_mode = 2
-size_flags_horizontal = 2
-tooltip_text = "If true, the screen on the M8 model will have linear texture filtering. If false, it will have nearest texture filtering."
-mouse_filter = 1
-text = "Use Linear Filter for Screen"
-
-[node name="CheckButtonModelLinearFilter" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer2/VBoxContainer/HBoxContainer3"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-button_pressed = true
 
 [node name="Overlays" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
 visible = false
