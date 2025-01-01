@@ -1,15 +1,12 @@
 class_name MainMenu extends Panel
 
-const PATH_SCENES := "res://scenes/"
-
 const REBIND_COOLDOWN := 100 # ms until can rebind again
+
+const ICON_LOAD := preload("res://assets/icon/Load.png")
 
 @onready var button_exit: Button = %ButtonExit
 
 @onready var slider_volume: HSlider = %SliderVolume
-
-# the order of paths in scene_paths[] correspond to the items in option_scenes
-@onready var option_scenes: OptionButton = %OptionScenes
 
 @onready var main: M8SceneDisplay
 
@@ -49,8 +46,11 @@ func init(p_main: M8SceneDisplay) -> void:
 func _init_menu_profiles() -> void:
 
 	var _setup_as_button := func() -> void:
+		# ensure this function gets called after _setup_as_list
+		await get_tree().process_frame
 		%OptionProfiles.clear()
 		%OptionProfiles.add_item("Load profile...")
+		%OptionProfiles.set_item_icon(0, ICON_LOAD)
 
 	var _setup_as_list := func() -> void:
 		%OptionProfiles.clear()
@@ -85,6 +85,8 @@ func _init_menu_profiles() -> void:
 
 	_update_ui.call()
 
+	%OptionProfiles.pressed.connect(_setup_as_list)
+	%OptionProfiles.get_popup().popup_hide.connect(_setup_as_button)
 	%OptionProfiles.item_selected.connect(func(index: int) -> void:
 		if index == 0:
 			_load_default_profile.call()
@@ -93,9 +95,6 @@ func _init_menu_profiles() -> void:
 
 		_setup_as_button.call()
 	)
-
-	%OptionProfiles.pressed.connect(_setup_as_list)
-	%OptionProfiles.get_popup().close_requested.connect(_setup_as_button)
 
 	%LineEditProfileName.text_submitted.connect(func(new_text: String) -> void:
 		main.rename_profile(new_text)
@@ -122,79 +121,79 @@ func _init_menu_profiles() -> void:
 ##
 func _init_menu_scene() -> void:
 
-	# scan scenes folder
-	var dir_scenes: DirAccess = DirAccess.open(PATH_SCENES)
+	var _setup_as_button := func() -> void:
+		# ensure this function gets called after _setup_as_list
+		await get_tree().process_frame
+		%Option_LoadScene.clear()
+		%Option_LoadScene.add_item("Change Scene...")
+		%Option_LoadScene.set_item_icon(0, ICON_LOAD)
 
-	dir_scenes.list_dir_begin()
-	var path := dir_scenes.get_next()
-	while path != "":
-		if path.trim_suffix(".remap").get_extension() == "tscn":
-			var scene_path := dir_scenes.get_current_dir().path_join(path).trim_suffix(".remap")
-			var idx := option_scenes.item_count
-			option_scenes.add_item(main.get_scene_name(scene_path), idx)
-			option_scenes.set_item_metadata(idx, scene_path)
-			print("added scene: %s" % scene_path)
-		path = dir_scenes.get_next()
+	var _setup_as_list := func() -> void:
+		%Option_LoadScene.clear()
 
-	option_scenes.item_selected.connect(func(idx: int) -> void:
+		for scene_path: String in main.get_scene_paths():
+			var idx: int = %Option_LoadScene.item_count
+			var scene_name := main.get_scene_name(scene_path)
+			%Option_LoadScene.add_item(scene_name, idx)
+			%Option_LoadScene.set_item_metadata(idx, scene_path)
+
+		%Option_LoadScene.select(-1)
+
+	%Option_LoadScene.pressed.connect(_setup_as_list)
+	%Option_LoadScene.get_popup().popup_hide.connect(_setup_as_button)
+	%Option_LoadScene.item_selected.connect(func(idx: int) -> void:
 		if idx != -1:
-			main.load_scene(option_scenes.get_item_metadata(idx))
+			main.load_scene(%Option_LoadScene.get_item_metadata(idx))
+		_setup_as_button.call()
 	)
+	_setup_as_button.call()
 
-	main.m8_scene_changed.connect(func(scene_path: String, _scene: M8Scene) -> void:
-		option_scenes.selected = get_scene_path_idx(scene_path)
-	)
-
-	%Button_SceneMenu.pressed.connect(func() -> void:
+	%Button_OpenSceneMenu.pressed.connect(func() -> void:
 		visible = false
 		main.menu_scene.visible = true
 	)
+
+	main.m8_scene_changed.connect(func(scene_path: String, _scene: M8Scene) -> void:
+		var scene_name := main.get_scene_name(scene_path)
+		%Label_CurrentScene.text = "%s (%s)" % [scene_name, scene_path]
+	)
+
 
 ##
 ## Setup the overlay menu controls.
 ##
 func _init_menu_overlays() -> void:
 
-	_connect_config_profile("overlay_scale", %Slider_OverlayIntegerScale, 1, func(value: float) -> void:
-		%Label_OverlayIntegerScale.text = "%dx" % value
-		main.overlay_integer_zoom = int(value)
+	%Setting_OverlayScale.init_config_profile(main, "overlay_scale", func(value: int) -> void:
+		main.overlay_integer_zoom = value
 	)
 
-	_connect_config_profile("overlay_apply_filters", %Check_OverlayFilters, true, func(value: bool) -> void:
+	%Setting_OverlayFilters.init_config_profile(main, "overlay_apply_filters", func(value: bool) -> void:
 		main.get_node("%OverlayContainer").z_index = 0 if value else 1
 	)
 
-	# connect button to overlay enabled/disabled
-	var _overlay_connect := func(check: CheckButton, overlay: Control) -> void:
-		var default: bool = main.get_overlay_property(overlay, "enabled", overlay.visible)
-		_connect(check, default, func(value: bool) -> void:
-			overlay.visible = value
-			main.set_overlay_property(overlay, "enabled", value)
-		)
+	%Setting_OverlaySpectrum.init_config_overlay(main, main.overlay_spectrum, "visible")
+	%Setting_OverlayWaveform.init_config_overlay(main, main.overlay_waveform, "visible")
+	%Setting_OverlayDisplay.init_config_overlay(main, main.overlay_display, "visible")
+	%Setting_OverlayKeys.init_config_overlay(main, main.key_overlay, "visible")
 
-	_overlay_connect.call(%Check_OverlaySpectrum, main.overlay_spectrum)
-	_link_control_to_disable(%Check_OverlaySpectrum, %Button_OverlaySpectrumConfig)
+	%Setting_OverlaySpectrum.connect_to_enable(%Button_OverlaySpectrumConfig)
+	%Setting_OverlayWaveform.connect_to_enable(%Button_OverlayWaveformConfig)
+	%Setting_OverlayDisplay.connect_to_enable(%Button_OverlayDisplayConfig)
+	%Setting_OverlayKeys.connect_to_enable(%Button_OverlayKeysConfig)
+
 	%Button_OverlaySpectrumConfig.pressed.connect(func() -> void:
 		visible = false
 		main.menu_overlay.menu_open(main.overlay_spectrum)
 	)
-
-	_overlay_connect.call(%Check_OverlayWaveform, main.overlay_waveform)
-	_link_control_to_disable(%Check_OverlayWaveform, %Button_OverlayWaveformConfig)
 	%Button_OverlayWaveformConfig.pressed.connect(func() -> void:
 		visible = false
 		main.menu_overlay.menu_open(main.overlay_waveform)
 	)
-
-	_overlay_connect.call(%Check_OverlayDisplay, main.overlay_display)
-	_link_control_to_disable(%Check_OverlayDisplay, %Button_OverlayDisplayConfig)
 	%Button_OverlayDisplayConfig.pressed.connect(func() -> void:
 		visible = false
 		main.menu_overlay.menu_open(main.overlay_display)
 	)
-
-	_overlay_connect.call(%Check_OverlayKeys, main.key_overlay)
-	_link_control_to_disable(%Check_OverlayKeys, %Button_OverlayKeysConfig)
 	%Button_OverlayKeysConfig.pressed.connect(func() -> void:
 		visible = false
 		main.menu_overlay.menu_open(main.key_overlay)
@@ -210,13 +209,13 @@ func _init_menu_camera() -> void:
 		main.menu_camera.menu_open()
 	)
 
-	%Check_MouseCamera.toggled.connect(func(value: bool) -> void:
+	%Setting_MouseCamera.value_changed.connect(func(value: bool) -> void:
 		if main.current_scene and main.current_scene.has_3d_camera():
 			main.set_camera_property("mouse_controlled_pan_zoom", value)
 			main.current_scene.get_3d_camera().mouse_controlled_pan_zoom = value
 	)
 
-	%Check_HumanCamera.toggled.connect(func(value: bool) -> void:
+	%Setting_HumanCamera.value_changed.connect(func(value: bool) -> void:
 		if main.current_scene and main.current_scene.has_3d_camera():
 			main.set_camera_property("humanized_movement", value)
 			main.current_scene.get_3d_camera().humanized_movement = value
@@ -224,15 +223,13 @@ func _init_menu_camera() -> void:
 
 	main.m8_scene_changed.connect(func(_scene_path: String, scene: M8Scene) -> void:
 		if scene.has_3d_camera():
-			%Container_SceneCamera.modulate.a = 1.0
 			%Button_SceneCameraMenu.disabled = false
-			%Check_MouseCamera.disabled = false
-			%Check_HumanCamera.disabled = false
+			%Setting_MouseCamera.enabled = true
+			%Setting_HumanCamera.enabled = true
 		else:
-			%Container_SceneCamera.modulate.a = 0.5
 			%Button_SceneCameraMenu.disabled = true
-			%Check_MouseCamera.disabled = true
-			%Check_HumanCamera.disabled = true
+			%Setting_MouseCamera.enabled = false
+			%Setting_HumanCamera.enabled = false
 	)
 
 ##
@@ -243,15 +240,12 @@ func _init_menu_audio() -> void:
 	var config := main.config
 
 	# volume
-	slider_volume.value_changed.connect(func(value: float) -> void:
+
+	%Setting_Volume.init(config.volume, func(value: float) -> void:
 		var volume_db: float = linear_to_db(pow(value, 2))
-		print("volume = %f" % volume_db)
 		main.audio_set_volume(volume_db)
-		%LabelVolume.text = "%d%% (%05.2f dB)" % [round(slider_volume.value / slider_volume.max_value * 100), volume_db]
-		config.volume = value
+		config.set_property_global("volume", value)
 	)
-	slider_volume.value = config.volume
-	slider_volume.value_changed.emit(config.volume)
 
 	# audio driver (readonly)
 
@@ -277,23 +271,21 @@ func _init_menu_audio() -> void:
 			%LineEditAudioLatency.placeholder_text = "%f ms" % AudioServer.get_output_latency()
 	)
 
-	%CheckButtonEnableSA.toggled.connect(func(toggled_on: bool) -> void:
-		main.audio_set_spectrum_analyzer_enabled(toggled_on)
-		config.audio_analyzer_enabled = toggled_on
+	%Setting_SAEnable.init(config.audio_analyzer_enabled, func(value: bool) -> void:
+		main.audio_set_spectrum_analyzer_enabled(value)
+		config.set_property_global("audio_analyzer_enabled", value)
 	)
-	%CheckButtonEnableSA.button_pressed = config.audio_analyzer_enabled
 
-	%SpinBoxAVMinFreq.value_changed.connect(func(value: int) -> void:
+	%Setting_SAMin.init(config.audio_analyzer_min_freq, func(value: int) -> void:
 		main.visualizer_frequency_min = value
-		config.audio_analyzer_min_freq = value
+		config.set_property_global("audio_analyzer_min_freq", value)
 	)
-	%SpinBoxAVMinFreq.value = config.audio_analyzer_min_freq
 
-	%SpinBoxAVMaxFreq.value_changed.connect(func(value: int) -> void:
+	%Setting_SAMax.init(config.audio_analyzer_max_freq, func(value: int) -> void:
 		main.visualizer_frequency_max = value
-		config.audio_analyzer_max_freq = value
+		config.set_property_global("audio_analyzer_max_freq", value)
 	)
-	%SpinBoxAVMaxFreq.value = config.audio_analyzer_max_freq
+
 
 ##
 ## Setup the video menu controls.
@@ -302,268 +294,162 @@ func _init_menu_video() -> void:
 
 	var config := main.config
 
-	# video
-	%CheckButtonFullscreen.toggled.connect(func(toggled_on: bool) -> void:
-		config.fullscreen = toggled_on
-		if toggled_on:
-			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
-		else:
-			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
-	)
-	%CheckButtonFullscreen.button_pressed = config.fullscreen
+	# Display
 
-	%CheckButtonAlwaysOnTop.toggled.connect(func(toggled_on: bool) -> void:
-		config.always_on_top = toggled_on
-		if toggled_on:
-			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_ALWAYS_ON_TOP, true)
+	%Setting_Fullscreen.init_config_global(main, "fullscreen", func(value: bool) -> void:
+		if value:
+			get_window().mode = Window.MODE_EXCLUSIVE_FULLSCREEN
 		else:
-			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_ALWAYS_ON_TOP, false)
+			get_window().mode = Window.MODE_WINDOWED
 	)
-	%CheckButtonAlwaysOnTop.button_pressed = config.always_on_top
 
-	%SliderVsync.value_changed.connect(func(value: int) -> void:
+	%Setting_AlwaysOnTop.init_config_global(main, "always_on_top", func(value: bool) -> void:
+		get_window().always_on_top = value
+	)
+
+	%Setting_WindowSize.init(6, func(value: int) -> void:
+		%Setting_CustomWindowSize.visible = false
 		match value:
-			1:
-				DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED)
-				%LabelVsync.text = "Enabled"
-			2:
-				DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_MAILBOX)
-				%LabelVsync.text = "Mailbox"
-			3:
-				DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ADAPTIVE)
-				%LabelVsync.text = "Adaptive"
-			0, _:
-				DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
-				%LabelVsync.text = "Disabled"
-		config.vsync = value
+			0: %Setting_CustomWindowSize.value = Vector2i(640, 480)
+			1: %Setting_CustomWindowSize.value = Vector2i(960, 720)
+			2: %Setting_CustomWindowSize.value = Vector2i(1280, 960)
+			3: %Setting_CustomWindowSize.value = Vector2i(960, 640)
+			4: %Setting_CustomWindowSize.value = Vector2i(1440, 960)
+			5: %Setting_CustomWindowSize.value = Vector2i(1920, 1280)
+			6: %Setting_CustomWindowSize.visible = true
 	)
-	%SliderVsync.value = config.vsync
 
-	# Window resolution
-	# ------------------------------------------------------------------------
-
-	%Spin_WindowW.value_changed.connect(func(value: float) -> void:
-		var win_size := DisplayServer.window_get_size()
-		DisplayServer.window_set_size(Vector2i(int(value), win_size.y))
+	var init_window_size := Vector2i(config.window_width, config.window_height)
+	%Setting_CustomWindowSize.init(init_window_size, func(value: Vector2i) -> void:
+		if get_window().size != value:
+			get_window().size = value
+			config.set_property_global("window_width", value.x)
+			config.set_property_global("window_height", value.y)
 	)
-	%Spin_WindowW.value = config.window_width
-
-	%Spin_WindowH.value_changed.connect(func(value: float) -> void:
-		var win_size := DisplayServer.window_get_size()
-		DisplayServer.window_set_size(Vector2i(win_size.x, int(value)))
-	)
-	%Spin_WindowH.value = config.window_height
-
-	%OptionRes.item_selected.connect(func(index: int) -> void:
-		match index:
-			2: DisplayServer.window_set_size(Vector2i(640, 480))
-			3: DisplayServer.window_set_size(Vector2i(960, 720))
-			4: DisplayServer.window_set_size(Vector2i(1280, 960))
-			6: DisplayServer.window_set_size(Vector2i(960, 640))
-			7: DisplayServer.window_set_size(Vector2i(1440, 960))
-			8: DisplayServer.window_set_size(Vector2i(1920, 1280))
-		%OptionRes.select(0)
-	)
-	%OptionRes.select(0)
-
 	get_window().size_changed.connect(func() -> void:
-		var win_size := DisplayServer.window_get_size()
-		%Spin_WindowW.value = win_size.x
-		%Spin_WindowH.value = win_size.y
-		config.window_width = win_size.x
-		config.window_height = win_size.y
+		var is_fullscreen := get_window().mode != Window.MODE_WINDOWED
+
+		%Setting_Fullscreen.value = is_fullscreen
+		%Setting_CustomWindowSize.value = get_window().size
+
+		%Setting_WindowSize.enabled = !is_fullscreen
+		%Setting_CustomWindowSize.enabled = !is_fullscreen
 	)
-	DisplayServer.window_set_size(Vector2i(config.window_width, config.window_height))
 
-	%SliderFPSCap.value_changed.connect(func(value: float) -> void:
-		if value > 0 and value < 15: value = 15
-		Engine.max_fps = int(value)
-		config.fps_cap = int(value)
+	%Setting_VSync.init_config_global(main, "vsync", func(value: int) -> void:
+		DisplayServer.window_set_vsync_mode(value)
 	)
-	%SliderFPSCap.value = config.fps_cap
 
-	# graphics
-
-	%SliderDOFShape.value_changed.connect(func(value: RenderingServer.DOFBokehShape) -> void:
-		RenderingServer.camera_attributes_set_dof_blur_bokeh_shape(value)
+	%Setting_FPSLimit.init_config_global(main, "fps_cap", func(value: int) -> void:
 		match value:
-			RenderingServer.DOF_BOKEH_BOX:
-				%LabelDOFShape.text = "Box"
-			RenderingServer.DOF_BOKEH_HEXAGON:
-				%LabelDOFShape.text = "Hexagon"
-			RenderingServer.DOF_BOKEH_CIRCLE:
-				%LabelDOFShape.text = "Circle"
-		config.dof_bokeh_shape = value
+			0: Engine.max_fps = 30
+			1: Engine.max_fps = 45
+			2: Engine.max_fps = 60
+			3: Engine.max_fps = 72
+			4: Engine.max_fps = 90
+			5: Engine.max_fps = 120
+			6: Engine.max_fps = 144
+			7: Engine.max_fps = 240
+			_: Engine.max_fps = 0
 	)
-	%SliderDOFShape.value = config.dof_bokeh_shape
+	
+	# Blur settings
 
-	%SliderDOFQuality.value_changed.connect(func(value: RenderingServer.DOFBlurQuality) -> void:
-		RenderingServer.camera_attributes_set_dof_blur_quality(value, true)
+	%Setting_DOFShape.init_config_global(main, "dof_bokeh_shape", func(index: int) -> void:
+		RenderingServer.camera_attributes_set_dof_blur_bokeh_shape(index)
+	)
+
+	%Setting_DOFQuality.init_config_global(main, "dof_blur_quality", func(index: int) -> void:
+		RenderingServer.camera_attributes_set_dof_blur_quality(index, true)
+	)
+
+	# Anti-aliasing
+
+	%Setting_MSAA.init_config_global(main, "msaa", func(value: int) -> void:
 		match value:
-			RenderingServer.DOF_BLUR_QUALITY_VERY_LOW:
-				%LabelDOFQuality.text = "Very Low"
-			RenderingServer.DOF_BLUR_QUALITY_LOW:
-				%LabelDOFQuality.text = "Low"
-			RenderingServer.DOF_BLUR_QUALITY_MEDIUM:
-				%LabelDOFQuality.text = "Medium"
-			RenderingServer.DOF_BLUR_QUALITY_HIGH:
-				%LabelDOFQuality.text = "High"
-		config.dof_blur_quality = value
+			0: get_viewport().msaa_3d = Viewport.MSAA_DISABLED
+			1: get_viewport().msaa_3d = Viewport.MSAA_2X
+			2: get_viewport().msaa_3d = Viewport.MSAA_4X
+			3: get_viewport().msaa_3d = Viewport.MSAA_8X
 	)
-	%SliderDOFQuality.value = config.dof_blur_quality
 
-	# MSAA
-
-	%SliderMSAA.value_changed.connect(func(value: int) -> void:
-		match value:
-			0:
-				get_viewport().msaa_3d = Viewport.MSAA_DISABLED
-				%LabelMSAA.text = "Disabled"
-			1:
-				get_viewport().msaa_3d = Viewport.MSAA_2X
-				%LabelMSAA.text = "2X"
-			2:
-				get_viewport().msaa_3d = Viewport.MSAA_4X
-				%LabelMSAA.text = "4X"
-			3:
-				get_viewport().msaa_3d = Viewport.MSAA_8X
-				%LabelMSAA.text = "8X"
-		config.msaa = value
+	%Setting_TAA.init_config_global(main, "taa", func(value: bool) -> void:
+		get_viewport().use_taa = value
 	)
-	%SliderMSAA.value = config.msaa
-
-	# TAA
-
-	%CheckButtonTAA.toggled.connect(func(toggled_on: bool) -> void:
-		get_viewport().use_taa = toggled_on
-		config.taa = toggled_on
-	)
-	%CheckButtonTAA.button_pressed = config.taa
 
 	# Render Scale
 
-	%OptionUpscalingMethod.item_selected.connect(func(idx: int) -> void:
-		%OptionUpscalingMethod.selected = idx
-		config.scale_mode = idx
-		match idx:
+	%Setting_UpscalingMethod.init_config_global(main, "scale_mode", func(value: int) -> void:
+		match value:
 			0:
 				get_viewport().scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR
-				%SliderFSRSharpness.editable = false
+				%Setting_FSRSharpness.enabled = false
 			1:
 				get_viewport().scaling_3d_mode = Viewport.SCALING_3D_MODE_FSR
-				%SliderFSRSharpness.editable = true
+				%Setting_FSRSharpness.enabled = true
 			2:
 				get_viewport().scaling_3d_mode = Viewport.SCALING_3D_MODE_FSR2
-				%SliderFSRSharpness.editable = true
+				%Setting_FSRSharpness.enabled = true
 	)
-	%OptionUpscalingMethod.item_selected.emit(config.scale_mode)
 
-	%SliderRenderScale.value_changed.connect(func(value: float) -> void:
-		config.render_scale = value
+	%Setting_RenderScale.init_config_global(main, "render_scale", func(value: float) -> void:
 		get_viewport().scaling_3d_scale = value
-		%LabelRenderScale.text = "%d%%" % (value * 100)
 	)
-	%SliderRenderScale.set_value(config.render_scale)
 
-	%SliderFSRSharpness.value_changed.connect(func(value: float) -> void:
-		config.fsr_sharpness = value
-		get_viewport().fsr_sharpness = (2.0 - (value * 2.0))
-		%LabelFSRSharpness.text = "%d%%" % (value * 100)
+	%Setting_FSRSharpness.init_config_global(main, "fsr_sharpness", func(value: float) -> void:
+		get_viewport().fsr_sharpness = (2.0 - (value / 6.0 * 2.0))
 	)
-	%SliderFSRSharpness.set_value(config.fsr_sharpness)
-	%SliderFSRSharpness.editable = config.scale_mode != 0
 
 ##
 ## Setup the filter menu controls.
 ##
 func _init_menu_filters() -> void:
 
-	var _filter_connect_enable := func(check: CheckButton, filter_path: NodePath) -> void:
-		var filter: ColorRect = main.get_node(filter_path)
-		assert(filter is ColorRect)
-		var default: bool = main.get_filter_property(filter, "visible")
-		_connect(check, default, func(value: bool) -> void:
-			filter.visible = value
-			main.set_filter_property(filter, "visible", value)
-		)
-		main.profile_loaded.connect(func(_profile_name: String) -> void:
-			check.set_pressed_no_signal(filter.visible)
-		)
-
-	var _filter_connect_slider := func(check: CheckButton, slider: Slider, filter_path: NodePath, shader_param: String) -> void:
-		var filter: ColorRect = main.get_node(filter_path)
-		assert(filter is ColorRect)
-		var default: float = main.get_filter_shader_parameter(filter, shader_param)
-		_connect(slider, default, func(value: float) -> void:
-			main.set_filter_shader_parameter(filter_path, shader_param, value)
-		)
-		_link_control_to_disable(check, slider)
-		main.profile_loaded.connect(func(_profile_name: String) -> void:
-			slider.set_value_no_signal(main.get_filter_shader_parameter(filter, shader_param))
-		)
-
-	_filter_connect_enable.call(%CheckButtonFilter1, "%VHSFilter1")
-	_filter_connect_enable.call(%CheckButtonFilter2, "%VHSFilter2")
-	_filter_connect_enable.call(%CheckButtonFilter3, "%VHSFilter3")
-	_filter_connect_enable.call(%CheckButtonFilter4, "%Filter4")
-	_filter_connect_enable.call(%CheckButtonFilter5, "%CRTShader")
-	_filter_connect_enable.call(%Check_FilterNoise, "%NoiseShader")
-
-	_filter_connect_slider.call(
-		%CheckButtonFilter1, %Slider_ShaderSmearAmount, "%VHSFilter1", "smear"
+	%Setting_ShaderVHS.init_config_profile(main, "shader_vhs", func(value: bool) -> void:
+		main.get_node("%VHSFilter1").visible = value
+		main.get_node("%VHSFilter2").visible = value
 	)
-	_filter_connect_slider.call(
-		%CheckButtonFilter1, %Slider_ShaderWiggleAmount, "%VHSFilter1", "wiggle"
+	%Setting_ShaderCRT.init_config_profile(main, "shader_crt", func(value: bool) -> void:
+		main.get_node("%VHSFilter3").visible = value and %Setting_ShaderCRTScanLines.value
+		main.get_node("%Filter4").visible = value and %Setting_ShaderCRTReverseCurvature.value
+		main.get_node("%CRTShader").visible = value
 	)
-	_filter_connect_slider.call(
-		%CheckButtonFilter2, %Slider_ShaderNoiseCreaseOpacity, "%VHSFilter2", "crease_opacity"
-	)
-	_filter_connect_slider.call(
-		%CheckButtonFilter2, %Slider_ShaderTapeCreaseAmount, "%VHSFilter2", "tape_crease_smear"
-	)
-	_filter_connect_slider.call(
-		%CheckButtonFilter5, %Slider_ShaderCurvatureAmount, "%CRTShader", "warp_amount"
-	)
-	_filter_connect_slider.call(
-		%CheckButtonFilter5, %Slider_ShaderVignetteAmount, "%CRTShader", "vignette_opacity"
+	%Setting_ShaderNoise.init_config_profile(main, "shader_noise", func(value: bool) -> void:
+		main.get_node("%NoiseShader").visible = value
 	)
 
-	# _connect_config_global("pp_vhs_smear", %Slider_ShaderSmearAmount, func(value: float) -> void:
-	# 	main.set_filter_parameter("%VHSFilter1", "smear", value)
-	# )
-	# _link_control_to_disable(%CheckButtonFilter1, %Slider_ShaderSmearAmount)
-	# _connect_config_global("pp_vhs_wiggle", %Slider_ShaderWiggleAmount, func(value: float) -> void:
-	# 	main.set_filter_parameter("%VHSFilter1", "wiggle", value)
-	# )
-	# _link_control_to_disable(%CheckButtonFilter1, %Slider_ShaderWiggleAmount)
-	# _connect_config_global("pp_vhs_noise_crease_opacity", %Slider_ShaderNoiseCreaseOpacity, func(value: float) -> void:
-	# 	main.set_filter_parameter("%VHSFilter2", "crease_opacity", value)
-	# )
-	# _link_control_to_disable(%CheckButtonFilter2, %Slider_ShaderNoiseCreaseOpacity)
-	# _connect_config_global("pp_vhs_tape_crease_amount", %Slider_ShaderTapeCreaseAmount, func(value: float) -> void:
-	# 	main.set_filter_parameter("%VHSFilter2", "tape_crease_smear", value)
-	# )
-	# _link_control_to_disable(%CheckButtonFilter2, %Slider_ShaderTapeCreaseAmount)
-	# _connect_config_global("pp_crt_curvature", %Slider_ShaderCurvatureAmount, func(value: float) -> void:
-	# 	main.set_filter_parameter("%CRTShader", "warp_amount", value)
-	# )
-	# _link_control_to_disable(%CheckButtonFilter5, %Slider_ShaderCurvatureAmount)
-	# _connect_config_global("pp_vignette_amount", %Slider_ShaderVignetteAmount, func(value: float) -> void:
-	# 	main.set_filter_parameter("%CRTShader", "vignette_opacity", value)
-	# )
-	# _link_control_to_disable(%CheckButtonFilter5, %Slider_ShaderVignetteAmount)
+	%Setting_ShaderVHSSmear.init_config_shader(main, "%VHSFilter1", "smear")
+	%Setting_ShaderVHSWiggle.init_config_shader(main, "%VHSFilter1", "wiggle")
+	%Setting_ShaderVHSNoise.init_config_shader(main, "%VHSFilter2", "crease_opacity")
+	%Setting_ShaderVHSTape.init_config_shader(main, "%VHSFilter2", "tape_crease_smear")
 
-	_connect_config_global("audio_to_brightness", %SliderAVBrightness, func(value: float) -> void:
+	%Setting_ShaderCRTScanLines.init_config_profile(main, "shader_crt_scan_lines", func(value: bool) -> void:
+		main.get_node("%VHSFilter3").visible = value and %Setting_ShaderCRT.value
+	)
+	%Setting_ShaderCRTReverseCurvature.init_config_profile(main, "shader_crt_reverse_curvature", func(value: bool) -> void:
+		main.get_node("%Filter4").visible = value and %Setting_ShaderCRT.value
+	)
+	%Setting_ShaderCRTCurvature.init_config_shader(main, "%CRTShader", "warp_amount")
+	%Setting_ShaderCRTVignette.init_config_shader(main, "%CRTShader", "vignette_opacity")
+
+	%Setting_ShaderCRTAudioB.init_config_global(main, "audio_to_brightness", func(value: float) -> void:
 		main.visualizer_brightness_amount = value
-		main.save_filters()
 	)
-	_link_control_to_disable(%CheckButtonFilter5, %SliderAVBrightness)
-
-	_connect_config_global("audio_to_ca", %SliderAVCA, func(value: float) -> void:
+	%Setting_ShaderCRTAudioCA.init_config_global(main, "audio_to_ca", func(value: float) -> void:
 		main.visualizer_ca_amount = value
-		main.save_filters()
 	)
-	_link_control_to_disable(%CheckButtonFilter5, %SliderAVCA)
+
+	%Setting_ShaderVHS.connect_to_enable(%Setting_ShaderVHSSmear)
+	%Setting_ShaderVHS.connect_to_enable(%Setting_ShaderVHSWiggle)
+	%Setting_ShaderVHS.connect_to_enable(%Setting_ShaderVHSNoise)
+	%Setting_ShaderVHS.connect_to_enable(%Setting_ShaderVHSTape)
+
+	%Setting_ShaderCRT.connect_to_enable(%Setting_ShaderCRTScanLines)
+	%Setting_ShaderCRT.connect_to_enable(%Setting_ShaderCRTReverseCurvature)
+	%Setting_ShaderCRT.connect_to_enable(%Setting_ShaderCRTCurvature)
+	%Setting_ShaderCRT.connect_to_enable(%Setting_ShaderCRTVignette)
+	%Setting_ShaderCRT.connect_to_enable(%Setting_ShaderCRTAudioB)
+	%Setting_ShaderCRT.connect_to_enable(%Setting_ShaderCRTAudioCA)
 
 ##
 ## Setup the input menu controls.
@@ -623,12 +509,12 @@ func _init_menu_model() -> void:
 
 	# Background color (read-only)
 
-	get_tree().physics_frame.connect(func() -> void:
-		var color: Color = main.m8_client.get_theme_colors()[0]
-		if color != %ThemeBGColor.color:
-			%LabelThemeBGColor.text = "#%s" % color.to_html(false).to_upper()
-			%ThemeBGColor.color = color
-	)
+	# get_tree().physics_frame.connect(func() -> void:
+	# 	var color: Color = main.m8_client.get_theme_colors()[0]
+	# 	if color != %ThemeBGColor.color:
+	# 		%LabelThemeBGColor.text = "#%s" % color.to_html(false).to_upper()
+	# 		%ThemeBGColor.color = color
+	# )
 
 	# Model colors
 
@@ -731,20 +617,15 @@ func _init_menu_model() -> void:
 
 	# Model settings
 
-	%SliderHL_Opacity.value_changed.connect(func(value: float) -> void:
-		config.hl_opacity = value
-		%LabelHL_Opacity.text = "%d%%" % (value * 100)
+	%Setting_ModelHighlightOpacity.init_config_profile(main, "model_hl_opacity", func(value: float) -> void:
 		if _model():
 			_model().highlight_opacity = value
 	)
-	%SliderHL_Opacity.value = config.hl_opacity
 
-	%CheckButtonModelLinearFilter.toggled.connect(func(toggled_on: bool) -> void:
-		config.model_use_linear_filter = toggled_on
+	%Setting_ModelScreenFilter.init_config_profile(main, "model_screen_linear_filter", func(value: bool) -> void:
 		if _model():
-			_model().set_screen_filter(toggled_on)
+			_model().set_screen_filter(value)
 	)
-	%CheckButtonModelLinearFilter.button_pressed = config.model_use_linear_filter
 
 ##
 ## Setup the device connection menu controls.
@@ -903,19 +784,6 @@ func _connect_config_global(property: String, control: Control, fn: Callable) ->
 
 	_connect(control, default, callback)
 
-##
-## Connect a Control node to a config profile setting and callback function.
-##
-func _connect_config_profile(property: String, control: Control, default: Variant, fn: Callable) -> void:
-
-	var callback := func(value: Variant) -> void:
-		fn.call(value)
-		main.config.set_property(property, value)
-
-	default = main.config.get_property(property, default)
-
-	_connect(control, default, callback)
-
 func _connect(control: Control, default: Variant, fn: Callable) -> void:
 
 	if control is Slider: # fn should be func(value: float)
@@ -935,17 +803,37 @@ func _connect(control: Control, default: Variant, fn: Callable) -> void:
 ## Links the first control to enable/disable the second control.
 ## First control should be a CheckButton. 
 ##
-func _link_control_to_disable(check: CheckButton, control: Control) -> void:
+func _link_control_to_disable(setting: Control, control: Control) -> void:
+	var sig: Signal
+	var src_property: String
+	var dst_property: String
+	var invert := false
+
+	if setting is CheckButton:
+		sig = setting.toggled
+		src_property = "button_pressed"
+	elif setting is SettingBase:
+		sig = setting.value_changed
+		src_property = "value"
+	else:
+		assert(false)
+
 	if control is Slider:
-		check.toggled.connect(func(toggled_on: bool) -> void:
-			control.editable = toggled_on
-		)
-		control.editable = check.button_pressed
+		dst_property = "editable"
 	elif control is Button:
-		check.toggled.connect(func(toggled_on: bool) -> void:
-			control.disabled = !toggled_on
-		)
-		control.disabled = !check.button_pressed
+		dst_property = "disabled"
+		invert = true
+	else:
+		assert(false)
+
+	assert(src_property in setting and dst_property in control)
+
+	sig.connect(func(value: bool) -> void:
+		control.set(dst_property, value if !invert else !value)
+		print("update button")
+	)
+
+	control.set(dst_property, setting.get(src_property) if !invert else !setting.get(src_property))
 
 func get_color_pickers() -> Array:
 	return [
@@ -967,11 +855,6 @@ func on_color_picker_erase_preset(color: Color) -> void:
 	for colorpicker: ColorPickerButton in get_color_pickers():
 		colorpicker.get_picker().erase_preset(color)
 
-func get_scene_path_idx(scene_path: String) -> int:
-	for i in range(option_scenes.item_count):
-		if option_scenes.get_item_metadata(i) == scene_path:
-			return i
-	return -1
 
 ##
 ## Try to return the device model in the current scene.
@@ -1153,11 +1036,6 @@ func refresh_audio_device_list() -> void:
 
 func _input(event: InputEvent) -> void:
 	_handle_input_rebind(event)
-
-func _process(_delta: float) -> void:
-	%CheckButtonFullscreen.button_pressed = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN
-	%OptionRes.disabled = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN
-	%LabelFPSCap.text = "%d" % Engine.max_fps
 
 ##
 ## Recreate the profile hotkey UI with the current list of profiles and

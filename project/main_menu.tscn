@@ -1,84 +1,17 @@
-[gd_scene load_steps=30 format=3 uid="uid://d13t756slc8b0"]
+[gd_scene load_steps=21 format=3 uid="uid://d13t756slc8b0"]
 
 [ext_resource type="Script" path="res://main_menu.gd" id="1_7xjs6"]
-
-[sub_resource type="Gradient" id="Gradient_oact8"]
-colors = PackedColorArray(1, 1, 1, 0.5, 1, 1, 1, 0)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_1rbt4"]
-gradient = SubResource("Gradient_oact8")
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hyxo6"]
-texture = SubResource("GradientTexture1D_1rbt4")
-expand_margin_left = 4.0
-expand_margin_top = 1.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1asjn"]
-bg_color = Color(0, 0, 0, 0.75)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vd3cv"]
-bg_color = Color(0.6, 0.6, 0.6, 0)
-border_width_top = 1
-border_color = Color(1, 1, 1, 1)
-
-[sub_resource type="Theme" id="Theme_b8l6s"]
-Button/font_sizes/font_size = 12
-CheckButton/colors/font_color = Color(1, 1, 1, 1)
-CheckButton/font_sizes/font_size = 14
-GridContainer/constants/v_separation = 4
-HSeparator/constants/separation = 8
-HSeparator/styles/separator = SubResource("StyleBoxTexture_hyxo6")
-ItemList/font_sizes/font_size = 12
-Label/colors/font_color = Color(1, 1, 1, 1)
-Label/font_sizes/font_size = 14
-Label/fonts/font = null
-LineEdit/font_sizes/font_size = 12
-MarginContainer/constants/margin_bottom = 16
-MarginContainer/constants/margin_left = 32
-MarginContainer/constants/margin_right = 32
-MarginContainer/constants/margin_top = 16
-Panel/styles/panel = SubResource("StyleBoxFlat_1asjn")
-RichTextLabel/constants/line_separation = 8
-TabContainer/font_sizes/font_size = 14
-TabContainer/fonts/font = null
-TabContainer/styles/panel = SubResource("StyleBoxFlat_vd3cv")
-TextEdit/font_sizes/font_size = 12
-VBoxContainer/constants/separation = 4
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3mi27"]
-content_margin_top = 4.0
-content_margin_bottom = 4.0
-bg_color = Color(0.5, 0, 0, 1)
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_l2hi4"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fbamp"]
-content_margin_left = 64.0
-content_margin_right = 64.0
-bg_color = Color(0.154876, 0.154876, 0.154876, 1)
-border_width_top = 2
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vndkq"]
-content_margin_left = 64.0
-content_margin_right = 64.0
-bg_color = Color(0.1, 0.1, 0.1, 1)
-border_width_top = 2
-border_color = Color(0.8, 0.8, 0.8, 0)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g57iy"]
-content_margin_left = 64.0
-content_margin_right = 64.0
-bg_color = Color(0, 0, 0, 1)
-border_width_top = 2
-border_color = Color(0.8, 0.8, 0.8, 0)
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bruag"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0w5ic"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_06k14"]
+[ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/menu_theme.tres" id="1_qr6r4"]
+[ext_resource type="Texture2D" uid="uid://d1o5ho1s6e3vr" path="res://assets/icon/Add.png" id="2_mwqao"]
+[ext_resource type="PackedScene" uid="uid://dsgvm3dda1kjp" path="res://ui/label_header.tscn" id="3_pyc3l"]
+[ext_resource type="PackedScene" uid="uid://c5kj1uj0ohnmm" path="res://ui/setting_bool.tscn" id="5_16o8v"]
+[ext_resource type="PackedScene" uid="uid://b1r8nehsgp111" path="res://ui/setting_number.tscn" id="6_07wpv"]
+[ext_resource type="PackedScene" uid="uid://bgsxagi62acni" path="res://ui/setting_options.tscn" id="6_mvtic"]
+[ext_resource type="PackedScene" uid="uid://bevoopcdq5dsh" path="res://ui/setting_vec2i.tscn" id="7_t1h81"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4w3sk"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_06k14"]
 
 [sub_resource type="Gradient" id="Gradient_t416v"]
 offsets = PackedFloat32Array(0, 0.528409, 0.754, 0.79)
@@ -87,21 +20,18 @@ colors = PackedColorArray(0, 0.95, 1, 1, 0.0833333, 1, 0, 1, 1, 1, 0, 1, 1, 0.03
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_55vtn"]
 gradient = SubResource("Gradient_t416v")
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3mi27"]
+content_margin_top = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.5, 0, 0, 1)
+
 [sub_resource type="LabelSettings" id="LabelSettings_cher2"]
-outline_size = 2
+font_size = 12
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_v2m85"]
 color = Color(1, 1, 1, 0.25)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bd31u"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_h7ijs"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_f5cg4"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dnh0l"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_sgnvi"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wlgng"]
 
@@ -131,7 +61,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = SubResource("Theme_b8l6s")
+theme = ExtResource("1_qr6r4")
 script = ExtResource("1_7xjs6")
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
@@ -149,7 +79,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
-custom_minimum_size = Vector2(760, 640)
+custom_minimum_size = Vector2(620, 640)
 layout_mode = 2
 
 [node name="TabContainer" type="TabContainer" parent="CenterContainer/VBoxContainer"]
@@ -158,890 +88,619 @@ layout_mode = 2
 size_flags_vertical = 3
 current_tab = 0
 
-[node name="Profile" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
-layout_mode = 2
-metadata/_tab_index = 0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Profile"]
-custom_minimum_size = Vector2(300, 0)
-layout_mode = 2
-
-[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 0
-
-[node name="RichTextLabel4" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/HBoxContainer"]
-clip_contents = false
-custom_minimum_size = Vector2(80, 0)
-layout_mode = 2
-size_flags_horizontal = 2
-bbcode_enabled = true
-text = "[b]Profile[/b] "
-fit_content = true
-autowrap_mode = 0
-
-[node name="ButtonProfileCreate" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/HBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Create new profile..."
-
-[node name="OptionProfiles" type="OptionButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/HBoxContainer"]
-unique_name_in_owner = true
-clip_contents = true
-layout_mode = 2
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/HBoxContainer2"]
-layout_mode = 2
-text = "Name"
-
-[node name="LineEditProfileName" type="LineEdit" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/HBoxContainer2"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-text = "<default>"
-editable = false
-caret_blink = true
-
-[node name="ButtonProfileReset" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/HBoxContainer2"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(50, 0)
-layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxFlat_3mi27")
-text = "Reset"
-
-[node name="ButtonProfileDelete" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/HBoxContainer2"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(50, 0)
-layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxFlat_3mi27")
-text = "Delete"
-
-[node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer"]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_l2hi4")
-
-[node name="TabContainer" type="TabContainer" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer"]
-layout_mode = 2
-theme_override_styles/tab_selected = SubResource("StyleBoxFlat_fbamp")
-theme_override_styles/tab_hovered = SubResource("StyleBoxFlat_vndkq")
-theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_g57iy")
-tab_alignment = 1
-current_tab = 0
-
-[node name="Scene" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer"]
+[node name="Scene" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
 layout_mode = 2
 theme_override_constants/margin_top = 18
 metadata/_tab_index = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Scene"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Scene"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Scene/VBoxContainer"]
+[node name="LabelHeader3" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer4" instance=ExtResource("3_pyc3l")]
 layout_mode = 2
+size_flags_horizontal = 3
+text = "Scene"
+top_spacing = false
 
-[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer"]
+[node name="Label_CurrentScene" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer4"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
-text = "Current Scene"
+size_flags_horizontal = 3
+size_flags_vertical = 0
+text = "placeholder"
+horizontal_alignment = 2
+vertical_alignment = 1
 
-[node name="OptionScenes" type="OptionButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer"]
+[node name="Option_LoadScene" type="OptionButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer4"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Scene/VBoxContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Scene Parameters"
-
-[node name="Button_SceneMenu" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer2"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(140, 0)
-layout_mode = 2
-text = "Configure..."
-
-[node name="GridContainer" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Scene/VBoxContainer"]
-visible = false
-layout_mode = 2
-columns = 3
-
-[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Scene/VBoxContainer/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Secondary Scene Mode"
-
-[node name="Option_SubSceneMode" type="OptionButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Scene/VBoxContainer/GridContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 0)
-layout_mode = 2
+size_flags_vertical = 0
 alignment = 1
 
-[node name="Button_SubSceneMenu" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Scene/VBoxContainer/GridContainer"]
+[node name="Button_OpenSceneMenu" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(140, 0)
-layout_mode = 2
-disabled = true
-text = "Configure..."
-
-[node name="Container_SceneCamera" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Scene/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-columns = 2
-
-[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Scene/VBoxContainer/Container_SceneCamera"]
+custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 size_flags_horizontal = 3
-text = "3D Camera"
-
-[node name="Button_SceneCameraMenu" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Scene/VBoxContainer/Container_SceneCamera"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(140, 0)
-layout_mode = 2
-text = "Configure..."
-
-[node name="Label2" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Scene/VBoxContainer/Container_SceneCamera"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Enable Mouse-controlled Pan/Zooming"
-
-[node name="Check_MouseCamera" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Scene/VBoxContainer/Container_SceneCamera"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="Label3" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Scene/VBoxContainer/Container_SceneCamera"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Enable Humanized Camera Movement"
-
-[node name="Check_HumanCamera" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Scene/VBoxContainer/Container_SceneCamera"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="Overlays" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer"]
-visible = false
-layout_mode = 2
-theme_override_constants/margin_top = 18
-metadata/_tab_index = 1
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Overlays"]
-layout_mode = 2
-
-[node name="HBoxContainer3" type="HBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Overlays/VBoxContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Overlays/VBoxContainer/HBoxContainer3"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Integer Scale"
-
-[node name="Label_OverlayIntegerScale" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Overlays/VBoxContainer/HBoxContainer3"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(30, 0)
-layout_mode = 2
-text = "1x"
-
-[node name="Slider_OverlayIntegerScale" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Overlays/VBoxContainer/HBoxContainer3"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-min_value = 1.0
-max_value = 4.0
-value = 1.0
-tick_count = 4
-ticks_on_borders = true
-
-[node name="HBoxContainer4" type="HBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Overlays/VBoxContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Overlays/VBoxContainer/HBoxContainer4"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Apply Filters"
-
-[node name="Check_OverlayFilters" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Overlays/VBoxContainer/HBoxContainer4"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Overlays/VBoxContainer"]
-layout_mode = 2
-
-[node name="GridContainer2" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Overlays/VBoxContainer"]
-layout_mode = 2
-columns = 3
-
-[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Overlays/VBoxContainer/GridContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Audio Spectrum"
-
-[node name="Check_OverlaySpectrum" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Overlays/VBoxContainer/GridContainer2"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="Button_OverlaySpectrumConfig" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Overlays/VBoxContainer/GridContainer2"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(140, 0)
-layout_mode = 2
-disabled = true
-text = "Configure..."
-
-[node name="Label2" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Overlays/VBoxContainer/GridContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Audio Waveform"
-
-[node name="Check_OverlayWaveform" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Overlays/VBoxContainer/GridContainer2"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="Button_OverlayWaveformConfig" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Overlays/VBoxContainer/GridContainer2"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(140, 0)
-layout_mode = 2
-disabled = true
-text = "Configure..."
-
-[node name="Label3" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Overlays/VBoxContainer/GridContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "M8 Screen Display"
-
-[node name="Check_OverlayDisplay" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Overlays/VBoxContainer/GridContainer2"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="Button_OverlayDisplayConfig" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Overlays/VBoxContainer/GridContainer2"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(140, 0)
-layout_mode = 2
-disabled = true
-text = "Configure..."
-
-[node name="Label4" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Overlays/VBoxContainer/GridContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Key Display"
-
-[node name="Check_OverlayKeys" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Overlays/VBoxContainer/GridContainer2"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="Button_OverlayKeysConfig" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Overlays/VBoxContainer/GridContainer2"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(140, 0)
-layout_mode = 2
-disabled = true
-text = "Configure..."
-
-[node name="Filters" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer"]
-visible = false
-layout_mode = 2
-theme_override_constants/margin_top = 18
-metadata/_tab_index = 2
-
-[node name="ScrollContainer" type="ScrollContainer" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Filters"]
-custom_minimum_size = Vector2(0, 400)
-layout_mode = 2
-horizontal_scroll_mode = 0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Filters/ScrollContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="GridContainer" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer"]
-layout_mode = 2
-columns = 2
-
-[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "VHS Smearing"
-
-[node name="CheckButtonFilter1" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer/GridContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer/GridContainer"]
-layout_mode = 2
 size_flags_vertical = 0
-bbcode_enabled = true
-text = "	[font size=12]Smear Amount[/font]"
-fit_content = true
+text = "Configure Scene..."
 
-[node name="Slider_ShaderSmearAmount" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer/GridContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-max_value = 2.0
-step = 0.2
-value = 1.0
-tick_count = 11
-ticks_on_borders = true
-
-[node name="RichTextLabel6" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer/GridContainer"]
-layout_mode = 2
-size_flags_vertical = 0
-bbcode_enabled = true
-text = "	[font size=12]Wiggle Amount[/font]"
-fit_content = true
-
-[node name="Slider_ShaderWiggleAmount" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer/GridContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-max_value = 0.2
-step = 0.01
-value = 0.03
-tick_count = 11
-ticks_on_borders = true
-
-[node name="Label2" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer/GridContainer"]
+[node name="LabelHeader" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer" instance=ExtResource("3_pyc3l")]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "VHS Distortion & Tearing"
+text = "Camera"
 
-[node name="CheckButtonFilter2" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer/GridContainer"]
+[node name="Setting_MouseCamera" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer" instance=ExtResource("5_16o8v")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
+setting_name = "Mouse Pan & Zoom Control"
 
-[node name="RichTextLabel4" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer/GridContainer"]
-layout_mode = 2
-size_flags_vertical = 0
-bbcode_enabled = true
-text = "	[font size=12]Noise Crease Opacity[/font]"
-fit_content = true
-
-[node name="Slider_ShaderNoiseCreaseOpacity" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer/GridContainer"]
+[node name="Setting_HumanCamera" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer" instance=ExtResource("5_16o8v")]
 unique_name_in_owner = true
 layout_mode = 2
-max_value = 1.0
-step = 0.1
-value = 0.5
-tick_count = 11
-ticks_on_borders = true
+setting_name = "Humanize Camera Movements"
 
-[node name="RichTextLabel5" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer/GridContainer"]
-layout_mode = 2
-size_flags_vertical = 0
-bbcode_enabled = true
-text = "	[font size=12]Tape Crease Amount[/font]"
-fit_content = true
-
-[node name="Slider_ShaderTapeCreaseAmount" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer/GridContainer"]
+[node name="Button_SceneCameraMenu" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer"]
 unique_name_in_owner = true
-layout_mode = 2
-max_value = 1.0
-step = 0.1
-value = 0.2
-tick_count = 11
-ticks_on_borders = true
-
-[node name="Label3" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "CRT Scan Lines"
-
-[node name="CheckButtonFilter3" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer/GridContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Label5" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Reverse Curvature Warping"
-
-[node name="CheckButtonFilter4" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer/GridContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Label4" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "CRT Curvature Warping"
-
-[node name="CheckButtonFilter5" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer/GridContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="RichTextLabel2" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer/GridContainer"]
-layout_mode = 2
-size_flags_vertical = 0
-bbcode_enabled = true
-text = "	[font size=12]Curvature Warp Amount[/font]"
-fit_content = true
-
-[node name="Slider_ShaderCurvatureAmount" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer/GridContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-max_value = 1.0
-step = 0.1
-value = 0.5
-tick_count = 11
-ticks_on_borders = true
-
-[node name="RichTextLabel3" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer/GridContainer"]
-layout_mode = 2
-size_flags_vertical = 0
-bbcode_enabled = true
-text = "	[font size=12]Vignette Amount[/font]"
-fit_content = true
-
-[node name="Slider_ShaderVignetteAmount" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer/GridContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-max_value = 1.0
-step = 0.1
-value = 0.5
-tick_count = 11
-ticks_on_borders = true
-
-[node name="RichTextLabel7" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer/GridContainer"]
-layout_mode = 2
-size_flags_vertical = 0
-bbcode_enabled = true
-text = "	[font size=12]Audio to Brightness Amount[/font]"
-fit_content = true
-
-[node name="SliderAVBrightness" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer/GridContainer"]
-unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-max_value = 1.0
-step = 0.01
-allow_lesser = true
+text = "Configure Camera..."
 
-[node name="RichTextLabel8" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer/GridContainer"]
+[node name="LabelHeader2" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer" instance=ExtResource("3_pyc3l")]
 layout_mode = 2
-size_flags_vertical = 0
-bbcode_enabled = true
-text = "	[font size=12]Audio to Chromatic Abberation Amount[/font]"
-fit_content = true
+text = "M8 Model"
 
-[node name="SliderAVCA" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer/GridContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-max_value = 0.1
-step = 0.001
-allow_lesser = true
-
-[node name="Label8" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Noise Filter"
-
-[node name="Check_FilterNoise" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Profile/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer/GridContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Model" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
-visible = false
-layout_mode = 2
-theme_override_constants/margin_top = 18
-metadata/_tab_index = 1
-
-[node name="ScrollContainer" type="ScrollContainer" parent="CenterContainer/VBoxContainer/TabContainer/Model"]
-custom_minimum_size = Vector2(0, 400)
+[node name="HBoxContainer3" type="HBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer"]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 
-[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer"]
-layout_mode = 2
-text = "(Only applies to scenes with an M8 model in it.)"
-
-[node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_l2hi4")
-
-[node name="GridContainer" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer"]
-layout_mode = 2
-columns = 2
-
-[node name="Label2" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
-custom_minimum_size = Vector2(200, 0)
-layout_mode = 2
-text = "Keycap Colors"
-
-[node name="Label3" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
+[node name="Label2" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Other Colors"
+text = "Keycap Colors / Press Highlight Colors"
 
-[node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer"]
 layout_mode = 2
 
-[node name="HSeparator2" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
+[node name="Control" type="Control" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+mouse_filter = 1
+
+[node name="Color_KeyUp" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 36.0
+offset_top = 10.0
+offset_right = 68.0
+offset_bottom = 42.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(0.0901961, 0.0901961, 0.0901961, 1)
+edit_alpha = false
+
+[node name="Color_KeyDown" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 36.0
+offset_top = 42.0
+offset_right = 68.0
+offset_bottom = 74.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(0.0901961, 0.0901961, 0.0901961, 1)
+edit_alpha = false
+
+[node name="Color_KeyLeft" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 4.0
+offset_top = 42.0
+offset_right = 36.0
+offset_bottom = 74.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(0.0901961, 0.0901961, 0.0901961, 1)
+edit_alpha = false
+
+[node name="Color_KeyRight" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 68.0
+offset_top = 42.0
+offset_right = 100.0
+offset_bottom = 74.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(0.0901961, 0.0901961, 0.0901961, 1)
+edit_alpha = false
+
+[node name="Color_KeyShift" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 36.0
+offset_top = 82.0
+offset_right = 68.0
+offset_bottom = 114.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(0.0901961, 0.0901961, 0.0901961, 1)
+edit_alpha = false
+
+[node name="Color_KeyPlay" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 68.0
+offset_top = 82.0
+offset_right = 100.0
+offset_bottom = 114.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(0.0901961, 0.0901961, 0.0901961, 1)
+edit_alpha = false
+
+[node name="Color_KeyOption" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 76.0
+offset_top = 2.0
+offset_right = 108.0
+offset_bottom = 34.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(0.0901961, 0.0901961, 0.0901961, 1)
+edit_alpha = false
+
+[node name="Color_KeyEdit" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 108.0
+offset_top = 2.0
+offset_right = 140.0
+offset_bottom = 34.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(0.0901961, 0.0901961, 0.0901961, 1)
+edit_alpha = false
+
+[node name="Color_HLUp" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 188.0
+offset_top = 10.0
+offset_right = 220.0
+offset_bottom = 42.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(1, 1, 1, 1)
+edit_alpha = false
+
+[node name="Color_HLDown" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 188.0
+offset_top = 42.0
+offset_right = 220.0
+offset_bottom = 74.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(1, 1, 1, 1)
+edit_alpha = false
+
+[node name="Color_HLLeft" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 156.0
+offset_top = 42.0
+offset_right = 188.0
+offset_bottom = 74.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(1, 1, 1, 1)
+edit_alpha = false
+
+[node name="Color_HLRight" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 220.0
+offset_top = 42.0
+offset_right = 252.0
+offset_bottom = 74.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(1, 1, 1, 1)
+edit_alpha = false
+
+[node name="Color_HLShift" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 188.0
+offset_top = 82.0
+offset_right = 220.0
+offset_bottom = 114.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(1, 1, 1, 1)
+edit_alpha = false
+
+[node name="Color_HLPlay" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 220.0
+offset_top = 82.0
+offset_right = 252.0
+offset_bottom = 114.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(1, 1, 1, 1)
+edit_alpha = false
+
+[node name="Color_HLOption" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 228.0
+offset_top = 2.0
+offset_right = 260.0
+offset_bottom = 34.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(1, 1, 1, 1)
+edit_alpha = false
+
+[node name="Color_HLEdit" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer/Control"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+offset_left = 260.0
+offset_top = 2.0
+offset_right = 292.0
+offset_bottom = 34.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+color = Color(1, 1, 1, 1)
+edit_alpha = false
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer2"]
 layout_mode = 2
 
-[node name="HSeparator3" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer2/VBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 8
-theme_override_constants/separation = 144
-theme_override_styles/separator = SubResource("StyleBoxEmpty_bruag")
 
-[node name="GridContainer2" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
-layout_mode = 2
-columns = 2
-
-[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer/GridContainer2"]
+[node name="Label3" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer2/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Body Color"
 
-[node name="Color_Body" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer/GridContainer2"]
+[node name="Color_Body" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer2/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
-
-[node name="Label4" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
-custom_minimum_size = Vector2(200, 0)
-layout_mode = 2
-text = "Highlight Colors"
-
-[node name="Label5" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
-layout_mode = 2
 size_flags_horizontal = 3
-text = "Settings"
 
-[node name="HSeparator4" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
+[node name="Setting_ModelHighlightOpacity" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer2/VBoxContainer" instance=ExtResource("6_07wpv")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_value_min_width = 32
+max_value = 1.0
+step = 0.01
+value = 1.0
+as_percent = true
+format_string = "%d%%"
+setting_name = "Highlight Opacity"
+setting_name_min_width = 100
+
+[node name="Setting_ModelScreenFilter" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer2/VBoxContainer" instance=ExtResource("5_16o8v")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_name = "Screen Linear Filter"
+setting_name_min_width = 100
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer2/VBoxContainer"]
+visible = false
 layout_mode = 2
 
-[node name="HSeparator5" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer2/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
-
-[node name="HSeparator7" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
-layout_mode = 2
-size_flags_vertical = 8
-theme_override_constants/separation = 144
-theme_override_styles/separator = SubResource("StyleBoxEmpty_bruag")
-
-[node name="GridContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer"]
-layout_mode = 2
-
-[node name="GridContainer" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer/GridContainer"]
-layout_mode = 2
-columns = 3
-
-[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer/GridContainer/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 0
+size_flags_horizontal = 2
 text = "Highlight Color Opacity"
 
-[node name="LabelHL_Opacity" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer/GridContainer/GridContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer2/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LabelHL_Opacity" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer2/VBoxContainer/HBoxContainer2/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 text = "1.00"
 horizontal_alignment = 2
 
-[node name="SliderHL_Opacity" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer/GridContainer/GridContainer"]
+[node name="SliderHL_Opacity" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer2/VBoxContainer/HBoxContainer2/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 max_value = 1.0
 step = 0.01
 
-[node name="Label2" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer/GridContainer/GridContainer"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer2/VBoxContainer"]
+visible = false
 layout_mode = 2
-size_flags_horizontal = 0
+
+[node name="Label2" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer2/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 2
 tooltip_text = "If true, the screen on the M8 model will have linear texture filtering. If false, it will have nearest texture filtering."
 mouse_filter = 1
 text = "Use Linear Filter for Screen"
 
-[node name="VSeparator2" type="VSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer/GridContainer/GridContainer"]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_0w5ic")
-
-[node name="CheckButtonModelLinearFilter" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/GridContainer/GridContainer/GridContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-button_pressed = true
-
-[node name="Control" type="Control" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
-mouse_filter = 1
-
-[node name="Color_KeyUp" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 44.0
-offset_top = -311.0
-offset_right = 76.0
-offset_bottom = -279.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(0.0901961, 0.0901961, 0.0901961, 1)
-edit_alpha = false
-
-[node name="Color_KeyDown" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 44.0
-offset_top = -279.0
-offset_right = 76.0
-offset_bottom = -247.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(0.0901961, 0.0901961, 0.0901961, 1)
-edit_alpha = false
-
-[node name="Color_KeyLeft" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 12.0
-offset_top = -279.0
-offset_right = 44.0
-offset_bottom = -247.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(0.0901961, 0.0901961, 0.0901961, 1)
-edit_alpha = false
-
-[node name="Color_KeyRight" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 76.0
-offset_top = -279.0
-offset_right = 108.0
-offset_bottom = -247.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(0.0901961, 0.0901961, 0.0901961, 1)
-edit_alpha = false
-
-[node name="Color_KeyShift" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 44.0
-offset_top = -239.0
-offset_right = 76.0
-offset_bottom = -207.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(0.0901961, 0.0901961, 0.0901961, 1)
-edit_alpha = false
-
-[node name="Color_KeyPlay" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 76.0
-offset_top = -239.0
-offset_right = 108.0
-offset_bottom = -207.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(0.0901961, 0.0901961, 0.0901961, 1)
-edit_alpha = false
-
-[node name="Color_KeyOption" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 84.0
-offset_top = -319.0
-offset_right = 116.0
-offset_bottom = -287.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(0.0901961, 0.0901961, 0.0901961, 1)
-edit_alpha = false
-
-[node name="Color_KeyEdit" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 116.0
-offset_top = -319.0
-offset_right = 148.0
-offset_bottom = -287.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(0.0901961, 0.0901961, 0.0901961, 1)
-edit_alpha = false
-
-[node name="Color_HLUp" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 44.0
-offset_top = -127.0
-offset_right = 76.0
-offset_bottom = -95.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(1, 1, 1, 1)
-edit_alpha = false
-
-[node name="Color_HLDown" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 44.0
-offset_top = -95.0
-offset_right = 76.0
-offset_bottom = -63.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(1, 1, 1, 1)
-edit_alpha = false
-
-[node name="Color_HLLeft" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 12.0
-offset_top = -95.0
-offset_right = 44.0
-offset_bottom = -63.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(1, 1, 1, 1)
-edit_alpha = false
-
-[node name="Color_HLRight" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 76.0
-offset_top = -95.0
-offset_right = 108.0
-offset_bottom = -63.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(1, 1, 1, 1)
-edit_alpha = false
-
-[node name="Color_HLShift" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 44.0
-offset_top = -55.0
-offset_right = 76.0
-offset_bottom = -23.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(1, 1, 1, 1)
-edit_alpha = false
-
-[node name="Color_HLPlay" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 76.0
-offset_top = -55.0
-offset_right = 108.0
-offset_bottom = -23.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(1, 1, 1, 1)
-edit_alpha = false
-
-[node name="Color_HLOption" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 84.0
-offset_top = -135.0
-offset_right = 116.0
-offset_bottom = -103.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(1, 1, 1, 1)
-edit_alpha = false
-
-[node name="Color_HLEdit" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/Control"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
-layout_mode = 2
-offset_left = 116.0
-offset_top = -135.0
-offset_right = 148.0
-offset_bottom = -103.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-color = Color(1, 1, 1, 1)
-edit_alpha = false
-
-[node name="RichTextLabel2" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer"]
-visible = false
-layout_mode = 2
-bbcode_enabled = true
-text = "[b]Key Overlay[/b] "
-fit_content = true
-
-[node name="HSeparator2" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer"]
-visible = false
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_06k14")
-
-[node name="RichTextLabel3" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer"]
-layout_mode = 2
-bbcode_enabled = true
-text = "[b]M8 Device Info[/b] "
-fit_content = true
-
-[node name="ContainerModel" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-columns = 3
-
-[node name="Label5" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/ContainerModel"]
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-text = "Theme BG Color"
-
-[node name="LabelThemeBGColor" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/ContainerModel"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-text = "#000000"
-horizontal_alignment = 2
-
-[node name="ThemeBGColor" type="ColorPickerButton" parent="CenterContainer/VBoxContainer/TabContainer/Model/ScrollContainer/VBoxContainer/ContainerModel"]
+[node name="CheckButtonModelLinearFilter" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer2/VBoxContainer/HBoxContainer3"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+button_pressed = true
+
+[node name="Overlays" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_top = 18
+metadata/_tab_index = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Overlays"]
+layout_mode = 2
+
+[node name="Setting_OverlayScale" parent="CenterContainer/VBoxContainer/TabContainer/Overlays/VBoxContainer" instance=ExtResource("6_07wpv")]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 1.0
+max_value = 4.0
+value = 1.0
+show_ticks = true
+format_string = "%dx"
+setting_name = "Integer Scale"
+
+[node name="Setting_OverlayFilters" parent="CenterContainer/VBoxContainer/TabContainer/Overlays/VBoxContainer" instance=ExtResource("5_16o8v")]
+unique_name_in_owner = true
+layout_mode = 2
+value = true
+setting_name = "Apply Filters"
+
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Overlays/VBoxContainer"]
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Overlays/VBoxContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="Setting_OverlaySpectrum" parent="CenterContainer/VBoxContainer/TabContainer/Overlays/VBoxContainer/GridContainer" instance=ExtResource("5_16o8v")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_name = "Audio Spectrum"
+
+[node name="Button_OverlaySpectrumConfig" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Overlays/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
 disabled = true
-edit_alpha = false
+text = "Configure..."
+
+[node name="Setting_OverlayWaveform" parent="CenterContainer/VBoxContainer/TabContainer/Overlays/VBoxContainer/GridContainer" instance=ExtResource("5_16o8v")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_name = "Audio Waveform"
+
+[node name="Button_OverlayWaveformConfig" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Overlays/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+disabled = true
+text = "Configure..."
+
+[node name="Setting_OverlayDisplay" parent="CenterContainer/VBoxContainer/TabContainer/Overlays/VBoxContainer/GridContainer" instance=ExtResource("5_16o8v")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_name = "Screen Display"
+
+[node name="Button_OverlayDisplayConfig" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Overlays/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+disabled = true
+text = "Configure..."
+
+[node name="Setting_OverlayKeys" parent="CenterContainer/VBoxContainer/TabContainer/Overlays/VBoxContainer/GridContainer" instance=ExtResource("5_16o8v")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_name = "Key Display"
+
+[node name="Button_OverlayKeysConfig" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Overlays/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+disabled = true
+text = "Configure..."
+
+[node name="Filters" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
+visible = false
+layout_mode = 2
+theme_override_constants/margin_top = 18
+metadata/_tab_index = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CenterContainer/VBoxContainer/TabContainer/Filters"]
+custom_minimum_size = Vector2(0, 400)
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Filters/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Setting_ShaderVHS" parent="CenterContainer/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer" instance=ExtResource("5_16o8v")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_name = "VHS Shader"
+
+[node name="Setting_ShaderVHSSmear" parent="CenterContainer/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer" instance=ExtResource("6_07wpv")]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 2.0
+step = 0.02
+as_percent = true
+percent_factor = 50.0
+format_string = "%d%%"
+setting_name = "Smear Amount"
+setting_name_min_width = 200
+setting_name_indent = 32
+
+[node name="Setting_ShaderVHSWiggle" parent="CenterContainer/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer" instance=ExtResource("6_07wpv")]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 0.2
+step = 0.002
+as_percent = true
+percent_factor = 500.0
+format_string = "%d%%"
+setting_name = "Wiggle Amount"
+setting_name_min_width = 200
+setting_name_indent = 32
+
+[node name="Setting_ShaderVHSNoise" parent="CenterContainer/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer" instance=ExtResource("6_07wpv")]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 2.0
+step = 0.02
+as_percent = true
+percent_factor = 50.0
+format_string = "%d%%"
+setting_name = "Noise Crease Amount"
+setting_name_min_width = 200
+setting_name_indent = 32
+
+[node name="Setting_ShaderVHSTape" parent="CenterContainer/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer" instance=ExtResource("6_07wpv")]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+as_percent = true
+format_string = "%d%%"
+setting_name = "Tape Crease Amount"
+setting_name_min_width = 200
+setting_name_indent = 32
+
+[node name="Setting_ShaderCRT" parent="CenterContainer/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer" instance=ExtResource("5_16o8v")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_name = "CRT Shader"
+
+[node name="Setting_ShaderCRTScanLines" parent="CenterContainer/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer" instance=ExtResource("5_16o8v")]
+unique_name_in_owner = true
+layout_mode = 2
+value = true
+setting_name = "Scan Lines"
+setting_name_min_width = 200
+setting_name_indent = 32
+
+[node name="Setting_ShaderCRTReverseCurvature" parent="CenterContainer/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer" instance=ExtResource("5_16o8v")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_name = "Reverse Curvature"
+setting_name_min_width = 200
+setting_name_indent = 32
+
+[node name="Setting_ShaderCRTCurvature" parent="CenterContainer/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer" instance=ExtResource("6_07wpv")]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+as_percent = true
+format_string = "%d%%"
+setting_name = "Curvature Amount"
+setting_name_min_width = 200
+setting_name_indent = 32
+
+[node name="Setting_ShaderCRTVignette" parent="CenterContainer/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer" instance=ExtResource("6_07wpv")]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+as_percent = true
+format_string = "%d%%"
+setting_name = "Vignette Amount"
+setting_name_min_width = 200
+setting_name_indent = 32
+
+[node name="Setting_ShaderCRTAudioB" parent="CenterContainer/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer" instance=ExtResource("6_07wpv")]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+as_percent = true
+format_string = "%d%%"
+setting_name = "Audio to Brightness"
+setting_name_min_width = 200
+setting_name_indent = 32
+
+[node name="Setting_ShaderCRTAudioCA" parent="CenterContainer/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer" instance=ExtResource("6_07wpv")]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 0.1
+step = 0.001
+as_percent = true
+percent_factor = 1000.0
+format_string = "%d%%"
+setting_name = "Audio to Chromatic Abberation"
+setting_name_min_width = 200
+setting_name_indent = 32
+
+[node name="Setting_ShaderNoise" parent="CenterContainer/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer" instance=ExtResource("5_16o8v")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_name = "Noise"
 
 [node name="Devices" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
 visible = false
 layout_mode = 2
-metadata/_tab_index = 2
+metadata/_tab_index = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Devices"]
 layout_mode = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer"]
+[node name="LabelHeader" parent="CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer" instance=ExtResource("3_pyc3l")]
 layout_mode = 2
-bbcode_enabled = true
-text = "[b]Serial Device[/b] "
-fit_content = true
+text = "Serial Devices"
+top_spacing = false
 
 [node name="GridContainer" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer"]
 layout_mode = 2
@@ -1103,25 +762,19 @@ size_flags_horizontal = 3
 disabled = true
 text = "Connect"
 
-[node name="HSeparator2" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer"]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_06k14")
-
 [node name="HBoxContainer3" type="HBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer"]
 layout_mode = 2
 
-[node name="RichTextLabel2" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer/HBoxContainer3"]
-custom_minimum_size = Vector2(150, 0)
+[node name="LabelHeader" parent="CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer/HBoxContainer3" instance=ExtResource("3_pyc3l")]
 layout_mode = 2
-bbcode_enabled = true
-text = "[b]Audio Device[/b] "
-fit_content = true
+size_flags_horizontal = 3
+text = "Audio Devices"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer/HBoxContainer3"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 0
+size_flags_vertical = 4
 
 [node name="Bar_AudioLevelL" type="TextureProgressBar" parent="CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer/HBoxContainer3/VBoxContainer"]
 unique_name_in_owner = true
@@ -1218,10 +871,15 @@ text = "Connect"
 [node name="Controls" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
 visible = false
 layout_mode = 2
-metadata/_tab_index = 3
+metadata/_tab_index = 4
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Controls"]
 layout_mode = 2
+
+[node name="LabelHeader" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer" instance=ExtResource("3_pyc3l")]
+layout_mode = 2
+text = "M8 Remote Input"
+top_spacing = false
 
 [node name="GridContainer" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer"]
 layout_mode = 2
@@ -1415,15 +1073,9 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Reset to Defaults"
 
-[node name="HSeparator4" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer"]
+[node name="LabelHeader2" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer" instance=ExtResource("3_pyc3l")]
 layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxLine_v2m85")
-
-[node name="RichTextLabel2" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer"]
-layout_mode = 2
-bbcode_enabled = true
-text = "[b]Virtual Keyboard[/b] "
-fit_content = true
+text = "Virtual Keyboard"
 
 [node name="GridContainer2" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer"]
 layout_mode = 2
@@ -1438,15 +1090,9 @@ text = "Enable Virtual Keyboard"
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="HSeparator2" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer"]
+[node name="LabelHeader3" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer" instance=ExtResource("3_pyc3l")]
 layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_l2hi4")
-
-[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer"]
-layout_mode = 2
-bbcode_enabled = true
-text = "[b]Profile Hotkeys[/b] "
-fit_content = true
+text = "Profile Hotkeys"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer"]
 layout_mode = 2
@@ -1484,379 +1130,147 @@ text = "Clear"
 [node name="Video" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
 visible = false
 layout_mode = 2
-metadata/_tab_index = 4
+metadata/_tab_index = 5
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Video"]
 layout_mode = 2
 
-[node name="LabelVideo3" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer"]
+[node name="LabelHeader" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer" instance=ExtResource("3_pyc3l")]
 layout_mode = 2
-bbcode_enabled = true
-text = "[b]Display[/b] "
-fit_content = true
+text = "Display"
+top_spacing = false
 
-[node name="GridContainerVideo" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer"]
 layout_mode = 2
-columns = 3
 
-[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerVideo"]
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Fullscreen"
-
-[node name="VSeparator" type="VSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerVideo"]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_4w3sk")
-
-[node name="CheckButtonFullscreen" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerVideo"]
+[node name="Setting_Fullscreen" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/VBoxContainer2" instance=ExtResource("5_16o8v")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 8
-size_flags_vertical = 4
+setting_name = "Fullscreen"
 
-[node name="Label2" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerVideo"]
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Always on Top"
-
-[node name="VSeparator2" type="VSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerVideo"]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_4w3sk")
-
-[node name="CheckButtonAlwaysOnTop" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerVideo"]
+[node name="Setting_AlwaysOnTop" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/VBoxContainer2" instance=ExtResource("5_16o8v")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 8
-size_flags_vertical = 4
+setting_name = "Always on Top"
 
-[node name="Label5" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerVideo"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Window Size"
-
-[node name="VSeparator3" type="VSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerVideo"]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_4w3sk")
-
-[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerVideo"]
-layout_mode = 2
-
-[node name="Spin_WindowW" type="SpinBox" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerVideo/HBoxContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(70, 0)
-layout_mode = 2
-min_value = 960.0
-max_value = 3840.0
-value = 960.0
-allow_greater = true
-
-[node name="Spin_WindowH" type="SpinBox" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerVideo/HBoxContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(70, 0)
-layout_mode = 2
-min_value = 640.0
-max_value = 2160.0
-value = 640.0
-allow_greater = true
-
-[node name="OptionRes" type="OptionButton" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerVideo/HBoxContainer"]
+[node name="Setting_WindowSize" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/VBoxContainer2" instance=ExtResource("6_mvtic")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
-selected = 0
-item_count = 9
-popup/item_0/text = "Presets"
-popup/item_0/id = 8
-popup/item_0/disabled = true
-popup/item_1/text = "Model 01"
-popup/item_1/id = 6
-popup/item_1/separator = true
-popup/item_2/text = "640x480 (2X)"
-popup/item_2/id = 1
-popup/item_3/text = "960x720 (3X)"
-popup/item_3/id = 2
-popup/item_4/text = "1280x960 (4X)"
-popup/item_4/id = 3
-popup/item_5/text = "Model 02"
-popup/item_5/id = 7
-popup/item_5/separator = true
-popup/item_6/text = "960x640 (2X)"
-popup/item_6/id = 3
-popup/item_7/text = "1440x960 (3X)"
-popup/item_7/id = 4
-popup/item_8/text = "1920x1280 (4X)"
-popup/item_8/id = 5
+setting_type = 1
+items = PackedStringArray("640x480 (2x M01)", "960x720 (3x M01)", "1280x960 (4x M01)", "960x640 (2x M02)", "1440x960 (3x M02)", "1920x1280 (4x M02)", "Custom")
+value = 6
+setting_name = "Window Size"
 
-[node name="Label3" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerVideo"]
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-text = "VSync"
-
-[node name="LabelVsync" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerVideo"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-text = "Enabled"
-horizontal_alignment = 2
-
-[node name="SliderVsync" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerVideo"]
+[node name="Setting_CustomWindowSize" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/VBoxContainer2" instance=ExtResource("7_t1h81")]
 unique_name_in_owner = true
 layout_mode = 2
-max_value = 3.0
-value = 1.0
-tick_count = 4
-ticks_on_borders = true
+value = Vector2i(640, 480)
+min_value = Vector2i(640, 480)
+max_value = Vector2i(3840, 2160)
+setting_name = "Custom Window Size"
 
-[node name="Label4" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerVideo"]
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-text = "FPS Cap
-"
-
-[node name="LabelFPSCap" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerVideo"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(50, 0)
-layout_mode = 2
-text = "0"
-horizontal_alignment = 2
-
-[node name="SliderFPSCap" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainerVideo"]
+[node name="Setting_VSync" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/VBoxContainer2" instance=ExtResource("6_mvtic")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-max_value = 500.0
+items = PackedStringArray("Disabled", "Enabled", "Adaptive", "Mailbox")
+value = 1
+setting_name = "VSync"
 
-[node name="LabelVideo2" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer"]
-layout_mode = 2
-bbcode_enabled = true
-text = "[b]Graphics[/b] "
-fit_content = true
-
-[node name="GridContainer3" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer"]
-layout_mode = 2
-columns = 3
-
-[node name="Label10" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer3"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "MSAA
-"
-
-[node name="LabelMSAA" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer3"]
+[node name="Setting_FPSLimit" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/VBoxContainer2" instance=ExtResource("6_mvtic")]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Disabled
-"
-horizontal_alignment = 2
+items = PackedStringArray("30", "45", "60", "72", "90", "120", "144", "240", "Unlimited")
+value = 8
+setting_name = "FPS Limit"
 
-[node name="SliderMSAA" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer3"]
+[node name="LabelHeader2" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer" instance=ExtResource("3_pyc3l")]
+layout_mode = 2
+text = "Graphics"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer"]
+layout_mode = 2
+
+[node name="Setting_MSAA" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/VBoxContainer" instance=ExtResource("6_mvtic")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-theme_override_styles/grabber_area = SubResource("StyleBoxEmpty_h7ijs")
-max_value = 3.0
-tick_count = 4
-ticks_on_borders = true
+items = PackedStringArray("Disabled", "2x", "4x", "8x")
+value = 0
+setting_name = "MSAA"
 
-[node name="Label9" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer3"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "TAA"
-
-[node name="VSeparator5" type="VSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer3"]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_4w3sk")
-
-[node name="CheckButtonTAA" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer3"]
+[node name="Setting_TAA" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/VBoxContainer" instance=ExtResource("5_16o8v")]
 unique_name_in_owner = true
 layout_mode = 2
+setting_name = "TAA"
 
-[node name="HSeparator7" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer"]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_l2hi4")
-
-[node name="GridContainer" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer"]
-layout_mode = 2
-columns = 3
-
-[node name="Label8" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "DOF Bokeh Shape"
-
-[node name="LabelDOFShape" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-size_flags_horizontal = 4
-text = "Hexagon"
-horizontal_alignment = 2
-
-[node name="SliderDOFShape" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer"]
+[node name="Setting_UpscalingMethod" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/VBoxContainer" instance=ExtResource("6_mvtic")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-theme_override_styles/grabber_area = SubResource("StyleBoxEmpty_f5cg4")
-theme_override_styles/grabber_area_highlight = SubResource("StyleBoxEmpty_dnh0l")
-max_value = 2.0
-value = 1.0
-tick_count = 3
-ticks_on_borders = true
+items = PackedStringArray("None (Bilinear)", "FSR 1.0", "FSR 2.2")
+value = 0
+setting_name = "Upscaling Method"
 
-[node name="Label7" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "DOF Blur Quality"
-
-[node name="LabelDOFQuality" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-size_flags_horizontal = 4
-text = "Medium"
-horizontal_alignment = 2
-
-[node name="SliderDOFQuality" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer"]
+[node name="Setting_RenderScale" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/VBoxContainer" instance=ExtResource("6_07wpv")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-theme_override_styles/grabber_area = SubResource("StyleBoxEmpty_h7ijs")
-theme_override_styles/grabber_area_highlight = SubResource("StyleBoxEmpty_dnh0l")
-max_value = 3.0
-value = 2.0
-tick_count = 4
-ticks_on_borders = true
-
-[node name="HSeparator6" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer"]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_l2hi4")
-
-[node name="GridContainer2" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer"]
-layout_mode = 2
-columns = 3
-
-[node name="Label12" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Upscaling Method"
-
-[node name="VSeparator6" type="VSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer2"]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_4w3sk")
-
-[node name="OptionUpscalingMethod" type="OptionButton" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer2"]
-unique_name_in_owner = true
-layout_mode = 2
-item_count = 3
-popup/item_0/text = "Bilinear"
-popup/item_1/text = "FSR 1.0"
-popup/item_1/id = 1
-popup/item_2/text = "FSR 2.2"
-popup/item_2/id = 2
-
-[node name="Label11" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Render Scale"
-
-[node name="LabelRenderScale" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer2"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(40, 0)
-layout_mode = 2
-text = "100%"
-horizontal_alignment = 2
-
-[node name="SliderRenderScale" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer2"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-theme_override_styles/grabber_area = SubResource("StyleBoxEmpty_h7ijs")
+size_flags_vertical = 1
 min_value = 0.25
 max_value = 2.0
 step = 0.05
-value = 1.0
-tick_count = 8
-ticks_on_borders = true
+value = 0.25
+as_percent = true
+format_string = "%d%%"
+setting_name = "Render Scale"
 
-[node name="Label13" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "FSR Sharpness"
-
-[node name="LabelFSRSharpness" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer2"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(40, 0)
-layout_mode = 2
-text = "90%"
-horizontal_alignment = 2
-
-[node name="SliderFSRSharpness" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/GridContainer2"]
+[node name="Setting_FSRSharpness" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/VBoxContainer" instance=ExtResource("6_07wpv")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-theme_override_styles/grabber_area = SubResource("StyleBoxEmpty_h7ijs")
-max_value = 1.0
-step = 0.05
-value = 0.9
-editable = false
-tick_count = 11
-ticks_on_borders = true
+max_value = 5.0
+value = 3.0
+show_ticks = true
+format_string = "%d"
+setting_name = "FSR Sharpness"
+
+[node name="Setting_DOFShape" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/VBoxContainer" instance=ExtResource("6_mvtic")]
+unique_name_in_owner = true
+layout_mode = 2
+items = PackedStringArray("Box", "Hexagon", "Circle")
+value = 1
+setting_name = "DOF Blur Bokeh Shape"
+
+[node name="Setting_DOFQuality" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/VBoxContainer" instance=ExtResource("6_mvtic")]
+unique_name_in_owner = true
+layout_mode = 2
+items = PackedStringArray("Very Low", "Low", "Medium", "High")
+value = 2
+setting_name = "DOF Blur Quality"
 
 [node name="Audio" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
 visible = false
 layout_mode = 2
-metadata/_tab_index = 5
+metadata/_tab_index = 6
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Audio"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer"]
+[node name="LabelHeader" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer" instance=ExtResource("3_pyc3l")]
 layout_mode = 2
-bbcode_enabled = true
-text = "[b]Output[/b] "
-fit_content = true
+text = "Output"
+top_spacing = false
 
-[node name="GridContainer" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer"]
-layout_mode = 2
-columns = 3
-
-[node name="Label2" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer/GridContainer"]
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Volume"
-
-[node name="LabelVolume" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer/GridContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(50, 0)
-layout_mode = 2
-text = "100%"
-horizontal_alignment = 2
-
-[node name="SliderVolume" type="HSlider" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer/GridContainer"]
+[node name="Setting_Volume" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer" instance=ExtResource("6_07wpv")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
 max_value = 1.0
 step = 0.01
-value = 1.0
+value = 0.8
+as_percent = true
+format_string = "%d%%"
+setting_name = "Volume"
 
-[node name="RichTextLabel2" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer"]
+[node name="LabelHeader2" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer" instance=ExtResource("3_pyc3l")]
 layout_mode = 2
-bbcode_enabled = true
-text = "[b]Driver Info[/b] "
-fit_content = true
+text = "Driver Info"
 
 [node name="GridContainer2" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer"]
 layout_mode = 2
@@ -1916,78 +1330,41 @@ max_length = 10
 editable = false
 virtual_keyboard_type = 2
 
-[node name="RichTextLabel3" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer"]
+[node name="LabelHeader3" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer" instance=ExtResource("3_pyc3l")]
 layout_mode = 2
-bbcode_enabled = true
-text = "[b]Spectrum Analyzer[/b] "
-fit_content = true
+text = "Spectrum Analyzer"
 
-[node name="GridContainer3" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer"]
-layout_mode = 2
-columns = 3
-
-[node name="Label2" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer/GridContainer3"]
-layout_mode = 2
-text = "Enable Spectrum Analyzer"
-
-[node name="VSeparator3" type="VSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer/GridContainer3"]
-custom_minimum_size = Vector2(50, 0)
-layout_mode = 2
-size_flags_vertical = 4
-theme_override_styles/separator = SubResource("StyleBoxEmpty_sgnvi")
-
-[node name="CheckButtonEnableSA" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer/GridContainer3"]
+[node name="Setting_SAEnable" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer" instance=ExtResource("5_16o8v")]
 unique_name_in_owner = true
 layout_mode = 2
+setting_name = "Enable Spectrum Analyzer"
 
-[node name="Label4" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer/GridContainer3"]
-custom_minimum_size = Vector2(0, 24)
-layout_mode = 2
-text = "Min Frequency"
-vertical_alignment = 1
-
-[node name="VSeparator" type="VSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer/GridContainer3"]
-custom_minimum_size = Vector2(50, 0)
-layout_mode = 2
-size_flags_vertical = 4
-theme_override_styles/separator = SubResource("StyleBoxEmpty_sgnvi")
-
-[node name="SpinBoxAVMinFreq" type="SpinBox" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer/GridContainer3"]
+[node name="Setting_SAMin" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer" instance=ExtResource("6_07wpv")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
+setting_value_min_width = 60
 min_value = 100.0
 max_value = 20000.0
 step = 100.0
 value = 100.0
+format_string = "%d hz"
+setting_name = "Min Frequency"
 
-[node name="Label5" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer/GridContainer3"]
-custom_minimum_size = Vector2(0, 24)
-layout_mode = 2
-text = "Max Frequency"
-vertical_alignment = 1
-
-[node name="VSeparator2" type="VSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer/GridContainer3"]
-custom_minimum_size = Vector2(50, 0)
-layout_mode = 2
-size_flags_vertical = 4
-theme_override_styles/separator = SubResource("StyleBoxEmpty_sgnvi")
-
-[node name="SpinBoxAVMaxFreq" type="SpinBox" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer/GridContainer3"]
+[node name="Setting_SAMax" parent="CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer" instance=ExtResource("6_07wpv")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
+setting_value_min_width = 60
 min_value = 100.0
 max_value = 20000.0
 step = 100.0
 value = 100.0
+format_string = "%d hz"
+setting_name = "Max Frequency"
 
 [node name="Debug" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
 visible = false
 layout_mode = 2
-metadata/_tab_index = 6
+metadata/_tab_index = 7
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Debug"]
 custom_minimum_size = Vector2(300, 0)
@@ -2011,15 +1388,9 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Debug/VBoxContainer"]
+[node name="LabelHeader" parent="CenterContainer/VBoxContainer/TabContainer/Debug/VBoxContainer" instance=ExtResource("3_pyc3l")]
 layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_wlgng")
-
-[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/VBoxContainer/TabContainer/Debug/VBoxContainer"]
-layout_mode = 2
-bbcode_enabled = true
-text = "[b]M8 Serial Device Commands[/b] "
-fit_content = true
+text = "M8 Remote Commands"
 
 [node name="ButtonM8Reset" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Debug/VBoxContainer"]
 unique_name_in_owner = true
@@ -2256,6 +1627,65 @@ size_flags_vertical = 4
 layout_mode = 2
 theme_override_constants/separation = 16
 theme_override_styles/separator = SubResource("StyleBoxEmpty_7jqdk")
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+text = "Profile Name"
+
+[node name="LineEditProfileName" type="LineEdit" parent="CenterContainer/VBoxContainer/HBoxContainer4"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "<default>"
+editable = false
+caret_blink = true
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer/VBoxContainer/HBoxContainer3"]
+visible = false
+custom_minimum_size = Vector2(80, 18)
+layout_mode = 2
+size_flags_vertical = 4
+bbcode_enabled = true
+text = "[b]Profile[/b]"
+scroll_active = false
+
+[node name="ButtonProfileCreate" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer3"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+text = "Create new profile"
+icon = ExtResource("2_mwqao")
+
+[node name="OptionProfiles" type="OptionButton" parent="CenterContainer/VBoxContainer/HBoxContainer3"]
+unique_name_in_owner = true
+clip_contents = true
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+alignment = 1
+
+[node name="ButtonProfileReset" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_3mi27")
+text = "Reset"
+
+[node name="ButtonProfileDelete" type="Button" parent="CenterContainer/VBoxContainer/HBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_3mi27")
+text = "Delete"
+
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"HSpacer"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2

@@ -1,7 +1,7 @@
 class_name M8SceneDisplay extends Node
 
 const MAIN_SCENE_PATH: String = "res://scenes/floating_scene.tscn"
-const SUB_SCENE_PATH: String = "res://scenes/simple_scene.tscn"
+const PATH_SCENES: String = "res://scenes/"
 
 const FONT_01_SMALL: BitMap = preload("res://assets/m8_fonts/5_7.bmp")
 const FONT_01_BIG: BitMap = preload("res://assets/m8_fonts/8_9.bmp")
@@ -29,7 +29,7 @@ signal profile_loaded(profile_name: String)
 @export var visualizer_frequency_min := 0
 @export var visualizer_frequency_max := 400
 
-@export var overlay_integer_zoom: int = 2:
+@export var overlay_integer_zoom: int = 1:
 	set(value):
 		overlay_integer_zoom = value
 		if is_inside_tree():
@@ -280,6 +280,25 @@ func reset_scene_to_default() -> void:
 	load_scene(current_scene.scene_file_path)
 
 ##
+## Get the list of filepaths to M8 scene files.
+##
+func get_scene_paths() -> PackedStringArray:
+
+	var scene_paths: PackedStringArray = []
+	var dir_scenes: DirAccess = DirAccess.open(PATH_SCENES)
+
+	dir_scenes.list_dir_begin()
+	var path := dir_scenes.get_next()
+	while path != "":
+		if path.trim_suffix(".remap").get_extension() == "tscn":
+			var scene_path := dir_scenes.get_current_dir().path_join(path).trim_suffix(".remap")
+			scene_paths.append(scene_path)
+		path = dir_scenes.get_next()
+
+	return scene_paths
+
+
+##
 ## Load the last saved profile.
 ##
 func load_last_profile() -> void:
@@ -416,7 +435,6 @@ func init_camera_property(property: String) -> Variant:
 ##
 func _init_overlay(overlay: Control) -> void:
 
-	overlay.visible = get_overlay_property(overlay, "enabled", overlay.visible)
 	overlay.anchors_preset = get_overlay_property(overlay, "anchors_preset")
 	overlay.position_offset = get_overlay_property(overlay, "position_offset")
 	overlay.size = get_overlay_property(overlay, "size")
@@ -454,16 +472,17 @@ func init_overlays() -> void:
 	_init_overlay(overlay_spectrum)
 	_init_overlay(overlay_waveform)
 
-	# update buttons in main menu
-	menu.get_node("%Check_OverlayDisplay").button_pressed = overlay_display.visible
-	menu.get_node("%Check_OverlayKeys").button_pressed = key_overlay.visible
-	menu.get_node("%Check_OverlaySpectrum").button_pressed = overlay_spectrum.visible
-	menu.get_node("%Check_OverlayWaveform").button_pressed = overlay_waveform.visible
+	menu.get_node("%Setting_OverlayScale").init_config_profile(self, "overlay_scale")
+	menu.get_node("%Setting_OverlayFilters").init_config_profile(self, "overlay_apply_filters")
 
-	menu.get_node("%Slider_OverlayIntegerScale").value = config.get_property("overlay_scale", 1)
-	menu.get_node("%Check_OverlayFilters").button_pressed = config.get_property("overlay_apply_filters", true)
+	# update buttons in main menu
+	menu.get_node("%Setting_OverlaySpectrum").init_config_overlay(self, overlay_spectrum, "visible")
+	menu.get_node("%Setting_OverlayWaveform").init_config_overlay(self, overlay_waveform, "visible")
+	menu.get_node("%Setting_OverlayDisplay").init_config_overlay(self, overlay_display, "visible")
+	menu.get_node("%Setting_OverlayKeys").init_config_overlay(self, key_overlay, "visible")
 
 	_overlay_update_viewport_size()
+
 	if not get_window().size_changed.is_connected(_overlay_update_viewport_size):
 		get_window().size_changed.connect(_overlay_update_viewport_size)
 
@@ -510,8 +529,8 @@ func init_camera() -> void:
 	camera.base_position = position
 	camera.base_rotation = rotation
 
-	menu.get_node("%Check_MouseCamera").button_pressed = mouse_enabled
-	menu.get_node("%Check_HumanCamera").button_pressed = humanize_enabled
+	menu.get_node("%Setting_MouseCamera").value = mouse_enabled
+	menu.get_node("%Setting_HumanCamera").value = humanize_enabled
 
 ##
 ## Save the current camera properties to the config.
@@ -545,6 +564,16 @@ func get_filter_shader_parameter(filter: ColorRect, property: String) -> Variant
 	var propkey: String = _get_propkey_filter_shader(filter, property)
 	var default: Variant = filter.material.get_shader_parameter(property)
 	return config.get_property(propkey, default)
+
+func get_shader_parameter(shader_node_path: NodePath, shader_parameter: String) -> Variant:
+	var shader_node: ColorRect = get_node(shader_node_path)
+	assert(shader_node.material.get_shader_parameter(shader_parameter) != null, "shader parameter does not exist in %s: %s" % [shader_node_path, shader_parameter])
+	return shader_node.material.get_shader_parameter(shader_parameter)
+
+func set_shader_parameter(shader_node_path: NodePath, shader_parameter: String, value: Variant) -> void:
+	var shader_node: ColorRect = get_node(shader_node_path)
+	assert(shader_node.material.get_shader_parameter(shader_parameter) != null, "shader parameter does not exist in %s: %s" % [shader_node_path, shader_parameter])
+	shader_node.material.set_shader_parameter(shader_parameter, value)
 
 ##
 ## Initialize a filter property from the config (profile property).
@@ -592,8 +621,12 @@ func set_filter_shader_parameter(filter_node_path: NodePath, param: String, valu
 
 func init_filters() -> void:
 
-	for filter: ColorRect in [%VHSFilter1, %VHSFilter2, %VHSFilter3, %Filter4, %CRTShader, %NoiseShader]:
-		load_filter_property(filter, "visible")
+	# for filter: ColorRect in [%VHSFilter1, %VHSFilter2, %VHSFilter3, %Filter4, %CRTShader, %NoiseShader]:
+	# 	load_filter_property(filter, "visible")
+
+	menu.get_node("%Setting_ShaderVHS").init_config_profile(self, "shader_vhs")
+	menu.get_node("%Setting_ShaderCRT").init_config_profile(self, "shader_crt")
+	menu.get_node("%Setting_ShaderNoise").init_config_profile(self, "shader_noise")
 
 	load_filter_shader_parameter(%VHSFilter1, "smear")
 	load_filter_shader_parameter(%VHSFilter1, "wiggle")
@@ -637,8 +670,8 @@ func save_filters() -> void:
 	# 	%CRTShader.material.get_shader_parameter("vignette_opacity")
 	# )
 
-	for filter: ColorRect in [%VHSFilter1, %VHSFilter2, %VHSFilter3, %Filter4, %CRTShader, %NoiseShader]:
-		save_filter_property(filter, "visible")
+	# for filter: ColorRect in [%VHSFilter1, %VHSFilter2, %VHSFilter3, %Filter4, %CRTShader, %NoiseShader]:
+	# 	save_filter_property(filter, "visible")
 
 	save_filter_shader_parameter(%VHSFilter1, "smear")
 	save_filter_shader_parameter(%VHSFilter1, "wiggle")

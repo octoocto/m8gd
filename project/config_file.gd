@@ -75,7 +75,7 @@ var version: int = 0
 @export var window_height := 720
 @export var always_on_top := false
 @export var vsync := 1
-@export var fps_cap := 0
+@export var fps_cap := 8 # see %Setting_Vsync for items
 
 # graphical settings
 @export var msaa := 0
@@ -288,7 +288,7 @@ func get_property_scene(propname: String, default: Variant = null) -> Variant:
 		_print("INIT scene prop: %s = %s" % [propname, default])
 
 	# print("scene: profile %s: get %s=%s" % [current_profile, property, profile[property]])
-	_print("GET scene prop: %s, value = %s" % [propname, scene_props[propname]])
+	# _print("GET scene prop: %s, value = %s" % [propname, scene_props[propname]])
 	return scene_props[propname]
 
 ##
@@ -311,7 +311,7 @@ func get_property(propname: String, default: Variant = null) -> Variant:
 		props[propname] = default
 		_print("INIT profile prop: %s = %s" % [propname, default])
 
-	_print("GET profile prop: %s, value = %s" % [propname, props[propname]])
+	# _print("GET profile prop: %s, value = %s" % [propname, props[propname]])
 	return props[propname]
 
 ##
@@ -328,8 +328,9 @@ func set_property(propname: String, value: Variant) -> void:
 ##
 func set_property_global(property: String, value: Variant) -> void:
 	assert(property in self)
-	_print("SET global prop: %s = %s" % [property, value])
-	set(property, value)
+	if get(property) != value:
+		set(property, value)
+		_print("SET global prop: %s = %s" % [property, value])
 
 ##
 ## Get a global config setting.
@@ -337,7 +338,7 @@ func set_property_global(property: String, value: Variant) -> void:
 func get_property_global(property: String) -> Variant:
 	assert(property in self)
 	var value: Variant = get(property)
-	_print("GET global prop: %s, value = %s" % [property, value])
+	# _print("GET global prop: %s, value = %s" % [property, value])
 	return value
 
 func set_profile_hotkey(event: InputEvent, profile_name: String) -> void:

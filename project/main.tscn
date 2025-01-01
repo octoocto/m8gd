@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://b265ke8cr3dgr"]
+[gd_scene load_steps=39 format=3 uid="uid://b265ke8cr3dgr"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_4g2n0"]
 [ext_resource type="Shader" path="res://shaders/post_process.gdshader" id="1_tjung"]
@@ -15,6 +15,8 @@
 [ext_resource type="PackedScene" uid="uid://ca2jqh2tc7jix" path="res://overlays/key_overlay.tscn" id="8_dnyct"]
 [ext_resource type="PackedScene" uid="uid://geilakxinhul" path="res://scene_camera_menu.tscn" id="8_v4lip"]
 [ext_resource type="PackedScene" uid="uid://dv8crbibtrpck" path="res://scene_menu.tscn" id="9_bisyb"]
+[ext_resource type="Texture2D" uid="uid://bnktl64c363mh" path="res://assets/icon/TripleBar.png" id="13_gepng"]
+[ext_resource type="Texture2D" uid="uid://bmg26rkxtqtso" path="res://assets/icon/Close.png" id="14_p46wh"]
 [ext_resource type="PackedScene" uid="uid://bebvc2datqp85" path="res://menu_overlay.tscn" id="16_4bi6d"]
 
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_c3wmn"]
@@ -168,6 +170,11 @@ shader_parameter/tint_amount = 0.0
 shader_parameter/brightness = 1.0
 shader_parameter/noise_strength = 0.015
 shader_parameter/noise_texture = SubResource("NoiseTexture2D_m6tfj")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0a764"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xqpi0"]
+bg_color = Color(0.6, 0, 0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lbvov"]
 bg_color = Color(0, 0, 0, 0.5)
@@ -661,6 +668,43 @@ unique_name_in_owner = true
 visible = false
 z_index = 1
 layout_mode = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TextureButton" type="Button" parent="CanvasLayer/UI/HBoxContainer"]
+texture_filter = 1
+custom_minimum_size = Vector2(64, 63)
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/h_separation = 12
+icon = ExtResource("13_gepng")
+alignment = 0
+expand_icon = true
+
+[node name="HSeparator" type="VSeparator" parent="CanvasLayer/UI/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_0a764")
+
+[node name="TextureButton2" type="Button" parent="CanvasLayer/UI/HBoxContainer"]
+texture_filter = 1
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/h_separation = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_xqpi0")
+icon = ExtResource("14_p46wh")
+icon_alignment = 2
+expand_icon = true
 
 [node name="SplashContainer" type="CenterContainer" parent="CanvasLayer/UI"]
 unique_name_in_owner = true

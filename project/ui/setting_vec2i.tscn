@@ -1,0 +1,53 @@
+[gd_scene load_steps=2 format=3 uid="uid://bevoopcdq5dsh"]
+
+[ext_resource type="Script" path="res://ui/setting_vec2i.gd" id="1_uglar"]
+
+[node name="ControlVec2i" type="PanelContainer"]
+offset_right = 132.0
+offset_bottom = 27.0
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_type_variation = &"SettingBackground"
+script = ExtResource("1_uglar")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="LabelName" type="Label" parent="HBoxContainer"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+text = "test"
+
+[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"SettingControl"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/PanelContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="HBoxContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+text = "x"
+
+[node name="SpinBoxX" type="SpinBox" parent="HBoxContainer/PanelContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"SettingControlVec2SpinBox"
+select_all_on_focus = true
+
+[node name="Label2" type="Label" parent="HBoxContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+text = "y"
+
+[node name="SpinBoxY" type="SpinBox" parent="HBoxContainer/PanelContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"SettingControlVec2SpinBox"
+select_all_on_focus = true

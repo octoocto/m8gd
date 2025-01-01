@@ -1,0 +1,75 @@
+[gd_scene load_steps=9 format=3 uid="uid://c5kj1uj0ohnmm"]
+
+[ext_resource type="Script" path="res://ui/setting_bool.gd" id="1_0smb8"]
+[ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/menu_theme.tres" id="1_b6avg"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_skb08"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_c1ghm"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_kxv6b"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_na5e0"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_o2jme"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s1diy"]
+
+[node name="SettingBool" type="PanelContainer"]
+offset_right = 132.0
+offset_bottom = 27.0
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme = ExtResource("1_b6avg")
+theme_type_variation = &"SettingBackground"
+script = ExtResource("1_0smb8")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Control" type="Control" parent="HBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="LabelName" type="Label" parent="HBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+text = "test"
+
+[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"SettingControl"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/PanelContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 8
+
+[node name="LabelValue" type="Label" parent="HBoxContainer/PanelContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Off"
+horizontal_alignment = 2
+vertical_alignment = 1
+autowrap_mode = 1
+
+[node name="CheckButton" type="CheckButton" parent="HBoxContainer/PanelContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_skb08")
+theme_override_styles/hover_pressed_mirrored = SubResource("StyleBoxEmpty_c1ghm")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_kxv6b")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_na5e0")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_o2jme")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_s1diy")
