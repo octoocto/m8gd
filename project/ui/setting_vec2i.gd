@@ -2,13 +2,11 @@
 extends SettingBase
 
 
-@export var items: PackedStringArray
-
 @export var value := Vector2i.ZERO:
 	set(p_value):
 		value = p_value.clamp(min_value, max_value)
 		await _update()
-		value_changed.emit(value)
+		_emit_value_changed()
 
 @export var min_value := Vector2i.ZERO:
 	set(p_value):
@@ -32,7 +30,6 @@ func _ready() -> void:
 	%SpinBoxX.value_changed.connect(func(p_value: float) -> void:
 		value = Vector2i(int(p_value), value.y)
 	)
-
 	%SpinBoxY.value_changed.connect(func(p_value: float) -> void:
 		value = Vector2i(value.x, int(p_value))
 	)

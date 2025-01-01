@@ -2,7 +2,14 @@ class_name SettingBase extends PanelContainer
 
 signal value_changed(value: Variant)
 
-var is_initialized := false
+## If true, one of the [init] methods has been called.
+var _is_initialized := false
+
+## If true, fire the [value_changed] signal when [value] is set.
+var _value_changed_signal_enabled := true
+
+## Set to a Callable that gets the initial value of [value].
+var _value_init_fn: Callable
 
 @export var enabled := true:
 	set(value):
@@ -27,26 +34,48 @@ var is_initialized := false
 func _update() -> void:
 	assert(false, "not implemented")
 
+func set_value_no_signal(value: Variant) -> void:
+	_value_changed_signal_enabled = false
+	set("value",value)
+	_value_changed_signal_enabled = true
+
+func _emit_value_changed() -> void:
+	if _value_changed_signal_enabled:
+		value_changed.emit(get("value"))
+
 func _clear_signals() -> void:
 	for conn: Dictionary in value_changed.get_connections():
 		value_changed.disconnect(conn.callable)
+
+func _init_value(value_init_fn: Callable, value_changed_fn: Callable) -> void:
+	assert("value" in self)
+
+	_value_init_fn = value_init_fn
+
+	if !_is_initialized:
+		_clear_signals()
+		value_changed.connect(value_changed_fn)
+		print("%s: initializing value" % name)
+	else:
+		print("%s: reinitializing value" % name)
+
+	set("value", _value_init_fn.call())
+	_is_initialized = true
+
+##
+## Re-initialize this setting to an initial value and emits [value_changed].
+## This is useful when a profile or scene has just been loaded, and
+## the initial value could be different.
+##
+func reinit() -> void:
+	assert(_value_init_fn)
+	set("value", _value_init_fn.call())
 
 ##
 ## Set this control to an initial value and value_changed function.
 ##
 func init(value: Variant, value_changed_fn: Callable) -> void:
-	assert("value" in self)
-
-	if !is_initialized:
-		_clear_signals()
-		value_changed.connect(value_changed_fn)
-		print_verbose("%s: initializing value" % name)
-	else:
-		print_verbose("%s: reinitializing value" % name)
-
-	set("value",value)
-	is_initialized = true
-
+	_init_value(func() -> Variant: return value, value_changed_fn)
 
 ##
 ## Link this setting to a global config property and a callback function
@@ -71,8 +100,8 @@ func init_config_global(main: M8SceneDisplay, property: String, value_changed_fn
 ##
 func init_config_profile(main: M8SceneDisplay, property: String, value_changed_fn: Variant = null) -> void:
 	assert(value_changed_fn is Callable or value_changed_fn == null)
-	init(
-		main.config.get_property(property, get("value")),
+	_init_value(
+		func() -> Variant: return main.config.get_property(property, get("value")),
 		func(value: Variant) -> void:
 			if value_changed_fn: value_changed_fn.call(value)
 			main.config.set_property(property, value)
@@ -83,8 +112,8 @@ func init_config_profile(main: M8SceneDisplay, property: String, value_changed_f
 ##
 func init_config_overlay(main: M8SceneDisplay, overlay: Control, property: String) -> void:
 	var config_property := main._get_propkey_overlay(overlay, property)
-	init(
-		main.config.get_property(config_property, overlay.get(property)),
+	_init_value(
+		func() -> Variant: return main.config.get_property(config_property, overlay.get(property)),
 		func(value: Variant) -> void:
 			overlay.set(property, value)
 			main.config.set_property(config_property, value)
@@ -97,8 +126,8 @@ func init_config_shader(main: M8SceneDisplay, shader_node_path: NodePath, shader
 	assert(main.has_node(shader_node_path))
 	var shader_node: ColorRect = main.get_node(shader_node_path)
 	var config_property := main._get_propkey_filter_shader(shader_node, shader_parameter)
-	init(
-		main.config.get_property(config_property, main.get_shader_parameter(shader_node_path, shader_parameter)),
+	_init_value(
+		func() -> Variant: return main.config.get_property(config_property, main.get_shader_parameter(shader_node_path, shader_parameter)),
 		func(value: Variant) -> void:
 			main.set_shader_parameter(shader_node_path, shader_parameter, value)
 			main.config.set_property(config_property, value)
@@ -125,7 +154,6 @@ func connect_to_enable(control: Control) -> void:
 
 	value_changed.connect(func(value: Variant) -> void:
 		control.set(dst_property, bool(value) if !invert else !bool(value))
-		print("update button")
 	)
 
 	control.set(dst_property, bool(get("value")) if !invert else !bool(get("value")))
