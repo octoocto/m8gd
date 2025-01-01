@@ -798,257 +798,267 @@ visible = false
 layout_mode = 2
 metadata/_tab_index = 4
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Controls"]
+[node name="ScrollContainer" type="ScrollContainer" parent="CenterContainer/VBoxContainer/TabContainer/Controls"]
 layout_mode = 2
 
-[node name="LabelHeader" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer" instance=ExtResource("3_pyc3l")]
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="LabelHeader" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("3_pyc3l")]
 layout_mode = 2
 text = "M8 Remote Input"
 top_spacing = false
 
-[node name="GridContainer" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer"]
+[node name="GridContainer" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 columns = 3
 
-[node name="LabelVideo2" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer"]
+[node name="LabelVideo2" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "Key"
 label_settings = SubResource("LabelSettings_cher2")
 
-[node name="LabelVideo3" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer"]
+[node name="LabelVideo3" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "Primary Binding"
 label_settings = SubResource("LabelSettings_cher2")
 
-[node name="LabelVideo4" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer"]
+[node name="LabelVideo4" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 text = "Secondary Binding"
 label_settings = SubResource("LabelSettings_cher2")
 
-[node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer"]
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxLine_v2m85")
 
-[node name="HSeparator2" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer"]
+[node name="HSeparator2" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxLine_v2m85")
 
-[node name="HSeparator3" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer"]
+[node name="HSeparator3" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxLine_v2m85")
 
-[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer"]
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 text = "Up"
 
-[node name="ButtonBindUp1" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer"]
+[node name="ButtonBindUp1" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="ButtonBindUp2" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer"]
+[node name="ButtonBindUp2" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="Label2" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer"]
+[node name="Label2" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 text = "Down"
 
-[node name="ButtonBindDown1" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer"]
+[node name="ButtonBindDown1" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="ButtonBindDown2" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer"]
+[node name="ButtonBindDown2" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="Label3" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer"]
+[node name="Label3" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 text = "Left"
 
-[node name="ButtonBindLeft1" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer"]
+[node name="ButtonBindLeft1" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="ButtonBindLeft2" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer"]
+[node name="ButtonBindLeft2" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="Label4" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer"]
+[node name="Label4" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 text = "Right"
 
-[node name="ButtonBindRight1" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer"]
+[node name="ButtonBindRight1" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="ButtonBindRight2" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer"]
+[node name="ButtonBindRight2" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="Label5" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer"]
+[node name="Label5" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 text = "Option"
 
-[node name="ButtonBindOpt1" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer"]
+[node name="ButtonBindOpt1" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="ButtonBindOpt2" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer"]
+[node name="ButtonBindOpt2" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="Label6" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer"]
+[node name="Label6" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 text = "Edit"
 
-[node name="ButtonBindEdit1" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer"]
+[node name="ButtonBindEdit1" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="ButtonBindEdit2" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer"]
+[node name="ButtonBindEdit2" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="Label7" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer"]
+[node name="Label7" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 text = "Shift"
 
-[node name="ButtonBindShift1" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer"]
+[node name="ButtonBindShift1" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="ButtonBindShift2" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer"]
+[node name="ButtonBindShift2" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="Label8" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer"]
+[node name="Label8" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 text = "Play"
 
-[node name="ButtonBindPlay1" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer"]
+[node name="ButtonBindPlay1" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="ButtonBindPlay2" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer"]
+[node name="ButtonBindPlay2" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="HSeparator3" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer"]
+[node name="HSeparator3" type="HSeparator" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_bd31u")
 
-[node name="ButtonResetBinds" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer"]
+[node name="ButtonResetBinds" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Reset to Defaults"
 
-[node name="LabelHeader2" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer" instance=ExtResource("3_pyc3l")]
+[node name="LabelHeader2" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("3_pyc3l")]
 layout_mode = 2
 text = "Virtual Keyboard"
 
-[node name="GridContainer2" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer"]
+[node name="GridContainer2" type="GridContainer" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 columns = 2
 
-[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer2"]
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/GridContainer2"]
 layout_mode = 2
 size_flags_horizontal = 2
 text = "Enable Virtual Keyboard"
 
-[node name="Check_VirtualKeyboard" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/GridContainer2"]
+[node name="Check_VirtualKeyboard" type="CheckButton" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/GridContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="LabelHeader3" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer" instance=ExtResource("3_pyc3l")]
+[node name="LabelHeader3" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("3_pyc3l")]
 layout_mode = 2
 text = "Profile Hotkeys"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="ProfileHotkeysContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/ScrollContainer"]
+[node name="ProfileHotkeysContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 4
 
-[node name="ProfileHotkeyTemplate" type="HBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/ScrollContainer/ProfileHotkeysContainer"]
+[node name="ProfileHotkeyTemplate" type="HBoxContainer" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/ProfileHotkeysContainer"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/ScrollContainer/ProfileHotkeysContainer/ProfileHotkeyTemplate"]
+[node name="Label" type="Label" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/ProfileHotkeysContainer/ProfileHotkeyTemplate"]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 text = "placeholder"
 horizontal_alignment = 2
 
-[node name="ButtonBind" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/ScrollContainer/ProfileHotkeysContainer/ProfileHotkeyTemplate"]
+[node name="ButtonBind" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/ProfileHotkeysContainer/ProfileHotkeyTemplate"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="ButtonClear" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/VBoxContainer/ScrollContainer/ProfileHotkeysContainer/ProfileHotkeyTemplate"]
+[node name="ButtonClear" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Controls/ScrollContainer/MarginContainer/VBoxContainer/ProfileHotkeysContainer/ProfileHotkeyTemplate"]
 layout_mode = 2
 text = "Clear"
 
