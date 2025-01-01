@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://c3tgp2f7xe2td"
 path.s3tc="res://.godot/imported/taniku01-tex.005_baseColor.png-4d6f814f78281772bf74b1528266b87a.s3tc.ctex"
+path.etc2="res://.godot/imported/taniku01-tex.005_baseColor.png-4d6f814f78281772bf74b1528266b87a.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/succulent_plants/textures/taniku01-tex.005_baseColor.png"
-dest_files=["res://.godot/imported/taniku01-tex.005_baseColor.png-4d6f814f78281772bf74b1528266b87a.s3tc.ctex"]
+dest_files=["res://.godot/imported/taniku01-tex.005_baseColor.png-4d6f814f78281772bf74b1528266b87a.s3tc.ctex", "res://.godot/imported/taniku01-tex.005_baseColor.png-4d6f814f78281772bf74b1528266b87a.etc2.ctex"]
 
 [params]
 

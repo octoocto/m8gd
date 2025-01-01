@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://vjh43e67xd15"
 path.s3tc="res://.godot/imported/Asphalt010_2K-JPG_NormalDX.jpg-686d96df6bae4676b8f320f15c3b1360.s3tc.ctex"
+path.etc2="res://.godot/imported/Asphalt010_2K-JPG_NormalDX.jpg-686d96df6bae4676b8f320f15c3b1360.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/ambientcg/asphalt010/Asphalt010_2K-JPG_NormalDX.jpg"
-dest_files=["res://.godot/imported/Asphalt010_2K-JPG_NormalDX.jpg-686d96df6bae4676b8f320f15c3b1360.s3tc.ctex"]
+dest_files=["res://.godot/imported/Asphalt010_2K-JPG_NormalDX.jpg-686d96df6bae4676b8f320f15c3b1360.s3tc.ctex", "res://.godot/imported/Asphalt010_2K-JPG_NormalDX.jpg-686d96df6bae4676b8f320f15c3b1360.etc2.ctex"]
 
 [params]
 

@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://c2lmoussricp2"
 path.s3tc="res://.godot/imported/Asphalt010_2K-JPG_Displacement.jpg-4824fc52730c7bf0ee2051b5361e2dd0.s3tc.ctex"
+path.etc2="res://.godot/imported/Asphalt010_2K-JPG_Displacement.jpg-4824fc52730c7bf0ee2051b5361e2dd0.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/ambientcg/asphalt010/Asphalt010_2K-JPG_Displacement.jpg"
-dest_files=["res://.godot/imported/Asphalt010_2K-JPG_Displacement.jpg-4824fc52730c7bf0ee2051b5361e2dd0.s3tc.ctex"]
+dest_files=["res://.godot/imported/Asphalt010_2K-JPG_Displacement.jpg-4824fc52730c7bf0ee2051b5361e2dd0.s3tc.ctex", "res://.godot/imported/Asphalt010_2K-JPG_Displacement.jpg-4824fc52730c7bf0ee2051b5361e2dd0.etc2.ctex"]
 
 [params]
 

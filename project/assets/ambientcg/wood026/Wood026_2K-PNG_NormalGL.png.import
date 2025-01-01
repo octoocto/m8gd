@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://blpgniahalmfb"
 path.s3tc="res://.godot/imported/Wood026_2K-PNG_NormalGL.png-9f5d3014bb95d1c9e4b0a2f5081e679a.s3tc.ctex"
+path.etc2="res://.godot/imported/Wood026_2K-PNG_NormalGL.png-9f5d3014bb95d1c9e4b0a2f5081e679a.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/ambientcg/wood026/Wood026_2K-PNG_NormalGL.png"
-dest_files=["res://.godot/imported/Wood026_2K-PNG_NormalGL.png-9f5d3014bb95d1c9e4b0a2f5081e679a.s3tc.ctex"]
+dest_files=["res://.godot/imported/Wood026_2K-PNG_NormalGL.png-9f5d3014bb95d1c9e4b0a2f5081e679a.s3tc.ctex", "res://.godot/imported/Wood026_2K-PNG_NormalGL.png-9f5d3014bb95d1c9e4b0a2f5081e679a.etc2.ctex"]
 
 [params]
 

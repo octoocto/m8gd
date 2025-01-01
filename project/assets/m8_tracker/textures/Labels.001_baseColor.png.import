@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://dkluilk4o0r7l"
 path.s3tc="res://.godot/imported/Labels.001_baseColor.png-824537fe0efd80af6df369f778cccbd0.s3tc.ctex"
+path.etc2="res://.godot/imported/Labels.001_baseColor.png-824537fe0efd80af6df369f778cccbd0.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/m8_tracker/textures/Labels.001_baseColor.png"
-dest_files=["res://.godot/imported/Labels.001_baseColor.png-824537fe0efd80af6df369f778cccbd0.s3tc.ctex"]
+dest_files=["res://.godot/imported/Labels.001_baseColor.png-824537fe0efd80af6df369f778cccbd0.s3tc.ctex", "res://.godot/imported/Labels.001_baseColor.png-824537fe0efd80af6df369f778cccbd0.etc2.ctex"]
 
 [params]
 

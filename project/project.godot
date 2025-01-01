@@ -111,6 +111,7 @@ cam_right={
 
 [rendering]
 
+textures/vram_compression/import_etc2_astc=true
 lights_and_shadows/directional_shadow/soft_shadow_filter_quality=5
 lights_and_shadows/positional_shadow/soft_shadow_filter_quality=5
 camera/depth_of_field/depth_of_field_bokeh_quality=2

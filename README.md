@@ -53,72 +53,12 @@ $ macports install libserialport
 
 ### Building
 
-#### 1. Clone and enter this repo
 ```bash
 $ git clone https://github.com/octoocto/m8gd
 $ cd m8gd
 $ git submodule update --init
+$ python build.py
 ```
-
-#### 2. Compile the GDExtension libm8gd
-```bash
-$ scons target=template_release
-
-# or, specify a platform ("windows", "linux", or "macos")
-$ scons target=template_release platform=<platform>
-```
-##### Compiling for Windows (via MinGW64)
-```bash
-# specifying platform is required here
-$ scons target=template_release platform=windows
-```
-
-__If you want to be able to edit the project in the Godot Editor as well__,
-compiling the debug version of libm8gd is required:
-```bash
-$ scons target=template_debug platform=<platform>
-```
-
-#### 3. Download and Install the export templates for Godot
-
-##### A. Download and Installing with the Godot Editor UI
-
-Run `godot` to open the Project Manager UI.
-
-Click the "Import" button at the top-left of the window, select the project file located in `project/project.godot`, then click "Open" to open the editor.
-
-In the editor, click "Editor" at the top of the window then "Manage Export Templates..." to open the Export Template Manager.
-
-Click "Download and Install" to install the export templates. After it is finished, you can close Export Template Manager and the editor.
-
-##### B. Download and Installing manually
-
-Download the export templates from [here](https://github.com/godotengine/godot-builds/releases/download/4.3-stable/Godot_v4.3-stable_export_templates.tpz). This is a `.tpz` file which is just a renamed `.zip` file.
-
-Extract the `.tpz` file to get a folder named `templates`. This folder should be renamed to `4.2.2.stable`.
-
-Move the `4.2.2.stable` folder into one of these paths depending on platform:
-- Windows: `%APPDATA%\Godot\export_templates\`
-- Linux: `~/.local/share/godot/export_templates/`
-- MacOS: `~/Library/Application Support/Godot/export_templates/`
-
-#### 4. Export the Godot project m8gd
-
-Assuming your Godot editor is named `godot`, run one of these commands to export the app for the desired platform.
-
-```sh
-# export to windows
-$ godot --headless --path project --export-release windows ../build/m8gd_windows.zip
-
-# export to linux
-$ godot --headless --path project --export-release linux ../build/m8gd_linux.zip
-
-# export to macos
-$ godot --headless --path project --export-release macos ../build/m8gd_macos.zip
-```
-
-Note: You may see some error messages during the export. This is normal, and the app will still export.
-(The errors are due to not having the debug version of libgdm8, which we do not need to compile here.)
 
 A .zip file containing the app should be created in the `build` folder.
 

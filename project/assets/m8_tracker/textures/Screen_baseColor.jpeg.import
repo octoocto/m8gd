@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://msxu28wn7cft"
 path.s3tc="res://.godot/imported/Screen_baseColor.jpeg-91152212967f3af2af792e58f6bc1fb7.s3tc.ctex"
+path.etc2="res://.godot/imported/Screen_baseColor.jpeg-91152212967f3af2af792e58f6bc1fb7.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/m8_tracker/textures/Screen_baseColor.jpeg"
-dest_files=["res://.godot/imported/Screen_baseColor.jpeg-91152212967f3af2af792e58f6bc1fb7.s3tc.ctex"]
+dest_files=["res://.godot/imported/Screen_baseColor.jpeg-91152212967f3af2af792e58f6bc1fb7.s3tc.ctex", "res://.godot/imported/Screen_baseColor.jpeg-91152212967f3af2af792e58f6bc1fb7.etc2.ctex"]
 
 [params]
 
