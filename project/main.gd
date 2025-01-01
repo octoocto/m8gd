@@ -111,51 +111,38 @@ func _notification(what: int) -> void:
 func _ready() -> void:
 
 	var start_time := Time.get_ticks_msec()
-	var time := start_time
 
 	# resize viewport with window
-	DisplayServer.window_set_min_size(Vector2i(960, 640)) # 2x M8 screen size
+	get_window().min_size = Vector2i(960, 640)
 
 	# initialize utility scripts
-	_print("initializing util scripts...")
-	MenuUtils.init(self)
-	_print("initialized key overlay in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
-	time = Time.get_ticks_msec()
+	_start_task("init util scripts", func() -> void:
+		MenuUtils.init(self)
+	)
 
 	# initialize key overlay
-	_print("initializing key overlay...")
-	key_overlay.init(self)
-	_print("initialized key overlay in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
-	time = Time.get_ticks_msec()
+	_start_task("init key overlay", func() -> void:
+		key_overlay.init(self)
+	)
 
-	# initialize menus
-	_print("initializing main menu...")
-	menu.init(self)
-	_print("initialized main menu in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
-	time = Time.get_ticks_msec()
+	_start_task("init main menu", func() -> void:
+		menu.init(self)
+	)
 
-	_print("initializing scene menu...")
-	menu_scene.init(self)
-	_print("initialized scene menu in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
-	time = Time.get_ticks_msec()
+	_start_task("init other menus", func() -> void:
+		menu_scene.init(self)
+		menu_camera.init(self)
+	)
 
-	_print("initializing camera menu...")
-	menu_camera.init(self)
-	_print("initialized camera menu in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
-	time = Time.get_ticks_msec()
+	_start_task("load profile", func() -> void:
+		# initialize main scene
+		# load_scene(config.get_current_scene_path())
+		load_last_profile()
+	)
 
-	_print("initializing scene...")
-	# initialize main scene
-	# load_scene(config.get_current_scene_path())
-	load_last_profile()
-	_print("initialized scene in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
-	time = Time.get_ticks_msec()
-
-	_print("initializing overlays...")
-	menu_overlay.init(self)
-	init_overlays()
-	_print("initialized overlays in %.3f seconds" % ((Time.get_ticks_msec() - time) / 1000.0))
-	time = Time.get_ticks_msec()
+	_start_task("init overlay menu", func() -> void:
+		menu_overlay.init(self)
+	)
 
 	_print("finished initializing in %.3f seconds!" % ((Time.get_ticks_msec() - start_time) / 1000.0))
 
@@ -175,6 +162,14 @@ func _ready() -> void:
 		var local_keybits := m8_get_local_keybits()
 		m8_client.send_input(local_keybits)
 	)
+
+
+func _start_task(task_name: String, fn: Callable) -> void:
+	var time := Time.get_ticks_msec()
+	_print("starting task \"%s\"..." % task_name)
+	fn.call()
+	_print("finished task \"%s\" in %.3f seconds" % [task_name, ((Time.get_ticks_msec() - time) / 1000.0)])
+
 
 func quit() -> void:
 	config.save()
@@ -331,7 +326,11 @@ func load_profile(profile_name: String) -> bool:
 	init_filters()
 
 	print("profile loaded!")
-	profile_loaded.emit(profile_name)
+
+	# profile_loaded.emit(profile_name)
+	# synchronously call all signal connections for profile_loaded
+	for conn: Dictionary in profile_loaded.get_connections():
+		conn.callable.call(profile_name)
 
 	return true
 
