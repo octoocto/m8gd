@@ -133,11 +133,7 @@ func _ready() -> void:
 		menu_overlay.init(self)
 	)
 
-	_start_task("load profile", func() -> void:
-		# initialize main scene
-		# load_scene(config.get_current_scene_path())
-		load_last_profile()
-	)
+	load_last_profile()
 
 	_print("finished initializing in %.3f seconds!" % ((Time.get_ticks_msec() - start_time) / 1000.0))
 
@@ -159,11 +155,12 @@ func _ready() -> void:
 	)
 
 
-func _start_task(task_name: String, fn: Callable) -> void:
+func _start_task(task_name: String, fn: Callable) -> Variant:
 	var time := Time.get_ticks_msec()
 	_print("starting task \"%s\"..." % task_name)
-	fn.call()
+	var ret: Variant = fn.call()
 	_print("finished task \"%s\" in %.3f seconds" % [task_name, ((Time.get_ticks_msec() - time) / 1000.0)])
+	return ret
 
 
 func quit() -> void:
@@ -302,28 +299,27 @@ func load_last_profile() -> void:
 ## scene properties, and all profile properties (overlays, filters, etc).
 ##
 func load_profile(profile_name: String) -> bool:
+	return _start_task("load profile \"%s\"" % profile_name, func() -> bool:
+		config.use_profile(profile_name)
+		var scene_path := config.get_current_scene_path()
+		assert(scene_path != null)
 
-	print("loading profile %s..." % profile_name)
+		if current_scene == null or scene_path != current_scene.scene_file_path:
+			load_scene(scene_path)
+		else: # just reset the scene menu (also loads properties from config)
+			menu_scene.clear_params()
+			current_scene.init(self)
+			current_scene.init_menu(menu_scene)
+			scene_loaded.emit(scene_path, current_scene)
 
-	config.use_profile(profile_name)
-	var scene_path := config.get_current_scene_path()
-	assert(scene_path != null)
+		init_overlays()
 
-	if current_scene == null or scene_path != current_scene.scene_file_path:
-		load_scene(scene_path)
-	else: # just reset the scene menu (also loads properties from config)
-		menu_scene.clear_params()
-		current_scene.init(self)
-		current_scene.init_menu(menu_scene)
-		scene_loaded.emit(scene_path, current_scene)
+		profile_loaded.emit(profile_name)
 
-	init_overlays()
+		print("profile loaded!")
 
-	profile_loaded.emit(profile_name)
-
-	print("profile loaded!")
-
-	return true
+		return true
+	)
 
 func load_default_profile() -> void:
 	load_profile(config.DEFAULT_PROFILE)

@@ -188,6 +188,12 @@ anti_aliasing_size = 0.5
 
 [node name="Main" type="Node"]
 script = ExtResource("1_4g2n0")
+visualizer_ca_amount = null
+visualizer_glow_amount = null
+visualizer_brightness_amount = null
+visualizer_frequency_min = null
+visualizer_frequency_max = null
+overlay_integer_zoom = null
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 unique_name_in_owner = true
