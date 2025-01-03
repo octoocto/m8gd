@@ -1,14 +1,14 @@
-[gd_scene load_steps=2 format=3 uid="uid://bevoopcdq5dsh"]
+[gd_scene load_steps=2 format=3 uid="uid://d2wnq8ai2ykus"]
 
-[ext_resource type="Script" path="res://ui/setting_vec2i.gd" id="1_uglar"]
+[ext_resource type="Script" path="res://ui/setting_vec2.gd" id="1_6vysa"]
 
-[node name="SettingVec2i" type="PanelContainer"]
+[node name="SettingVec2" type="PanelContainer"]
 offset_right = 132.0
 offset_bottom = 27.0
 size_flags_horizontal = 3
 size_flags_vertical = 4
 theme_type_variation = &"SettingBackground"
-script = ExtResource("1_uglar")
+script = ExtResource("1_6vysa")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
@@ -40,6 +40,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"SettingControlVec2SpinBox"
+step = 0.01
 select_all_on_focus = true
 
 [node name="LabelY" type="Label" parent="HBoxContainer/PanelContainer/HBoxContainer"]
@@ -52,4 +53,5 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"SettingControlVec2SpinBox"
+step = 0.01
 select_all_on_focus = true

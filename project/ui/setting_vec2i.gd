@@ -18,6 +18,16 @@ extends SettingBase
 		max_value = p_value
 		value = value
 
+@export var prefix_x := "x":
+	set(value):
+		prefix_x = value
+		_update()
+
+@export var prefix_y := "y":
+	set(value):
+		prefix_y = value
+		_update()
+
 
 func _ready() -> void:
 
@@ -61,6 +71,9 @@ func _update() -> void:
 
 	%SpinBoxX.value = value.x
 	%SpinBoxY.value = value.y
+
+	%LabelX.text = prefix_x
+	%LabelY.text = prefix_y
 
 
 func init(p_value: Variant, changed_fn: Callable) -> void:

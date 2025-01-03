@@ -49,15 +49,10 @@ func _clear_signals() -> void:
 
 func _init_value(value_init_fn: Callable, value_changed_fn: Callable) -> void:
 	assert("value" in self)
+	assert(!_is_initialized, "This setting has already been initialized: %s" % name)
 
 	_value_init_fn = value_init_fn
-
-	if !_is_initialized:
-		_clear_signals()
-		value_changed.connect(value_changed_fn)
-		print("%s: initializing value" % name)
-	else:
-		print("%s: reinitializing value" % name)
+	value_changed.connect(value_changed_fn)
 
 	set("value", _value_init_fn.call())
 	_is_initialized = true
@@ -67,9 +62,13 @@ func _init_value(value_init_fn: Callable, value_changed_fn: Callable) -> void:
 ## This is useful when a profile or scene has just been loaded, and
 ## the initial value could be different.
 ##
-func reinit() -> void:
-	assert(_value_init_fn)
-	set("value", _value_init_fn.call())
+func reinit(emit_value_changed := true) -> void:
+	assert(_is_initialized and _value_init_fn, "This setting has not been initialized yet: %s" % name)
+	if emit_value_changed:
+		set("value", _value_init_fn.call())
+	else:
+		set_value_no_signal(_value_init_fn.call())
+	print("%s: reinitializing value" % name)
 
 ##
 ## Set this control to an initial value and value_changed function.
@@ -88,15 +87,15 @@ func init(value: Variant, value_changed_fn: Callable) -> void:
 ##
 func init_config_global(main: M8SceneDisplay, property: String, value_changed_fn: Variant = null) -> void:
 	assert(value_changed_fn is Callable or value_changed_fn == null)
-	init(
-		main.config.get_property_global(property),
+	_init_value(
+		func() -> Variant: return main.config.get_property_global(property),
 		func(value: Variant) -> void:
 			if value_changed_fn: value_changed_fn.call(value)
 			main.config.set_property_global(property, value)
 	)
 
 ##
-## This setting's value will default to its value in the inspector.
+## This setting's value will default to its current value in the inspector.
 ##
 func init_config_profile(main: M8SceneDisplay, property: String, value_changed_fn: Variant = null) -> void:
 	assert(value_changed_fn is Callable or value_changed_fn == null)
@@ -105,6 +104,18 @@ func init_config_profile(main: M8SceneDisplay, property: String, value_changed_f
 		func(value: Variant) -> void:
 			if value_changed_fn: value_changed_fn.call(value)
 			main.config.set_property(property, value)
+	)
+
+##
+## This setting's value will default to its current value in the inspector.
+##
+func init_config_scene(main: M8SceneDisplay, property: String, value_changed_fn: Variant = null) -> void:
+	assert(value_changed_fn is Callable or value_changed_fn == null)
+	_init_value(
+		func() -> Variant: return main.config.get_property_scene(property, get("value")),
+		func(value: Variant) -> void:
+			if value_changed_fn: value_changed_fn.call(value)
+			main.config.set_property_scene(property, value)
 	)
 
 ##
@@ -117,6 +128,46 @@ func init_config_overlay(main: M8SceneDisplay, overlay: Control, property: Strin
 		func(value: Variant) -> void:
 			overlay.set(property, value)
 			main.config.set_property(config_property, value)
+	)
+
+##
+## Initialize this setting to a camera config property.
+##
+## This setting's initial value will be read from the config, and default to
+## the property's value in the current scene's camera or the value returned
+## from [value_init_fn] if defined.
+##
+## Changing this setting's value will write the value to the config,
+## set the property in the current scene's camera, and
+## call [value_changed_fn] if defined.
+##
+func init_config_camera(main: M8SceneDisplay, property: String, value_changed_fn: Variant = null, value_init_fn: Variant = null) -> void:
+	assert(value_changed_fn is Callable or value_changed_fn == null)
+	assert(value_init_fn is Callable or value_init_fn == null)
+	var config_property := main._get_propkey_camera(property)
+	_init_value(
+		func() -> Variant:
+			var init_value: Variant
+			if main.get_scene_camera():
+				var default: Variant
+				if value_init_fn:
+					default = value_init_fn.call()
+					print("%s: reading value from value_init_fn() = %s" % [name, default])
+				else:
+					print("%s: reading value from camera = %s" % [name, default])
+					default = main.get_scene_camera().get(property)
+				init_value = main.config.get_property_scene(config_property, default)
+			else:
+				init_value = null
+			print("%s: initialized value to %s" % [name, init_value])
+			return init_value,
+		func(value: Variant) -> void:
+			if main.get_scene_camera():
+				if value_changed_fn:
+					value_changed_fn.call(value)
+				else:
+					main.get_scene_camera().set(property, value)
+				main.config.set_property_scene(config_property, value)
 	)
 
 ##

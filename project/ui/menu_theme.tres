@@ -1,4 +1,13 @@
-[gd_resource type="Theme" load_steps=12 format=3 uid="uid://c8lf57q2f23tp"]
+[gd_resource type="Theme" load_steps=14 format=3 uid="uid://c8lf57q2f23tp"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cajla"]
+content_margin_top = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0, 0.45, 0, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [sub_resource type="Gradient" id="Gradient_oact8"]
 colors = PackedColorArray(1, 1, 1, 0.5, 1, 1, 1, 0)
@@ -47,6 +56,17 @@ anti_aliasing = false
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_d1pdv"]
 size = Vector2(0, 0)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cu6ld"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0, 0, 0, 0.5)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vd3cv"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
 border_width_top = 1
@@ -54,6 +74,8 @@ border_color = Color(1, 1, 1, 1)
 
 [resource]
 default_font_size = 12
+ButtonGreen/base_type = &"Button"
+ButtonGreen/styles/normal = SubResource("StyleBoxFlat_cajla")
 GridContainer/constants/v_separation = 4
 HSeparator/constants/separation = 8
 HSeparator/styles/separator = SubResource("StyleBoxTexture_hyxo6")
@@ -76,6 +98,8 @@ SettingControlVec2LineEdit/styles/normal = SubResource("StyleBoxFlat_nvw7c")
 SettingControlVec2LineEdit/styles/read_only = SubResource("StyleBoxEmpty_rbyqy")
 SettingControlVec2SpinBox/base_type = &"SpinBox"
 SettingControlVec2SpinBox/icons/updown = SubResource("PlaceholderTexture2D_d1pdv")
+SubmenuPanelContainer/base_type = &"PanelContainer"
+SubmenuPanelContainer/styles/panel = SubResource("StyleBoxFlat_cu6ld")
 TabContainer/fonts/font = null
 TabContainer/styles/panel = SubResource("StyleBoxFlat_vd3cv")
 VBoxContainer/constants/separation = 4
