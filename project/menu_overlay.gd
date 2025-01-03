@@ -1,6 +1,6 @@
 extends PanelContainer
 
-var main: M8SceneDisplay
+var main: Main
 
 ## The overlay element currently being edited.
 var overlay_target: Control
@@ -14,7 +14,7 @@ func _disconnect_all(sig: Signal) -> void:
 ##
 ## Called once on initial app startup.
 ##
-func init(p_main: M8SceneDisplay) -> void:
+func init(p_main: Main) -> void:
 	main = p_main
 
 	%ButtonFinish.pressed.connect(func() -> void:

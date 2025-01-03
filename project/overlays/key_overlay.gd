@@ -53,7 +53,7 @@ var color_edit := Color.WHITE:
 		color_edit = value
 		_set_color(value, panel_edit, label_edit)
 
-@onready var main: M8SceneDisplay
+@onready var main: Main
 
 @onready var anim_tween: Tween # tween for scroll animation
 
@@ -112,7 +112,7 @@ func overlay_get_properties() -> Array[String]:
 	return ["overlay_style"]
 
 
-func init(p_main: M8SceneDisplay) -> void:
+func init(p_main: Main) -> void:
 	main = p_main
 	main.m8_client.key_pressed.connect(func(key: int, pressed: bool) -> void:
 		if pressed:

@@ -88,7 +88,7 @@ extends M8Scene
 		%LightRight.light_color = value
 		%LightRight.light_energy = value.a * 16
 
-func init(p_main: M8SceneDisplay) -> void:
+func init(p_main: Main) -> void:
 	super(p_main)
 
 	%DeviceModel.init(main)

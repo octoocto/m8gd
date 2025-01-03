@@ -1,9 +1,9 @@
 class_name SceneMenu extends PanelContainer
 
-var main: M8SceneDisplay
+var main: Main
 
 
-func init(p_main: M8SceneDisplay) -> void:
+func init(p_main: Main) -> void:
 	main = p_main
 
 	%ButtonFinish.pressed.connect(func() -> void:

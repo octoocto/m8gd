@@ -60,7 +60,7 @@ signal reposition_stopped
 		if is_inside_tree():
 			%Camera3D.position.z = arm_length
 
-@onready var main: M8SceneDisplay
+@onready var main: Main
 @onready var cam: Camera3D = %Camera3D
 
 @onready var base_rotation := rotation
@@ -83,7 +83,7 @@ func vdeg_to_rad(v: Vector2) -> Vector2:
 func _ready() -> void:
 	noise.noise_type = FastNoiseLite.TYPE_PERLIN
 
-func init(p_main: M8SceneDisplay) -> void:
+func init(p_main: Main) -> void:
 	main = p_main
 
 func update(delta: float) -> void:

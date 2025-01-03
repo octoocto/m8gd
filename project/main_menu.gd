@@ -8,13 +8,13 @@ const ICON_LOAD := preload("res://assets/icon/Load.png")
 
 @onready var slider_volume: HSlider = %SliderVolume
 
-@onready var main: M8SceneDisplay
+@onready var main: Main
 
 var is_key_rebinding := false
 var last_rebind_time := 0.0
 var key_rebind_callback: Callable
 
-func init(p_main: M8SceneDisplay) -> void:
+func init(p_main: Main) -> void:
 
 	main = p_main
 

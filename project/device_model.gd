@@ -40,7 +40,7 @@ class_name DeviceModel extends StaticBody3D
 @onready var home_keycap_option: Vector3 = keycap_option.position
 @onready var home_keycap_edit: Vector3 = keycap_edit.position
 
-func init(main: M8SceneDisplay) -> void:
+func init(main: Main) -> void:
 
 	screen_material.set_shader_parameter("texture_linear", main.m8_client.get_display_texture())
 	screen_material.set_shader_parameter("texture_nearest", main.m8_client.get_display_texture())

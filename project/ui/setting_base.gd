@@ -100,7 +100,7 @@ func init(value: Variant, value_changed_fn: Callable) -> void:
 ##
 ## This setting's value will default to the corresponding property in [config_file.gd].
 ##
-func init_config_global(main: M8SceneDisplay, property: String, value_changed_fn: Variant = null) -> void:
+func init_config_global(main: Main, property: String, value_changed_fn: Variant = null) -> void:
 	assert(value_changed_fn is Callable or value_changed_fn == null)
 	_init_value(
 		func() -> Variant: return main.config.get_property_global(property),
@@ -112,7 +112,7 @@ func init_config_global(main: M8SceneDisplay, property: String, value_changed_fn
 ##
 ## This setting's value will default to its current value in the inspector.
 ##
-func init_config_profile(main: M8SceneDisplay, property: String, value_changed_fn: Variant = null) -> void:
+func init_config_profile(main: Main, property: String, value_changed_fn: Variant = null) -> void:
 	assert(value_changed_fn is Callable or value_changed_fn == null)
 	_init_value(
 		func() -> Variant: return main.config.get_property(property, get("value")),
@@ -127,7 +127,7 @@ func init_config_profile(main: M8SceneDisplay, property: String, value_changed_f
 ## This setting's initial value will be read from the config, and default to
 ## the property's value in the current scene.
 ##
-func init_config_scene(main: M8SceneDisplay, property: String, value_changed_fn: Variant = null) -> void:
+func init_config_scene(main: Main, property: String, value_changed_fn: Variant = null) -> void:
 	assert(value_changed_fn is Callable or value_changed_fn == null)
 	_init_value(
 		func() -> Variant:
@@ -151,7 +151,7 @@ func init_config_scene(main: M8SceneDisplay, property: String, value_changed_fn:
 ## Changing this setting's value will write the value to the config,
 ## set the property in [overlay], and call [value_changed_fn] if defined.
 ##
-func init_config_overlay(main: M8SceneDisplay, overlay: Control, property: String, value_changed_fn: Variant = null) -> void:
+func init_config_overlay(main: Main, overlay: Control, property: String, value_changed_fn: Variant = null) -> void:
 	assert(value_changed_fn is Callable or value_changed_fn == null)
 	var config_property := main._get_propkey_overlay(overlay, property)
 	_init_value(
@@ -168,7 +168,7 @@ func init_config_overlay(main: M8SceneDisplay, overlay: Control, property: Strin
 ## The initial value of the property in [overlay] will be read from the config,
 ## and default to its current value (unchanged).
 ##
-static func init_overlay_property(main: M8SceneDisplay, overlay: Control, property: String) -> void:
+static func init_overlay_property(main: Main, overlay: Control, property: String) -> void:
 	var config_property := main._get_propkey_overlay(overlay, property)
 	var value: Variant = main.config.get_property(config_property, overlay.get(property))
 	overlay.set(property, value)
@@ -185,7 +185,7 @@ static func init_overlay_property(main: M8SceneDisplay, overlay: Control, proper
 ## set the property in the current scene's camera, and
 ## call [value_changed_fn] if defined.
 ##
-func init_config_camera(main: M8SceneDisplay, property: String, value_changed_fn: Variant = null, value_init_fn: Variant = null) -> void:
+func init_config_camera(main: Main, property: String, value_changed_fn: Variant = null, value_init_fn: Variant = null) -> void:
 	assert(value_changed_fn is Callable or value_changed_fn == null)
 	assert(value_init_fn is Callable or value_init_fn == null)
 	var config_property := main._get_propkey_camera(property)
@@ -217,7 +217,7 @@ func init_config_camera(main: M8SceneDisplay, property: String, value_changed_fn
 ##
 ## This setting's value will default to its current value of the property in [overlay].
 ##
-func init_config_shader(main: M8SceneDisplay, shader_node_path: NodePath, shader_parameter: String) -> void:
+func init_config_shader(main: Main, shader_node_path: NodePath, shader_parameter: String) -> void:
 	assert(main.has_node(shader_node_path))
 	var shader_node: ColorRect = main.get_node(shader_node_path)
 	var config_property := main._get_propkey_filter_shader(shader_node, shader_parameter)

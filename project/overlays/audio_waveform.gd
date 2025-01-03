@@ -28,7 +28,7 @@ enum Type {PIXEL, BAR, LINE}
 @export var style_line_width := 1.0
 
 
-var main: M8SceneDisplay
+var main: Main
 
 var peaks := []
 
@@ -43,7 +43,7 @@ func _ready() -> void:
 	peaks.fill(0.0)
 	sample_rate = 1 / analyzer_sample_rate
 
-func init(p_main: M8SceneDisplay) -> void:
+func init(p_main: Main) -> void:
 	main = p_main
 
 func overlay_get_properties() -> Array[String]:

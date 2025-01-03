@@ -31,7 +31,7 @@ enum ColorStyle {SCOPE, METER}
 @export var style_color_high_cutoff := 0.6
 
 
-var main: M8SceneDisplay
+var main: Main
 
 var highest_peak := 0.5
 var last_peaks := []
@@ -40,7 +40,7 @@ func _ready() -> void:
 	last_peaks.resize(int(size.x * style_rows))
 	last_peaks.fill(0.0)
 
-func init(p_main: M8SceneDisplay) -> void:
+func init(p_main: Main) -> void:
 	main = p_main
 
 func overlay_get_properties() -> Array[String]:

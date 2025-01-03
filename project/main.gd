@@ -1,4 +1,4 @@
-class_name M8SceneDisplay extends Node
+class_name Main extends Node
 
 const MAIN_SCENE_PATH: String = "res://scenes/floating_scene.tscn"
 const PATH_SCENES: String = "res://scenes/"

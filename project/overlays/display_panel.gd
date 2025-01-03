@@ -33,10 +33,10 @@ extends Control
 		_update_panel()
 
 
-var main: M8SceneDisplay
+var main: Main
 
 
-func init(p_main: M8SceneDisplay) -> void:
+func init(p_main: Main) -> void:
 	main = p_main
 
 	%DisplayTextureRect.texture = main.m8_client.get_display_texture()

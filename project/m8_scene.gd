@@ -13,9 +13,9 @@ class_name M8Scene extends Node3D
 
 @export var m8_scene_name: String
 
-var main: M8SceneDisplay
+var main: Main
 
-func init(p_main: M8SceneDisplay) -> void:
+func init(p_main: Main) -> void:
 	main = p_main
 
 ##

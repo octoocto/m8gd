@@ -80,7 +80,7 @@ extends M8Scene
 
 @onready var panel: PanelContainer = %PanelContainer
 
-func init(p_main: M8SceneDisplay) -> void:
+func init(p_main: Main) -> void:
 	super(p_main)
 
 	%AudioSpectrum.init(main)
