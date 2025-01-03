@@ -726,6 +726,10 @@ func _init_menu_devices() -> void:
 		if visible:
 			refresh_serial_device_list()
 			refresh_audio_device_list()
+			for item: int in %ListAudioDevices.get_selected_items():
+				%ListAudioDevices.item_selected.emit(item)
+			for item: int in %ListSerialPorts.get_selected_items():
+				%ListSerialPorts.item_selected.emit(item)
 	)
 
 ##
