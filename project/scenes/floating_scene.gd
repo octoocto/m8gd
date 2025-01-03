@@ -93,8 +93,6 @@ extends M8Scene
 		%LightRight.light_color = value
 		%LightRight.light_energy = value.a * 16
 
-var background_mode := 0
-
 func init(p_main: M8SceneDisplay) -> void:
 	super(p_main)
 
@@ -111,34 +109,26 @@ func init_menu(menu: SceneMenu) -> void:
 	menu.add_auto("model_screen_emission")
 
 	menu.add_section("Audio Spectrum")
-	menu.add_auto("enable_audio_spectrum")
-	menu.add_auto("audio_spectrum_color")
-	menu.add_auto("audio_spectrum_width")
-	menu.add_auto("audio_spectrum_interlace")
-	menu.reg_link_editable("enable_audio_spectrum", "audio_spectrum_color")
-	menu.reg_link_editable("enable_audio_spectrum", "audio_spectrum_width")
-	menu.reg_link_editable("enable_audio_spectrum", "audio_spectrum_interlace")
+	var setting_spectrum := menu.add_auto("enable_audio_spectrum")
+	setting_spectrum.connect_to_visible(menu.add_auto("audio_spectrum_color"))
+	setting_spectrum.connect_to_visible(menu.add_auto("audio_spectrum_width"))
+	setting_spectrum.connect_to_visible(menu.add_auto("audio_spectrum_interlace"))
 
 	menu.add_section("Jumbotron")
 	menu.add_option_custom("jumbotron_mode", 1, [
 		"Disabled",
 		"M8 Display"
 	], func(index: int) -> void:
-		%DisplayMesh.visible = false
-
-		match index:
-			0:
-				pass
-			1:
-				%DisplayMesh.visible = true
+		%DisplayMesh.visible = index == 1
 	)
-	menu.add_auto("jumbotron_size")
-	menu.add_auto("jumbotron_brightness")
-	menu.add_auto("jumbotron_contrast")
-	menu.add_auto("jumbotron_distortion_amount")
+	menu.add_auto("jumbotron_size", "• Size")
+	menu.add_auto("jumbotron_brightness", "• Brightness")
+	menu.add_auto("jumbotron_contrast", "• Contrast")
+	menu.add_auto("jumbotron_distortion_amount", "• Distortion")
 
 	menu.add_section("Background")
-	menu.add_option_custom("background_mode", 0, [
+
+	var setting_bg_mode := menu.add_option_custom("background_mode", 0, [
 		"Solid Color",
 		"Custom File",
 		"Custom File (Panorama)",
@@ -157,27 +147,29 @@ func init_menu(menu: SceneMenu) -> void:
 					%BGVideoStreamPlayer.visible = true
 			2:
 				%WorldEnvironment.environment.background_mode = Environment.BG_SKY
-
-		background_mode = index
 	)
 
-	menu.add_auto("solid_background_color")
-	menu.add_file_custom("background_file", "", func(path: String) -> void:
-		var texture := load_media_to_texture_rect(path, %BGVideoStreamPlayer)
-		%BGTextureRect.texture = texture
-		%WorldEnvironment.environment.sky.sky_material.panorama = texture
+	setting_bg_mode.connect_to_visible(menu.add_auto("solid_background_color"),
+		func(value: int) -> bool: return value == 0
 	)
 
-	menu.add_section("Lights")
-	menu.add_auto("enable_lamp_light")
-	menu.add_auto("lamp_light_color")
-	menu.add_auto("enable_left_light")
-	menu.add_auto("left_light_color")
-	menu.add_auto("enable_right_light")
-	menu.add_auto("right_light_color")
-	menu.reg_link_editable("enable_lamp_light", "lamp_light_color")
-	menu.reg_link_editable("enable_left_light", "left_light_color")
-	menu.reg_link_editable("enable_right_light", "right_light_color")
+	setting_bg_mode.connect_to_visible(
+		menu.add_file_custom("background_file", "", func(path: String) -> void:
+			var texture := load_media_to_texture_rect(path, %BGVideoStreamPlayer)
+			%BGTextureRect.texture = texture
+			%WorldEnvironment.environment.sky.sky_material.panorama = texture
+			),
+		func(value: int) -> bool: return value != 0
+	)
+
+	menu.add_section("Lighting")
+
+	var setting_light_lamp := menu.add_auto("enable_lamp_light")
+	setting_light_lamp.connect_to_visible(menu.add_auto("lamp_light_color", "• Light Color"))
+	var setting_light_left := menu.add_auto("enable_left_light")
+	setting_light_left.connect_to_visible(menu.add_auto("left_light_color", "• Light Color"))
+	var setting_light_right := menu.add_auto("enable_right_light")
+	setting_light_right.connect_to_visible(menu.add_auto("right_light_color", "• Light Color"))
 
 func _physics_process(delta: float) -> void:
 

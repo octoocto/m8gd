@@ -263,7 +263,7 @@ curve = SubResource("Curve_y7obg")
 
 [node name="M8Scene" type="Node3D"]
 script = ExtResource("1_87ai1")
-m8_scene_name = "Surface"
+m8_scene_name = "Desktop"
 metadata/_edit_vertical_guides_ = [640.0]
 metadata/_edit_horizontal_guides_ = [480.0]
 
@@ -340,7 +340,6 @@ dof_zoomout = 3.0
 dof_zoomin = 1.5
 dof_focus_distance = 14.4
 dof_focus_width = 3.0
-dof_blur_amount = 0.18
 
 [node name="PlantModel" type="Node3D" parent="."]
 unique_name_in_owner = true

@@ -115,7 +115,7 @@ func init(p_value: Variant, changed_fn: Callable) -> void:
 
 
 func _update_format() -> void:
-	await get_tree().process_frame
+	if is_inside_tree(): await get_tree().process_frame
 	%SpinBoxX.get_line_edit().text = "%.2f %s" % [value.x, suffix]
 	%SpinBoxY.get_line_edit().text = "%.2f %s" % [value.y, suffix]
 	%SpinBoxZ.get_line_edit().text = "%.2f %s" % [value.z, suffix]

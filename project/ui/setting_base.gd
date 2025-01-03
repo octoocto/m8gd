@@ -2,6 +2,11 @@ class_name SettingBase extends PanelContainer
 
 signal value_changed(value: Variant)
 
+const CONFIG_KEY_OVERLAY = "overlay.%s.%s"
+const CONFIG_KEY_CAMERA = "camera.%s"
+const CONFIG_KEY_SHADER = "filter.%s.shader.%s"
+const CONFIG_KEY_SCENE_CUSTOM = "custom.%s"
+
 ## If true, one of the [init] methods has been called.
 var _is_initialized := false
 
@@ -117,15 +122,24 @@ func init_config_profile(main: M8SceneDisplay, property: String, value_changed_f
 	)
 
 ##
-## This setting's value will default to its current value in the inspector.
+## Initialize this setting to a scene property.
+##
+## This setting's initial value will be read from the config, and default to
+## the property's value in the current scene.
 ##
 func init_config_scene(main: M8SceneDisplay, property: String, value_changed_fn: Variant = null) -> void:
 	assert(value_changed_fn is Callable or value_changed_fn == null)
 	_init_value(
-		func() -> Variant: return main.config.get_property_scene(property, get("value")),
+		func() -> Variant:
+			if property in main.current_scene:
+				return main.config.get_property_scene(property, main.current_scene.get(property))
+			else:
+				return main.config.get_property_scene(property, get("value")),
 		func(value: Variant) -> void:
-			if value_changed_fn: value_changed_fn.call(value)
+			if property in main.current_scene:
+				main.current_scene.set(property, value)
 			main.config.set_property_scene(property, value)
+			if value_changed_fn: value_changed_fn.call(value)
 	)
 
 ##
@@ -217,7 +231,7 @@ func init_config_shader(main: M8SceneDisplay, shader_node_path: NodePath, shader
 ##
 ## Links this setting to enable/disable a control node.
 ##
-func connect_to_enable(control: Control) -> void:
+func connect_to_enable(control: Control) -> SettingBase:
 	var dst_property: String
 	var invert := false
 
@@ -238,3 +252,25 @@ func connect_to_enable(control: Control) -> void:
 	)
 
 	control.set(dst_property, bool(get("value")) if !invert else !bool(get("value")))
+
+	return self
+
+func connect_to_visible(control: Control, check_fn: Variant = null) -> SettingBase:
+	assert(check_fn == null or check_fn is Callable)
+	var invert := false
+
+	var _check := func() -> bool:
+		var bool_value: bool
+		if check_fn:
+			bool_value = check_fn.call(get("value"))
+		else:
+			bool_value = bool(get("value"))
+		return !bool_value if invert else bool_value
+
+	value_changed.connect(func(_value: Variant) -> void:
+		control.visible = _check.call()
+	)
+
+	control.visible = _check.call()
+
+	return self

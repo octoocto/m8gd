@@ -1,0 +1,72 @@
+[gd_scene load_steps=8 format=3 uid="uid://dh6y5qxmki43x"]
+
+[ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/menu_theme.tres" id="1_8lfnr"]
+[ext_resource type="Script" path="res://ui/setting_file.gd" id="2_sexd4"]
+[ext_resource type="Texture2D" uid="uid://58ird2h11kc6" path="res://assets/icon/Load.png" id="3_lncwf"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1lqcu"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2vtvl"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hhnov"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ivsvg"]
+
+[node name="SettingFile" type="PanelContainer"]
+offset_right = 132.0
+offset_bottom = 27.0
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme = ExtResource("1_8lfnr")
+theme_type_variation = &"SettingBackground"
+script = ExtResource("2_sexd4")
+
+[node name="FileDialog" type="FileDialog" parent="."]
+unique_name_in_owner = true
+auto_translate_mode = 1
+title = "Open a File"
+position = Vector2i(0, 36)
+size = Vector2i(392, 183)
+ok_button_text = "Open"
+dialog_hide_on_ok = true
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.png, *.jpg, *.jpeg, *.hdr, *.ogv; Supported Filetypes")
+use_native_dialog = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Control" type="Control" parent="HBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="LabelName" type="Label" parent="HBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+text = "t"
+
+[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"SettingControl"
+
+[node name="Button" type="Button" parent="HBoxContainer/PanelContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_1lqcu")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_2vtvl")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_hhnov")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_ivsvg")
+text = "Open File..."
+icon = ExtResource("3_lncwf")
+text_overrun_behavior = 3
+clip_text = true

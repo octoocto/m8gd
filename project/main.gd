@@ -118,11 +118,6 @@ func _ready() -> void:
 	# resize viewport with window
 	get_window().min_size = Vector2i(960, 640)
 
-	# initialize utility scripts
-	_start_task("init util scripts", func() -> void:
-		MenuUtils.init(self)
-	)
-
 	# initialize key overlay
 	_start_task("init key overlay", func() -> void:
 		key_overlay.init(self)
@@ -317,9 +312,9 @@ func load_profile(profile_name: String) -> bool:
 	if current_scene == null or scene_path != current_scene.scene_file_path:
 		load_scene(scene_path)
 	else: # just reset the scene menu (also loads properties from config)
+		menu_scene.clear_params()
 		current_scene.init(self)
 		current_scene.init_menu(menu_scene)
-		menu_scene.clear_params()
 		scene_loaded.emit(scene_path, current_scene)
 
 	init_overlays()
@@ -677,15 +672,6 @@ func audio_fft(from_hz: float, to_hz: float) -> float:
 		AudioEffectSpectrumAnalyzerInstance.MAGNITUDE_AVERAGE
 	)
 	return (magnitude.x + magnitude.y) / 2.0
-
-func open_file_dialog(fn: Callable) -> void:
-	var callback := func(path: String) -> void:
-		fn.call(path)
-	%FileDialog.file_selected.connect(callback, CONNECT_ONE_SHOT)
-	%FileDialog.canceled.connect(func() -> void:
-		%FileDialog.files_selected.disconnect(callback)
-	, CONNECT_ONE_SHOT)
-	%FileDialog.show()
 
 func _physics_process(delta: float) -> void:
 

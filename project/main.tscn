@@ -197,18 +197,6 @@ bus = &"Analyzer"
 [node name="SceneRoot" type="Node" parent="."]
 unique_name_in_owner = true
 
-[node name="FileDialog" type="FileDialog" parent="."]
-unique_name_in_owner = true
-title = "Open a File"
-position = Vector2i(0, 36)
-size = Vector2i(392, 175)
-ok_button_text = "Open"
-dialog_hide_on_ok = true
-file_mode = 0
-access = 2
-filters = PackedStringArray("*.png, *.jpg, *.jpeg, *.hdr, *.ogv; Supported Filetypes")
-use_native_dialog = true
-
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="UI" type="Control" parent="CanvasLayer"]

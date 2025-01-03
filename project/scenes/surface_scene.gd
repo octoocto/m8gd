@@ -4,7 +4,7 @@ const GRID_OVERLAY_MATERIAL := preload("res://assets/grid_overlay.tres")
 
 @onready var camera: M8SceneCamera3D = %Camera3D
 
-@export var model_screen_emission := 0.25:
+@export_range(0, 1, 0.01) var model_screen_emission := 0.25:
 	set(value):
 		if has_device_model():
 			get_device_model().set_screen_emission(value)
@@ -98,13 +98,14 @@ func init_menu(menu: SceneMenu) -> void:
 	menu.add_auto("model_screen_emission")
 
 	menu.add_section("Surface")
-	menu.add_option_custom("surface_mode", 0, [
+	var setting_surface_mode := menu.add_option_custom("surface_mode", 0, [
 		"Wood",
 		"Stone",
 		"M8 Display",
 		"Custom"
 	], set_surface_mode)
-	menu.add_file_custom("surface_texture", "", func(path: String) -> void:
+
+	var setting_surface_tex := menu.add_file_custom("surface_texture", "", func(path: String) -> void:
 		var texture := load_media_to_texture_rect(path, %VideoStreamPlayer)
 		if texture is Texture2D:
 			var material := StandardMaterial3D.new()
@@ -112,23 +113,31 @@ func init_menu(menu: SceneMenu) -> void:
 			surface_material_custom = material
 			load_custom_texture()
 	)
+
+	setting_surface_mode.connect_to_visible(
+		setting_surface_tex, func(value: int) -> bool: return value == 3
+	)
+
 	menu.add_auto("surface_color")
-	menu.add_auto("surface_enable_grid")
-	menu.add_auto("surface_grid_color")
+
+	var setting_grid := menu.add_auto("surface_enable_grid")
+	setting_grid.connect_to_visible(menu.add_auto("surface_grid_color"))
 
 	menu.add_section("Decorations")
+
 	menu.add_auto("enable_plant")
 	menu.add_auto("enable_grass")
 
 	menu.add_section("Lighting")
-	menu.add_auto("enable_directional_light")
-	menu.add_auto("directional_light_color")
-	menu.add_auto("enable_lamp_light")
-	menu.add_auto("lamp_light_color")
-	menu.add_auto("enable_left_light")
-	menu.add_auto("left_light_color")
-	menu.add_auto("enable_right_light")
-	menu.add_auto("right_light_color")
+
+	var setting_light_dir := menu.add_auto("enable_directional_light")
+	setting_light_dir.connect_to_visible(menu.add_auto("directional_light_color", "• Light Color"))
+	var setting_light_lamp := menu.add_auto("enable_lamp_light")
+	setting_light_lamp.connect_to_visible(menu.add_auto("lamp_light_color", "• Light Color"))
+	var setting_light_left := menu.add_auto("enable_left_light")
+	setting_light_left.connect_to_visible(menu.add_auto("left_light_color", "• Light Color"))
+	var setting_light_right := menu.add_auto("enable_right_light")
+	setting_light_right.connect_to_visible(menu.add_auto("right_light_color", "• Light Color"))
 
 
 func _physics_process(delta: float) -> void:

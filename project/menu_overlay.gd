@@ -1,10 +1,5 @@
 extends PanelContainer
 
-const SETTING_NUMBER := preload("res://ui/setting_number.tscn")
-const SETTING_VEC2I := preload("res://ui/setting_vec2i.tscn")
-const SETTING_BOOL := preload("res://ui/setting_bool.tscn")
-const SETTING_OPTIONS := preload("res://ui/setting_options.tscn")
-
 var main: M8SceneDisplay
 
 ## The overlay element currently being edited.
@@ -39,6 +34,7 @@ func menu_open(overlay: Control) -> void:
 	overlay_target.draw_bounds = true
 
 	init_settings(overlay_target)
+	_populate_overlay_properties()
 
 func init_settings(overlay: Control) -> void:
 
@@ -80,50 +76,12 @@ func _populate_overlay_properties() -> void:
 	var propinfo: Array[Dictionary] = overlay_target.get_property_list()
 
 	for prop in propinfo:
-		if prop.name in props:
-			print("overlay menu: found prop %s, hint = %s, hint_string = %s" % [prop.name, prop.hint, prop.hint_string])
-			var property: String = prop.name
-			var value: Variant = overlay_target.get(property)
-			var hint: PropertyHint = prop.hint
-			var type: PropertyHint = prop.type
-			var hint_string: String = prop.hint_string
-			var setting: Node = null
+		if prop.name not in props: continue
 
-			match hint:
-				PropertyHint.PROPERTY_HINT_NONE: # prop only has a type
-					match type:
-						TYPE_VECTOR2I:
-							setting = SETTING_VEC2I.instantiate()
-							setting.min_value = Vector2i(-3000, -3000)
-							setting.max_value = Vector2i(3000, 3000)
-						TYPE_BOOL:
-							setting = SETTING_BOOL.instantiate()
-						TYPE_INT:
-							setting = SETTING_NUMBER.instantiate()
-							setting.format_string = "%d"
-						TYPE_FLOAT:
-							setting = SETTING_NUMBER.instantiate()
-							setting.value = value
-							setting.step = 0.01
-						var x:
-							assert(false, "Unrecognized property type when populating menu: name=%s, hint=%s, hint_string=%s, %s" % [property, hint, x, prop])
+		var property: String = prop.name
+		var setting := MenuUtils.create_setting_from_property(prop)
 
-				PropertyHint.PROPERTY_HINT_RANGE: # prop using @export_range
-					var split := hint_string.split(",")
-					setting = SETTING_NUMBER.instantiate()
-					setting.min_value = split[0].to_float()
-					setting.max_value = split[1].to_float()
-					setting.step = split[2].to_float()
-					if is_equal_approx(setting.step, 1): setting.format_string = "%d"
-
-				PropertyHint.PROPERTY_HINT_ENUM: # prop is an enum
-					setting = SETTING_OPTIONS.instantiate()
-					for s in hint_string.split(","):
-						setting.items.append(s.split(":")[0])
-					setting.setting_type = 1
-
-			if setting:
-				setting.value = value
-				setting.setting_name = property.capitalize()
-				%ParamContainer.add_child(setting)
-				setting.init_config_overlay(main, overlay_target, property)
+		setting.value = overlay_target.get(property)
+		setting.setting_name = prop.name.capitalize()
+		%ParamContainer.add_child(setting)
+		setting.init_config_overlay(main, overlay_target, property)

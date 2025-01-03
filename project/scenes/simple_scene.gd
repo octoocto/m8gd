@@ -1,6 +1,6 @@
 extends M8Scene
 
-@export_range(0, 6) var force_integer_scale: int:
+@export_range(0, 6) var force_integer_scale: int = 0:
 	set(value):
 		force_integer_scale = value
 
@@ -11,7 +11,7 @@ func init(p_main: M8SceneDisplay) -> void:
 	%TextureRect.texture = main.m8_client.get_display_texture()
 
 func init_menu(menu: SceneMenu) -> void:
-	menu.add_exports_from(self)
+	menu.add_auto("force_integer_scale")
 
 func get_auto_integer_scale() -> int:
 
