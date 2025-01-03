@@ -1,6 +1,16 @@
 @tool
 class_name M8SceneCamera3D extends Node3D
 
+# Emitted when any of the camera properties change.
+signal camera_updated
+
+# Emitted when the camera is repositioning (right-click pressed).
+signal reposition_started
+
+# Emitted when the camera has stopped repositioning (right-click unpressed).
+signal reposition_stopped
+
+
 @export var mouse_controlled_pan_zoom := true
 
 @export var humanized_movement := true
@@ -182,25 +192,24 @@ func update_reposition(delta: float) -> void:
 		if Input.is_action_pressed("cam_right"):
 			global_position += global_transform.basis.x * delta * 10
 
-		main.menu_camera.update_menu()
-		main.save_camera()
+		camera_updated.emit()
 
 func reposition_start() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	rclick_pressed = true
 	main.cam_help.visible = true
-	main.menu_camera.set_fields_editable(false)
 	if main.menu_scene.visible:
 		main.menu_camera.menu_open_as_info()
+	reposition_started.emit()
 
 func reposition_stop() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	rclick_pressed = false
 	main.cam_help.visible = false
-	main.menu_camera.set_fields_editable(true)
 	set_current_transform_as_base()
 	if main.menu_scene.visible:
 		main.menu_camera.menu_close()
+	reposition_stopped.emit()
 
 func _input(event: InputEvent) -> void:
 
@@ -222,8 +231,7 @@ func _input(event: InputEvent) -> void:
 				if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 					dof_focus_distance -= 0.1
 
-			main.menu_camera.update_menu()
-			main.save_camera()
+			camera_updated.emit()
 
 	elif rclick_pressed:
 		reposition_stop()

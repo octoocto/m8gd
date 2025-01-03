@@ -9,32 +9,76 @@ var main: M8SceneDisplay
 func init(p_main: M8SceneDisplay) -> void:
 	main = p_main
 
-	var callback := func(_value: float) -> void:
-		_update_camera()
+	%Setting_Position.init_config_camera(p_main, "position")
+	%Setting_Angle.init_config_camera(p_main, "angle",
+		func(value: Vector2) -> void:
+			main.get_scene_camera().rotation_degrees = Vector3(value.x, value.y, 0),
+		func() -> Vector2:
+			var rot := main.get_scene_camera().rotation_degrees
+			return Vector2(rot.x, rot.y)
+	)
+	%Setting_Focus.init_config_camera_2(p_main, "dof_focus_distance", "dof_focus_width")
+	%Setting_Blur.init_config_camera(p_main, "dof_blur_amount")
 
-	%Spin_PosX.value_changed.connect(callback)
-	%Spin_PosY.value_changed.connect(callback)
-	%Spin_PosZ.value_changed.connect(callback)
-	%Spin_AngP.value_changed.connect(callback)
-	%Spin_AngY.value_changed.connect(callback)
-	%Spin_FocalLength.value_changed.connect(callback)
-	%Spin_FocalWidth.value_changed.connect(callback)
-	%Slider_Blur.value_changed.connect(callback)
+	%Button_Finish.pressed.connect(main.menu_open)
 
-	%Button_Finish.pressed.connect(func() -> void:
-		main.menu_open()
+	main.scene_loaded.connect(func(_scene_path: String, _scene: M8Scene) -> void:
+		on_scene_loaded()
+		var camera := main.get_scene_camera()
+		if camera:
+			camera.camera_updated.disconnect(on_camera_updated)
+			camera.camera_updated.connect(on_camera_updated)
+			camera.reposition_stopped.disconnect(on_camera_reposition_stopped)
+			camera.reposition_stopped.connect(on_camera_reposition_stopped)
 	)
 
-	main.m8_scene_changed.connect(func(_scene_path: String, _scene: M8Scene) -> void:
-		update_menu()
-	)
+##
+## Called when a scene has been loaded.
+## This will reinit setting values from the config.
+##
+func on_scene_loaded() -> void:
+	var camera := main.get_scene_camera()
+	if camera:
+		%Setting_Position.reinit()
+		%Setting_Angle.reinit()
+		%Setting_Focus.reinit()
+		%Setting_Blur.reinit()
+		camera.set_current_transform_as_base()
+		# print("camera menu: reinited")
+
+##
+## Called when any of the camera's properties have changed.
+## This will change the setting values without saving to the config.
+##
+func on_camera_updated() -> void:
+	var camera := main.get_scene_camera()
+	if camera:
+		%Setting_Position.set_value_no_signal(camera.position)
+		%Setting_Angle.set_value_no_signal(Vector2(camera.rotation_degrees.x, camera.rotation_degrees.y))
+		%Setting_Focus.set_value_no_signal(Vector2(camera.dof_focus_distance, camera.dof_focus_width))
+		%Setting_Blur.set_value_no_signal(camera.dof_blur_amount)
+		# print("camera menu: camera updated")
+
+##
+## Called when the camera has stopped repositioning.
+## This will save the current setting values to the config.
+##
+func on_camera_reposition_stopped() -> void:
+	var camera := main.get_scene_camera()
+	if camera:
+		camera.set_current_transform_as_base()
+		%Setting_Position._emit_value_changed()
+		%Setting_Angle._emit_value_changed()
+		%Setting_Focus._emit_value_changed()
+		%Setting_Blur._emit_value_changed()
+		# print("camera menu: camera reposition stopped")
 
 ##
 ## Called when this menu is opened.
 ##
 func menu_open() -> void:
 	if !visible:
-		update_menu()
+		# update_menu()
 		visible = true
 		%Button_Finish.visible = true
 		main.get_scene_camera().set_transform_to_base()
@@ -44,7 +88,7 @@ func menu_open() -> void:
 ## Used when editing the camera from the scene parameter menu.
 ##
 func menu_open_as_info() -> void:
-	update_menu()
+	# update_menu()
 	visible = true
 	%Button_Finish.visible = false
 
@@ -55,52 +99,3 @@ func menu_close() -> void:
 	if visible:
 		visible = false
 		main.get_scene_camera().set_current_transform_as_base()
-
-##
-## Update the scene camera and the config from this menu.
-##
-func _update_camera() -> void:
-
-	var camera := main.get_scene_camera()
-	assert(camera != null)
-
-	camera.position = Vector3(%Spin_PosX.value, %Spin_PosY.value, %Spin_PosZ.value)
-	camera.rotation = Vector3(deg_to_rad(%Spin_AngP.value), deg_to_rad(%Spin_AngY.value), 0)
-	camera.dof_focus_distance = %Spin_FocalLength.value
-	camera.dof_focus_width = %Spin_FocalWidth.value
-	camera.dof_blur_amount = %Slider_Blur.value
-
-	main.save_camera()
-
-##
-## Update this menu with the current scene camera properties.
-##
-func update_menu() -> void:
-
-	var camera := main.get_scene_camera()
-	if camera == null: return
-	
-	%Spin_PosX.set_value_no_signal(camera.position.x)
-	%Spin_PosY.set_value_no_signal(camera.position.y)
-	%Spin_PosZ.set_value_no_signal(camera.position.z)
-	
-	%Spin_AngP.set_value_no_signal(rad_to_deg(camera.rotation.x))
-	%Spin_AngY.set_value_no_signal(rad_to_deg(camera.rotation.y))
-
-	%Spin_FocalLength.set_value_no_signal(camera.dof_focus_distance)
-	%Spin_FocalWidth.set_value_no_signal(camera.dof_focus_width)
-
-	%Slider_Blur.set_value_no_signal(camera.dof_blur_amount)
-	%Label_Blur.text = "%04.2f" % camera.dof_blur_amount
-
-func set_fields_editable(editable: bool) -> void:
-
-	%Spin_PosX.editable = editable
-	%Spin_PosY.editable = editable
-	%Spin_PosZ.editable = editable
-	%Spin_AngP.editable = editable
-	%Spin_AngY.editable = editable
-	%Spin_FocalLength.editable = editable
-	%Spin_FocalWidth.editable = editable
-	%Slider_Blur.editable = editable
-	%Button_Finish.disabled = !editable

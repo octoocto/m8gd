@@ -153,7 +153,7 @@ func _init_menu_scene() -> void:
 		main.menu_scene.visible = true
 	)
 
-	main.m8_scene_changed.connect(func(scene_path: String, _scene: M8Scene) -> void:
+	main.scene_loaded.connect(func(scene_path: String, _scene: M8Scene) -> void:
 		var scene_name := main.get_scene_name(scene_path)
 		%Label_CurrentScene.text = "%s (%s)" % [scene_name, scene_path]
 	)
@@ -182,6 +182,15 @@ func _init_menu_overlays() -> void:
 	%Setting_OverlayDisplay.connect_to_enable(%Button_OverlayDisplayConfig)
 	%Setting_OverlayKeys.connect_to_enable(%Button_OverlayKeysConfig)
 
+	main.profile_loaded.connect(func(_profile_name: String) -> void:
+		%Setting_OverlayScale.reinit()
+		%Setting_OverlayFilters.reinit()
+		%Setting_OverlaySpectrum.reinit()
+		%Setting_OverlayWaveform.reinit()
+		%Setting_OverlayDisplay.reinit()
+		%Setting_OverlayKeys.reinit()
+	)
+
 	%Button_OverlaySpectrumConfig.pressed.connect(func() -> void:
 		visible = false
 		main.menu_overlay.menu_open(main.overlay_spectrum)
@@ -209,27 +218,27 @@ func _init_menu_camera() -> void:
 		main.menu_camera.menu_open()
 	)
 
-	%Setting_MouseCamera.value_changed.connect(func(value: bool) -> void:
-		if main.current_scene and main.current_scene.has_3d_camera():
-			main.set_camera_property("mouse_controlled_pan_zoom", value)
-			main.current_scene.get_3d_camera().mouse_controlled_pan_zoom = value
+	%Setting_MouseCamera.init_config_camera(main, "mouse_controlled_pan_zoom", func(value: bool) -> void:
+		main.current_scene.get_3d_camera().mouse_controlled_pan_zoom = value
 	)
 
-	%Setting_HumanCamera.value_changed.connect(func(value: bool) -> void:
-		if main.current_scene and main.current_scene.has_3d_camera():
-			main.set_camera_property("humanized_movement", value)
-			main.current_scene.get_3d_camera().humanized_movement = value
+	%Setting_HumanCamera.init_config_camera(main, "humanized_movement", func(value: bool) -> void:
+		main.current_scene.get_3d_camera().humanized_movement = value
 	)
 
-	main.m8_scene_changed.connect(func(_scene_path: String, scene: M8Scene) -> void:
-		if scene.has_3d_camera():
-			%Button_SceneCameraMenu.disabled = false
-			%Setting_MouseCamera.enabled = true
-			%Setting_HumanCamera.enabled = true
-		else:
+	main.scene_loaded.connect(func(_scene_path: String, scene: M8Scene) -> void:
+		if !scene.has_3d_camera():
 			%Button_SceneCameraMenu.disabled = true
 			%Setting_MouseCamera.enabled = false
 			%Setting_HumanCamera.enabled = false
+			return
+
+		%Button_SceneCameraMenu.disabled = false
+		%Setting_MouseCamera.enabled = true
+		%Setting_HumanCamera.enabled = true
+
+		%Setting_MouseCamera.reinit()
+		%Setting_HumanCamera.reinit()
 	)
 
 ##
@@ -241,10 +250,9 @@ func _init_menu_audio() -> void:
 
 	# volume
 
-	%Setting_Volume.init(config.volume, func(value: float) -> void:
+	%Setting_Volume.init_config_global(main, "volume", func(value: float) -> void:
 		var volume_db: float = linear_to_db(pow(value, 2))
 		main.audio_set_volume(volume_db)
-		config.set_property_global("volume", value)
 	)
 
 	# audio driver (readonly)
@@ -450,6 +458,22 @@ func _init_menu_filters() -> void:
 	%Setting_ShaderCRT.connect_to_enable(%Setting_ShaderCRTVignette)
 	%Setting_ShaderCRT.connect_to_enable(%Setting_ShaderCRTAudioB)
 	%Setting_ShaderCRT.connect_to_enable(%Setting_ShaderCRTAudioCA)
+
+	main.profile_loaded.connect(func(_profile_name: String) -> void:
+		%Setting_ShaderVHS.reinit()
+		%Setting_ShaderVHSSmear.reinit()
+		%Setting_ShaderVHSWiggle.reinit()
+		%Setting_ShaderVHSNoise.reinit()
+		%Setting_ShaderVHSTape.reinit()
+		%Setting_ShaderCRT.reinit()
+		%Setting_ShaderCRTScanLines.reinit()
+		%Setting_ShaderCRTReverseCurvature.reinit()
+		%Setting_ShaderCRTCurvature.reinit()
+		%Setting_ShaderCRTVignette.reinit()
+		%Setting_ShaderCRTAudioB.reinit()
+		%Setting_ShaderCRTAudioCA.reinit()
+		%Setting_ShaderNoise.reinit()
+	)
 
 ##
 ## Setup the input menu controls.

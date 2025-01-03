@@ -13,7 +13,6 @@ const M8_ACTIONS := [
 	"key_up", "key_down", "key_left", "key_right",
 	"key_shift", "key_play", "key_option", "key_edit"]
 
-signal m8_scene_changed(scene_path: String, scene: M8Scene)
 signal m8_system_info_received(hardware: String, firmware: String)
 signal m8_font_changed
 signal m8_theme_changed(colors: PackedColorArray, complete: bool)
@@ -22,6 +21,10 @@ signal m8_disconnected
 
 ## Emitted after a profile has been loaded.
 signal profile_loaded(profile_name: String)
+
+## Emitted after a scene has been loaded.
+## Loading a profile will also emit this signal if a new scene wasn't loaded.
+signal scene_loaded(scene_path: String, scene: M8Scene)
 
 @export var visualizer_ca_amount := 1.0
 @export var visualizer_glow_amount := 0.5
@@ -259,9 +262,9 @@ func load_scene(scene_path: String) -> bool:
 	menu_scene.clear_params()
 	scene.init_menu(menu_scene)
 
-	print("scene loaded!")
+	scene_loaded.emit(scene_path, scene)
 
-	m8_scene_changed.emit(scene_path, scene)
+	print("scene loaded!")
 
 	return true
 
@@ -318,19 +321,16 @@ func load_profile(profile_name: String) -> bool:
 		load_scene(scene_path)
 	else: # just reset the scene menu (also loads properties from config)
 		current_scene.init(self)
-		menu_scene.clear_params()
 		current_scene.init_menu(menu_scene)
+		menu_scene.clear_params()
+		scene_loaded.emit(scene_path, current_scene)
 
 	init_overlays()
-	init_camera()
-	init_filters()
+	# init_filters()
+
+	profile_loaded.emit(profile_name)
 
 	print("profile loaded!")
-
-	# profile_loaded.emit(profile_name)
-	# synchronously call all signal connections for profile_loaded
-	for conn: Dictionary in profile_loaded.get_connections():
-		conn.callable.call(profile_name)
 
 	return true
 
@@ -397,38 +397,6 @@ func init_overlay_property(overlay: Control, property: String) -> Variant:
 	overlay.set(property, value)
 	return value
 
-func set_camera_property(property: String, value: Variant) -> void:
-	var propkey := _get_propkey_camera(property)
-	config.set_property_scene(propkey, value)
-
-##
-## Get a property from the config for the scene camera (scene property).
-## If the property does not exist, get the property from the current scene camera.
-##
-func get_camera_property(property: String, default: Variant = null) -> Variant:
-	var camera := get_scene_camera()
-	if camera != null:
-		var propkey: String = _get_propkey_camera(property)
-		if default == null:
-			default = camera.get(property)
-		return config.get_property_scene(propkey, default)
-	else:
-		return null
-
-##
-## Initialize a scene camera property from the config (scene property).
-##
-## If the property already exists in the config, set the camera to that value.
-## If the property does not exist, save the current value in the camera to the config.
-##
-func init_camera_property(property: String) -> Variant:
-	var camera := get_scene_camera()
-	if camera != null:
-		var value: Variant = get_camera_property(property)
-		camera.set(property, value)
-		return value
-	return null
-
 ##
 ## Set properties of the given overlay according to the current profile/scene.
 ##
@@ -471,15 +439,6 @@ func init_overlays() -> void:
 	_init_overlay(overlay_spectrum)
 	_init_overlay(overlay_waveform)
 
-	menu.get_node("%Setting_OverlayScale").init_config_profile(self, "overlay_scale")
-	menu.get_node("%Setting_OverlayFilters").init_config_profile(self, "overlay_apply_filters")
-
-	# update buttons in main menu
-	menu.get_node("%Setting_OverlaySpectrum").init_config_overlay(self, overlay_spectrum, "visible")
-	menu.get_node("%Setting_OverlayWaveform").init_config_overlay(self, overlay_waveform, "visible")
-	menu.get_node("%Setting_OverlayDisplay").init_config_overlay(self, overlay_display, "visible")
-	menu.get_node("%Setting_OverlayKeys").init_config_overlay(self, key_overlay, "visible")
-
 	_overlay_update_viewport_size()
 
 	if not get_window().size_changed.is_connected(_overlay_update_viewport_size):
@@ -507,43 +466,6 @@ func get_scene_camera() -> M8SceneCamera3D:
 		return current_scene.get_3d_camera()
 	else:
 		return null
-
-##
-## Initializes or re-initializes the state of the 3D camera.
-## The camera state will be loaded from the config.
-##
-func init_camera() -> void:
-	# menu_camera.init_camera()
-	var camera := get_scene_camera()
-	if camera == null: return
-
-	var position: Vector3 = init_camera_property("position")
-	var rotation: Vector3 = init_camera_property("rotation")
-	init_camera_property("dof_focus_distance")
-	init_camera_property("dof_focus_width")
-	init_camera_property("dof_blur_amount")
-	var mouse_enabled: bool = init_camera_property("mouse_controlled_pan_zoom")
-	var humanize_enabled: bool = init_camera_property("humanized_movement")
-
-	camera.base_position = position
-	camera.base_rotation = rotation
-
-	menu.get_node("%Setting_MouseCamera").value = mouse_enabled
-	menu.get_node("%Setting_HumanCamera").value = humanize_enabled
-
-##
-## Save the current camera properties to the config.
-##
-func save_camera() -> void:
-
-	var camera := get_scene_camera()
-	assert(camera != null)
-
-	set_camera_property("position", camera.position)
-	set_camera_property("rotation", camera.rotation)
-	set_camera_property("dof_focus_distance", camera.dof_focus_distance)
-	set_camera_property("dof_focus_width", camera.dof_focus_width)
-	set_camera_property("dof_blur_amount", camera.dof_blur_amount)
 
 func set_filter_property(filter: ColorRect, property: String, value: Variant = null) -> void:
 	var propkey: String = _get_propkey_filter(filter, property)
