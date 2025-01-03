@@ -793,6 +793,7 @@ text = "Disconnect"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
+tooltip_text = "A \"harder\" reconnect. Frees and creates a new AudioStreamPlayer and reconnects the audio device."
 theme_override_styles/normal = SubResource("StyleBoxFlat_3mi27")
 disabled = true
 text = "Hard Reset"

@@ -159,7 +159,7 @@ func _init_menu_scene() -> void:
 
 	main.scene_loaded.connect(func(scene_path: String, _scene: M8Scene) -> void:
 		var scene_name := main.get_scene_name(scene_path)
-		%Label_CurrentScene.text = "%s (%s)" % [scene_name, scene_path]
+		%Label_CurrentScene.text = "%s" % scene_name
 	)
 
 
