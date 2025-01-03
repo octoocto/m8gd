@@ -69,24 +69,18 @@ func _update() -> void:
 	%SpinBoxX.editable = enabled
 	%SpinBoxY.editable = enabled
 
-	if setting_name == "":
-		%LabelName.visible = false
-	else:
-		%LabelName.visible = true
-		%LabelName.text = setting_name
-
+	%LabelName.visible = setting_name != ""
+	%LabelName.text = setting_name
 	%LabelName.custom_minimum_size.x = setting_name_min_width
 
 	%SpinBoxX.theme_type_variation = "" if show_updown_arrows else "SettingControlVec2SpinBox"
-	%SpinBoxY.theme_type_variation = "" if show_updown_arrows else "SettingControlVec2SpinBox"
-
 	%SpinBoxX.min_value = min_value.x
 	%SpinBoxX.max_value = max_value.x
+	%SpinBoxX.value = value.x
 
+	%SpinBoxY.theme_type_variation = "" if show_updown_arrows else "SettingControlVec2SpinBox"
 	%SpinBoxY.min_value = min_value.y
 	%SpinBoxY.max_value = max_value.y
-
-	%SpinBoxX.value = value.x
 	%SpinBoxY.value = value.y
 
 	%LabelX.text = prefix_x

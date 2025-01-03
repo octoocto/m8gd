@@ -10,14 +10,14 @@ enum ColorStyle {SCOPE, METER}
 
 @export_group("Analyzer", "analyzer_")
 @export var analyzer_db_min: float = 60.0
-@export var analyzer_freq_min: int = 100
-@export var analyzer_freq_max: int = 10000
-@export_range(0.0, 1.0, 0.01) var analyzer_smoothing: float = 0.95
+@export_range(100, 20000, 1) var analyzer_freq_min: int = 100
+@export_range(100, 20000, 1) var analyzer_freq_max: int = 10000
+@export_range(0.0, 1.0, 0.01) var analyzer_smoothing: float = 0.5
 
 # @export var size := Vector2i(320, 240)
 
 @export_group("Style", "style_")
-@export var style_rows := 1
+@export_range(1, 10, 1) var style_rows := 1
 @export var style_mirror := false
 @export var style_reverse := false
 @export_range(0.0, 1.0, 0.05) var style_peak_to_alpha_amount := 0.75
@@ -112,7 +112,8 @@ func _draw() -> void:
 		if magnitude_raw > last_peaks[i]:
 			magnitude = magnitude_raw
 		else:
-			magnitude = lerp(magnitude_raw, last_peaks[i], analyzer_smoothing)
+			var smoothing_adjusted := analyzer_smoothing * 0.1 + 0.9
+			magnitude = lerp(magnitude_raw, last_peaks[i], smoothing_adjusted)
 
 		last_peaks[i] = magnitude
 		magnitudes.append(magnitude)

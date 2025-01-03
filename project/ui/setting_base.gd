@@ -68,7 +68,17 @@ func reinit(emit_value_changed := true) -> void:
 		set("value", _value_init_fn.call())
 	else:
 		set_value_no_signal(_value_init_fn.call())
-	print("%s: reinitializing value" % name)
+	# print("%s: reinitializing value" % name)
+
+##
+## Uninitialize this setting, disconnecting all signal connections.
+## Note: the value won't change.
+##
+func uninit() -> void:
+	if _is_initialized:
+		_clear_signals()
+		_value_init_fn = func() -> void: return
+		_is_initialized = false
 
 ##
 ## Set this control to an initial value and value_changed function.
@@ -119,16 +129,36 @@ func init_config_scene(main: M8SceneDisplay, property: String, value_changed_fn:
 	)
 
 ##
-## This setting's value will default to its current value of the property in [overlay].
+## Initialize this setting to an overlay property.
 ##
-func init_config_overlay(main: M8SceneDisplay, overlay: Control, property: String) -> void:
+## This setting's initial value will be read from the config, and default to
+## the property's value in the [overlay].
+##
+## Changing this setting's value will write the value to the config,
+## set the property in [overlay], and call [value_changed_fn] if defined.
+##
+func init_config_overlay(main: M8SceneDisplay, overlay: Control, property: String, value_changed_fn: Variant = null) -> void:
+	assert(value_changed_fn is Callable or value_changed_fn == null)
 	var config_property := main._get_propkey_overlay(overlay, property)
 	_init_value(
 		func() -> Variant: return main.config.get_property(config_property, overlay.get(property)),
 		func(value: Variant) -> void:
 			overlay.set(property, value)
-			main.config.set_property(config_property, value)
+			main.config.set_property(config_property, overlay.get(property))
+			if value_changed_fn: value_changed_fn.call(value)
 	)
+
+##
+## Initialize an overlay property.
+##
+## The initial value of the property in [overlay] will be read from the config,
+## and default to its current value (unchanged).
+##
+static func init_overlay_property(main: M8SceneDisplay, overlay: Control, property: String) -> void:
+	var config_property := main._get_propkey_overlay(overlay, property)
+	var value: Variant = main.config.get_property(config_property, overlay.get(property))
+	overlay.set(property, value)
+	main.config.set_property(config_property, overlay.get(property))
 
 ##
 ## Initialize this setting to a camera config property.
@@ -154,8 +184,8 @@ func init_config_camera(main: M8SceneDisplay, property: String, value_changed_fn
 					default = value_init_fn.call()
 					print("%s: reading value from value_init_fn() = %s" % [name, default])
 				else:
-					print("%s: reading value from camera = %s" % [name, default])
 					default = main.get_scene_camera().get(property)
+					print("%s: reading value from camera = %s" % [name, default])
 				init_value = main.config.get_property_scene(config_property, default)
 			else:
 				init_value = null

@@ -135,16 +135,13 @@ func _ready() -> void:
 	_start_task("init other menus", func() -> void:
 		menu_scene.init(self)
 		menu_camera.init(self)
+		menu_overlay.init(self)
 	)
 
 	_start_task("load profile", func() -> void:
 		# initialize main scene
 		# load_scene(config.get_current_scene_path())
 		load_last_profile()
-	)
-
-	_start_task("init overlay menu", func() -> void:
-		menu_overlay.init(self)
 	)
 
 	_print("finished initializing in %.3f seconds!" % ((Time.get_ticks_msec() - start_time) / 1000.0))
@@ -326,7 +323,6 @@ func load_profile(profile_name: String) -> bool:
 		scene_loaded.emit(scene_path, current_scene)
 
 	init_overlays()
-	# init_filters()
 
 	profile_loaded.emit(profile_name)
 
@@ -372,42 +368,16 @@ func _get_propkey_filter(filter: ColorRect, property: String) -> String:
 func _get_propkey_filter_shader(filter: ColorRect, property: String) -> String:
 	return "filter.%s.shader.%s" % [filter.name, property]
 
-func set_overlay_property(overlay: Control, property: String, value: Variant) -> void:
-	var propkey := _get_propkey_overlay(overlay, property)
-	config.set_property(propkey, value)
-
-##
-## Get a property from the config for an overlay (profile property).
-## If the property does not exist, get the property from the overlay.
-##
-func get_overlay_property(overlay: Control, property: String, default: Variant = null) -> Variant:
-	var propkey: String = _get_propkey_overlay(overlay, property)
-	if default == null:
-		default = overlay.get(property)
-	return config.get_property(propkey, default)
-
-##
-## Initialize an overlay property from the config (profile property).
-##
-## If the property already exists in the config, set the property in the overlay to that value.
-## If the property does not exist, save the current value in the overlay to the config.
-##
-func init_overlay_property(overlay: Control, property: String) -> Variant:
-	var value: Variant = get_overlay_property(overlay, property)
-	overlay.set(property, value)
-	return value
-
 ##
 ## Set properties of the given overlay according to the current profile/scene.
 ##
 func _init_overlay(overlay: Control) -> void:
 
-	overlay.anchors_preset = get_overlay_property(overlay, "anchors_preset")
-	overlay.position_offset = get_overlay_property(overlay, "position_offset")
-	overlay.size = get_overlay_property(overlay, "size")
-
+	# manually init the overlay properties here since we won't have a
+	# Setting node for all of them
+	menu_overlay.init_settings(overlay)
 	for property: String in overlay.overlay_get_properties():
-		init_overlay_property(overlay, property)
+		SettingBase.init_overlay_property(self, overlay, property)
 
 func _overlay_update_viewport_size() -> void:
 
@@ -439,23 +409,9 @@ func init_overlays() -> void:
 	_init_overlay(overlay_spectrum)
 	_init_overlay(overlay_waveform)
 
+	get_window().size_changed.disconnect(_overlay_update_viewport_size)
+	get_window().size_changed.connect(_overlay_update_viewport_size)
 	_overlay_update_viewport_size()
-
-	if not get_window().size_changed.is_connected(_overlay_update_viewport_size):
-		get_window().size_changed.connect(_overlay_update_viewport_size)
-
-##
-## Save the current properties of an overlay to the config.
-##
-func save_overlay(overlay: Control) -> void:
-
-	set_overlay_property(overlay, "enabled", overlay.visible)
-	set_overlay_property(overlay, "anchors_preset", overlay.anchors_preset)
-	set_overlay_property(overlay, "position_offset", overlay.position_offset)
-	set_overlay_property(overlay, "size", overlay.size)
-
-	for property: String in overlay.overlay_get_properties():
-		set_overlay_property(overlay, property, overlay.get(property))
 
 ##
 ## Get the 3D camera of the current scene.

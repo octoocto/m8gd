@@ -1,14 +1,17 @@
-[gd_scene load_steps=3 format=3 uid="uid://bebvc2datqp85"]
+[gd_scene load_steps=6 format=3 uid="uid://bebvc2datqp85"]
 
 [ext_resource type="Script" path="res://menu_overlay.gd" id="1_biga6"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0w3pk"]
-bg_color = Color(0.115, 0.3, 0, 1)
+[ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/menu_theme.tres" id="1_t3dyr"]
+[ext_resource type="PackedScene" uid="uid://dsgvm3dda1kjp" path="res://ui/label_header.tscn" id="3_40ori"]
+[ext_resource type="PackedScene" uid="uid://bgsxagi62acni" path="res://ui/setting_options.tscn" id="3_q4g74"]
+[ext_resource type="PackedScene" uid="uid://bevoopcdq5dsh" path="res://ui/setting_vec2i.tscn" id="4_s6r0s"]
 
 [node name="MenuElement" type="PanelContainer"]
-custom_minimum_size = Vector2(320, 0)
+custom_minimum_size = Vector2(400, 0)
 size_flags_horizontal = 0
 size_flags_vertical = 8
+theme = ExtResource("1_t3dyr")
+theme_type_variation = &"SubmenuPanelContainer"
 script = ExtResource("1_biga6")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
@@ -29,13 +32,45 @@ size_flags_vertical = 3
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/MarginContainer"]
 layout_mode = 2
 
-[node name="LabelTarget" type="Label" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="LabelTarget" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("3_40ori")]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
-text = "Editing:"
+text = "OverlayAudioSpectrum"
+top_spacing = false
+
+[node name="Setting_Anchor" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("3_q4g74")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_type = 1
+items = PackedStringArray("Top Left", "Top Right", "Bottom Left", "Bottom Right", "Center Left", "Center Top", "Center Right", "Center Bottom", "Center")
+value = 0
+setting_name = "Anchor"
+setting_name_min_width = 50
+
+[node name="Setting_Position" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("4_s6r0s")]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = Vector2i(-3000, -3000)
+max_value = Vector2i(3000, 3000)
+show_updown_arrows = true
+prefix_min_width = 10
+setting_name = "Position"
+setting_name_min_width = 50
+
+[node name="Setting_Size" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("4_s6r0s")]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = Vector2i(-3000, -3000)
+max_value = Vector2i(3000, 3000)
+show_updown_arrows = true
+prefix_x = "w"
+prefix_y = "h"
+prefix_min_width = 10
+setting_name = "Size"
+setting_name_min_width = 50
 
 [node name="GridContainer" type="GridContainer" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+visible = false
 layout_mode = 2
 columns = 2
 
@@ -136,5 +171,5 @@ layout_mode = 2
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 28)
 layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxFlat_0w3pk")
+theme_type_variation = &"ButtonGreen"
 text = "Finish"
