@@ -719,10 +719,10 @@ func _init_menu_devices() -> void:
 	)
 
 	# auto refresh list
-	%TabContainer.tab_changed.connect(func(tab: int) -> void:
-		if tab == 1: # misc tab
-			refresh_audio_device_list()
+	visibility_changed.connect(func() -> void:
+		if visible:
 			refresh_serial_device_list()
+			refresh_audio_device_list()
 	)
 
 ##
