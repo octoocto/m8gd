@@ -634,6 +634,9 @@ func _init_menu_model() -> void:
 	%Setting_ModelScreenFilter.init_config_profile(main, "model_screen_linear_filter", func(value: bool) -> void:
 		if _model(): _model().set_screen_filter(value)
 	)
+	%Setting_ModelScreenEmission.init_config_profile(main, "model_screen_emission", func(value: float) -> void:
+		if _model(): _model().set_screen_emission(value)
+	)
 
 ##
 ## Setup the device connection menu controls.

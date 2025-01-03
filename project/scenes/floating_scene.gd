@@ -2,11 +2,6 @@ extends M8Scene
 
 @onready var camera: M8SceneCamera3D = %Camera3D
 
-@export var model_screen_emission := 0.25:
-	set(value):
-		if has_device_model():
-			get_device_model().set_screen_emission(value)
-		model_screen_emission = value
 
 @export var enable_display_background := true:
 	set(value):
@@ -105,8 +100,6 @@ func init_menu(menu: SceneMenu) -> void:
 
 	# menu.add_exports_from(self)
 	# menu.init_profile(self)
-
-	menu.add_auto("model_screen_emission")
 
 	menu.add_section("Audio Spectrum")
 	var setting_spectrum := menu.add_auto("enable_audio_spectrum")

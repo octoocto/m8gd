@@ -4,11 +4,6 @@ const GRID_OVERLAY_MATERIAL := preload("res://assets/grid_overlay.tres")
 
 @onready var camera: M8SceneCamera3D = %Camera3D
 
-@export_range(0, 1, 0.01) var model_screen_emission := 0.25:
-	set(value):
-		if has_device_model():
-			get_device_model().set_screen_emission(value)
-		model_screen_emission = value
 
 @export var surface_color := Color(1.0, 1.0, 1.0):
 	set(value):
@@ -94,8 +89,6 @@ func init(p_main: M8SceneDisplay) -> void:
 	camera.init(main)
 
 func init_menu(menu: SceneMenu) -> void:
-
-	menu.add_auto("model_screen_emission")
 
 	menu.add_section("Surface")
 	var setting_surface_mode := menu.add_option_custom("surface_mode", 0, [
