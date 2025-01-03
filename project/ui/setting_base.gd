@@ -196,14 +196,14 @@ func init_config_camera(main: M8SceneDisplay, property: String, value_changed_fn
 				var default: Variant
 				if value_init_fn:
 					default = value_init_fn.call()
-					print("%s: reading value from value_init_fn() = %s" % [name, default])
+					# print("%s: reading value from value_init_fn() = %s" % [name, default])
 				else:
 					default = main.get_scene_camera().get(property)
-					print("%s: reading value from camera = %s" % [name, default])
+					# print("%s: reading value from camera = %s" % [name, default])
 				init_value = main.config.get_property_scene(config_property, default)
 			else:
 				init_value = null
-			print("%s: initialized value to %s" % [name, init_value])
+			# print("%s: initialized value to %s" % [name, init_value])
 			return init_value,
 		func(value: Variant) -> void:
 			if main.get_scene_camera():

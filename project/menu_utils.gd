@@ -20,8 +20,7 @@ static func create_setting_from_property(prop: Dictionary) -> SettingBase:
 	var hint_string: String = prop.hint_string
 	var setting: Node = null
 
-	print("creating setting: found prop %s, hint = %s, hint_string = %s" % [prop.name, prop.hint, prop.hint_string])
-
+	# print("creating setting: found prop %s, hint = %s, hint_string = %s" % [prop.name, prop.hint, prop.hint_string])
 	match hint:
 		PropertyHint.PROPERTY_HINT_NONE: # prop only has a type
 			match type:
