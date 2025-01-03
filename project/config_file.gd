@@ -197,11 +197,17 @@ func list_profile_names() -> Array:
 ##
 func rename_current_profile(new_profile_name: String) -> void:
 	assert(current_profile != DEFAULT_PROFILE)
+
 	var old_profile_name := current_profile
+	var profile_hotkey: InputEvent = get_profile_hotkey(old_profile_name)
 	var profile_dict: Dictionary = profiles[old_profile_name]
+
 	profiles[new_profile_name] = profile_dict
 	profiles.erase(old_profile_name)
+	clear_profile_hotkey(old_profile_name)
+
 	current_profile = new_profile_name
+	set_profile_hotkey(new_profile_name, profile_hotkey)
 
 	_print("rename profile: %s -> %s" % [old_profile_name, new_profile_name])
 
@@ -341,10 +347,17 @@ func get_property_global(property: String) -> Variant:
 	# _print("GET global prop: %s, value = %s" % [property, value])
 	return value
 
-func set_profile_hotkey(event: InputEvent, profile_name: String) -> void:
+##
+## Set a profile's hotkey to an [InputEvent].
+##
+func set_profile_hotkey(profile_name: String, event: InputEvent) -> void:
 	profile_hotkeys[profile_name] = event
 	_print("set profile hotkey: %s -> %s" % [event.as_text(), profile_name])
 
+##
+## Returns a profile's hotkey ([InputEvent]). If the profile does not have a hotkey,
+## returns [null].
+##
 func get_profile_hotkey(profile_name: String) -> Variant:
 	return profile_hotkeys.get(profile_name)
 

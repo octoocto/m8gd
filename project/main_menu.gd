@@ -1042,7 +1042,7 @@ func refresh_profile_hotkeys() -> void:
 
 		container.get_node("ButtonBind").pressed.connect(func() -> void:
 			start_rebind(func(e: InputEvent) -> void:
-				main.config.set_profile_hotkey(e, profile_name)
+				main.config.set_profile_hotkey(profile_name, e)
 				refresh_profile_hotkeys()
 			)
 		)
