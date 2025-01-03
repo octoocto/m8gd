@@ -83,6 +83,10 @@ func _init_menu_profiles() -> void:
 		main.load_default_profile()
 		_update_ui.call()
 
+	main.profile_loaded.connect(func(_profile_name: String) -> void:
+		_update_ui.call()
+	)
+
 	_update_ui.call()
 
 	%OptionProfiles.pressed.connect(_setup_as_list)
