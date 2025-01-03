@@ -467,144 +467,15 @@ func get_scene_camera() -> M8SceneCamera3D:
 	else:
 		return null
 
-func set_filter_property(filter: ColorRect, property: String, value: Variant = null) -> void:
-	var propkey: String = _get_propkey_filter(filter, property)
-	config.set_property(propkey, value)
-
-##
-## Get a property from the config for a filter (profile property).
-## If the property does not exist, get the property from the filter.
-##
-func get_filter_property(filter: ColorRect, property: String, default: Variant = null) -> Variant:
-	var propkey: String = _get_propkey_filter(filter, property)
-	if default == null:
-		default = filter.get(property)
-	return config.get_property(propkey, default)
-
-func get_filter_shader_parameter(filter: ColorRect, property: String) -> Variant:
-	var propkey: String = _get_propkey_filter_shader(filter, property)
-	var default: Variant = filter.material.get_shader_parameter(property)
-	return config.get_property(propkey, default)
-
-func get_shader_parameter(shader_node_path: NodePath, shader_parameter: String) -> Variant:
+func get_filter_shader_parameter(shader_node_path: NodePath, shader_parameter: String) -> Variant:
 	var shader_node: ColorRect = get_node(shader_node_path)
 	assert(shader_node.material.get_shader_parameter(shader_parameter) != null, "shader parameter does not exist in %s: %s" % [shader_node_path, shader_parameter])
 	return shader_node.material.get_shader_parameter(shader_parameter)
 
-func set_shader_parameter(shader_node_path: NodePath, shader_parameter: String, value: Variant) -> void:
+func set_filter_shader_parameter(shader_node_path: NodePath, shader_parameter: String, value: Variant) -> void:
 	var shader_node: ColorRect = get_node(shader_node_path)
 	assert(shader_node.material.get_shader_parameter(shader_parameter) != null, "shader parameter does not exist in %s: %s" % [shader_node_path, shader_parameter])
 	shader_node.material.set_shader_parameter(shader_parameter, value)
-
-##
-## Initialize a filter property from the config (profile property).
-##
-## If the property already exists in the config, set the shader parameter in the filter to that value.
-## If the property does not exist, save the current value in the filter to the config.
-##
-func load_filter_property(filter: ColorRect, property: String) -> Variant:
-	var value: Variant = get_filter_property(filter, property)
-	filter.set(property, value)
-	return value
-
-func load_filter_shader_parameter(filter: ColorRect, property: String) -> Variant:
-	var value: Variant = get_filter_shader_parameter(filter, property)
-	filter.material.set_shader_parameter(property, value)
-	return value
-
-func save_filter_property(filter: ColorRect, property: String) -> void:
-	var propkey: String = _get_propkey_filter(filter, property)
-	var value: Variant = filter.get(property)
-	config.set_property(propkey, value)
-
-func save_filter_shader_parameter(filter: ColorRect, property: String) -> void:
-	var propkey: String = _get_propkey_filter_shader(filter, property)
-	var value: Variant = filter.material.get_shader_parameter(property)
-	config.set_property(propkey, value)
-
-##
-## Set whether a filter is visible or not.
-##
-func set_filter_enabled(filter_node_path: NodePath, enabled: bool) -> void:
-	var filter: ColorRect = get_node(filter_node_path)
-	assert(filter is ColorRect)
-	filter.visible = enabled
-	save_filters()
-
-##
-## Set a shader parameter on a filter.
-##
-func set_filter_shader_parameter(filter_node_path: NodePath, param: String, value: Variant) -> void:
-	var filter: ColorRect = get_node(filter_node_path)
-	assert(filter is ColorRect)
-	filter.material.set_shader_parameter(param, value)
-	save_filters()
-
-func init_filters() -> void:
-
-	# for filter: ColorRect in [%VHSFilter1, %VHSFilter2, %VHSFilter3, %Filter4, %CRTShader, %NoiseShader]:
-	# 	load_filter_property(filter, "visible")
-
-	menu.get_node("%Setting_ShaderVHS").init_config_profile(self, "shader_vhs")
-	menu.get_node("%Setting_ShaderCRT").init_config_profile(self, "shader_crt")
-	menu.get_node("%Setting_ShaderNoise").init_config_profile(self, "shader_noise")
-
-	load_filter_shader_parameter(%VHSFilter1, "smear")
-	load_filter_shader_parameter(%VHSFilter1, "wiggle")
-
-	load_filter_shader_parameter(%VHSFilter2, "crease_opacity")
-	load_filter_shader_parameter(%VHSFilter2, "tape_crease_smear")
-
-	load_filter_shader_parameter(%CRTShader, "warp_amount")
-	load_filter_shader_parameter(%CRTShader, "vignette_opacity")
-
-	visualizer_brightness_amount = config.get_property_global("audio_to_brightness")
-	visualizer_ca_amount = config.get_property_global("audio_to_ca")
-
-func save_filters() -> void:
-
-	# config.set_property_global("filter_1", %VHSFilter1.visible)
-	# config.set_property_global("filter_2", %VHSFilter2.visible)
-	# config.set_property_global("filter_3", %VHSFilter3.visible)
-	# config.set_property_global("filter_4", %Filter4.visible)
-	# config.set_property_global("crt_filter", %CRTShader.visible)
-	# config.set_property_global("filter_noise", %NoiseShader.visible)
-
-	# config.set_property_global("pp_vhs_smear",
-	# 	%VHSFilter1.material.get_shader_parameter("smear")
-	# )
-	# config.set_property_global("pp_vhs_wiggle",
-	# 	%VHSFilter1.material.get_shader_parameter("wiggle")
-	# )
-
-	# config.set_property_global("pp_vhs_noise_crease_opacity",
-	# 	%VHSFilter2.material.get_shader_parameter("crease_opacity")
-	# )
-	# config.set_property_global("pp_vhs_tape_crease_amount",
-	# 	%VHSFilter2.material.get_shader_parameter("tape_crease_smear")
-	# )
-
-	# config.set_property_global("pp_crt_curvature",
-	# 	%CRTShader.material.get_shader_parameter("warp_amount")
-	# )
-	# config.set_property_global("pp_vignette_amount",
-	# 	%CRTShader.material.get_shader_parameter("vignette_opacity")
-	# )
-
-	# for filter: ColorRect in [%VHSFilter1, %VHSFilter2, %VHSFilter3, %Filter4, %CRTShader, %NoiseShader]:
-	# 	save_filter_property(filter, "visible")
-
-	save_filter_shader_parameter(%VHSFilter1, "smear")
-	save_filter_shader_parameter(%VHSFilter1, "wiggle")
-
-	save_filter_shader_parameter(%VHSFilter2, "crease_opacity")
-	save_filter_shader_parameter(%VHSFilter2, "tape_crease_smear")
-
-	save_filter_shader_parameter(%CRTShader, "warp_amount")
-	save_filter_shader_parameter(%CRTShader, "vignette_opacity")
-
-	config.set_property_global("audio_to_brightness", visualizer_brightness_amount)
-	config.set_property_global("audio_to_ca", visualizer_ca_amount)
 
 # M8 client methods
 ################################################################################

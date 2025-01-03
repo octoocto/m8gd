@@ -178,9 +178,9 @@ func init_config_shader(main: M8SceneDisplay, shader_node_path: NodePath, shader
 	var shader_node: ColorRect = main.get_node(shader_node_path)
 	var config_property := main._get_propkey_filter_shader(shader_node, shader_parameter)
 	_init_value(
-		func() -> Variant: return main.config.get_property(config_property, main.get_shader_parameter(shader_node_path, shader_parameter)),
+		func() -> Variant: return main.config.get_property(config_property, main.get_filter_shader_parameter(shader_node_path, shader_parameter)),
 		func(value: Variant) -> void:
-			main.set_shader_parameter(shader_node_path, shader_parameter, value)
+			main.set_filter_shader_parameter(shader_node_path, shader_parameter, value)
 			main.config.set_property(config_property, value)
 	)
 
