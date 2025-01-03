@@ -1,14 +1,14 @@
 [gd_scene load_steps=39 format=4 uid="uid://f2tvhcv8kiuu"]
 
-[ext_resource type="Script" path="res://scenes/surface_scene.gd" id="1_87ai1"]
-[ext_resource type="Shader" path="res://shaders/device_screen.gdshader" id="3_bp567"]
-[ext_resource type="PackedScene" uid="uid://budu6000msy4d" path="res://device_model.tscn" id="3_trbiq"]
-[ext_resource type="Texture2D" uid="uid://ras5y3yqijkx" path="res://assets/m8_screen_placeholder.png" id="4_3r2cc"]
-[ext_resource type="PackedScene" uid="uid://bckroenwlecqv" path="res://scene_camera_3d.tscn" id="5_jy4yn"]
-[ext_resource type="Texture2D" uid="uid://sw144ksus5yx" path="res://assets/succulent_plants/textures/taniku01-tex_baseColor.png" id="6_uda7r"]
-[ext_resource type="Material" uid="uid://dv1jtj3wvh678" path="res://assets/grid_overlay.tres" id="8_pmofd"]
-[ext_resource type="PackedScene" uid="uid://ceqlf8kgdxjeb" path="res://grass_area.tscn" id="8_srvcg"]
-[ext_resource type="Shader" path="res://grass_area.gdshader" id="9_uucvv"]
+[ext_resource type="Script" path="res://scenes/desktop_scene.gd" id="1_0y3bn"]
+[ext_resource type="PackedScene" uid="uid://budu6000msy4d" path="res://device_model.tscn" id="2_kwwqq"]
+[ext_resource type="Shader" path="res://shaders/device_screen.gdshader" id="3_5bvpi"]
+[ext_resource type="Texture2D" uid="uid://ras5y3yqijkx" path="res://assets/m8_screen_placeholder.png" id="4_e4t2e"]
+[ext_resource type="PackedScene" uid="uid://bckroenwlecqv" path="res://scene_camera_3d.tscn" id="5_d472a"]
+[ext_resource type="Texture2D" uid="uid://sw144ksus5yx" path="res://assets/succulent_plants/textures/taniku01-tex_baseColor.png" id="6_ld5ks"]
+[ext_resource type="Material" uid="uid://dv1jtj3wvh678" path="res://assets/grid_overlay.tres" id="7_7cg8p"]
+[ext_resource type="PackedScene" uid="uid://ceqlf8kgdxjeb" path="res://grass_area.tscn" id="8_ophi6"]
+[ext_resource type="Shader" path="res://grass_area.gdshader" id="9_wvtmw"]
 
 [sub_resource type="Environment" id="Environment_ayqpk"]
 background_mode = 1
@@ -24,7 +24,7 @@ adjustment_enabled = true
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4b25i"]
 resource_local_to_scene = true
 render_priority = 0
-shader = ExtResource("3_bp567")
+shader = ExtResource("3_5bvpi")
 shader_parameter/emission_amount = 0.7
 shader_parameter/edge_darken = -0.3
 shader_parameter/edge_burn = 0.0
@@ -32,8 +32,8 @@ shader_parameter/edge_burn_ramp = 10.0
 shader_parameter/brightness = 0.0
 shader_parameter/backlight = true
 shader_parameter/use_linear_filter = true
-shader_parameter/texture_linear = ExtResource("4_3r2cc")
-shader_parameter/texture_nearest = ExtResource("4_3r2cc")
+shader_parameter/texture_linear = ExtResource("4_e4t2e")
+shader_parameter/texture_nearest = ExtResource("4_e4t2e")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tb1h5"]
 resource_name = "syna"
@@ -127,7 +127,7 @@ shadow_mesh = SubResource("ArrayMesh_4lc78")
 resource_name = "taniku01-tex"
 transparency = 4
 cull_mode = 2
-albedo_texture = ExtResource("6_uda7r")
+albedo_texture = ExtResource("6_ld5ks")
 roughness = 0.7
 emission_operator = 1
 subsurf_scatter_enabled = true
@@ -138,7 +138,7 @@ resource_name = "taniku01-tex"
 transparency = 4
 cull_mode = 2
 shading_mode = 0
-albedo_texture = ExtResource("6_uda7r")
+albedo_texture = ExtResource("6_ld5ks")
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_ok18d"]
 _surfaces = [{
@@ -228,7 +228,7 @@ noise = SubResource("FastNoiseLite_3605e")
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_wnfn1"]
 resource_local_to_scene = true
 render_priority = 0
-shader = ExtResource("9_uucvv")
+shader = ExtResource("9_wvtmw")
 shader_parameter/uv_offset = -0.1
 shader_parameter/heightmap_offset = Vector2(40.11, 40.015)
 shader_parameter/heightmap_scale = Vector2(1.65, 1.125)
@@ -262,7 +262,7 @@ section_segments = 1
 curve = SubResource("Curve_y7obg")
 
 [node name="M8Scene" type="Node3D"]
-script = ExtResource("1_87ai1")
+script = ExtResource("1_0y3bn")
 m8_scene_name = "Desktop"
 metadata/_edit_vertical_guides_ = [640.0]
 metadata/_edit_horizontal_guides_ = [480.0]
@@ -328,12 +328,12 @@ shadow_blur = 0.5
 spot_range = 43.892
 spot_angle = 36.8368
 
-[node name="DeviceModel" parent="." instance=ExtResource("3_trbiq")]
+[node name="DeviceModel" parent="." instance=ExtResource("2_kwwqq")]
 unique_name_in_owner = true
 transform = Transform3D(38.83, 0, 0, 0, 38.83, 0, 0, 0, 38.83, 0, 0.269188, 0)
 screen_material = SubResource("ShaderMaterial_4b25i")
 
-[node name="Camera3D" parent="." instance=ExtResource("5_jy4yn")]
+[node name="Camera3D" parent="." instance=ExtResource("5_d472a")]
 unique_name_in_owner = true
 transform = Transform3D(0.906308, -0.365998, 0.211309, 0, 0.5, 0.866025, -0.422618, -0.784885, 0.453154, 4.353, 12.615, 6.695)
 dof_zoomout = 3.0
@@ -366,11 +366,11 @@ skeleton = NodePath("")
 
 [node name="SurfaceMesh" type="MeshInstance3D" parent="."]
 unique_name_in_owner = true
-material_overlay = ExtResource("8_pmofd")
+material_overlay = ExtResource("7_7cg8p")
 cast_shadow = 0
 mesh = SubResource("PlaneMesh_4c1u1")
 
-[node name="GrassArea" parent="." instance=ExtResource("8_srvcg")]
+[node name="GrassArea" parent="." instance=ExtResource("8_ophi6")]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5, 0)
 visible = false

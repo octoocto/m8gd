@@ -1,12 +1,12 @@
 [gd_scene load_steps=3 format=3 uid="uid://dh1klpvygnyuf"]
 
-[ext_resource type="Script" path="res://scenes/simple_scene.gd" id="1_edxk2"]
+[ext_resource type="Script" path="res://scenes/fast_display_scene.gd" id="1_edxk2"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_5kl75"]
 
 [node name="M8Scene" type="Node3D"]
 script = ExtResource("1_edxk2")
-m8_scene_name = "Simple Display"
+m8_scene_name = "Fast Display"
 metadata/_edit_vertical_guides_ = [640.0]
 metadata/_edit_horizontal_guides_ = [480.0]
 

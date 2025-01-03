@@ -1,11 +1,11 @@
 [gd_scene load_steps=32 format=3 uid="uid://bu28kwqtn6cdg"]
 
-[ext_resource type="Script" path="res://scenes/pixel_scene.gd" id="1_4jmsl"]
-[ext_resource type="Texture2D" uid="uid://ras5y3yqijkx" path="res://assets/m8_screen_placeholder.png" id="2_0qctg"]
-[ext_resource type="PackedScene" uid="uid://dq6heks88e2ip" path="res://overlays/audio_waveform.tscn" id="3_2lr8w"]
-[ext_resource type="PackedScene" uid="uid://263mog4cxgwr" path="res://overlays/audio_spectrum.tscn" id="3_6dnic"]
-[ext_resource type="Shader" path="res://shaders/panel_blur.gdshader" id="4_7e2xd"]
-[ext_resource type="Shader" path="res://shaders/screen_blur.gdshader" id="4_rkdfl"]
+[ext_resource type="Script" path="res://scenes/fancy_display_scene.gd" id="1_jfrc1"]
+[ext_resource type="Shader" path="res://shaders/screen_blur.gdshader" id="2_rpd8y"]
+[ext_resource type="PackedScene" uid="uid://263mog4cxgwr" path="res://overlays/audio_spectrum.tscn" id="3_ena4s"]
+[ext_resource type="Shader" path="res://shaders/panel_blur.gdshader" id="4_y8ora"]
+[ext_resource type="Texture2D" uid="uid://ras5y3yqijkx" path="res://assets/m8_screen_placeholder.png" id="5_ihehy"]
+[ext_resource type="PackedScene" uid="uid://dq6heks88e2ip" path="res://overlays/audio_waveform.tscn" id="6_j1xao"]
 
 [sub_resource type="Gradient" id="Gradient_gskhf"]
 
@@ -20,7 +20,7 @@ color_ramp = SubResource("Gradient_gskhf")
 noise = SubResource("FastNoiseLite_ee18n")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rqrn1"]
-shader = ExtResource("4_rkdfl")
+shader = ExtResource("2_rpd8y")
 shader_parameter/blur_amount = 3.5
 shader_parameter/tint_color = Color(1, 1, 1, 1)
 shader_parameter/tint_amount = 1.0
@@ -120,7 +120,7 @@ color_ramp = SubResource("Gradient_2ccln")
 noise = SubResource("FastNoiseLite_np6uh")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y1b4h"]
-shader = ExtResource("4_7e2xd")
+shader = ExtResource("4_y8ora")
 shader_parameter/blur_amount = 5.231
 shader_parameter/panel_color = Color(0, 0, 0, 1)
 shader_parameter/panel_opacity = 1.0
@@ -140,7 +140,7 @@ corner_detail = 6
 anti_aliasing = false
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_k66bi"]
-atlas = ExtResource("2_0qctg")
+atlas = ExtResource("5_ihehy")
 region = Rect2(0, 0, 320, 240)
 
 [sub_resource type="Environment" id="Environment_nwhd1"]
@@ -154,8 +154,8 @@ glow_bloom = 0.8
 glow_blend_mode = 4
 
 [node name="M8Scene" type="Node3D"]
-script = ExtResource("1_4jmsl")
-m8_scene_name = "Pixel Art"
+script = ExtResource("1_jfrc1")
+m8_scene_name = "Fancy Display"
 metadata/_edit_vertical_guides_ = [640.0]
 metadata/_edit_horizontal_guides_ = [480.0]
 
@@ -261,7 +261,7 @@ trail_section_subdivisions = 1
 position = Vector2(320, 240)
 copy_mode = 2
 
-[node name="AudioSpectrum" parent="CenterContainer/Control/SubViewportContainer/SubViewport" instance=ExtResource("3_6dnic")]
+[node name="AudioSpectrum" parent="CenterContainer/Control/SubViewportContainer/SubViewport" instance=ExtResource("3_ena4s")]
 unique_name_in_owner = true
 visible = false
 offset_left = 130.0
@@ -304,7 +304,7 @@ texture = SubResource("AtlasTexture_k66bi")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="AudioWaveform" parent="CenterContainer/Control/SubViewportContainer/SubViewport" instance=ExtResource("3_2lr8w")]
+[node name="AudioWaveform" parent="CenterContainer/Control/SubViewportContainer/SubViewport" instance=ExtResource("6_j1xao")]
 unique_name_in_owner = true
 visible = false
 anchors_preset = 4
