@@ -42,13 +42,13 @@ func init_settings(overlay: Control) -> void:
 	%Setting_Anchor.uninit()
 	%Setting_Size.uninit()
 
-	%Setting_Position.init_config_overlay(main, overlay, "position_offset")
-	%Setting_Anchor.init_config_overlay(main, overlay, "anchors_preset", func(_value: int) -> void:
-		%Setting_Position.value = Vector2i.ZERO
-	)
 	%Setting_Size.init_config_overlay(main, overlay, "size", func(_value: Vector2) -> void:
 		%Setting_Anchor._emit_value_changed()
 	)
+	%Setting_Anchor.init_config_overlay(main, overlay, "anchors_preset", func(_value: int) -> void:
+		%Setting_Position.value = Vector2i.ZERO
+	)
+	%Setting_Position.init_config_overlay(main, overlay, "position_offset")
 
 ##
 ## Called when this menu is closed
