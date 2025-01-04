@@ -231,6 +231,7 @@ func load_scene(scene_path: String) -> bool:
 	var scene := _load_scene_from_file_path(scene_path)
 
 	if !scene is M8Scene:
+		scene_path = MAIN_SCENE_PATH
 		scene = _load_scene_from_file_path(MAIN_SCENE_PATH)
 
 	# remove existing scene from viewport
