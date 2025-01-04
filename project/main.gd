@@ -401,8 +401,8 @@ func init_overlays() -> void:
 	_init_overlay(overlay_spectrum)
 	_init_overlay(overlay_waveform)
 
-	get_window().size_changed.disconnect(_overlay_update_viewport_size)
-	get_window().size_changed.connect(_overlay_update_viewport_size)
+	if !get_window().size_changed.is_connected(_overlay_update_viewport_size):
+		get_window().size_changed.connect(_overlay_update_viewport_size)
 	_overlay_update_viewport_size()
 
 ##
@@ -761,7 +761,7 @@ func update_audio_analyzer() -> void:
 	# audio_level = max(audio_level_raw, lerp(audio_level_raw, last_audio_level, 0.95))
 	# last_audio_level = audio_level
 
-	var peak = db_to_linear((audio_get_peak_volume().x + audio_get_peak_volume().y) / 2.0)
+	var peak := db_to_linear((audio_get_peak_volume().x + audio_get_peak_volume().y) / 2.0)
 	audio_level = lerp(audio_level, peak, 0.2)
 	audio_level = max(audio_level, peak)
 	last_audio_level = audio_level
@@ -780,13 +780,13 @@ func _input(event: InputEvent) -> void:
 		# screenshot F12
 		if event.pressed and event.keycode == KEY_F12:
 			var id := 1
-			var name := "%d.png" % id
+			var screenshot_name := "%d.png" % id
 
-			while FileAccess.file_exists(name):
+			while FileAccess.file_exists(screenshot_name):
 				id += 1
-				name = "%d.png" % id
+				screenshot_name = "%d.png" % id
 
-			get_viewport().get_texture().get_image().save_png(name)
+			get_viewport().get_texture().get_image().save_png(screenshot_name)
 
 		# fullscreen ALT+ENTER toggle
 		if event.pressed and event.keycode == KEY_ENTER and event.alt_pressed:

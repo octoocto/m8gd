@@ -6,8 +6,6 @@ const ICON_LOAD := preload("res://assets/icon/Load.png")
 
 @onready var button_exit: Button = %ButtonExit
 
-@onready var slider_volume: HSlider = %SliderVolume
-
 @onready var main: Main
 
 var is_key_rebinding := false
@@ -250,8 +248,6 @@ func _init_menu_camera() -> void:
 ##
 func _init_menu_audio() -> void:
 
-	var config := main.config
-
 	# volume
 
 	%Setting_Volume.init_config_global(main, "volume", func(value: float) -> void:
@@ -393,12 +389,16 @@ func _init_menu_video() -> void:
 			0:
 				get_viewport().scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR
 				%Setting_FSRSharpness.enabled = false
+				%Setting_TAA.enabled = true
 			1:
 				get_viewport().scaling_3d_mode = Viewport.SCALING_3D_MODE_FSR
 				%Setting_FSRSharpness.enabled = true
+				%Setting_TAA.enabled = true
 			2:
+				%Setting_TAA.value = false
 				get_viewport().scaling_3d_mode = Viewport.SCALING_3D_MODE_FSR2
 				%Setting_FSRSharpness.enabled = true
+				%Setting_TAA.enabled = false
 	)
 
 	%Setting_RenderScale.init_config_global(main, "render_scale", func(value: float) -> void:
