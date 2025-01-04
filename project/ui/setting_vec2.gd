@@ -112,7 +112,7 @@ func _update_format() -> void:
 func init_config_camera_2(main: Main, property_x: String, property_y: String) -> void:
 	var config_property_x := main._get_propkey_camera(property_x)
 	var config_property_y := main._get_propkey_camera(property_y)
-	_init_value(
+	init_to_value(
 		func() -> Variant:
 			var camera := main.get_scene_camera()
 			if camera:

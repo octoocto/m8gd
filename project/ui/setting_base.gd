@@ -52,14 +52,23 @@ func _clear_signals() -> void:
 	for conn: Dictionary in value_changed.get_connections():
 		value_changed.disconnect(conn.callable)
 
-func _init_value(value_init_fn: Callable, value_changed_fn: Callable) -> void:
+func init_to_value(value_init_fn: Variant, value_changed_fn: Callable) -> void:
 	assert("value" in self)
 	assert(!_is_initialized, "This setting has already been initialized: %s" % name)
 
-	_value_init_fn = value_init_fn
-	value_changed.connect(value_changed_fn)
+	var initial_value: Variant
 
-	set("value", _value_init_fn.call())
+	if value_init_fn is Callable:
+		_value_init_fn = value_init_fn
+		initial_value = _value_init_fn.call()
+
+	else:
+		_value_init_fn = func() -> Variant: return value_init_fn
+		initial_value = _value_init_fn
+		
+	value_changed.connect(value_changed_fn)
+	set("value",initial_value)
+
 	_is_initialized = true
 
 ##
@@ -89,7 +98,8 @@ func uninit() -> void:
 ## Set this control to an initial value and value_changed function.
 ##
 func init(value: Variant, value_changed_fn: Callable) -> void:
-	_init_value(func() -> Variant: return value, value_changed_fn)
+	init_to_value(func() -> Variant: return value, value_changed_fn)
+
 
 ##
 ## Link this setting to a global config property and a callback function
@@ -102,7 +112,7 @@ func init(value: Variant, value_changed_fn: Callable) -> void:
 ##
 func init_config_global(main: Main, property: String, value_changed_fn: Variant = null) -> void:
 	assert(value_changed_fn is Callable or value_changed_fn == null)
-	_init_value(
+	init_to_value(
 		func() -> Variant: return main.config.get_property_global(property),
 		func(value: Variant) -> void:
 			if value_changed_fn: value_changed_fn.call(value)
@@ -114,7 +124,7 @@ func init_config_global(main: Main, property: String, value_changed_fn: Variant 
 ##
 func init_config_profile(main: Main, property: String, value_changed_fn: Variant = null) -> void:
 	assert(value_changed_fn is Callable or value_changed_fn == null)
-	_init_value(
+	init_to_value(
 		func() -> Variant: return main.config.get_property(property, get("value")),
 		func(value: Variant) -> void:
 			if value_changed_fn: value_changed_fn.call(value)
@@ -129,7 +139,7 @@ func init_config_profile(main: Main, property: String, value_changed_fn: Variant
 ##
 func init_config_scene(main: Main, property: String, value_changed_fn: Variant = null) -> void:
 	assert(value_changed_fn is Callable or value_changed_fn == null)
-	_init_value(
+	init_to_value(
 		func() -> Variant:
 			if property in main.current_scene:
 				return main.config.get_property_scene(property, main.current_scene.get(property))
@@ -154,7 +164,7 @@ func init_config_scene(main: Main, property: String, value_changed_fn: Variant =
 func init_config_overlay(main: Main, overlay: Control, property: String, value_changed_fn: Variant = null) -> void:
 	assert(value_changed_fn is Callable or value_changed_fn == null)
 	var config_property := main._get_propkey_overlay(overlay, property)
-	_init_value(
+	init_to_value(
 		func() -> Variant: return main.config.get_property(config_property, overlay.get(property)),
 		func(value: Variant) -> void:
 			overlay.set(property, value)
@@ -189,7 +199,7 @@ func init_config_camera(main: Main, property: String, value_changed_fn: Variant 
 	assert(value_changed_fn is Callable or value_changed_fn == null)
 	assert(value_init_fn is Callable or value_init_fn == null)
 	var config_property := main._get_propkey_camera(property)
-	_init_value(
+	init_to_value(
 		func() -> Variant:
 			var init_value: Variant
 			if main.get_scene_camera():
@@ -221,7 +231,7 @@ func init_config_shader(main: Main, shader_node_path: NodePath, shader_parameter
 	assert(main.has_node(shader_node_path))
 	var shader_node: ColorRect = main.get_node(shader_node_path)
 	var config_property := main._get_propkey_filter_shader(shader_node, shader_parameter)
-	_init_value(
+	init_to_value(
 		func() -> Variant: return main.config.get_property(config_property, main.get_filter_shader_parameter(shader_node_path, shader_parameter)),
 		func(value: Variant) -> void:
 			main.set_filter_shader_parameter(shader_node_path, shader_parameter, value)
@@ -255,6 +265,9 @@ func connect_to_enable(control: Control) -> SettingBase:
 
 	return self
 
+##
+## Links this setting to unhide/hide a control node.
+##
 func connect_to_visible(control: Control, check_fn: Variant = null) -> SettingBase:
 	assert(check_fn == null or check_fn is Callable)
 	var invert := false

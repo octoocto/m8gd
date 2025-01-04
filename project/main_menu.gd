@@ -283,19 +283,16 @@ func _init_menu_audio() -> void:
 			%LineEditAudioLatency.placeholder_text = "%f ms" % AudioServer.get_output_latency()
 	)
 
-	%Setting_SAEnable.init(config.audio_analyzer_enabled, func(value: bool) -> void:
+	%Setting_SAEnable.init_config_global(main, "audio_analyzer_enabled", func(value: bool) -> void:
 		main.audio_set_spectrum_analyzer_enabled(value)
-		config.set_property_global("audio_analyzer_enabled", value)
 	)
 
-	%Setting_SAMin.init(config.audio_analyzer_min_freq, func(value: int) -> void:
+	%Setting_SAMin.init_config_global(main, "audio_analyzer_min_freq", func(value: int) -> void:
 		main.visualizer_frequency_min = value
-		config.set_property_global("audio_analyzer_min_freq", value)
 	)
 
-	%Setting_SAMax.init(config.audio_analyzer_max_freq, func(value: int) -> void:
+	%Setting_SAMax.init_config_global(main, "audio_analyzer_max_freq", func(value: int) -> void:
 		main.visualizer_frequency_max = value
-		config.set_property_global("audio_analyzer_max_freq", value)
 	)
 
 
@@ -319,7 +316,7 @@ func _init_menu_video() -> void:
 		get_window().always_on_top = value
 	)
 
-	%Setting_WindowSize.init(6, func(value: int) -> void:
+	%Setting_WindowSize.init_to_value(6, func(value: int) -> void:
 		%Setting_CustomWindowSize.visible = false
 		match value:
 			0: %Setting_CustomWindowSize.value = Vector2i(640, 480)
@@ -332,7 +329,7 @@ func _init_menu_video() -> void:
 	)
 
 	var init_window_size := Vector2i(config.window_width, config.window_height)
-	%Setting_CustomWindowSize.init(init_window_size, func(value: Vector2i) -> void:
+	%Setting_CustomWindowSize.init_to_value(init_window_size, func(value: Vector2i) -> void:
 		if get_window().size != value:
 			get_window().size = value
 			config.set_property_global("window_width", value.x)
