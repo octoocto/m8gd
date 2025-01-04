@@ -30,6 +30,7 @@ func _update() -> void:
 	if not is_inside_tree(): await ready
 
 	modulate = Color.WHITE if enabled else Color.from_hsv(0, 0, 0.25)
+	%CheckButton.disabled = !enabled
 
 	if setting_name == "":
 		%LabelName.visible = false
