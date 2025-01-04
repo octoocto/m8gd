@@ -52,7 +52,7 @@ func has_3d_camera() -> bool:
 ## Returns the Camera3D in this scene is there is one. Returns null if not.
 ##
 func get_3d_camera() -> M8SceneCamera3D:
-	return %Camera3D
+	return %Camera3D if has_node("%Camera3D") else null
 
 ##
 ## Load an image or video and apply its texture to a texture rect, if possible.
