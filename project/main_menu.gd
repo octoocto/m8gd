@@ -638,6 +638,20 @@ func _init_menu_model() -> void:
 		if _model(): _model().set_screen_emission(value)
 	)
 
+	main.scene_loaded.connect(func(_scene_path: String, scene: M8Scene) -> void:
+		var enabled := scene.has_3d_camera()
+
+		for setting in color_settings:
+			setting.enabled = enabled
+			%Setting_ModelHighlightOpacity.enabled = enabled
+			%Setting_ModelScreenFilter.enabled = enabled
+			%Setting_ModelScreenEmission.enabled = enabled
+
+		%Setting_ModelHighlightOpacity.reinit()
+		%Setting_ModelScreenFilter.reinit()
+		%Setting_ModelScreenEmission.reinit()
+	)
+
 ##
 ## Setup the device connection menu controls.
 ##
