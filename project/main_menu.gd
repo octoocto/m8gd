@@ -222,6 +222,7 @@ func _init_menu_camera() -> void:
 
 	%Setting_MouseCamera.init_config_camera(main, "mouse_controlled_pan_zoom", func(value: bool) -> void:
 		main.current_scene.get_3d_camera().mouse_controlled_pan_zoom = value
+		if !value: main.current_scene.get_3d_camera().set_transform_to_base()
 	)
 
 	%Setting_HumanCamera.init_config_camera(main, "humanized_movement", func(value: bool) -> void:
