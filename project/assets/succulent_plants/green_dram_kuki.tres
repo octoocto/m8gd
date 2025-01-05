@@ -1,0 +1,5 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://nqslr6d6ha2f"]
+
+[resource]
+resource_name = "green_dram_kuki"
+albedo_color = Color(0.389381, 0.778761, 0.416947, 1)

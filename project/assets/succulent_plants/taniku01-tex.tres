@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://veb2g6vptu67"]
+
+[ext_resource type="Texture2D" uid="uid://sw144ksus5yx" path="res://assets/succulent_plants/textures/taniku01-tex_baseColor.png" id="1_73kmh"]
+
+[resource]
+resource_name = "taniku01-tex"
+albedo_texture = ExtResource("1_73kmh")

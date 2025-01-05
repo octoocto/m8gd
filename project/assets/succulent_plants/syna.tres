@@ -1,0 +1,20 @@
+[gd_resource type="StandardMaterial3D" load_steps=3 format=3 uid="uid://d2oyaa5lu3per"]
+
+[sub_resource type="Gradient" id="Gradient_bj3gf"]
+interpolation_color_space = 1
+offsets = PackedFloat32Array(0, 0.451449, 0.535507, 0.981884, 1)
+colors = PackedColorArray(0.265118, 0.265118, 0.265118, 1, 1, 1, 1, 1, 0.951904, 0.951904, 0.951904, 1, 0.219715, 0.219715, 0.219715, 1, 0.19, 0.19, 0.19, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_s6hft"]
+gradient = SubResource("Gradient_bj3gf")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+metadata/_snap_enabled = true
+
+[resource]
+resource_name = "syna"
+albedo_color = Color(0.31, 0.25141, 0.1798, 1)
+albedo_texture = SubResource("GradientTexture2D_s6hft")
+uv1_scale = Vector3(1.765, 1.99, 1)
+uv1_offset = Vector3(0.505, 0.505, 0)
+uv1_triplanar = true

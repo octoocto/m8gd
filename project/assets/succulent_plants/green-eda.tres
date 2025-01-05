@@ -1,0 +1,5 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://cvxgd6fhsw2a5"]
+
+[resource]
+resource_name = "green-eda"
+albedo_color = Color(0.379992, 0.716814, 0.336205, 1)
