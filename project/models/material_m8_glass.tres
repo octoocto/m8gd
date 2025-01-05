@@ -1,0 +1,13 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://bx4wimtm1r58y"]
+
+[ext_resource type="Shader" path="res://shaders/device_screen_glass.gdshader" id="1_4ogah"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_4ogah")
+shader_parameter/albedo = Color(0.25, 0.25, 0.25, 0.00784314)
+shader_parameter/roughness = 0.02
+shader_parameter/specular = 0.0
+shader_parameter/metallic = 30.0
+shader_parameter/specular_light_size = 0.05
+shader_parameter/specular_light_opacity = 1.0

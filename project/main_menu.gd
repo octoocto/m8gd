@@ -532,14 +532,14 @@ func _init_menu_input() -> void:
 func _init_menu_model() -> void:
 
 	for arr: Array in [
-		[%Setting_ModelColorUp, "%Keycap_Up", "model_color_key_up"],
-		[%Setting_ModelColorDown, "%Keycap_Down", "model_color_key_down"],
-		[%Setting_ModelColorLeft, "%Keycap_Left", "model_color_key_left"],
-		[%Setting_ModelColorRight, "%Keycap_Right", "model_color_key_right"],
-		[%Setting_ModelColorOption, "%Keycap_Option", "model_color_key_option"],
-		[%Setting_ModelColorEdit, "%Keycap_Edit", "model_color_key_edit"],
-		[%Setting_ModelColorShift, "%Keycap_Shift", "model_color_key_shift"],
-		[%Setting_ModelColorPlay, "%Keycap_Play", "model_color_key_play"],
+		[%Setting_ModelColorUp, "%KeyUp", "model_color_key_up"],
+		[%Setting_ModelColorDown, "%KeyDown", "model_color_key_down"],
+		[%Setting_ModelColorLeft, "%KeyLeft", "model_color_key_left"],
+		[%Setting_ModelColorRight, "%KeyRight", "model_color_key_right"],
+		[%Setting_ModelColorOption, "%KeyOption", "model_color_key_option"],
+		[%Setting_ModelColorEdit, "%KeyEdit", "model_color_key_edit"],
+		[%Setting_ModelColorShift, "%KeyShift", "model_color_key_shift"],
+		[%Setting_ModelColorPlay, "%KeyPlay", "model_color_key_play"],
 		[%Setting_ModelColorBody, "%Body", "model_color_body"]
 	]:
 		var setting: SettingBase = arr[0]
@@ -564,24 +564,24 @@ func _init_menu_model() -> void:
 				s.set_value_no_signal(value)
 			if _model():
 				var colors: Array[Color] = [
-					_model("%Keycap_Up").material_overlay.albedo_color,
-					_model("%Keycap_Down").material_overlay.albedo_color,
-					_model("%Keycap_Left").material_overlay.albedo_color,
-					_model("%Keycap_Right").material_overlay.albedo_color
+					_model("%KeyUp").material_overlay.albedo_color,
+					_model("%KeyDown").material_overlay.albedo_color,
+					_model("%KeyLeft").material_overlay.albedo_color,
+					_model("%KeyRight").material_overlay.albedo_color
 				]
-				_model("%Keycap_Up").material_overlay.albedo_color = Color(value, colors[0].a)
-				_model("%Keycap_Down").material_overlay.albedo_color = Color(value, colors[1].a)
-				_model("%Keycap_Left").material_overlay.albedo_color = Color(value, colors[2].a)
-				_model("%Keycap_Right").material_overlay.albedo_color = Color(value, colors[3].a)
+				_model("%KeyUp").material_overlay.albedo_color = Color(value, colors[0].a)
+				_model("%KeyDown").material_overlay.albedo_color = Color(value, colors[1].a)
+				_model("%KeyLeft").material_overlay.albedo_color = Color(value, colors[2].a)
+				_model("%KeyRight").material_overlay.albedo_color = Color(value, colors[3].a)
 			main.key_overlay.color_directional = value
 		)
 
 	# highlight color for other buttons
 	for arr: Array in [
-		[%Setting_ModelColorHLOption, "%Keycap_Option", "color_option", "hl_color_option"],
-		[%Setting_ModelColorHLEdit, "%Keycap_Edit", "color_edit", "hl_color_edit"],
-		[%Setting_ModelColorHLShift, "%Keycap_Shift", "color_shift", "hl_color_shift"],
-		[%Setting_ModelColorHLPlay, "%Keycap_Play", "color_play", "hl_color_play"],
+		[%Setting_ModelColorHLOption, "%KeyOption", "color_option", "hl_color_option"],
+		[%Setting_ModelColorHLEdit, "%KeyEdit", "color_edit", "hl_color_edit"],
+		[%Setting_ModelColorHLShift, "%KeyShift", "color_shift", "hl_color_shift"],
+		[%Setting_ModelColorHLPlay, "%KeyPlay", "color_play", "hl_color_play"],
 	]:
 		var setting: SettingBase = arr[0]
 		var node_path: String = arr[1]

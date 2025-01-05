@@ -1,16 +1,5 @@
 class_name M8Scene extends Node3D
 
-# const COLOR_SAMPLE_POINT_1 := Vector2i(0, 0)
-# const COLOR_SAMPLE_POINT_2 := Vector2i(19, 67)
-# const COLOR_SAMPLE_POINT_3 := Vector2i(400, 67)
-
-# @export var receiver_texture: ImageTexture
-
-## 3 colors sampled from the m8's display texture
-# @export var color_fg: Color
-# @export var color_fg2: Color
-# @export var color_bg: Color
-
 @export var m8_scene_name: String
 
 var main: Main
@@ -34,13 +23,13 @@ func get_export_vars() -> Array:
 ## Returns true if this scene contains a DeviceModel.
 ##
 func has_device_model() -> bool:
-	return has_node("%DeviceModel") and %DeviceModel is DeviceModel
+	return has_node("%M8Model") and %M8Model is DeviceModel
 
 ##
 ## Returns the DeviceModel in this scene is there is one. Returns null if not.
 ##
 func get_device_model() -> DeviceModel:
-	return %DeviceModel
+	return %M8Model
 
 ##
 ## Returns true if this scene contains a Camera3D.
@@ -80,19 +69,3 @@ func load_media_to_texture_rect(path: String, vsp: VideoStreamPlayer = null) -> 
 
 func get_setting(setting: String) -> Variant:
 	return main.config.get_property_scene(setting)
-
-# func update_m8_color_samples():
-#	 if main.m8_display_viewport != null:
-#		 var image = receiver_texture.get_image()
-#		 if image != null:
-#			 color_fg2 = image.get_pixelv(COLOR_SAMPLE_POINT_3)
-#			 color_fg = image.get_pixelv(COLOR_SAMPLE_POINT_2)
-#			 color_bg = image.get_pixelv(COLOR_SAMPLE_POINT_1)
-
-# func _physics_process(_delta):
-#	 if receiver_texture != null:
-#		 var image = receiver_texture.get_image()
-#		 if image != null:
-#			 color_fg2 = image.get_pixelv(COLOR_SAMPLE_POINT_3)
-#			 color_fg = image.get_pixelv(COLOR_SAMPLE_POINT_2)
-#			 color_bg = image.get_pixelv(COLOR_SAMPLE_POINT_1)

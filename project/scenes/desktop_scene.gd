@@ -85,7 +85,7 @@ var surface_material_custom: StandardMaterial3D = null
 func init(p_main: Main) -> void:
 	super(p_main)
 
-	%DeviceModel.init(main)
+	get_device_model().init(main)
 	camera.init(main)
 
 func init_menu(menu: SceneMenu) -> void:

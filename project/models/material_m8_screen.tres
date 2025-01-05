@@ -1,0 +1,18 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://catw8vnxgj5jg"]
+
+[ext_resource type="Shader" path="res://shaders/device_screen.gdshader" id="1_7pb8s"]
+[ext_resource type="Texture2D" uid="uid://ras5y3yqijkx" path="res://assets/m8_screen_placeholder.png" id="2_imxx7"]
+
+[resource]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("1_7pb8s")
+shader_parameter/emission_amount = 0.7
+shader_parameter/edge_darken = -0.3
+shader_parameter/edge_burn = 0.0
+shader_parameter/edge_burn_ramp = 10.0
+shader_parameter/brightness = 0.0
+shader_parameter/backlight = false
+shader_parameter/use_linear_filter = true
+shader_parameter/texture_linear = ExtResource("2_imxx7")
+shader_parameter/texture_nearest = ExtResource("2_imxx7")

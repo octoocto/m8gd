@@ -24,17 +24,17 @@ void fragment() {
 	{
 		ALBEDO = texture(texture_nearest, UV).rgb;
 	}
-	
+
 	if (backlight)
 	{
 		ALBEDO = clamp(ALBEDO + brightness, 0.0, 1.0);
-		
+
 		ALBEDO -= pow(abs(UV.x - 0.5), 7) * edge_darken;
 		ALBEDO -= pow(abs(UV.y - 0.5), 6) * edge_darken;
 
 		ALBEDO -= pow(abs(UV.x - 0.5) * 2.0, edge_burn_ramp) * edge_burn;
 		ALBEDO -= pow(abs(UV.y - 0.5) * 2.0, edge_burn_ramp) * edge_burn;
-		
+
 		EMISSION = ALBEDO * emission_amount;
 	}
 

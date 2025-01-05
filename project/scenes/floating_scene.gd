@@ -91,7 +91,7 @@ extends M8Scene
 func init(p_main: Main) -> void:
 	super(p_main)
 
-	%DeviceModel.init(main)
+	get_device_model().init(main)
 	%AudioSpectrum.init(main)
 	%DisplayMesh.material_override.set_shader_parameter("tex", main.m8_client.get_display_texture())
 	camera.init(main)

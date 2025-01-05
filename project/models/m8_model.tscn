@@ -1,0 +1,140 @@
+[gd_scene load_steps=15 format=3 uid="uid://iwhr1bmv263q"]
+
+[ext_resource type="PackedScene" uid="uid://dk7t461afqmq" path="res://assets/m8_tracker/m8_model.glb" id="1_caehv"]
+[ext_resource type="Material" uid="uid://bd1asqbjl3odm" path="res://models/material_m8_screw.tres" id="2_8q2ys"]
+[ext_resource type="Material" uid="uid://catw8vnxgj5jg" path="res://models/material_m8_screen.tres" id="2_lrirv"]
+[ext_resource type="Script" path="res://models/m8_model.gd" id="2_xv2tg"]
+[ext_resource type="Material" uid="uid://bteaijler8fto" path="res://models/material_m8_keycap.tres" id="3_3mgv6"]
+[ext_resource type="Material" uid="uid://dg5vx4cep1n2d" path="res://models/material_m8_labels.tres" id="4_q8ktk"]
+[ext_resource type="Material" uid="uid://lctfc7euwygw" path="res://models/material_m8_keycap_highlight.tres" id="5_6oh3r"]
+[ext_resource type="Material" uid="uid://g8po1mp7xinq" path="res://models/material_m8_body.tres" id="5_fqt17"]
+[ext_resource type="Material" uid="uid://be3p66xqo7iqm" path="res://models/material_m8_rim.tres" id="6_km1st"]
+[ext_resource type="Material" uid="uid://bx4wimtm1r58y" path="res://models/material_m8_glass.tres" id="7_sxjvu"]
+[ext_resource type="Material" uid="uid://brl2lskfjpwxk" path="res://models/material_m8_screen_bezel.tres" id="8_hlgg7"]
+[ext_resource type="Material" uid="uid://di0h5jn753ri3" path="res://models/material_m8_screen_black.tres" id="9_epesr"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xgbwu"]
+size = Vector3(4.78, 1, 6.55)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5kd5q"]
+shading_mode = 0
+albedo_color = Color(0, 0, 0, 1)
+
+[node name="M8Model" instance=ExtResource("1_caehv")]
+script = ExtResource("2_xv2tg")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.309917)
+shape = SubResource("BoxShape3D_xgbwu")
+
+[node name="AudioJacks" parent="." index="1"]
+material_override = ExtResource("2_8q2ys")
+
+[node name="BottomLeft" parent="Screws" index="0"]
+material_override = ExtResource("2_8q2ys")
+
+[node name="BottomRight" parent="Screws" index="1"]
+material_override = ExtResource("2_8q2ys")
+
+[node name="TopLeft" parent="Screws" index="2"]
+material_override = ExtResource("2_8q2ys")
+
+[node name="TopRight" parent="Screws" index="3"]
+material_override = ExtResource("2_8q2ys")
+
+[node name="KeyDown" parent="Keycaps" index="0"]
+unique_name_in_owner = true
+material_override = ExtResource("3_3mgv6")
+material_overlay = ExtResource("5_6oh3r")
+
+[node name="KeyEdit" parent="Keycaps" index="1"]
+unique_name_in_owner = true
+material_override = ExtResource("3_3mgv6")
+material_overlay = ExtResource("5_6oh3r")
+
+[node name="KeyLeft" parent="Keycaps" index="2"]
+unique_name_in_owner = true
+material_override = ExtResource("3_3mgv6")
+material_overlay = ExtResource("5_6oh3r")
+
+[node name="KeyOption" parent="Keycaps" index="3"]
+unique_name_in_owner = true
+material_override = ExtResource("3_3mgv6")
+material_overlay = ExtResource("5_6oh3r")
+
+[node name="KeyPlay" parent="Keycaps" index="4"]
+unique_name_in_owner = true
+material_override = ExtResource("3_3mgv6")
+material_overlay = ExtResource("5_6oh3r")
+
+[node name="KeyRight" parent="Keycaps" index="5"]
+unique_name_in_owner = true
+material_override = ExtResource("3_3mgv6")
+material_overlay = ExtResource("5_6oh3r")
+
+[node name="KeyShift" parent="Keycaps" index="6"]
+unique_name_in_owner = true
+material_override = ExtResource("3_3mgv6")
+material_overlay = ExtResource("5_6oh3r")
+
+[node name="KeyUp" parent="Keycaps" index="7"]
+unique_name_in_owner = true
+material_override = ExtResource("3_3mgv6")
+material_overlay = ExtResource("5_6oh3r")
+
+[node name="SwitchUp" parent="." index="4"]
+visible = false
+
+[node name="SwitchLeft" parent="." index="5"]
+visible = false
+
+[node name="SwitchDown" parent="." index="6"]
+visible = false
+
+[node name="SwitchRight" parent="." index="7"]
+visible = false
+
+[node name="SwitchShift" parent="." index="8"]
+visible = false
+
+[node name="SwitchPlay" parent="." index="9"]
+visible = false
+
+[node name="SwitchOption" parent="." index="10"]
+visible = false
+
+[node name="SwitchEdit" parent="." index="11"]
+visible = false
+
+[node name="Inside" parent="." index="13"]
+material_override = SubResource("StandardMaterial3D_5kd5q")
+
+[node name="Labels" parent="." index="14"]
+material_override = ExtResource("4_q8ktk")
+
+[node name="Body" parent="." index="15"]
+unique_name_in_owner = true
+material_override = ExtResource("5_fqt17")
+
+[node name="Bezel" parent="." index="16"]
+material_override = ExtResource("6_km1st")
+
+[node name="ScreenGlass" parent="." index="17"]
+material_override = ExtResource("7_sxjvu")
+
+[node name="ScreenHousing" parent="." index="18"]
+material_override = ExtResource("8_hlgg7")
+
+[node name="PowerButton" parent="." index="21"]
+material_override = ExtResource("5_fqt17")
+
+[node name="MicroUSBPort" parent="." index="22"]
+material_override = ExtResource("6_km1st")
+
+[node name="ScreenBlackPart" parent="." index="23"]
+material_override = ExtResource("9_epesr")
+
+[node name="Screen" parent="." index="24"]
+unique_name_in_owner = true
+transform = Transform3D(-33.3661, 0, 1.29932e-05, 0, 33.3661, 0, -1.29932e-05, 0, -33.3661, 0.0190179, 0.402652, -1.59689)
+material_override = ExtResource("2_lrirv")

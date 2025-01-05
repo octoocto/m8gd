@@ -1,13 +1,11 @@
-[gd_scene load_steps=27 format=3 uid="uid://f2tvhcv8kiuu"]
+[gd_scene load_steps=24 format=3 uid="uid://f2tvhcv8kiuu"]
 
 [ext_resource type="Script" path="res://scenes/desktop_scene.gd" id="1_0y3bn"]
-[ext_resource type="PackedScene" uid="uid://budu6000msy4d" path="res://device_model.tscn" id="2_kwwqq"]
-[ext_resource type="Shader" path="res://shaders/device_screen.gdshader" id="3_5bvpi"]
-[ext_resource type="Texture2D" uid="uid://ras5y3yqijkx" path="res://assets/m8_screen_placeholder.png" id="4_e4t2e"]
 [ext_resource type="PackedScene" uid="uid://bckroenwlecqv" path="res://scene_camera_3d.tscn" id="5_d472a"]
 [ext_resource type="Material" uid="uid://dv1jtj3wvh678" path="res://assets/grid_overlay.tres" id="7_7cg8p"]
+[ext_resource type="PackedScene" uid="uid://iwhr1bmv263q" path="res://models/m8_model.tscn" id="8_a1o7u"]
 [ext_resource type="PackedScene" uid="uid://ceqlf8kgdxjeb" path="res://grass_area.tscn" id="8_ophi6"]
-[ext_resource type="PackedScene" uid="uid://nepv47umjdf0" path="res://assets/plant_model.tscn" id="9_c3a4o"]
+[ext_resource type="PackedScene" uid="uid://nepv47umjdf0" path="res://models/plant_model.tscn" id="9_c3a4o"]
 [ext_resource type="Shader" path="res://grass_area.gdshader" id="9_wvtmw"]
 
 [sub_resource type="Environment" id="Environment_ayqpk"]
@@ -20,20 +18,6 @@ fog_light_color = Color(0, 0, 0, 1)
 fog_density = 0.001
 volumetric_fog_albedo = Color(0.114897, 0.114897, 0.114897, 1)
 volumetric_fog_ambient_inject = 0.53
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_4b25i"]
-resource_local_to_scene = true
-render_priority = 0
-shader = ExtResource("3_5bvpi")
-shader_parameter/emission_amount = 0.7
-shader_parameter/edge_darken = -0.3
-shader_parameter/edge_burn = 0.0
-shader_parameter/edge_burn_ramp = 10.0
-shader_parameter/brightness = 0.0
-shader_parameter/backlight = true
-shader_parameter/use_linear_filter = true
-shader_parameter/texture_linear = ExtResource("4_e4t2e")
-shader_parameter/texture_nearest = ExtResource("4_e4t2e")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_4c1u1"]
 size = Vector2(200, 200)
@@ -197,11 +181,6 @@ shadow_blur = 0.5
 spot_range = 43.892
 spot_angle = 36.8368
 
-[node name="DeviceModel" parent="." instance=ExtResource("2_kwwqq")]
-unique_name_in_owner = true
-transform = Transform3D(38.83, 0, 0, 0, 38.83, 0, 0, 0, 38.83, 0, 0.269188, 0)
-screen_material = SubResource("ShaderMaterial_4b25i")
-
 [node name="PlantModel" parent="." instance=ExtResource("9_c3a4o")]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.25, 0, 0)
@@ -220,5 +199,9 @@ material_override = SubResource("ShaderMaterial_wnfn1")
 extents = Vector3(20, 0, 20)
 grass_mesh = SubResource("RibbonTrailMesh_xwsvd")
 num_meshes = 32000
+
+[node name="M8Model" parent="." instance=ExtResource("8_a1o7u")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.416673, 0)
 
 [editable path="Camera3D"]
