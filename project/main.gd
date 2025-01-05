@@ -227,36 +227,39 @@ func _load_scene_from_file_path(scene_path: String) -> M8Scene:
 ## If the filepath is invalid or the scene is unable to load, returns [false].
 ##
 func load_scene(scene_path: String) -> bool:
+	return _start_task("load scene \"%s\"" % scene_path, func() -> bool:
 
-	var scene := _load_scene_from_file_path(scene_path)
+		var p_scene_path := scene_path
+		var scene := _load_scene_from_file_path(p_scene_path)
 
-	if !scene is M8Scene:
-		scene_path = MAIN_SCENE_PATH
-		scene = _load_scene_from_file_path(MAIN_SCENE_PATH)
+		if !scene is M8Scene:
+			p_scene_path = MAIN_SCENE_PATH
+			scene = _load_scene_from_file_path(MAIN_SCENE_PATH)
 
-	# remove existing scene from viewport
-	if current_scene:
-		print("freeing current scene...")
-		scene_root.remove_child(current_scene)
-		current_scene.queue_free()
-		current_scene = null
+		# remove existing scene from viewport
+		if current_scene:
+			print("freeing current scene...")
+			scene_root.remove_child(current_scene)
+			current_scene.queue_free()
+			current_scene = null
 
-	# add new scene and initialize
-	print("adding new scene...")
-	scene_root.add_child(scene)
-	scene.init(self)
-	menu.update_device_colors()
-	config.use_scene(scene)
-	current_scene = scene
+		# add new scene and initialize
+		print("adding new scene...")
+		scene_root.add_child(scene)
+		scene.init(self)
+		menu.update_device_colors()
+		config.use_scene(scene)
+		current_scene = scene
 
-	menu_scene.clear_params()
-	scene.init_menu(menu_scene)
+		menu_scene.clear_params()
+		scene.init_menu(menu_scene)
 
-	scene_loaded.emit(scene_path, scene)
+		scene_loaded.emit(p_scene_path, scene)
 
-	print("scene loaded!")
+		print("scene loaded!")
 
-	return true
+		return true
+	)
 
 ##
 ## Reset the current scene's properties to their default values.
