@@ -224,7 +224,6 @@ grow_vertical = 2
 
 [node name="OverlayContainer" type="CenterContainer" parent="CanvasLayer/UI"]
 unique_name_in_owner = true
-z_index = 1
 layout_mode = 0
 size_flags_horizontal = 2
 size_flags_vertical = 2
@@ -253,7 +252,6 @@ render_target_update_mode = 4
 
 [node name="OverlayAudioSpectrum" parent="CanvasLayer/UI/OverlayContainer/OverlayControl/OverlaySubViewportContainer/OverlaySubViewport" instance=ExtResource("2_tbmna")]
 unique_name_in_owner = true
-visible = false
 anchors_preset = 0
 anchor_left = 0.0
 anchor_top = 0.0
@@ -268,7 +266,6 @@ grow_vertical = 1
 
 [node name="OverlayDisplayPanel" parent="CanvasLayer/UI/OverlayContainer/OverlayControl/OverlaySubViewportContainer/OverlaySubViewport" instance=ExtResource("4_nrhlm")]
 unique_name_in_owner = true
-visible = false
 
 [node name="OverlayAudioWaveform" parent="CanvasLayer/UI/OverlayContainer/OverlayControl/OverlaySubViewportContainer/OverlaySubViewport" instance=ExtResource("5_p87tv")]
 unique_name_in_owner = true
@@ -296,7 +293,7 @@ position_offset = Vector2i(-30, -100)
 [node name="BackBufferCopy2" type="BackBufferCopy" parent="CanvasLayer/UI"]
 copy_mode = 2
 
-[node name="VHSFilter1" type="ColorRect" parent="CanvasLayer/UI"]
+[node name="VHSShader1" type="ColorRect" parent="CanvasLayer/UI"]
 unique_name_in_owner = true
 visible = false
 material = SubResource("ShaderMaterial_x0ssf")
@@ -307,10 +304,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="BackBufferCopy2" type="BackBufferCopy" parent="CanvasLayer/UI/VHSFilter1"]
+[node name="BackBufferCopy2" type="BackBufferCopy" parent="CanvasLayer/UI/VHSShader1"]
 copy_mode = 2
 
-[node name="VHSFilter2" type="ColorRect" parent="CanvasLayer/UI"]
+[node name="VHSShader2" type="ColorRect" parent="CanvasLayer/UI"]
 unique_name_in_owner = true
 visible = false
 material = SubResource("ShaderMaterial_i0wc8")
@@ -321,10 +318,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="BackBufferCopy" type="BackBufferCopy" parent="CanvasLayer/UI/VHSFilter2"]
+[node name="BackBufferCopy" type="BackBufferCopy" parent="CanvasLayer/UI/VHSShader2"]
 copy_mode = 2
 
-[node name="VHSFilter3" type="ColorRect" parent="CanvasLayer/UI"]
+[node name="CRTShader1" type="ColorRect" parent="CanvasLayer/UI"]
 unique_name_in_owner = true
 visible = false
 material = SubResource("ShaderMaterial_j82o4")
@@ -335,10 +332,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="BackBufferCopy2" type="BackBufferCopy" parent="CanvasLayer/UI/VHSFilter3"]
+[node name="BackBufferCopy2" type="BackBufferCopy" parent="CanvasLayer/UI/CRTShader1"]
 copy_mode = 2
 
-[node name="Filter4" type="ColorRect" parent="CanvasLayer/UI"]
+[node name="CRTShader2" type="ColorRect" parent="CanvasLayer/UI"]
 unique_name_in_owner = true
 visible = false
 material = SubResource("ShaderMaterial_pe34f")
@@ -350,10 +347,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="BackBufferCopy" type="BackBufferCopy" parent="CanvasLayer/UI/Filter4"]
+[node name="BackBufferCopy" type="BackBufferCopy" parent="CanvasLayer/UI/CRTShader2"]
 copy_mode = 2
 
-[node name="CRTShader" type="ColorRect" parent="CanvasLayer/UI"]
+[node name="CRTShader3" type="ColorRect" parent="CanvasLayer/UI"]
 unique_name_in_owner = true
 visible = false
 material = SubResource("ShaderMaterial_udd8c")
@@ -364,7 +361,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="BackBufferCopy" type="BackBufferCopy" parent="CanvasLayer/UI/CRTShader"]
+[node name="BackBufferCopy" type="BackBufferCopy" parent="CanvasLayer/UI/CRTShader3"]
 copy_mode = 2
 
 [node name="NoiseShader" type="ColorRect" parent="CanvasLayer/UI"]

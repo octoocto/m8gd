@@ -26,8 +26,7 @@ signal profile_loaded(profile_name: String)
 ## Loading a profile will also emit this signal if a new scene wasn't loaded.
 signal scene_loaded(scene_path: String, scene: M8Scene)
 
-@export var visualizer_ca_amount := 1.0
-@export var visualizer_glow_amount := 0.5
+@export var visualizer_aberration_amount := 1.0
 @export var visualizer_brightness_amount := 0.1
 @export var visualizer_frequency_min := 0
 @export var visualizer_frequency_max := 400
@@ -683,8 +682,8 @@ func _physics_process(delta: float) -> void:
 
 	# do shader parameter responses to audio
 
-	%CRTShader.material.set_shader_parameter("aberration", audio_level * visualizer_ca_amount)
-	%NoiseShader.material.set_shader_parameter("brightness", 1.0 + (audio_level * visualizer_brightness_amount))
+	%CRTShader3.material.set_shader_parameter("aberration", audio_level * visualizer_aberration_amount)
+	%CRTShader3.material.set_shader_parameter("brightness", 1.0 + (audio_level * visualizer_brightness_amount))
 	# %BGShader.material.set_shader_parameter("brightness", 1.0 + (audio_level * visualizer_brightness_amount))
 
 	# fade out status message

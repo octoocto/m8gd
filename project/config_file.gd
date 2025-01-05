@@ -106,7 +106,7 @@ var version: int = 0
 @export var audio_analyzer_min_freq: int = 800
 @export var audio_analyzer_max_freq: int = 1200
 @export var audio_to_brightness := 0.1
-@export var audio_to_ca := 0.02
+@export var audio_to_aberration := 0.02
 
 # audio settings
 @export var volume := 0.8

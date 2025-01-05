@@ -416,37 +416,37 @@ func _init_menu_video() -> void:
 func _init_menu_filters() -> void:
 
 	%Setting_ShaderVHS.init_config_profile(main, "shader_vhs", func(value: bool) -> void:
-		main.get_node("%VHSFilter1").visible = value
-		main.get_node("%VHSFilter2").visible = value
+		main.get_node("%VHSShader1").visible = value
+		main.get_node("%VHSShader2").visible = value
 	)
 	%Setting_ShaderCRT.init_config_profile(main, "shader_crt", func(value: bool) -> void:
-		main.get_node("%VHSFilter3").visible = value and %Setting_ShaderCRTScanLines.value
-		main.get_node("%Filter4").visible = value and %Setting_ShaderCRTReverseCurvature.value
-		main.get_node("%CRTShader").visible = value
+		main.get_node("%CRTShader1").visible = value and %Setting_ShaderCRTScanLines.value
+		main.get_node("%CRTShader2").visible = value and %Setting_ShaderCRTReverseCurvature.value
+		main.get_node("%CRTShader3").visible = value
 	)
 	%Setting_ShaderNoise.init_config_profile(main, "shader_noise", func(value: bool) -> void:
 		main.get_node("%NoiseShader").visible = value
 	)
 
-	%Setting_ShaderVHSSmear.init_config_shader(main, "%VHSFilter1", "smear")
-	%Setting_ShaderVHSWiggle.init_config_shader(main, "%VHSFilter1", "wiggle")
-	%Setting_ShaderVHSNoise.init_config_shader(main, "%VHSFilter2", "crease_opacity")
-	%Setting_ShaderVHSTape.init_config_shader(main, "%VHSFilter2", "tape_crease_smear")
+	%Setting_ShaderVHSSmear.init_config_shader(main, "%VHSShader1", "smear")
+	%Setting_ShaderVHSWiggle.init_config_shader(main, "%VHSShader1", "wiggle")
+	%Setting_ShaderVHSNoise.init_config_shader(main, "%VHSShader2", "crease_opacity")
+	%Setting_ShaderVHSTape.init_config_shader(main, "%VHSShader2", "tape_crease_smear")
 
 	%Setting_ShaderCRTScanLines.init_config_profile(main, "shader_crt_scan_lines", func(value: bool) -> void:
-		main.get_node("%VHSFilter3").visible = value and %Setting_ShaderCRT.value
+		main.get_node("%CRTShader1").visible = value and %Setting_ShaderCRT.value
 	)
 	%Setting_ShaderCRTReverseCurvature.init_config_profile(main, "shader_crt_reverse_curvature", func(value: bool) -> void:
-		main.get_node("%Filter4").visible = value and %Setting_ShaderCRT.value
+		main.get_node("%CRTShader2").visible = value and %Setting_ShaderCRT.value
 	)
-	%Setting_ShaderCRTCurvature.init_config_shader(main, "%CRTShader", "warp_amount")
-	%Setting_ShaderCRTVignette.init_config_shader(main, "%CRTShader", "vignette_opacity")
+	%Setting_ShaderCRTCurvature.init_config_shader(main, "%CRTShader3", "warp_amount")
+	%Setting_ShaderCRTVignette.init_config_shader(main, "%CRTShader3", "vignette_opacity")
 
 	%Setting_ShaderCRTAudioB.init_config_global(main, "audio_to_brightness", func(value: float) -> void:
 		main.visualizer_brightness_amount = value
 	)
-	%Setting_ShaderCRTAudioCA.init_config_global(main, "audio_to_ca", func(value: float) -> void:
-		main.visualizer_ca_amount = value
+	%Setting_ShaderCRTAudioCA.init_config_global(main, "audio_to_aberration", func(value: float) -> void:
+		main.visualizer_aberration_amount = value
 	)
 
 	%Setting_ShaderVHS.connect_to_enable(%Setting_ShaderVHSSmear)

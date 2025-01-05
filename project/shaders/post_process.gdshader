@@ -85,25 +85,25 @@ void fragment() {
 	COLOR.r = textureLod(SCREEN_TEXTURE, mirror(uv_r), mirror_lod(uv_r)).r;
 	COLOR.g = textureLod(SCREEN_TEXTURE, mirror(uv_g), mirror_lod(uv_g)).g;
 	COLOR.b = textureLod(SCREEN_TEXTURE, mirror(uv_b), mirror_lod(uv_b)).b;
-	
 
-	
+
+
 
 	vec2 mirror_uv = mirror(uv);
 	float border_depth = clamp(max(abs(0.5 - uv.x), abs(0.5 - uv.y)), 0, 1) * 2.0;
 	float screen_depth = clamp(max(abs(0.5 - mirror_uv.x), abs(0.5 - mirror_uv.y)), 0, 1) * 2.0;
 	float border_shadow = clamp(pow((border_depth - 1.000) * border_shadow_range, border_shadow_ramp), 0, 1) + 0.1;
-		
+
 	float screen_vignette = 1.0 - clamp(abs(border_depth - 1.95) * vignette_range, 0.0, 1.0);
-	
-	
+
+
 	if (is_in_mirror(uv)) {
 		COLOR.rgb *= reflection_amount * border_shadow;
 		COLOR.rgb *= mirror_overlay.rgb;
 	} else {
 		COLOR.rgb *= 1.0 - vec3(pow(screen_vignette, vignette_ramp));
 	}
-	
+
 	if (border_depth > 1.0) {
 		COLOR.rgb += border_color * border_shadow;
 		COLOR.rgb = clamp(COLOR.rgb, vec3(0), vec3(1));
