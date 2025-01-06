@@ -35,9 +35,9 @@ func add_auto(property: String, setting_name: String = "") -> SettingBase:
 
 	# add menu items
 	var scene := main.current_scene
-	var export_vars := scene.get_export_vars()
+	var property_list := scene.get_property_list()
 
-	for prop: Dictionary in export_vars:
+	for prop: Dictionary in property_list:
 		if prop.name != property: continue
 
 		var setting := MenuUtils.create_setting_from_property(prop)

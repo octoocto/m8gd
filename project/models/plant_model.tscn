@@ -17,7 +17,7 @@ visible = false
 
 [node name="green dram" parent="Sketchfab_model/Root/Pot002" index="2"]
 unique_name_in_owner = true
-transform = Transform3D(0.012756, -0.126693, -0.0792938, 0.149458, 0.0108066, 0.00676988, -3.56636e-09, -0.07958, 0.12715, -0.00333744, 0.0868662, 0.42577)
+transform = Transform3D(-0.0950257, -0.0983798, -0.0615777, 0.116063, -0.0805563, -0.0504135, -1.73482e-08, -0.07958, 0.12715, -0.0376695, 0.0697476, 0.42577)
 visible = false
 
 [node name="Pot001" parent="Sketchfab_model/Root" index="2"]
@@ -36,12 +36,12 @@ visible = false
 
 [node name="Pot006" parent="Sketchfab_model/Root" index="5"]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+transform = Transform3D(1.12, 0, 0, 0, 1.12, 0, 0, 0, 1.12, 0, 0, -0.04)
 visible = false
 
 [node name="Pot007" parent="Sketchfab_model/Root" index="6"]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+transform = Transform3D(1.095, 0, 0, 0, 1.095, 0, 0, 0, 1.095, 0, 0, -0.02)
 visible = false
 
 [node name="Pot008" parent="Sketchfab_model/Root" index="7"]

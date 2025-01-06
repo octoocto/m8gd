@@ -38,6 +38,11 @@ var surface_material_custom: StandardMaterial3D = null
 		enable_plant = value
 		%PlantModel.visible = value
 
+@export var plant_type: PlantModel.Type = PlantModel.Type.TYPE_C:
+	set(value):
+		plant_type = value
+		%PlantModel.type = plant_type
+
 @export var enable_directional_light := true:
 	set(value):
 		enable_directional_light = value
@@ -118,7 +123,9 @@ func init_menu(menu: SceneMenu) -> void:
 
 	menu.add_section("Decorations")
 
-	menu.add_auto("enable_plant")
+	var setting_plant := menu.add_auto("enable_plant")
+	setting_plant.connect_to_visible(menu.add_auto("plant_type"))
+
 	menu.add_auto("enable_grass")
 
 	menu.add_section("Lighting")

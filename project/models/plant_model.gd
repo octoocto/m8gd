@@ -1,5 +1,5 @@
 @tool
-extends Node3D
+class_name PlantModel extends Node3D
 
 @onready var plant_nodes: Array[Node3D] = [
 	%Pot003,
@@ -14,7 +14,7 @@ extends Node3D
 	%Pot010,
 ]
 
-enum Plant {
+enum Type {
 	TYPE_A,
 	TYPE_B,
 	TYPE_C,
@@ -27,10 +27,10 @@ enum Plant {
 	TYPE_J, # senecio
 }
 
-@export var plant := Plant.TYPE_C:
+@export var type := Type.TYPE_C:
 	set(value):
-		plant = value
+		type = value
 		if not is_inside_tree(): return
 		for node in plant_nodes:
 			node.visible = false
-		plant_nodes[plant].visible = true
+		plant_nodes[type].visible = true
