@@ -82,11 +82,13 @@ var last_audio_level := 0.0
 @onready var cam_status: RichTextLabel = %CameraStatus
 @onready var cam_help: RichTextLabel = %CameraControls
 @onready var cam_status_template: String = cam_status.text
-@onready var m8_client := M8GD.new()
+@onready var m8_client: M8GD = %M8GD
 @onready var m8_is_connected := false
 @onready var m8_audio_connected := false
 
 func _ready() -> void:
+
+	# add_child(m8_client)
 
 	get_window().min_size = Vector2i(960, 640)
 
@@ -120,15 +122,7 @@ func _ready() -> void:
 
 	%SplashContainer.visible = config.splash_show
 
-	get_tree().process_frame.connect(func() -> void:
-		# godot action to m8 controller
-		var local_keybits := m8_get_local_keybits()
-		m8_client.send_input(local_keybits)
-	)
-
 func _process(_delta: float) -> void:
-
-	m8_client.update()
 
 	# auto connect to m8s
 	if !m8_is_connected and is_waiting_for_device:
@@ -150,6 +144,7 @@ func _process(_delta: float) -> void:
 			get_node("%%Color_Palette%d" % (i + 1)).color = Color(0, 0, 0, 0)
 		for i in range(palette.size()):
 			get_node("%%Color_Palette%d" % (i + 1)).color = palette[i]
+
 
 func _physics_process(delta: float) -> void:
 
@@ -203,6 +198,8 @@ func _input(event: InputEvent) -> void:
 			else:
 				menu_open()
 
+	if _handle_input_keys(event): return
+
 	if _handle_input_profile_hotkeys(event): return
 
 	if _handle_input_keyjazz(event): return
@@ -214,6 +211,7 @@ func _notification(what: int) -> void:
 
 func quit() -> void:
 	config.save()
+	m8_device_disconnect(false)
 	get_tree().quit()
 
 ## Temporarily show a message on the bottom-left of the screen.
@@ -403,7 +401,7 @@ func _init_overlay(overlay: OverlayBase) -> void:
 ##
 func init_overlays() -> void:
 
-	m8_client.set_background_alpha(0)
+	m8_client.set_display_background_alpha(0)
 
 	_init_overlay(overlay_display)
 	_init_overlay(overlay_keys)
@@ -642,22 +640,6 @@ func m8_is_key_pressed(keycode: int) -> bool:
 func m8_get_theme_colors() -> PackedColorArray:
 	return m8_client.get_theme_colors()
 
-##
-## Get the keybits from inputs received on this system. (Not the connected M8).
-##
-func m8_get_local_keybits() -> int:
-	var keystate := 0
-	if Input.is_action_pressed("key_up"): keystate += M8GD.M8_KEY_UP
-	if Input.is_action_pressed("key_down"): keystate += M8GD.M8_KEY_DOWN
-	if Input.is_action_pressed("key_left"): keystate += M8GD.M8_KEY_LEFT
-	if Input.is_action_pressed("key_right"): keystate += M8GD.M8_KEY_RIGHT
-	if Input.is_action_pressed("key_shift"): keystate += M8GD.M8_KEY_SHIFT
-	if Input.is_action_pressed("key_play"): keystate += M8GD.M8_KEY_PLAY
-	if Input.is_action_pressed("key_option"): keystate += M8GD.M8_KEY_OPTION
-	if Input.is_action_pressed("key_edit"): keystate += M8GD.M8_KEY_EDIT
-	return keystate
-
-
 func audio_get_level() -> float:
 	return audio_level
 
@@ -749,6 +731,22 @@ func _start_task(task_name: String, fn: Callable) -> Variant:
 	var ret: Variant = fn.call()
 	_print("finished task \"%s\" in %.3f seconds" % [task_name, ((Time.get_ticks_msec() - time) / 1000.0)])
 	return ret
+
+func _handle_input_keys(event: InputEvent) -> bool:
+	var key := M8GD.M8_KEY_UP
+	if event.is_action("key_up"): pass
+	elif event.is_action("key_down"): key = M8GD.M8_KEY_DOWN
+	elif event.is_action("key_left"): key = M8GD.M8_KEY_LEFT
+	elif event.is_action("key_right"): key = M8GD.M8_KEY_RIGHT
+	elif event.is_action("key_shift"): key = M8GD.M8_KEY_SHIFT
+	elif event.is_action("key_play"): key = M8GD.M8_KEY_PLAY
+	elif event.is_action("key_option"): key = M8GD.M8_KEY_OPTION
+	elif event.is_action("key_edit"): key = M8GD.M8_KEY_EDIT
+	else: return false
+
+	m8_client.set_key_pressed(key, event.pressed)
+
+	return true
 
 func _handle_input_profile_hotkeys(event: InputEvent) -> bool:
 

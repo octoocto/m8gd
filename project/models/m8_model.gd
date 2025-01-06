@@ -43,30 +43,10 @@ func _physics_process(_delta: float) -> void:
 	%KeyOption.material_overlay.albedo_color.a = highlight_opacity if key_option else 0.0
 	%KeyEdit.material_overlay.albedo_color.a = highlight_opacity if key_edit else 0.0
 
-func _input(event: InputEvent) -> void:
-	if event is InputEventKey:
-		match event.keycode:
-			KEY_UP:
-				key_up = event.pressed
-			KEY_DOWN:
-				key_down = event.pressed
-			KEY_LEFT:
-				key_left = event.pressed
-			KEY_RIGHT:
-				key_right = event.pressed
-			KEY_SHIFT:
-				key_shift = event.pressed
-			KEY_SPACE: # play
-				key_play = event.pressed
-			KEY_Z: # option
-				key_option = event.pressed
-			KEY_X: # edit
-				key_edit = event.pressed
-
 func init(main: Main) -> void:
 
-	screen_material.set_shader_parameter("texture_linear", main.m8_client.get_display_texture())
-	screen_material.set_shader_parameter("texture_nearest", main.m8_client.get_display_texture())
+	screen_material.set_shader_parameter("texture_linear", main.m8_client.get_display())
+	screen_material.set_shader_parameter("texture_nearest", main.m8_client.get_display())
 
 	main.m8_connected.connect(func() -> void:
 		screen_material.set_shader_parameter("backlight", true)

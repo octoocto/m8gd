@@ -109,7 +109,7 @@ func init(p_main: Main) -> void:
 	main = p_main
 	main.m8_client.key_pressed.connect(func(key: int, pressed: bool) -> void:
 		if pressed:
-			if main.m8_client.get_keybits() == current_keystate:
+			if main.m8_client.get_key_state() == current_keystate:
 				# increment last item
 				inc_item()
 				return
@@ -187,7 +187,7 @@ func update_item() -> void:
 	for child in current_item.get_children():
 		current_item.remove_child(child)
 	current_item_count = 0
-	current_keystate = main.m8_client.get_keybits()
+	current_keystate = main.m8_client.get_key_state()
 
 	if main.m8_is_key_pressed(M8GD.M8_KEY_UP):
 		add_element("UP", panel_directional, label_directional)

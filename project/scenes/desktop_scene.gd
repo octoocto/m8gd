@@ -156,7 +156,7 @@ func set_surface_mode(index: int) -> void:
 			%SurfaceMesh.material_override.albedo_color = surface_color
 		2: # display
 			%SurfaceMesh.material_override = StandardMaterial3D.new()
-			%SurfaceMesh.material_override.albedo_texture = main.m8_client.get_display_texture()
+			%SurfaceMesh.material_override.albedo_texture = main.m8_client.get_display()
 			%SurfaceMesh.material_override.albedo_color = surface_color
 			%SurfaceMesh.material_override.uv1_triplanar = true
 			%SurfaceMesh.material_override.uv1_scale = Vector3(0.125, 0.125, 0.125)

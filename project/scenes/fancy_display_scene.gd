@@ -86,10 +86,10 @@ func init(p_main: Main) -> void:
 	%AudioSpectrum.init(main)
 	%AudioWaveform.init(main)
 
-	main.m8_client.set_background_alpha(0)
+	main.m8_client.set_display_background_alpha(0)
 
 	# %TextureRect.texture = _display.m8_display_texture
-	var texture := main.m8_client.get_display_texture()
+	var texture := main.m8_client.get_display()
 	%DisplayTextureRect.texture = texture
 	# %BGTextureRect.texture.atlas = texture
 	# region.size = Vector2i(texture.get_size())
@@ -132,7 +132,7 @@ func init_menu(menu: SceneMenu) -> void:
 				%BGTextureRect.visible = false
 			1:
 				%BGTextureRect.visible = true
-				%BGTextureRect.texture = main.m8_client.get_display_texture()
+				%BGTextureRect.texture = main.m8_client.get_display()
 			2:
 				%BGTextureRect.visible = true
 				%BGTextureRect.texture = load_media_to_texture_rect(get_setting("background_file"), %BGVideoStreamPlayer)
@@ -176,7 +176,7 @@ func update_viewport_size() -> void:
 	%GPUParticles2D2.process_material.emission_box_extents.y = viewport_size.y / 2.0
 
 func update_panel_size() -> void:
-	var display_size := main.m8_client.get_display_texture().get_size()
+	var display_size := main.m8_client.get_display().get_size()
 	%DisplayTextureRect.custom_minimum_size = display_size * panel_integer_scale
 
 func _process(_delta: float) -> void:

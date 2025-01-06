@@ -11,7 +11,7 @@
 
 using namespace godot;
 
-enum M8_Key
+enum M8Key
 {
 	M8_KEY_UP = libm8::KEY_UP,
 	M8_KEY_DOWN = libm8::KEY_DOWN,
@@ -22,6 +22,10 @@ enum M8_Key
 	M8_KEY_SHIFT = libm8::KEY_SHIFT,
 	M8_KEY_PLAY = libm8::KEY_PLAY,
 };
+
+static const M8Key M8_KEYS[] = {
+	M8_KEY_UP, M8_KEY_DOWN, M8_KEY_LEFT, M8_KEY_RIGHT,
+	M8_KEY_OPTION, M8_KEY_EDIT, M8_KEY_SHIFT, M8_KEY_PLAY};
 
 class M8GD;
 
@@ -101,13 +105,38 @@ public:
 	M8GD();
 	~M8GD();
 
-public:
 	// void _ready() override;
-	void update();
+	void _process(double delta) override;
+	// void process();
+
+	// device methods
+public:
+	/// @brief Attempts to connect to the serial port at port_name.
+	///        Serial port name must be of a valid M8 device.
+	/// @param port_name
+	/// @return true if the connection was successful.
+	bool connect(String port_name);
+
+	/// @brief Disconnects the M8 and opens the serial port.
+	void disconnect();
+
+	/// @brief Returns true if there is an M8 currently connected.
+	/// @return true if there is an M8 currently connected
+	bool is_connected();
+
+public:
+	// device methods
 
 	/// @brief Gets the M8 display texture.
 	/// @return
-	Ref<ImageTexture> get_display_texture();
+	Ref<ImageTexture> get_display();
+
+	/// @brief Get the M8's theme colors.
+	/// @return An array of 13 colors
+	PackedColorArray get_theme_colors();
+
+	/// @brief Set one of the M8's theme color.
+	void set_theme_color(uint8_t index, Color color);
 
 	/// @brief Set the size of the display buffer.
 	/// @param width
@@ -128,10 +157,6 @@ public:
 	/// @param bigfont
 	void set_model(libm8::HardwareModel model, uint8_t fw_1, uint8_t fw_2, uint8_t fw_3, uint8_t font);
 
-	/// @brief Get the M8's theme colors.
-	/// @return An array of 13 colors
-	PackedColorArray get_theme_colors();
-
 	void set_background_alpha(float alpha);
 
 	/// @brief Get the color of a specific pixel in the M8 display.
@@ -144,23 +169,17 @@ public:
 	/// @param bitmap
 	void load_font(Ref<BitMap> bitmap);
 
-	/// @brief Returns true if there is an M8 currently connected.
-	/// @return
-	bool is_connected();
+public:
+	// input methods
 
-	bool is_key_pressed(M8_Key key)
+	bool is_key_pressed(M8Key key)
 	{
 		return keybits & key;
 	}
 
-	int get_keybits() { return keybits; }
+	int get_key_state() { return keybits; }
 
-	/// @brief Send a note to play to the connected device.
-	///
-	/// @param note the note value (0 - 255)
-	/// @param velocity the note velocity (0 - 255)
-	///
-	void send_keyjazz(uint8_t note, uint8_t velocity);
+	void set_key_pressed(M8Key key, bool pressed);
 
 	/// @brief Send control input to the connected device.
 	///
@@ -180,22 +199,18 @@ public:
 	/// 00000000 = no keys are pressed
 	/// 00000011 = EDIT + OPTION are pressed
 	///
-	void send_input(uint8_t input_code);
+	void set_key_state(uint8_t keybits);
 
-	void send_theme_color(uint8_t index, Color color);
+	/// @brief Send a note to play to the connected device.
+	///
+	/// @param note the note value (0 - 255)
+	/// @param velocity the note velocity (0 - 255)
+	///
+	void send_keyjazz(uint8_t note, uint8_t velocity);
 
 	void send_enable_display();
 
 	void send_disable_display();
-
-	/// @brief Attempts to connect to the serial port at port_name.
-	///        Serial port name must be of a valid M8 device.
-	/// @param port_name
-	/// @return true if the connection was successful.
-	bool connect(String port_name);
-
-	/// @brief Disconnects the M8 and opens the serial port.
-	void disconnect();
 
 	/// @brief Sends the reset display command to the M8.
 	///        This forces the M8 to re-send all draw commands through the serial port.
@@ -233,4 +248,4 @@ private:
 	}
 };
 
-VARIANT_ENUM_CAST(M8_Key);
+VARIANT_ENUM_CAST(M8Key);

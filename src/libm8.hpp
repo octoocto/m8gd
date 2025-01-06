@@ -112,10 +112,10 @@ namespace libm8
 	{
 		OK = 0,
 		// command reader errors
-		ERR_CMD_BUFFER_OVERFLOW = 1,		 // tried to add more bytes than RX_BUFFER_SIZE
-		ERR_CMD_HANDLER_NOT_IMPLEMENTED = 2, // function not overriden correctly
-		ERR_CMD_HANDLER_INVALID_SIZE = 3,	 // read a command with an invalid size
-		ERR_CMD_HANDLER_INVALID_CMD = 4,	 // read a command not recognized
+		ERR_CMD_BUFFER_OVERFLOW = 1, // tried to add more bytes than RX_BUFFER_SIZE
+		// ERR_CMD_HANDLER_NOT_IMPLEMENTED = 2, // function not overriden correctly
+		ERR_CMD_HANDLER_INVALID_SIZE = 3, // read a command with an invalid size
+		ERR_CMD_HANDLER_INVALID_CMD = 4,  // read a command not recognized
 		// read() errors
 		ERR_SLIP_INVALID_ESCAPED_CHAR = 5,
 		// libserialport errors
@@ -242,7 +242,6 @@ namespace libm8
 			uint8_t bg_r, uint8_t bg_g, uint8_t bg_b) = 0;
 
 		/// @brief Called when the M8 sends a DRAW_OSC command.
-		/// TODO: `start` is always 4; try to change implementation to remove this argument
 		virtual void on_draw_waveform(
 			uint16_t x, uint16_t y,
 			uint8_t r, uint8_t g, uint8_t b,
@@ -295,7 +294,7 @@ namespace libm8
 				m8_port = nullptr;
 				cmd_size = 0;	// also reset cmd_buffer
 				zero_reads = 0; // also reset zero_reads counter
-				print("disconnected");
+								// print("disconnected");
 			}
 			return OK;
 		}

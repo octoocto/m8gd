@@ -27,7 +27,7 @@ void DisplayBuffer::set_background_alpha(uint8_t a)
 		}
 	}
 
-	print("set background alpha to %d", a);
+	// print("set background alpha to %d", a);
 }
 
 void DisplayBuffer::draw_rect(int x, int y, int w, int h, uint8_t r, uint8_t g, uint8_t b)
@@ -66,7 +66,6 @@ void DisplayBuffer::draw_char(
 	uint8_t fg_r, uint8_t fg_g, uint8_t fg_b,
 	uint8_t bg_r, uint8_t bg_g, uint8_t bg_b)
 {
-
 	// bitmap only covers unicode 0-127
 	if (font_bitmap == nullptr || ch > 127)
 		return;

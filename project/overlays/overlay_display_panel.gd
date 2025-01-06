@@ -33,7 +33,7 @@ var main: Main
 func init(p_main: Main) -> void:
 	main = p_main
 
-	%DisplayTextureRect.texture = main.m8_client.get_display_texture()
+	%DisplayTextureRect.texture = main.m8_client.get_display()
 
 	main.m8_theme_changed.connect(func(_colors: PackedColorArray, _complete: bool) -> void:
 		_update()
@@ -71,7 +71,7 @@ func _update() -> void:
 		%DisplayPanel.material.set_shader_parameter("panel_color", main.m8_get_theme_colors()[0])
 
 		# update size
-		var display_size := main.m8_client.get_display_texture().get_size() * integer_scale
+		var display_size := main.m8_client.get_display().get_size() * integer_scale
 		%DisplayTextureRect.custom_minimum_size = display_size
 		%DisplayPanel.custom_minimum_size = Vector2.ZERO
 		%DisplayPanel.size = Vector2.ZERO

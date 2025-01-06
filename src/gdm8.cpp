@@ -7,7 +7,7 @@
 
 void M8GDClient::on_disconnect()
 {
-	print("disconnecting from port");
+	// print("disconnecting from port");
 	m8gd->display_buffer->clear(0, 0, 0);
 	m8gd->copy_buffer_to_texture();
 	m8gd->emit_signal("device_disconnected");
@@ -61,84 +61,28 @@ void M8GDClient::on_draw_waveform(
 
 void M8GDClient::on_key_pressed(uint8_t keybits)
 {
-	m8gd->emit_signal("keystate_changed", (int)keybits);
+	// m8gd->emit_signal("keystate_changed", (int)keybits);
 
-	const uint8_t last_keybits = m8gd->keybits;
-	const uint8_t curr_keybits = keybits;
+	static uint8_t last_keybits = 0;
 
-	m8gd->keybits = keybits;
 	m8gd->is_controlled_remotely = false;
 
-	if (curr_keybits & libm8::KEY_UP && !(last_keybits & libm8::KEY_UP))
+	if (keybits != last_keybits)
 	{
-		m8gd->emit_signal("key_pressed", M8_KEY_UP, true);
-	}
-	if (!(curr_keybits & libm8::KEY_UP) && last_keybits & libm8::KEY_UP)
-	{
-		m8gd->emit_signal("key_pressed", M8_KEY_UP, false);
-	}
-
-	if (curr_keybits & libm8::KEY_DOWN && !(last_keybits & libm8::KEY_DOWN))
-	{
-		m8gd->emit_signal("key_pressed", M8_KEY_DOWN, true);
-	}
-	if (!(curr_keybits & libm8::KEY_DOWN) && last_keybits & libm8::KEY_DOWN)
-	{
-		m8gd->emit_signal("key_pressed", M8_KEY_DOWN, false);
-	}
-
-	if (curr_keybits & libm8::KEY_LEFT && !(last_keybits & libm8::KEY_LEFT))
-	{
-		m8gd->emit_signal("key_pressed", M8_KEY_LEFT, true);
-	}
-	if (!(curr_keybits & libm8::KEY_LEFT) && last_keybits & libm8::KEY_LEFT)
-	{
-		m8gd->emit_signal("key_pressed", M8_KEY_LEFT, false);
-	}
-
-	if (curr_keybits & libm8::KEY_RIGHT && !(last_keybits & libm8::KEY_RIGHT))
-	{
-		m8gd->emit_signal("key_pressed", M8_KEY_RIGHT, true);
-	}
-	if (!(curr_keybits & libm8::KEY_RIGHT) && last_keybits & libm8::KEY_RIGHT)
-	{
-		m8gd->emit_signal("key_pressed", M8_KEY_RIGHT, false);
-	}
-
-	if (curr_keybits & libm8::KEY_OPTION && !(last_keybits & libm8::KEY_OPTION))
-	{
-		m8gd->emit_signal("key_pressed", M8_KEY_OPTION, true);
-	}
-	if (!(curr_keybits & libm8::KEY_OPTION) && last_keybits & libm8::KEY_OPTION)
-	{
-		m8gd->emit_signal("key_pressed", M8_KEY_OPTION, false);
-	}
-
-	if (curr_keybits & libm8::KEY_EDIT && !(last_keybits & libm8::KEY_EDIT))
-	{
-		m8gd->emit_signal("key_pressed", M8_KEY_EDIT, true);
-	}
-	if (!(curr_keybits & libm8::KEY_EDIT) && last_keybits & libm8::KEY_EDIT)
-	{
-		m8gd->emit_signal("key_pressed", M8_KEY_EDIT, false);
-	}
-
-	if (curr_keybits & libm8::KEY_SHIFT && !(last_keybits & libm8::KEY_SHIFT))
-	{
-		m8gd->emit_signal("key_pressed", M8_KEY_SHIFT, true);
-	}
-	if (!(curr_keybits & libm8::KEY_SHIFT) && last_keybits & libm8::KEY_SHIFT)
-	{
-		m8gd->emit_signal("key_pressed", M8_KEY_SHIFT, false);
-	}
-
-	if (curr_keybits & libm8::KEY_PLAY && !(last_keybits & libm8::KEY_PLAY))
-	{
-		m8gd->emit_signal("key_pressed", M8_KEY_PLAY, true);
-	}
-	if (!(curr_keybits & libm8::KEY_PLAY) && last_keybits & libm8::KEY_PLAY)
-	{
-		m8gd->emit_signal("key_pressed", M8_KEY_PLAY, false);
+		for (const M8Key key : M8_KEYS)
+		{
+			// detect press
+			if (!(last_keybits & key) && keybits & key)
+			{
+				m8gd->emit_signal("key_pressed", key, true);
+			}
+			// detect unpress
+			if (last_keybits & key && !(keybits & key))
+			{
+				m8gd->emit_signal("key_pressed", key, false);
+			}
+		}
+		last_keybits = keybits;
 	}
 }
 
@@ -152,7 +96,12 @@ void M8GDClient::on_system_info(
 
 void M8GD::_bind_methods()
 {
-	ClassDB::bind_static_method("M8GD", D_METHOD("list_devices"), &M8GD::list_devices);
+	ADD_SIGNAL(MethodInfo("system_info", PropertyInfo(Variant::STRING, "hardware"), PropertyInfo(Variant::STRING, "firmware")));
+	ADD_SIGNAL(MethodInfo("font_changed", PropertyInfo(Variant::INT, "model"), PropertyInfo(Variant::STRING, "font")));
+	// ADD_SIGNAL(MethodInfo("keystate_changed", PropertyInfo(Variant::INT, "keystate")));
+	ADD_SIGNAL(MethodInfo("key_pressed", PropertyInfo(Variant::INT, "keycode"), PropertyInfo(Variant::BOOL, "pressed")));
+	ADD_SIGNAL(MethodInfo("device_disconnected"));
+	ADD_SIGNAL(MethodInfo("theme_changed", PropertyInfo(Variant::PACKED_COLOR_ARRAY, "colors"), PropertyInfo(Variant::BOOL, "complete")));
 
 	BIND_ENUM_CONSTANT(M8_KEY_UP);
 	BIND_ENUM_CONSTANT(M8_KEY_DOWN);
@@ -163,52 +112,129 @@ void M8GD::_bind_methods()
 	BIND_ENUM_CONSTANT(M8_KEY_SHIFT);
 	BIND_ENUM_CONSTANT(M8_KEY_PLAY);
 
+	ClassDB::bind_static_method("M8GD", D_METHOD("list_devices"), &M8GD::list_devices);
+	ClassDB::bind_method(D_METHOD("connect", "device"), &M8GD::connect);
+	ClassDB::bind_method(D_METHOD("is_connected"), &M8GD::is_connected);
+	ClassDB::bind_method(D_METHOD("disconnect"), &M8GD::disconnect);
+
+	ClassDB::bind_method(D_METHOD("is_key_pressed"), &M8GD::is_key_pressed);
+	ClassDB::bind_method(D_METHOD("get_key_state"), &M8GD::get_key_state);
+	ClassDB::bind_method(D_METHOD("set_key_pressed", "key", "pressed"), &M8GD::set_key_pressed);
+	ClassDB::bind_method(D_METHOD("set_key_state", "keybits"), &M8GD::set_key_state);
+	ClassDB::bind_method(D_METHOD("send_keyjazz", "note", "velocity"), &M8GD::send_keyjazz);
+
+	ClassDB::bind_method(D_METHOD("get_display"), &M8GD::get_display);
+	ClassDB::bind_method(D_METHOD("set_display_background_alpha", "alpha"), &M8GD::set_background_alpha);
+	ClassDB::bind_method(D_METHOD("get_display_pixel", "x", "y"), &M8GD::get_pixel);
+	ClassDB::bind_method(D_METHOD("get_theme_colors"), &M8GD::get_theme_colors);
+	ClassDB::bind_method(D_METHOD("set_theme_color", "index", "color"), &M8GD::set_theme_color);
 	ClassDB::bind_method(D_METHOD("load_font", "bitmap"), &M8GD::load_font);
 
-	ClassDB::bind_method(D_METHOD("get_display_texture"), &M8GD::get_display_texture);
-
-	ClassDB::bind_method(D_METHOD("get_theme_colors"), &M8GD::get_theme_colors);
-	ClassDB::bind_method(D_METHOD("set_background_alpha"), &M8GD::set_background_alpha);
-	ClassDB::bind_method(D_METHOD("get_pixel"), &M8GD::get_pixel);
-
-	ClassDB::bind_method(D_METHOD("send_keyjazz", "note", "velocity"), &M8GD::send_keyjazz);
-	ClassDB::bind_method(D_METHOD("send_input", "input_code"), &M8GD::send_input);
-	ClassDB::bind_method(D_METHOD("send_theme_color", "index", "color"), &M8GD::send_theme_color);
 	ClassDB::bind_method(D_METHOD("send_enable_display"), &M8GD::send_enable_display);
 	ClassDB::bind_method(D_METHOD("send_disable_display"), &M8GD::send_disable_display);
 	ClassDB::bind_method(D_METHOD("send_reset_display"), &M8GD::reset_display);
-
-	ClassDB::bind_method(D_METHOD("update"), &M8GD::update);
-	ClassDB::bind_method(D_METHOD("is_connected"), &M8GD::is_connected);
-
-	ClassDB::bind_method(D_METHOD("disconnect"), &M8GD::disconnect);
-	ClassDB::bind_method(D_METHOD("connect", "preferred_device"), &M8GD::connect);
-
-	ClassDB::bind_method(D_METHOD("is_key_pressed"), &M8GD::is_key_pressed);
-	ClassDB::bind_method(D_METHOD("get_keybits"), &M8GD::get_keybits);
-
-	ADD_SIGNAL(MethodInfo("system_info", PropertyInfo(Variant::STRING, "hardware"), PropertyInfo(Variant::STRING, "firmware")));
-	ADD_SIGNAL(MethodInfo("font_changed", PropertyInfo(Variant::INT, "model"), PropertyInfo(Variant::STRING, "font")));
-	ADD_SIGNAL(MethodInfo("keystate_changed", PropertyInfo(Variant::INT, "keystate")));
-	ADD_SIGNAL(MethodInfo("key_pressed", PropertyInfo(Variant::INT, "keycode"), PropertyInfo(Variant::BOOL, "pressed")));
-	ADD_SIGNAL(MethodInfo("device_disconnected"));
-	ADD_SIGNAL(MethodInfo("theme_changed", PropertyInfo(Variant::PACKED_COLOR_ARRAY, "colors"), PropertyInfo(Variant::BOOL, "complete")));
 }
 
 M8GD::M8GD()
 {
 	display_buffer = nullptr;
-
 	set_display_size(320, 240);
-
-	print("created m8gd instance");
 }
 
 M8GD::~M8GD()
 {
-	print("destructing m8gd instance");
 	delete display_buffer;
 	disconnect();
+}
+
+void M8GD::_process(double delta)
+{
+	if (m8_client.is_connected())
+	{
+		read();
+		copy_buffer_to_texture();
+	}
+}
+
+bool M8GD::is_connected()
+{
+	return m8_client.is_connected();
+}
+
+bool M8GD::connect(String target_port_name)
+{
+	print("connecting to port \"%s\"...", target_port_name);
+
+	libm8::Error error = m8_client.connect(target_port_name);
+
+	if (error == libm8::OK)
+	{
+		print("connected to port \"%s\"!", target_port_name);
+		return true;
+	}
+
+	return false;
+}
+
+void M8GD::disconnect()
+{
+	if (m8_client.is_connected())
+	{
+		libm8::Error error = m8_client.disconnect();
+
+		if (error == libm8::OK)
+		{
+			print("disconnected!");
+		}
+		else
+		{
+			printerr("error when trying to disconnect: %d", error);
+		}
+	}
+}
+
+void M8GD::set_key_pressed(M8Key key, bool pressed)
+{
+	bool changed = false;
+	if (keybits & key && !pressed)
+	{
+		keybits = keybits & ~key; // set bit to 0
+		changed = true;
+	}
+	else if (!(keybits & key) && pressed)
+	{
+		keybits = keybits | key; // set bit to 1
+		changed = true;
+	}
+	if (changed)
+	{
+		if (keybits == M8_KEY_UP + M8_KEY_DOWN + M8_KEY_LEFT + M8_KEY_RIGHT)
+		{
+			reset_display();
+		}
+		else
+		{
+			m8_client.send_control_keys(keybits);
+		}
+	}
+}
+
+void M8GD::set_key_state(uint8_t keybits)
+{
+	// only receive 0b00000000 (no keys pressed) if previous call had a key press.
+	// fixes issues with mixed input from both local and remote.
+	if (keybits != this->keybits)
+	{
+		this->keybits = keybits;
+		if (keybits == M8_KEY_UP + M8_KEY_DOWN + M8_KEY_LEFT + M8_KEY_RIGHT)
+		{
+			reset_display();
+		}
+		else
+		{
+			m8_client.send_control_keys(keybits);
+		}
+	}
 }
 
 void M8GD::set_model(libm8::HardwareModel model)
@@ -276,7 +302,7 @@ void M8GD::set_model(libm8::HardwareModel model,
 
 void M8GD::set_display_size(uint16_t width, uint16_t height)
 {
-	print("setting display buffer size to (%d, %d)", width, height);
+	// print("setting display buffer size to (%d, %d)", width, height);
 
 	uint8_t bg_alpha = 0xFF;
 
@@ -301,23 +327,13 @@ void M8GD::set_display_size(uint16_t width, uint16_t height)
 	}
 }
 
-void M8GD::update()
-{
-	if (m8_client.is_connected())
-	{
-		read();
-	}
-
-	copy_buffer_to_texture();
-}
-
 void M8GD::copy_buffer_to_texture()
 {
 	display_image->set_data(display_buffer->width, display_buffer->height, false, Image::FORMAT_RGBA8, display_buffer->byte_array);
 	display_texture->update(display_image);
 }
 
-Ref<ImageTexture> M8GD::get_display_texture()
+Ref<ImageTexture> M8GD::get_display()
 {
 	return display_texture;
 }
@@ -390,35 +406,19 @@ bool M8GD::read()
 	return true;
 }
 
-bool M8GD::is_connected()
-{
-	return m8_client.is_connected();
-}
-
 void M8GD::send_keyjazz(uint8_t note, uint8_t velocity)
 {
 	m8_client.send_keyjazz(note, velocity);
 }
 
-void M8GD::send_input(uint8_t keystate)
-{
-	// only receive 0b00000000 (no keys pressed) if previous call had a key press.
-	// fixes issues with mixed input from both local and remote.
-	if (is_controlled_remotely || keystate)
-	{
-		is_controlled_remotely = true;
-		m8_client.send_control_keys(keystate);
-	}
-}
-
-void M8GD::send_theme_color(uint8_t index, Color color)
+void M8GD::set_theme_color(uint8_t index, Color color)
 {
 	// ERR_FAIL_COND_MSG(index > 12, vformat("Invalid color index %d", index));
 
 	const uint32_t rgba32 = color.to_rgba32();
 	uint8_t *rgba = (uint8_t *)&rgba32;
 	libm8::Error err = m8_client.send_theme_color(index, rgba[3], rgba[2], rgba[1]);
-	print("set theme color at idx %d to %02X %02X %02X", index, rgba[3], rgba[2], rgba[1]);
+	// print("set theme color at idx %d to %02X %02X %02X", index, rgba[3], rgba[2], rgba[1]);
 
 	ERR_FAIL_COND_MSG(err != libm8::OK, vformat("Failed to send command, error code = %d", err));
 }
@@ -460,16 +460,4 @@ godot::TypedArray<godot::String> M8GD::list_devices()
 	sp_free_port_list(port_list);
 
 	return port_names;
-}
-
-void M8GD::disconnect()
-{
-	m8_client.disconnect();
-}
-
-bool M8GD::connect(String target_port_name)
-{
-	print("connecting to port \"%s\"...", target_port_name);
-
-	return m8_client.connect(target_port_name) == libm8::OK;
 }

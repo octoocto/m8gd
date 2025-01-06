@@ -8,7 +8,7 @@ func init(p_main: Main) -> void:
 	super(p_main)
 
 	# %TextureRect.texture = _display.m8_display_texture
-	%TextureRect.texture = main.m8_client.get_display_texture()
+	%TextureRect.texture = main.m8_client.get_display()
 
 func init_menu(menu: SceneMenu) -> void:
 	menu.add_auto("force_integer_scale")

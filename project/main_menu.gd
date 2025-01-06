@@ -24,7 +24,7 @@ func init(p_main: Main) -> void:
 		visible = false
 	)
 
-	%DisplayRect.texture = main.m8_client.get_display_texture()
+	%DisplayRect.texture = main.m8_client.get_display()
 
 	_init_menu_profiles()
 	_init_menu_scene()
