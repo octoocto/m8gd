@@ -252,6 +252,7 @@ render_target_update_mode = 4
 
 [node name="OverlayAudioSpectrum" parent="CanvasLayer/UI/OverlayContainer/OverlayControl/OverlaySubViewportContainer/OverlaySubViewport" instance=ExtResource("2_tbmna")]
 unique_name_in_owner = true
+visible = false
 anchors_preset = 0
 anchor_left = 0.0
 anchor_top = 0.0
@@ -266,6 +267,7 @@ grow_vertical = 1
 
 [node name="OverlayDisplayPanel" parent="CanvasLayer/UI/OverlayContainer/OverlayControl/OverlaySubViewportContainer/OverlaySubViewport" instance=ExtResource("4_nrhlm")]
 unique_name_in_owner = true
+visible = false
 
 [node name="OverlayAudioWaveform" parent="CanvasLayer/UI/OverlayContainer/OverlayControl/OverlaySubViewportContainer/OverlaySubViewport" instance=ExtResource("5_p87tv")]
 unique_name_in_owner = true
