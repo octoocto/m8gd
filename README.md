@@ -1,11 +1,15 @@
 
-<center><h1>
+![screenshot](screenshot.png)
+
+<center>
+<h1>
 m8gd: M8 Headless Display and Visualizer
-</h1></center>
+</h1>
+</center>
 
 **m8gd** is a M8 display client for the M8 Tracker that provides a variety of 3D and 2D scenes.
 
-This repository consists of the C++ library and GDExtension `libm8gd` that acts as a headless M8 client library, and the main project `m8gd`.
+This repository consists of the C++ library and GDExtension `libm8gd` that allows Godot to connect to M8 devices, and the Godot project `m8gd`.
 
 Table of contents
 =================
@@ -22,7 +26,6 @@ Table of contents
 * [Troubleshooting](#troubleshooting)
 * [Editing](#editing)
 * [Credits](#credits)
-
 
 Download
 ========
@@ -205,7 +208,6 @@ $ sudo pacman -S libserialport
 $ sudo steamos-readonly enable
 ```
 
-
 # Editing
 
 A debug binary of the gdextension `libm8gd` is required to open this project in the Godot editor.
@@ -213,12 +215,6 @@ A debug binary of the gdextension `libm8gd` is required to open this project in 
 Please follow the build instructions in [Building](#building) (run `python build.py --dev` to compile a debug gdextension) or use a precompiled library from the latest release if available, placed in `project/addons/libm8gd/bin`.
 
 This project has been tested to work on [Godot 4.3-stable](https://godotengine.org/download/archive/4.3-stable/).
-
-# Screenshots
-
-![screenshot](screenshot.png)
-
-![screenshot2](screenshot2.png)
 
 # Credits
 
