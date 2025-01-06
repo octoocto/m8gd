@@ -24,9 +24,6 @@ enum Type {PIXEL, BAR, LINE}
 @export var style_line_antialiased := false
 @export var style_line_width := 1.0
 
-
-var main: Main
-
 var peaks := []
 
 var waveform_size: int = 0
@@ -35,13 +32,11 @@ var delta_left: float = 0.0
 
 var sample_rate: float
 
+
 func _ready() -> void:
 	peaks.resize(int(size.x * style_rows))
 	peaks.fill(0.0)
 	sample_rate = 1 / analyzer_sample_rate
-
-func init(p_main: Main) -> void:
-	main = p_main
 
 func overlay_get_properties() -> Array[String]:
 	return [

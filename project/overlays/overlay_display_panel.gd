@@ -27,11 +27,8 @@ extends OverlayBase
 		_update()
 
 
-var main: Main
-
-
 func init(p_main: Main) -> void:
-	main = p_main
+	super(p_main)
 
 	%DisplayTextureRect.texture = main.m8_client.get_display()
 
