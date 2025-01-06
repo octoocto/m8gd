@@ -1,23 +1,9 @@
 class_name M8Scene extends Node3D
 
-@export var m8_scene_name: String
-
 var main: Main
 
 func init(p_main: Main) -> void:
 	main = p_main
-
-##
-## Returns this scene's property list, but only exported variables.
-##
-func get_export_vars() -> Array:
-	return get_property_list().filter(func(prop: Dictionary) -> bool:
-		return prop["usage"] == (
-			PROPERTY_USAGE_SCRIPT_VARIABLE +
-			PROPERTY_USAGE_STORAGE +
-			PROPERTY_USAGE_EDITOR
-		)
-	)
 
 ##
 ## Returns true if this scene contains a DeviceModel.

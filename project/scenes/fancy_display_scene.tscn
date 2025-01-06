@@ -155,7 +155,6 @@ glow_blend_mode = 4
 
 [node name="M8Scene" type="Node3D"]
 script = ExtResource("1_jfrc1")
-m8_scene_name = "Fancy Display"
 metadata/_edit_vertical_guides_ = [640.0]
 metadata/_edit_horizontal_guides_ = [480.0]
 

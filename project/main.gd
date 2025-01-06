@@ -242,12 +242,7 @@ func menu_close() -> void:
 ## The scene's formatted name is stored in the export variable [m8_scene_name].
 ##
 func get_scene_name(scene_path: String) -> String:
-	var scene_name: Variant = _extract_scene_property(scene_path, "m8_scene_name")
-	if scene_name is String:
-		return scene_name
-	else:
-		# fallback name
-		return scene_path.get_file().get_basename().capitalize()
+	return scene_path.get_file().get_basename().capitalize().trim_suffix("Scene")
 
 ##
 ## Load an M8 scene from a filepath.
@@ -885,22 +880,6 @@ func _load_scene_from_file_path(scene_path: String) -> M8Scene:
 	assert(scene != null and scene is M8Scene)
 
 	return scene
-
-##
-## Return a value from a .tscn file by reading and parsing the file.
-##
-func _extract_scene_property(scene_path: String, property: String) -> Variant:
-	var lines := FileAccess.get_file_as_string(scene_path).split("\n", false)
-
-	for l in lines:
-		if l.contains(property):
-			var split := l.split(" = ", true, 1)
-			if split[0] == property:
-				var expr := Expression.new()
-				expr.parse(split[1])
-				return expr.execute()
-
-	return null
 
 func _overlay_update_viewport_size() -> void:
 

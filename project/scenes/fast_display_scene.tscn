@@ -6,7 +6,6 @@
 
 [node name="M8Scene" type="Node3D"]
 script = ExtResource("1_edxk2")
-m8_scene_name = "Fast Display"
 metadata/_edit_vertical_guides_ = [640.0]
 metadata/_edit_horizontal_guides_ = [480.0]
 

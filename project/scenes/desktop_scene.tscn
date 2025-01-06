@@ -108,7 +108,6 @@ curve = SubResource("Curve_y7obg")
 
 [node name="M8Scene" type="Node3D"]
 script = ExtResource("1_0y3bn")
-m8_scene_name = "Desktop"
 metadata/_edit_vertical_guides_ = [640.0]
 metadata/_edit_horizontal_guides_ = [480.0]
 
