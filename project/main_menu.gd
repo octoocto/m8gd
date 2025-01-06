@@ -335,8 +335,8 @@ func _init_menu_video() -> void:
 	get_window().size_changed.connect(func() -> void:
 		var is_fullscreen := get_window().mode != Window.MODE_WINDOWED
 
-		%Setting_Fullscreen.value = is_fullscreen
-		%Setting_CustomWindowSize.value = get_window().size
+		%Setting_Fullscreen.set_value_no_signal(is_fullscreen)
+		%Setting_CustomWindowSize.set_value_no_signal(get_window().size)
 
 		%Setting_WindowSize.enabled = !is_fullscreen
 		%Setting_CustomWindowSize.enabled = !is_fullscreen

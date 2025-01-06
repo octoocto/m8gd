@@ -181,10 +181,10 @@ func _input(event: InputEvent) -> void:
 
 		# fullscreen ALT+ENTER toggle
 		if event.pressed and event.keycode == KEY_ENTER and event.alt_pressed:
-			if DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_WINDOWED:
-				DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
+			if get_window().mode == Window.MODE_WINDOWED:
+				get_window().mode = Window.MODE_EXCLUSIVE_FULLSCREEN
 			else:
-				DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+				get_window().mode = Window.MODE_WINDOWED
 
 		if event.pressed and event.keycode == KEY_ESCAPE:
 
