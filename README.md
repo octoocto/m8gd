@@ -191,6 +191,21 @@ Please read [this guide](https://docs.godotengine.org/en/stable/tutorials/export
 
 The macOS build is also compiled specifically for x86_64 CPUs. If you are on a macOS system with the M1 chip or newer, enabling "Open using Rosetta" in the app's info window is also needed for it to start.
 
+## Running on Steam Deck
+
+On the Steam Deck, installing the `libserialport` package via `pacman` is required to run m8gd. Assuming you've already set up a `sudo` password, run the below commands in Desktop Mode with Konsole to install `libserialport`.
+
+Note: this will temporarily disable read-only mode on the Steam Deck. This also means that `libserialport` will have to be installed again when SteamOS updates.
+
+```sh
+$ sudo steamos-readonly disable
+$ sudo pacman-key init
+$ sudo pacman-key --populate archlinux
+$ sudo pacman -S libserialport
+$ sudo steamos-readonly enable
+```
+
+
 # Editing
 
 A debug binary of the gdextension `libm8gd` is required to open this project in the Godot editor.
