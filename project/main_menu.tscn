@@ -139,14 +139,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Camera"
 
-[node name="Button_SceneCameraMenu" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(160, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-text = "Configure Camera..."
-
 [node name="Setting_MouseCamera" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer" instance=ExtResource("5_16o8v")]
 unique_name_in_owner = true
 layout_mode = 2
@@ -156,6 +148,14 @@ setting_name = "Mouse Pan & Zoom Control"
 unique_name_in_owner = true
 layout_mode = 2
 setting_name = "Humanize Camera Movements"
+
+[node name="Button_SceneCameraMenu" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+text = "Configure Camera..."
 
 [node name="LabelHeader2" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer" instance=ExtResource("3_pyc3l")]
 layout_mode = 2

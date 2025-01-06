@@ -6,6 +6,7 @@
 [node name="PlantModel" instance=ExtResource("1_8xls6")]
 transform = Transform3D(0.423425, 0, 0.905931, 0, 1, 0, -0.905931, 0, 0.423425, 0, 0, 0)
 script = ExtResource("2_4nfm1")
+type = 4
 
 [node name="Sketchfab_model" parent="." index="0"]
 transform = Transform3D(-2.77361, 2.8822, 1.25985e-07, 0, -1.74846e-07, 4, 2.8822, 2.77361, 1.21238e-07, 0, 0, 0)
@@ -23,6 +24,7 @@ visible = false
 [node name="Pot001" parent="Sketchfab_model/Root" index="2"]
 unique_name_in_owner = true
 transform = Transform3D(-0.00701585, -0.999975, -4.37104e-08, 0.999975, -0.00701585, -4.40181e-08, 4.37104e-08, -4.40182e-08, 1, 0.0326475, -0.0207181, -9.05621e-10)
+visible = false
 
 [node name="Pot004" parent="Sketchfab_model/Root" index="3"]
 unique_name_in_owner = true
@@ -31,8 +33,7 @@ visible = false
 
 [node name="Pot005" parent="Sketchfab_model/Root" index="4"]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
-visible = false
+transform = Transform3D(0.488149, 0.87276, 3.81496e-08, -0.87276, 0.488149, -2.23738e-08, -3.81497e-08, -2.23737e-08, 1, 0.0100297, 0.00524204, 2.29138e-10)
 
 [node name="Pot006" parent="Sketchfab_model/Root" index="5"]
 unique_name_in_owner = true

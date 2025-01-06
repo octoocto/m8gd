@@ -125,7 +125,7 @@ loop = true
 
 [node name="Camera3D" parent="." instance=ExtResource("5_d472a")]
 unique_name_in_owner = true
-transform = Transform3D(0.906308, -0.365998, 0.211309, 0, 0.5, 0.866025, -0.422618, -0.784885, 0.453154, 4.4, 13.5, 7.3)
+transform = Transform3D(0.906308, -0.365998, 0.211309, 0, 0.5, 0.866025, -0.422618, -0.784885, 0.453154, 4.7, 13.5, 7)
 dof_zoomout = 3.0
 dof_zoomin = 1.5
 dof_focus_distance = 14.4
