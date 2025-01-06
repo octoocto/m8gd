@@ -1,15 +1,120 @@
 
-# m8gd: M8 Headless Display and Visualizer
+<center><h1>
+m8gd: M8 Headless Display and Visualizer
+</h1></center>
 
-## Description
+**m8gd** is a M8 display client for the M8 Tracker that provides a variety of 3D and 2D scenes.
 
-m8gd is a M8 headless client that is capable of rendering the M8's display in a 3D environment using the Godot Engine.
+This repository consists of the C++ library and GDExtension `libm8gd` that acts as a headless M8 client library, and the main project `m8gd`.
 
-This repository consists of the C++ library and GDExtension `libm8gd` that acts as a headless M8 client library, and the Godot project `m8gd` as the frontend.
+Table of contents
+=================
 
-## Building from source
+* [Download](#download)
+* [Usage](#usage)
+    * [Scenes](#scenes)
+    * [Overlays](#overlays)
+    * [Filters](#filters)
+    * [Controls](#controls)
+* [Building](#building)
+    * [Requirements](#requirements)
+    * [Building From Source](#building-from-source)
+* [Troubleshooting](#troubleshooting)
+* [Editing](#editing)
+* [Credits](#credits)
 
-### Requirements
+
+Download
+========
+
+[GitHub Releases (Windows, Linux, & MacOS (x86_64 only))](https://github.com/octoocto/m8gd/releases)
+
+Note that this project is a work-in-progress. All releases are pre-release builds.
+
+Linux builds require the `libserialport` package to be installed.
+
+If you wish to build this project from source, please see [Building](#building).
+
+Usage
+=====
+
+## Scenes
+
+The M8 screen can be displayed in various built-in scenes. Scenes are loaded and configured from the main menu.
+
+- **Fast Display**: resembles other M8 display apps such as m8.run and m8c.
+- **Fancy Display**: same as the Fast Display with additional customizable settings.
+- **Desktop** (3D): resembles a real-world desktop camera setup, including an interactive 3D model of the M8 and some desktop decorations.
+- **Floating** (3D): resembles a floating 3D model of the M8 in empty space with a jumbotron showing the M8 display in the background.
+
+## Overlays
+
+Various overlays can be toggled on/off and configured in the main menu.
+
+- **Audio Spectrum**: an audio spectrum (magnitude over frequency) graph.
+- **Audio Waveform**: an audio waveform (magnitude over time) graph.
+- **M8 Display**: a secondary 2D M8 display panel. Useful for overlaying over 3D scenes.
+- **Key Display**: displays live keystrokes and key combos (either from the physical M8 or from m8gd) live.
+
+### M8 Theme Integration
+
+The audio spectrum and audio waveform overlays are able to use colors from your M8's current theme (defaults to white), however, you must enter the Theme screen on the M8 at least once while m8gd is open first.
+
+## Filters
+
+Various filters/shaders can be toggled on/off and configured in the main menu.
+
+- **VHS Shader**: emulates VHS tape effects
+- **CRT Shader**: emulates a CRT monitor
+- **Noise Filter**: a subtle noise filter. Useful in the Fancy Display scene to avoid gradient banding.
+
+## Controls
+
+### General
+
+Action               | Binding
+---------------------|----------
+Open/Close Main Menu | ESC
+Toggle Fullscreen    | Alt+Enter
+Take Screenshot      | F12
+
+### Camera controls (only applicable to 3D scenes)
+
+Action                                                    | Binding
+----------------------------------------------------------|-----------------------
+Pan camera                                                | Mouse Move
+Zoom camera                                               | Hold Mouse Right-Click
+Move camera mode (when in camera or scene menu)           | Hold Mouse Right-Click
+Move camera (when in "move camera mode")                  | WASD
+Adjust camera angle (when in "move camera mode")          | Mouse Move
+Adjust camera focal distance (when in "move camera mode") | Mouse Scroll Up/Down
+
+### M8 Key Input
+
+M8 Key | Default Binding (KB)
+-------|---------------------
+Up     | Up Arrow
+Down   | Down Arrow
+Left   | Left Arrow
+Right  | Right Arrow
+Shift  | Shift
+Play   | Spacebar
+Option | Z
+Edit   | X
+
+### M8 Keyjazz / Virtual Keyboard
+
+Action            | Default Binding (KB)
+------------------|---------------------
+Play Note         | `A` to `'`
+Decrease Octave   | `-`
+Increase Octave   | `=`
+Decrease Velocity | `[`
+Increase Velocity | `]`
+
+# Building
+
+## Requirements
 
 - Git
 - GCC (if on Windows/Linux) or Clang (if on macOS)
@@ -19,11 +124,10 @@ This repository consists of the C++ library and GDExtension `libm8gd` that acts 
 - pkg-config
 - libserialport
 - [Godot 4.3-stable](https://godotengine.org/download/archive/4.3-stable/)
-- a desktop environment
 
 If on Windows, a MSYS2/MinGW64 installation is recommended when compiling.
 
-### Installing requirements
+### Installing Requirements
 
 #### Windows (via MinGW64)
 
@@ -51,7 +155,7 @@ $ macports install scons
 $ macports install libserialport
 ```
 
-### Building
+## Building From Source
 
 ```bash
 $ git clone https://github.com/octoocto/m8gd
@@ -60,43 +164,48 @@ $ git submodule update --init
 $ python build.py
 ```
 
-A .zip file containing the app should be created in the `build` folder.
+The `build.py` script will automatically download Godot and its export templates in order to export the project if it does not find a `godot` command. To force the script to run without downloading anything, run `python build.py --nodownload` instead.
 
-## Troubleshooting
+If the export was successful, a .zip file containing the app should be created in the `build/` folder.
 
-### Audio issues
+Run `python build.py -h` for different options
+
+# Troubleshooting
+
+## Audio issues
 
 In order to monitor audio, m8gd will attempt to find the audio input device associated with the M8 and listen to it.
+
+### No audio playing
 
 If the device is disabled, or m8gd doesn't have permissions to access the M8's audio input device, then it will fail to connect.
 See more details [here](https://docs.godotengine.org/en/4.2/classes/class_projectsettings.html#class-projectsettings-property-audio-driver-enable-input).
 
 m8gd will also detect if the audio device is connected but not playing (this may happen when repeatedly disconnecting/connecting the M8) and automatically attempt to reconnect the audio device. This can happen around 10 seconds of the audio device not playing.
 
-### Running on macOS
+## Running on macOS
 
-At this time, the macOS build included in the releases does not have an official Apple Developer code signature and will likely not start as-is. Please read [this guide](https://docs.godotengine.org/en/stable/tutorials/export/running_on_macos.html#app-is-signed-including-ad-hoc-signatures-but-not-notarized) from the Godot docs on how to allow m8gd to run.
+At this time, the macOS build included in the releases does not have an official Apple Developer code signature and will likely not start as-is. 
+
+Please read [this guide](https://docs.godotengine.org/en/stable/tutorials/export/running_on_macos.html#app-is-signed-including-ad-hoc-signatures-but-not-notarized) from the Godot docs on how to allow m8gd to run.
 
 The macOS build is also compiled specifically for x86_64 CPUs. If you are on a macOS system with the M1 chip or newer, enabling "Open using Rosetta" in the app's info window is also needed for it to start.
 
-## Development
+# Editing
 
-A debug build of libm8gd is required to open this project in the Godot editor.
-Please follow the build instructions up to Step 2 to build this from source, or use a precompiled library from the latest release if available, placed in `project/addons/libm8gd/`.
+A debug binary of the gdextension `libm8gd` is required to open this project in the Godot editor.
 
-This project has been tested to work on [Godot 4.2.2-stable](https://godotengine.org/download/archive/4.2.2-stable/).
+Please follow the build instructions in [Building](#building) (run `python build.py --dev` to compile a debug gdextension) or use a precompiled library from the latest release if available, placed in `project/addons/libm8gd/bin`.
 
-`libm8gd` source files are located in `src/`.
+This project has been tested to work on [Godot 4.3-stable](https://godotengine.org/download/archive/4.3-stable/).
 
-`m8gd` project and source files are located in `project/`.
-
-## Screenshots
+# Screenshots
 
 ![screenshot](screenshot.png)
 
 ![screenshot2](screenshot2.png)
 
-## Credits
+# Credits
 
 - Thanks to laamaa for creating [m8c](https://github.com/laamaa/m8c)! This was used as a reference when creating `libm8gd`.
 - m8stealth57 and m8stealth89 fonts by Trash80. These fonts were converted to bitmaps.
