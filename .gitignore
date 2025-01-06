@@ -21,5 +21,6 @@ build/
 
 # scons cache
 .sconsign.dblite
+/.scons_cache/
 
 thirdparty/*/*

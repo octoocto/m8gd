@@ -1,93 +1,66 @@
 #!/usr/bin/env python
-import subprocess
 import os
+from glob import glob
 from pathlib import Path
 
-ADDON_DIR = "project/addons/libm8gd"
-BUILD_DIR = "build"
-TARGET_LIB = "libm8gd"
-
 env = SConscript("thirdparty/godot-cpp/SConstruct")
-
-
-def call(*args) -> str:
-    return subprocess.run(args, capture_output=True).stdout.decode().strip()
-
-
-def call_split(*args) -> list[str]:
-    return call(*args).split(" ")
-
-
-# create build directory if doesn't exist
-Path(BUILD_DIR).mkdir(exist_ok=True)
-
-
-USING_OSXCROSS: bool = "OSXCROSS_ROOT" in os.environ
-
-if USING_OSXCROSS:
-    if env["arch"] == "universal":
-        print("OSXCross does not support universal builds.")
-        Exit(255)
-    else:
-        print("using OSXCross SDK: %s" % env["osxcross_sdk"])
-
-PKG_CONFIG: str
-if env["platform"] == "macos" and USING_OSXCROSS:
-    PKG_CONFIG = "x86_64-apple-%s-pkg-config" % env["osxcross_sdk"]
-else:
-    PKG_CONFIG = "pkg-config"
-
-
-CFLAGS = call_split(PKG_CONFIG, "--cflags", "libserialport")
-
-print("using pkg-config: %s" % PKG_CONFIG)
-print("using cxx: %s" % env["CXX"])
 
 # add sources
 env.Append(CPPPATH=["src/"])
 sources = Glob("src/*.cpp")
 
-# set flags
-if env["target"] == "template_release":
-    env.Append(CFLAGS=["-O2"])
+# env.Append(CPPPATH=["thirdparty/libserialport/"])
+# sources.append("thirdparty/libserialport/config.h")
+# sources.append("thirdparty/libserialport/serialport.c")
+# sources.append("thirdparty/libserialport/test_timing.c")
+# if env["platform"] == "linux":
+#     sources.append("thirdparty/libserialport/linux_termios.c")
+#     sources.append("thirdparty/libserialport/linux.c")
+# elif env["platform"] == "windows":
+#     sources.append("thirdparty/libserialport/windows.c")
+# elif env["platform"] == "macos":
+#     sources.append("thirdparty/libserialport/macosx.c")
 
-env.Append(CFLAGS=["-Wall", "-pipe"])
-env.Append(CFLAGS=CFLAGS)
+# find extension path
+(extension_path,) = glob("project/addons/*/*.gdextension")
+addon_path = Path(extension_path).parent
+project_name = Path(extension_path).stem
 
-print("architecture: %s" % env["arch"])
-
-if env["platform"] == "macos" and USING_OSXCROSS:
-    # explicitly link the static library
-    LIB_FILE = (
-        call(PKG_CONFIG, "--variable=libdir", "libserialport") + "/libserialport.a"
-    )
-    print("library path: %s" % LIB_FILE)
-    env.Append(LIBS=File(LIB_FILE))
+# scons cache
+scons_cache_path = os.environ.get("SCONS_CACHE")
+if scons_cache_path:
+    CacheDir(scons_cache_path)
 else:
-    LIBPATH = call_split(PKG_CONFIG, "--libs-only-L", "--static", "libserialport")
-    LIBS = call_split(PKG_CONFIG, "--libs-only-l", "--static", "libserialport")
+    CacheDir(".scons_cache/%s_%s_%s" % (env["platform"], env["arch"], env["target"]))
 
-    print("library paths: %s" % LIBPATH)
-    print("library flags: %s" % LIBS)
+# find pkg-config command
+if env["platform"] == "macos" and "OSXCROSS_ROOT" in os.environ:
+    pkg_config = "x86_64-apple-%s-pkg-config" % env["osxcross_sdk"]
+else:
+    pkg_config = "pkg-config"
 
-    env.Append(LIBPATH=LIBPATH)
-    env.Append(LIBS=LIBS)
+# link with libserialport
+env.ParseConfig(f"{pkg_config} libserialport --cflags --libs --static")
 
 # create library target
+debug_or_release = "release" if env["target"] == "template_release" else "debug"
 if env["platform"] == "macos":
-
-    env.Append(CCFLAGS=CFLAGS)
-
     library = env.SharedLibrary(
-        target="%s/%s.%s.%s.framework"
-        % (ADDON_DIR, TARGET_LIB, env["platform"], env["target"]),
+        "{0}/bin/{1}.{2}.{3}.framework/{1}.{2}.{3}".format(
+            addon_path, project_name, env["platform"], debug_or_release
+        ),
         source=sources,
     )
 else:
-
     library = env.SharedLibrary(
-        target="%s/%s.%s.%s%s"
-        % (ADDON_DIR, TARGET_LIB, env["platform"], env["target"], env["SHLIBSUFFIX"]),
+        "{}/bin/{}.{}.{}.{}{}".format(
+            addon_path,
+            project_name,
+            env["platform"],
+            debug_or_release,
+            env["arch"],
+            env["SHLIBSUFFIX"],
+        ),
         source=sources,
     )
 
