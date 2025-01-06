@@ -1,15 +1,15 @@
 [configuration]
 
 entry_symbol = "libm8gd_init"
-compatibility_minimum = 4.2
+compatibility_minimum = 4.3
 
 [libraries]
 
-macos.debug = "res://addons/libm8gd/libm8gd.macos.template_debug.framework"
-macos.release = "res://addons/libm8gd/libm8gd.macos.template_release.framework"
+macos.debug = "res://addons/libm8gd/bin/libm8gd.macos.debug.framework/libm8gd.macos.debug"
+macos.release = "res://addons/libm8gd/bin/libm8gd.macos.release.framework/libm8gd.macos.release"
 
-windows.debug.x86_64 = "res://addons/libm8gd/libm8gd.windows.template_debug.dll"
-windows.release.x86_64 = "res://addons/libm8gd/libm8gd.windows.template_release.dll"
+windows.debug.x86_64 = "res://addons/libm8gd/bin/libm8gd.windows.debug.x86_64.dll"
+windows.release.x86_64 = "res://addons/libm8gd/bin/libm8gd.windows.release.x86_64.dll"
 
-linux.debug.x86_64 = "res://addons/libm8gd/libm8gd.linux.template_debug.so"
-linux.release.x86_64 = "res://addons/libm8gd/libm8gd.linux.template_release.so"
+linux.debug.x86_64 = "res://addons/libm8gd/bin/libm8gd.linux.debug.x86_64.so"
+linux.release.x86_64 = "res://addons/libm8gd/bin/libm8gd.linux.release.x86_64.so"
