@@ -69,6 +69,7 @@ void M8GDClient::on_key_pressed(uint8_t keybits)
 
 	if (keybits != last_keybits)
 	{
+		m8gd->keybits = keybits;
 		for (const M8Key key : M8_KEYS)
 		{
 			// detect press
