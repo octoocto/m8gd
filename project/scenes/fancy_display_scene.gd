@@ -1,10 +1,16 @@
 extends M8Scene
 
-@export_range(1, 6) var integer_zoom: int = 1:
+@export_range(1, 6) var integer_zoom: int = 0:
 	set(value):
 		integer_zoom = value
 		if is_inside_tree():
 			update_viewport_size()
+
+@export_range(0, 6) var panel_integer_scale: int = 1:
+	set(value):
+		panel_integer_scale = value
+		if is_inside_tree():
+			update_panel_size()
 
 @export var enable_particles: bool = false:
 	set(value):
@@ -12,12 +18,6 @@ extends M8Scene
 		if is_inside_tree():
 			%GPUParticles2D.visible = value
 			%GPUParticles2D2.visible = value
-
-@export_range(1, 4) var panel_integer_scale: int = 1:
-	set(value):
-		panel_integer_scale = value
-		if is_inside_tree():
-			update_panel_size()
 
 @export var panel_offset: Vector2i = Vector2i.ZERO:
 	set(value):
@@ -147,24 +147,13 @@ func init_menu(menu: SceneMenu) -> void:
 	menu.add_auto("background_theme_tint")
 	menu.add_auto("background_blur_amount")
 
-
-func get_auto_integer_scale() -> int:
-
-	var window_size: Vector2i = get_viewport().size
-	var texture: Texture2D = %TextureRect.texture
-	var intscale := 1
-
-	while ((intscale + 1) * texture.get_size().x <= window_size.x and (intscale + 1) * texture.get_size().y <= window_size.y):
-		intscale += 1
-
-	return intscale
-
 func update_viewport_size() -> void:
 
 	var window_size := get_window().get_size()
 	var viewport_size := Vector2i((window_size / float(integer_zoom)).ceil())
 	%SubViewport.set_size(viewport_size)
 	%SubViewportContainer.scale = Vector2(integer_zoom, integer_zoom)
+
 	%Control.custom_minimum_size = window_size * integer_zoom
 
 	%CenterContainer.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -177,7 +166,10 @@ func update_viewport_size() -> void:
 
 func update_panel_size() -> void:
 	var display_size := main.m8_client.get_display().get_size()
-	%DisplayTextureRect.custom_minimum_size = display_size * panel_integer_scale
+	if panel_integer_scale == 0: # auto
+		%DisplayTextureRect.custom_minimum_size = display_size * get_auto_display_integer_scale()
+	else:
+		%DisplayTextureRect.custom_minimum_size = display_size * panel_integer_scale
 
 func _process(_delta: float) -> void:
 
@@ -202,6 +194,6 @@ func _process(_delta: float) -> void:
 	# %AudioSpectrum.modulate.a = pow(main.audio_get_level(), 3)
 
 	# if force_integer_scale == 0:
-	# 	%TextureRect.custom_minimum_size = %TextureRect.texture.get_size() * get_auto_integer_scale();
+	# 	%TextureRect.custom_minimum_size = %TextureRect.texture.get_size() * get_auto_display_integer_scale();
 	# else:
 	# 	%TextureRect.custom_minimum_size = %TextureRect.texture.get_size() * force_integer_scale;

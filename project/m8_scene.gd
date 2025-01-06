@@ -53,5 +53,13 @@ func load_media_to_texture_rect(path: String, vsp: VideoStreamPlayer = null) -> 
 
 	return null
 
+func get_auto_display_integer_scale() -> int:
+	var window_size: Vector2i = get_viewport().size
+	var texture: Texture2D = main.m8_client.get_display()
+	var intscale := 1
+	while ((intscale + 1) * texture.get_size().x <= window_size.x and (intscale + 1) * texture.get_size().y <= window_size.y):
+		intscale += 1
+	return intscale
+
 func get_setting(setting: String) -> Variant:
 	return main.config.get_property_scene(setting)
