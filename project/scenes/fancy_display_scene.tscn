@@ -2,10 +2,10 @@
 
 [ext_resource type="Script" path="res://scenes/fancy_display_scene.gd" id="1_jfrc1"]
 [ext_resource type="Shader" path="res://shaders/screen_blur.gdshader" id="2_rpd8y"]
-[ext_resource type="PackedScene" uid="uid://263mog4cxgwr" path="res://overlays/audio_spectrum.tscn" id="3_ena4s"]
+[ext_resource type="PackedScene" uid="uid://263mog4cxgwr" path="res://overlays/overlay_audio_spectrum.tscn" id="3_ena4s"]
 [ext_resource type="Shader" path="res://shaders/panel_blur.gdshader" id="4_y8ora"]
 [ext_resource type="Texture2D" uid="uid://ras5y3yqijkx" path="res://assets/m8_screen_placeholder.png" id="5_ihehy"]
-[ext_resource type="PackedScene" uid="uid://dq6heks88e2ip" path="res://overlays/audio_waveform.tscn" id="6_j1xao"]
+[ext_resource type="PackedScene" uid="uid://dq6heks88e2ip" path="res://overlays/overlay_audio_waveform.tscn" id="6_j1xao"]
 
 [sub_resource type="Gradient" id="Gradient_gskhf"]
 

@@ -177,7 +177,7 @@ func _init_menu_overlays() -> void:
 	%Setting_OverlaySpectrum.init_config_overlay(main, main.overlay_spectrum, "visible")
 	%Setting_OverlayWaveform.init_config_overlay(main, main.overlay_waveform, "visible")
 	%Setting_OverlayDisplay.init_config_overlay(main, main.overlay_display, "visible")
-	%Setting_OverlayKeys.init_config_overlay(main, main.key_overlay, "visible")
+	%Setting_OverlayKeys.init_config_overlay(main, main.overlay_keys, "visible")
 
 	%Setting_OverlaySpectrum.connect_to_enable(%Button_OverlaySpectrumConfig)
 	%Setting_OverlayWaveform.connect_to_enable(%Button_OverlayWaveformConfig)
@@ -207,7 +207,7 @@ func _init_menu_overlays() -> void:
 	)
 	%Button_OverlayKeysConfig.pressed.connect(func() -> void:
 		visible = false
-		main.menu_overlay.menu_open(main.key_overlay)
+		main.menu_overlay.menu_open(main.overlay_keys)
 	)
 
 ##
@@ -573,7 +573,7 @@ func _init_menu_model() -> void:
 				_model("%KeyDown").material_overlay.albedo_color = Color(value, colors[1].a)
 				_model("%KeyLeft").material_overlay.albedo_color = Color(value, colors[2].a)
 				_model("%KeyRight").material_overlay.albedo_color = Color(value, colors[3].a)
-			main.key_overlay.color_directional = value
+			main.overlay_keys.color_directional = value
 		)
 
 	# highlight color for other buttons
@@ -593,7 +593,7 @@ func _init_menu_model() -> void:
 				if _model():
 					var color: Color = _model(node_path).material_overlay.albedo_color
 					_model(node_path).material_overlay.albedo_color = Color(value, color.a)
-				main.key_overlay.set(overlay_prop, value)
+				main.overlay_keys.set(overlay_prop, value)
 		)
 
 	# sync color swatches between all color pickers
@@ -903,11 +903,11 @@ func update_device_colors() -> void:
 			keycap.material_overlay.albedo_color = hl_color
 
 	# update key overlay colors
-	main.key_overlay.color_directional = config.hl_color_directional
-	main.key_overlay.color_shift = config.hl_color_shift
-	main.key_overlay.color_play = config.hl_color_play
-	main.key_overlay.color_option = config.hl_color_option
-	main.key_overlay.color_edit = config.hl_color_edit
+	main.overlay_keys.color_directional = config.hl_color_directional
+	main.overlay_keys.color_shift = config.hl_color_shift
+	main.overlay_keys.color_play = config.hl_color_play
+	main.overlay_keys.color_option = config.hl_color_option
+	main.overlay_keys.color_edit = config.hl_color_edit
 
 func reset_key_rebinds() -> void:
 	for action: String in [

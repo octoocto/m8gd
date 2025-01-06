@@ -1,11 +1,8 @@
-extends Control
+extends OverlayBase
 
 enum Type {PIXEL, BAR, LINE}
 
 @export var type: Type = Type.BAR
-@export var draw_bounds := false
-
-@export var position_offset := Vector2i.ZERO
 
 # @export var size := Vector2i(320, 240)
 @export_group("Analyzer", "analyzer_")

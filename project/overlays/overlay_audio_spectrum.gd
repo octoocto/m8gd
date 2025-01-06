@@ -1,12 +1,9 @@
-extends Control
+extends OverlayBase
 
 enum Type {PIXEL, BAR, LINE}
 enum ColorStyle {SCOPE, METER}
 
 @export var type: Type = Type.BAR
-@export var draw_bounds := false
-
-@export var position_offset := Vector2i.ZERO
 
 @export_group("Analyzer", "analyzer_")
 @export var analyzer_db_min: float = 60.0

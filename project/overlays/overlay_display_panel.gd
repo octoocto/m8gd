@@ -1,36 +1,30 @@
-extends Control
+extends OverlayBase
 
-@export var draw_bounds := false
 
 @export_range(1, 4) var integer_scale: int = 1:
 	set(value):
 		integer_scale = value
-		_update_panel()
-
-@export var position_offset: Vector2i = Vector2i(0, 0):
-	set(value):
-		position_offset = value
-		_update_panel()
+		_update()
 
 @export var padding: Vector2i = Vector2i(16, 16):
 	set(value):
 		padding = value
-		_update_panel()
+		_update()
 
 @export_range(0, 16) var corner_radius: int = 8:
 	set(value):
 		corner_radius = value
-		_update_panel()
+		_update()
 
 @export_range(0.0, 1.0, 0.01) var opacity: float = 1.0:
 	set(value):
 		opacity = value
-		_update_panel()
+		_update()
 
 @export_range(0.0, 8.0, 0.1) var blur_amount: float = 2.0:
 	set(value):
 		opacity = value
-		_update_panel()
+		_update()
 
 
 var main: Main
@@ -42,7 +36,7 @@ func init(p_main: Main) -> void:
 	%DisplayTextureRect.texture = main.m8_client.get_display_texture()
 
 	main.m8_theme_changed.connect(func(_colors: PackedColorArray, _complete: bool) -> void:
-		_update_panel()
+		_update()
 	)
 
 func overlay_get_properties() -> Array[String]:
@@ -55,7 +49,7 @@ func _draw() -> void:
 	if draw_bounds:
 		draw_rect(Rect2(position_offset, size), Color.WHITE, false)
 		
-func _update_panel() -> void:
+func _update() -> void:
 	if is_inside_tree():
 		# update position
 		%DisplayPanel.position = position_offset

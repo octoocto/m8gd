@@ -1,6 +1,6 @@
 [gd_scene load_steps=14 format=3 uid="uid://ca2jqh2tc7jix"]
 
-[ext_resource type="Script" path="res://overlays/key_overlay.gd" id="1_tnj14"]
+[ext_resource type="Script" path="res://overlays/overlay_keys.gd" id="1_tnj14"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v85e1"]
 content_margin_left = 8.0

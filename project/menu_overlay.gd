@@ -25,7 +25,7 @@ func init(p_main: Main) -> void:
 ##
 ## Called when this menu is opened to edit the given overlay.
 ##
-func menu_open(overlay: Control) -> void:
+func menu_open(overlay: OverlayBase) -> void:
 
 	assert(!visible, "tried to open menu when menu is already open")
 	visible = true
@@ -36,7 +36,7 @@ func menu_open(overlay: Control) -> void:
 	init_settings(overlay_target)
 	_populate_overlay_properties()
 
-func init_settings(overlay: Control) -> void:
+func init_settings(overlay: OverlayBase) -> void:
 
 	%Setting_Position.uninit()
 	%Setting_Anchor.uninit()

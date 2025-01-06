@@ -38,6 +38,7 @@ project/assembly_name="m8-gd"
 [file_customization]
 
 folder_colors={
+"res://overlays/": "purple",
 "res://scenes/": "red",
 "res://shaders/": "green"
 }

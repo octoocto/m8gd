@@ -5,7 +5,7 @@
 [ext_resource type="Shader" path="res://shaders/screen_blur.gdshader" id="3_nedee"]
 [ext_resource type="PackedScene" uid="uid://bckroenwlecqv" path="res://scene_camera_3d.tscn" id="4_8iar1"]
 [ext_resource type="PackedScene" uid="uid://iwhr1bmv263q" path="res://models/m8_model.tscn" id="5_j0ox7"]
-[ext_resource type="PackedScene" uid="uid://263mog4cxgwr" path="res://overlays/audio_spectrum.tscn" id="5_ryr46"]
+[ext_resource type="PackedScene" uid="uid://263mog4cxgwr" path="res://overlays/overlay_audio_spectrum.tscn" id="5_ryr46"]
 [ext_resource type="Shader" path="res://shaders/crt_screen.gdshader" id="5_t84je"]
 
 [sub_resource type="Gradient" id="Gradient_1mc0v"]

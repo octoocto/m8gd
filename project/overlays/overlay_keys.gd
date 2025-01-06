@@ -1,15 +1,8 @@
-class_name M8KeyOverlay extends Control
+class_name OverlayKeys extends OverlayBase
 
 const MAX_ITEMS := 10
 
 enum Style {Boxed, Simple}
-
-@export var draw_bounds := false
-
-@export var position_offset: Vector2i = Vector2i(0, 0):
-	set(value):
-		position_offset = value
-		_update_overlay()
 
 @export var overlay_style := Style.Boxed:
 	set(value):
@@ -97,7 +90,7 @@ func _update_colors() -> void:
 	color_edit = color_edit
 
 
-func _update_overlay() -> void:
+func _update() -> void:
 	if is_inside_tree():
 		%ControlOffset.size = size
 		%ControlOffset.position = position_offset
@@ -131,7 +124,7 @@ func init(p_main: Main) -> void:
 			add_item()
 	)
 
-	_update_overlay()
+	_update()
 
 func _draw() -> void:
 	if draw_bounds:

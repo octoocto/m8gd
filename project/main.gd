@@ -69,10 +69,10 @@ var last_audio_level := 0.0
 @onready var current_scene: M8Scene = null
 
 # overlays
-@onready var key_overlay: M8KeyOverlay = %KeyOverlay
-@onready var overlay_spectrum: Control = %OverlayAudioSpectrum
-@onready var overlay_waveform: Control = %OverlayAudioWaveform
-@onready var overlay_display: Control = %OverlayDisplayPanel
+@onready var overlay_keys: OverlayKeys = %KeyOverlay
+@onready var overlay_spectrum: OverlayBase = %OverlayAudioSpectrum
+@onready var overlay_waveform: OverlayBase = %OverlayAudioWaveform
+@onready var overlay_display: OverlayBase = %OverlayDisplayPanel
 
 @onready var menu: MainMenu = %MainMenuPanel
 @onready var menu_scene: SceneMenu = %SceneMenu
@@ -88,21 +88,19 @@ var last_audio_level := 0.0
 
 func _ready() -> void:
 
-	var start_time := Time.get_ticks_msec()
-
-	# resize viewport with window
 	get_window().min_size = Vector2i(960, 640)
 
-	# initialize key overlay
-	_start_task("init key overlay", func() -> void:
-		key_overlay.init(self)
+	var start_time := Time.get_ticks_msec()
+
+	_start_task("init overlays", func() -> void:
+		overlay_spectrum.init(self)
+		overlay_waveform.init(self)
+		overlay_display.init(self)
+		overlay_keys.init(self)
 	)
 
-	_start_task("init main menu", func() -> void:
+	_start_task("init menus", func() -> void:
 		menu.init(self)
-	)
-
-	_start_task("init other menus", func() -> void:
 		menu_scene.init(self)
 		menu_camera.init(self)
 		menu_overlay.init(self)
@@ -124,7 +122,6 @@ func _ready() -> void:
 
 	get_tree().process_frame.connect(func() -> void:
 		# godot action to m8 controller
-		
 		var local_keybits := m8_get_local_keybits()
 		m8_client.send_input(local_keybits)
 	)
@@ -397,7 +394,7 @@ func _get_propkey_filter_shader(filter: ColorRect, property: String) -> String:
 ##
 ## Set properties of the given overlay according to the current profile/scene.
 ##
-func _init_overlay(overlay: Control) -> void:
+func _init_overlay(overlay: OverlayBase) -> void:
 
 	# manually init the overlay properties here since we won't have a
 	# Setting node for all of them
@@ -412,12 +409,9 @@ func _init_overlay(overlay: Control) -> void:
 func init_overlays() -> void:
 
 	m8_client.set_background_alpha(0)
-	%OverlayAudioSpectrum.init(self)
-	%OverlayAudioWaveform.init(self)
-	%OverlayDisplayPanel.init(self)
 
 	_init_overlay(overlay_display)
-	_init_overlay(key_overlay)
+	_init_overlay(overlay_keys)
 	_init_overlay(overlay_spectrum)
 	_init_overlay(overlay_waveform)
 
