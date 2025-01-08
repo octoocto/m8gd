@@ -68,14 +68,11 @@ func init_to_value(value_init_fn: Variant, value_changed_fn: Callable) -> void:
 
 	if value_init_fn is Callable:
 		_value_init_fn = value_init_fn
-		initial_value = _value_init_fn.call()
-
 	else:
 		_value_init_fn = func() -> Variant: return value_init_fn
-		initial_value = _value_init_fn
 		
 	value_changed.connect(value_changed_fn)
-	set("value",initial_value)
+	set("value", _value_init_fn.call())
 
 	_is_initialized = true
 

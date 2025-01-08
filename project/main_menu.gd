@@ -332,17 +332,16 @@ func _init_menu_video() -> void:
 
 	var init_window_size := Vector2i(config.window_width, config.window_height)
 	%Setting_CustomWindowSize.init_to_value(init_window_size, func(value: Vector2i) -> void:
-		if get_window().size != value:
-			get_window().size = value
-			config.set_property_global("window_width", value.x)
-			config.set_property_global("window_height", value.y)
+		get_window().size = value
+		config.set_property_global("window_width", value.x)
+		config.set_property_global("window_height", value.y)
 	)
 
 	get_window().size_changed.connect(func() -> void:
 		var is_fullscreen := get_window().mode != Window.MODE_WINDOWED
 
 		%Setting_Fullscreen.set_value_no_signal(is_fullscreen)
-		%Setting_CustomWindowSize.set_value_no_signal(get_window().size)
+		%Setting_CustomWindowSize.value = get_window().size
 	)
 
 	%Setting_VSync.init_config_global(main, "vsync", func(value: int) -> void:
