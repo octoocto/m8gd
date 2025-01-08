@@ -292,7 +292,6 @@ func _init_menu_audio() -> void:
 		main.visualizer_frequency_max = value
 	)
 
-
 ##
 ## Setup the video menu controls.
 ##
@@ -307,6 +306,12 @@ func _init_menu_video() -> void:
 			get_window().mode = Window.MODE_EXCLUSIVE_FULLSCREEN
 		else:
 			get_window().mode = Window.MODE_WINDOWED
+			%Setting_WindowBorderless._emit_value_changed()
+	)
+
+	%Setting_WindowBorderless.init_config_global(main, "window_borderless", func(value: bool) -> void:
+		if get_window().mode == Window.MODE_WINDOWED:
+			get_window().borderless = value
 	)
 
 	%Setting_AlwaysOnTop.init_config_global(main, "always_on_top", func(value: bool) -> void:
@@ -332,14 +337,12 @@ func _init_menu_video() -> void:
 			config.set_property_global("window_width", value.x)
 			config.set_property_global("window_height", value.y)
 	)
+
 	get_window().size_changed.connect(func() -> void:
 		var is_fullscreen := get_window().mode != Window.MODE_WINDOWED
 
 		%Setting_Fullscreen.set_value_no_signal(is_fullscreen)
 		%Setting_CustomWindowSize.set_value_no_signal(get_window().size)
-
-		%Setting_WindowSize.enabled = !is_fullscreen
-		%Setting_CustomWindowSize.enabled = !is_fullscreen
 	)
 
 	%Setting_VSync.init_config_global(main, "vsync", func(value: int) -> void:

@@ -60,6 +60,10 @@ var last_peak := 0.0
 var last_peak_max := 0.0
 var last_audio_level := 0.0
 
+# ALT+mouse dragging variables
+var _window_drag_enabled := false
+var _window_drag_initial_pos := Vector2.ZERO
+
 @onready var config := M8Config.load()
 
 @onready var audio_monitor: AudioStreamPlayer = %AudioStreamPlayer
@@ -166,6 +170,21 @@ func _physics_process(delta: float) -> void:
 		%LabelStatus.modulate.a = lerp(%LabelStatus.modulate.a, %LabelStatus.modulate.a - delta * 2.0, 0.2)
 
 func _input(event: InputEvent) -> void:
+
+	# ALT+mouse window dragging
+	if get_window().mode == Window.MODE_WINDOWED:
+		if event is InputEventMouseButton:
+			if event.button_index == MOUSE_BUTTON_LEFT:
+				if event.pressed and Input.is_key_pressed(KEY_ALT) and !_window_drag_enabled:
+					_window_drag_enabled = true
+					_window_drag_initial_pos = get_window().get_mouse_position()
+				elif !event.pressed and _window_drag_enabled:
+					_window_drag_enabled = false
+
+		if event is InputEventMouseMotion:
+			if _window_drag_enabled:
+				var delta := get_window().get_mouse_position() - _window_drag_initial_pos
+				get_window().position += Vector2i(delta)
 
 	if event is InputEventKey:
 		# screenshot F12

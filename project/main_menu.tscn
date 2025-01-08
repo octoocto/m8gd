@@ -89,9 +89,10 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-current_tab = 0
+current_tab = 5
 
 [node name="Scene" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
+visible = false
 layout_mode = 2
 theme_override_constants/margin_top = 18
 metadata/_tab_index = 0
@@ -1075,7 +1076,6 @@ layout_mode = 2
 text = "Clear"
 
 [node name="Video" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 5
 
@@ -1095,10 +1095,19 @@ unique_name_in_owner = true
 layout_mode = 2
 setting_name = "Fullscreen"
 
+[node name="Setting_WindowBorderless" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/VBoxContainer2" instance=ExtResource("5_16o8v")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_name = "Borderless Window"
+parent_setting = NodePath("../Setting_Fullscreen")
+parent_setting_invert = true
+
 [node name="Setting_AlwaysOnTop" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/VBoxContainer2" instance=ExtResource("5_16o8v")]
 unique_name_in_owner = true
 layout_mode = 2
 setting_name = "Always on Top"
+parent_setting = NodePath("../Setting_Fullscreen")
+parent_setting_invert = true
 
 [node name="Setting_WindowSize" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/VBoxContainer2" instance=ExtResource("6_mvtic")]
 unique_name_in_owner = true
@@ -1107,6 +1116,8 @@ setting_type = 1
 items = PackedStringArray("640x480 (2x M01)", "960x720 (3x M01)", "1280x960 (4x M01)", "960x640 (2x M02)", "1440x960 (3x M02)", "1920x1280 (4x M02)", "Custom")
 value = 6
 setting_name = "Window Size"
+parent_setting = NodePath("../Setting_Fullscreen")
+parent_setting_invert = true
 
 [node name="Setting_CustomWindowSize" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/VBoxContainer2" instance=ExtResource("7_t1h81")]
 unique_name_in_owner = true
@@ -1115,6 +1126,8 @@ value = Vector2i(640, 480)
 min_value = Vector2i(640, 480)
 max_value = Vector2i(3840, 2160)
 setting_name = "Custom Window Size"
+parent_setting = NodePath("../Setting_Fullscreen")
+parent_setting_invert = true
 
 [node name="Setting_VSync" parent="CenterContainer/VBoxContainer/TabContainer/Video/VBoxContainer/VBoxContainer2" instance=ExtResource("6_mvtic")]
 unique_name_in_owner = true
