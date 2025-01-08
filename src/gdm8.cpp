@@ -65,8 +65,6 @@ void M8GDClient::on_key_pressed(uint8_t keybits)
 
 	static uint8_t last_keybits = 0;
 
-	m8gd->is_controlled_remotely = false;
-
 	if (keybits != last_keybits)
 	{
 		m8gd->keybits = keybits;
@@ -98,7 +96,7 @@ void M8GDClient::on_system_info(
 void M8GD::_bind_methods()
 {
 	ADD_SIGNAL(MethodInfo("system_info", PropertyInfo(Variant::STRING, "hardware"), PropertyInfo(Variant::STRING, "firmware")));
-	ADD_SIGNAL(MethodInfo("font_changed", PropertyInfo(Variant::INT, "model"), PropertyInfo(Variant::STRING, "font")));
+	ADD_SIGNAL(MethodInfo("font_changed", PropertyInfo(Variant::INT, "font")));
 	// ADD_SIGNAL(MethodInfo("keystate_changed", PropertyInfo(Variant::INT, "keystate")));
 	ADD_SIGNAL(MethodInfo("key_pressed", PropertyInfo(Variant::INT, "keycode"), PropertyInfo(Variant::BOOL, "pressed")));
 	ADD_SIGNAL(MethodInfo("device_disconnected"));
@@ -112,6 +110,12 @@ void M8GD::_bind_methods()
 	BIND_ENUM_CONSTANT(M8_KEY_EDIT);
 	BIND_ENUM_CONSTANT(M8_KEY_SHIFT);
 	BIND_ENUM_CONSTANT(M8_KEY_PLAY);
+
+	BIND_ENUM_CONSTANT(M8_FONT_01_SMALL);
+	BIND_ENUM_CONSTANT(M8_FONT_01_BIG);
+	BIND_ENUM_CONSTANT(M8_FONT_02_SMALL);
+	BIND_ENUM_CONSTANT(M8_FONT_02_BOLD);
+	BIND_ENUM_CONSTANT(M8_FONT_02_HUGE);
 
 	ClassDB::bind_static_method("M8GD", D_METHOD("list_devices"), &M8GD::list_devices);
 	ClassDB::bind_method(D_METHOD("connect", "device"), &M8GD::connect);
@@ -129,7 +133,7 @@ void M8GD::_bind_methods()
 	ClassDB::bind_method(D_METHOD("get_display_pixel", "x", "y"), &M8GD::get_pixel);
 	ClassDB::bind_method(D_METHOD("get_theme_colors"), &M8GD::get_theme_colors);
 	ClassDB::bind_method(D_METHOD("set_theme_color", "index", "color"), &M8GD::set_theme_color);
-	ClassDB::bind_method(D_METHOD("load_font", "bitmap"), &M8GD::load_font);
+	ClassDB::bind_method(D_METHOD("load_font", "font_type", "bitmap"), &M8GD::load_font);
 
 	ClassDB::bind_method(D_METHOD("send_enable_display"), &M8GD::send_enable_display);
 	ClassDB::bind_method(D_METHOD("send_disable_display"), &M8GD::send_disable_display);
@@ -285,17 +289,7 @@ void M8GD::set_model(libm8::HardwareModel model,
 	if (font_last == 0xFF || font != font_last)
 	{
 		font_last = font;
-		emit_signal("font_changed", get_model_name(model), font);
-
-		// change font parameters
-
-		print("requested font: %d", font);
-
-		libm8::FontParameters font_params = libm8::get_font_params(model, font);
-
-		display_buffer->screen_offset_y = font_params.screen_y_offset;
-		display_buffer->font_offset_y = font_params.font_y_offset;
-		display_buffer->waveform_max = font_params.waveform_max;
+		set_font(model, font);
 	}
 
 	display_buffer->colors.clear();
@@ -314,7 +308,7 @@ void M8GD::set_display_size(uint16_t width, uint16_t height)
 	}
 
 	display_buffer = new DisplayBuffer(width, height);
-	display_buffer->set_font(font_bitmap);
+	display_buffer->set_font(custom_font_bitmaps[current_font]);
 	display_buffer->set_background_alpha(bg_alpha);
 	display_image = Image::create(width, height, false, Image::FORMAT_RGBA8);
 
@@ -376,11 +370,14 @@ Color M8GD::get_pixel(int x, int y)
 		1.0);
 }
 
-void M8GD::load_font(Ref<BitMap> bitmap)
+void M8GD::load_font(M8Font font, Ref<BitMap> bitmap)
 {
-	font_bitmap = bitmap;
-	display_buffer->set_font(bitmap);
-	print("loaded font with size (%d, %d)", bitmap->get_size().x, bitmap->get_size().y);
+	custom_font_bitmaps[font] = bitmap;
+	if (font == current_font)
+	{
+		display_buffer->set_font(custom_font_bitmaps[current_font]);
+	}
+	print("set font %d to bitmap of size (%d, %d)", font, bitmap->get_size().x, bitmap->get_size().y);
 }
 
 void M8GD::reset_display()
@@ -461,4 +458,19 @@ godot::TypedArray<godot::String> M8GD::list_devices()
 	sp_free_port_list(port_list);
 
 	return port_names;
+}
+
+void M8GD::set_font(libm8::HardwareModel model, u_int8_t font)
+{
+	current_font = M8GD::get_font_type(model, font);
+
+	emit_signal("font_changed", current_font);
+	print("requested font: %d", font);
+
+	libm8::FontParameters font_params = libm8::get_font_params(model, font);
+
+	display_buffer->screen_offset_y = font_params.screen_y_offset;
+	display_buffer->font_offset_y = font_params.font_y_offset;
+	display_buffer->waveform_max = font_params.waveform_max;
+	display_buffer->set_font(custom_font_bitmaps[current_font]);
 }

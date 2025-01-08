@@ -1,7 +1,6 @@
 class_name Main extends Node
 
 signal m8_system_info_received(hardware: String, firmware: String)
-signal m8_font_changed
 signal m8_theme_changed(colors: PackedColorArray, complete: bool)
 signal m8_connected
 signal m8_disconnected
@@ -92,7 +91,12 @@ var _window_drag_initial_pos := Vector2.ZERO
 
 func _ready() -> void:
 
-	# add_child(m8_client)
+	m8_client.load_font(M8GD.M8_FONT_01_SMALL, FONT_01_SMALL)
+	m8_client.load_font(M8GD.M8_FONT_01_BIG, FONT_01_BIG)
+	m8_client.load_font(M8GD.M8_FONT_02_SMALL, FONT_02_SMALL)
+	# m8_client.load_font(M8GD.M8_FONT_02_BOLD, FONT_02_BOLD)
+	m8_client.load_font(M8GD.M8_FONT_02_BOLD, FONT_01_BIG)
+	m8_client.load_font(M8GD.M8_FONT_02_HUGE, FONT_02_HUGE)
 
 	get_window().min_size = Vector2i(960, 640)
 
@@ -474,7 +478,6 @@ func m8_device_connect(port: String) -> void:
 	m8_is_connected = true
 	%LabelPort.text = m8_ports[0]
 	m8_client.system_info.connect(on_m8_system_info)
-	m8_client.font_changed.connect(on_m8_font_changed)
 	m8_client.device_disconnected.connect(on_m8_device_disconnect)
 	m8_client.theme_changed.connect(on_m8_theme_changed)
 	current_serial_device = port
@@ -595,24 +598,6 @@ func on_m8_system_info(hardware: String, firmware: String) -> void:
 	%LabelVersion.text = "%s %s" % [hardware, firmware]
 	m8_system_info_received.emit(hardware, firmware)
 
-func on_m8_font_changed(model: String, font: int) -> void:
-	# switch between small/big fonts (Model_01)
-	match model:
-		"model_02":
-			if font == 0:
-				m8_client.load_font(FONT_02_SMALL)
-			elif font == 1:
-				m8_client.load_font(FONT_02_BOLD)
-			else:
-				m8_client.load_font(FONT_02_HUGE)
-		_:
-			if font == 0:
-				m8_client.load_font(FONT_01_SMALL)
-			else:
-				m8_client.load_font(FONT_01_BIG)
-
-	m8_font_changed.emit()
-
 ## Called when the M8 has been disconnected.
 func on_m8_device_disconnect() -> void:
 
@@ -620,7 +605,6 @@ func on_m8_device_disconnect() -> void:
 	%LabelPort.text = ""
 
 	m8_client.system_info.disconnect(on_m8_system_info)
-	m8_client.font_changed.disconnect(on_m8_font_changed)
 	m8_client.device_disconnected.disconnect(on_m8_device_disconnect)
 	m8_client.theme_changed.disconnect(on_m8_theme_changed)
 

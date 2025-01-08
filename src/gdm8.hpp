@@ -22,6 +22,17 @@ enum M8Key
 	M8_KEY_SHIFT = libm8::KEY_SHIFT,
 	M8_KEY_PLAY = libm8::KEY_PLAY,
 };
+VARIANT_ENUM_CAST(M8Key);
+
+enum M8Font
+{
+	M8_FONT_01_SMALL,
+	M8_FONT_01_BIG,
+	M8_FONT_02_SMALL,
+	M8_FONT_02_BOLD,
+	M8_FONT_02_HUGE
+};
+VARIANT_ENUM_CAST(M8Font);
 
 static const M8Key M8_KEYS[] = {
 	M8_KEY_UP, M8_KEY_DOWN, M8_KEY_LEFT, M8_KEY_RIGHT,
@@ -78,9 +89,8 @@ protected:
 	Ref<Image> display_image;		   // image to use to load byte array
 	Ref<ImageTexture> display_texture; // display texture
 
-	Ref<BitMap> font_bitmap; // spritesheet of all characters
-	uint8_t font_w;			 // width of each char
-	uint8_t font_h;			 // height of each char
+	M8Font current_font = M8_FONT_01_SMALL;
+	Ref<BitMap> custom_font_bitmaps[5] = {nullptr};
 
 	// variables set after the m8 has been connected
 	int sys_model = -1;
@@ -89,10 +99,6 @@ protected:
 
 	// keybits
 	uint8_t keybits = 0b00000000;
-
-	/// @brief If true, the last control input was received remotely
-	/// (`send_input()` was called).
-	bool is_controlled_remotely = false;
 
 public:
 	// config variables
@@ -125,11 +131,13 @@ public:
 	bool is_connected();
 
 public:
-	// device methods
+	// display methods
 
 	/// @brief Gets the M8 display texture.
 	/// @return
 	Ref<ImageTexture> get_display();
+
+	void set_background_alpha(float alpha);
 
 	/// @brief Get the M8's theme colors.
 	/// @return An array of 13 colors
@@ -137,27 +145,6 @@ public:
 
 	/// @brief Set one of the M8's theme color.
 	void set_theme_color(uint8_t index, Color color);
-
-	/// @brief Set the size of the display buffer.
-	/// @param width
-	/// @param height
-	void set_display_size(uint16_t width, uint16_t height);
-
-	/// @brief Sets the current model of the M8 client.
-	///        Also resizes the display buffer.
-	/// @param model
-	void set_model(libm8::HardwareModel model);
-
-	/// @brief Sets the current model, firmware, and font mode of the M8 client.
-	///        Also resizes the display buffer.
-	/// @param model
-	/// @param fw_1 major version
-	/// @param fw_2 minor version
-	/// @param fw_3 patch version
-	/// @param bigfont
-	void set_model(libm8::HardwareModel model, uint8_t fw_1, uint8_t fw_2, uint8_t fw_3, uint8_t font);
-
-	void set_background_alpha(float alpha);
 
 	/// @brief Get the color of a specific pixel in the M8 display.
 	/// @param x
@@ -167,7 +154,7 @@ public:
 
 	/// @brief Load a font from a bitmap file.
 	/// @param bitmap
-	void load_font(Ref<BitMap> bitmap);
+	void load_font(M8Font font, Ref<BitMap> bitmap);
 
 public:
 	// input methods
@@ -230,6 +217,54 @@ private:
 	/// @brief Copy the display buffer to display_texture.
 	void copy_buffer_to_texture();
 
+	/// @brief Set the size of the display buffer.
+	/// @param width
+	/// @param height
+	void set_display_size(uint16_t width, uint16_t height);
+
+	/// @brief Sets the current model of the M8 client.
+	///        Also resizes the display buffer.
+	/// @param model
+	void set_model(libm8::HardwareModel model);
+
+	/// @brief Sets the current model, firmware, and font mode of the M8 client.
+	///        Also resizes the display buffer.
+	/// @param model
+	/// @param fw_1 major version
+	/// @param fw_2 minor version
+	/// @param fw_3 patch version
+	/// @param bigfont
+	void set_model(libm8::HardwareModel model, uint8_t fw_1, uint8_t fw_2, uint8_t fw_3, uint8_t font);
+
+	void set_font(libm8::HardwareModel model, u_int8_t font);
+
+	static M8Font get_font_type(libm8::HardwareModel model, u_int8_t font)
+	{
+		if (model == libm8::HardwareModel::MODEL_02)
+		{
+			switch (font)
+			{
+			case libm8::Font::FONT_SMALL:
+				return M8Font::M8_FONT_02_SMALL;
+			case libm8::Font::FONT_LARGE:
+				return M8Font::M8_FONT_02_BOLD;
+			case libm8::Font::FONT_HUGE:
+				return M8Font::M8_FONT_02_HUGE;
+			}
+		}
+		else
+		{
+			switch (font)
+			{
+			case libm8::Font::FONT_SMALL:
+				return M8Font::M8_FONT_01_SMALL;
+			case libm8::Font::FONT_LARGE:
+				return M8Font::M8_FONT_01_BIG;
+			}
+		}
+		return M8Font::M8_FONT_01_SMALL;
+	}
+
 	String get_model_name(libm8::HardwareModel model)
 	{
 		switch (model)
@@ -247,5 +282,3 @@ private:
 		}
 	}
 };
-
-VARIANT_ENUM_CAST(M8Key);

@@ -21,9 +21,9 @@ public:
 	uint16_t width;
 	uint16_t height;
 
-	godot::Ref<godot::BitMap> font_bitmap;
-	uint8_t font_w;
-	uint8_t font_h;
+	godot::Ref<godot::BitMap> font_bitmap; // spritesheet of all characters
+	uint8_t font_w;						   // width of each char
+	uint8_t font_h;						   // height of each char
 
 	// changes depending on small/big/huge font
 	int8_t screen_offset_y = 0;
