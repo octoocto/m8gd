@@ -20,6 +20,7 @@ extends SettingBase
 
 
 func _ready() -> void:
+	super()
 	%CheckButton.toggled.connect(func(p_value: bool) -> void:
 		value = p_value
 	)

@@ -52,11 +52,10 @@ var _is_int_type := false
 		_update()
 
 func _ready() -> void:
-
+	super()
 	%HSlider.value_changed.connect(func(p_value: float) -> void:
 		value = p_value
 	)
-
 	%LineEdit.gui_input.connect(func(event: InputEvent) -> void:
 		if event is InputEventMouseButton:
 			if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:

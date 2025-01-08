@@ -17,13 +17,12 @@ extends SettingBase
 
 
 func _ready() -> void:
-
+	super()
 	%ButtonLeft.pressed.connect(func() -> void: value -= 1)
 	%ButtonRight.pressed.connect(func() -> void: value += 1)
 	%OptionButton.item_selected.connect(func(p_value: int) -> void:
 		value = p_value
 	)
-
 	_update()
 
 

@@ -40,7 +40,7 @@ extends SettingBase
 
 
 func _ready() -> void:
-
+	super()
 	%SpinBoxX.get_line_edit().theme_type_variation = "SettingControlVec2LineEdit"
 	%SpinBoxY.get_line_edit().theme_type_variation = "SettingControlVec2LineEdit"
 

@@ -24,8 +24,8 @@ class_name SettingFile extends SettingBase
 
 
 func _ready() -> void:
+	super()
 	_update()
-
 	%Button.pressed.connect(open_file_dialog)
 	%FileDialog.file_selected.connect(on_file_selected)
 

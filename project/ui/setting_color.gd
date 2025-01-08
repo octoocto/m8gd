@@ -26,6 +26,7 @@ class_name SettingColor extends SettingBase
 
 
 func _ready() -> void:
+	super()
 	%ColorPickerButton.color_changed.connect(func(p_value: Color) -> void:
 		value = p_value
 	)

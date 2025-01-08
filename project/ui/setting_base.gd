@@ -7,15 +7,6 @@ const CONFIG_KEY_CAMERA = "camera.%s"
 const CONFIG_KEY_SHADER = "filter.%s.shader.%s"
 const CONFIG_KEY_SCENE_CUSTOM = "custom.%s"
 
-## If true, one of the [init] methods has been called.
-var _is_initialized := false
-
-## If true, fire the [value_changed] signal when [value] is set.
-var _value_changed_signal_enabled := true
-
-## Set to a Callable that gets the initial value of [value].
-var _value_init_fn: Callable
-
 @export var enabled := true:
 	set(value):
 		enabled = value
@@ -36,21 +27,38 @@ var _value_init_fn: Callable
 		setting_name_indent = max(0, value)
 		_update()
 
-func _update() -> void:
-	assert(false, "not implemented")
+@export_node_path("SettingBase") var parent_setting := NodePath("")
+
+@export_enum("Disable", "Hide") var parent_setting_mode: int
+
+@export var parent_setting_invert := false
+
+
+## If true, one of the [init] methods has been called.
+var _is_initialized := false
+
+## If true, fire the [value_changed] signal when [value] is set.
+var _value_changed_signal_enabled := true
+
+## Set to a Callable that gets the initial value of [value].
+var _value_init_fn: Callable
+
+## A Callable that maps the parent setting's value to a bool,
+## which decides whether to disable/hide this setting.
+var _parent_value_check_fn: Callable
+
+
+func _ready() -> void:
+	if parent_setting:
+		get_node(parent_setting).value_changed.connect(func(_value: Variant) -> void:
+			_check_parent()
+		)
+		_check_parent()
 
 func set_value_no_signal(value: Variant) -> void:
 	_value_changed_signal_enabled = false
 	set("value",value)
 	_value_changed_signal_enabled = true
-
-func _emit_value_changed() -> void:
-	if _value_changed_signal_enabled:
-		value_changed.emit(get("value"))
-
-func _clear_signals() -> void:
-	for conn: Dictionary in value_changed.get_connections():
-		value_changed.disconnect(conn.callable)
 
 func init_to_value(value_init_fn: Variant, value_changed_fn: Callable) -> void:
 	assert("value" in self)
@@ -287,3 +295,31 @@ func connect_to_visible(control: Control, check_fn: Variant = null) -> SettingBa
 	control.visible = _check.call()
 
 	return self
+
+func _update() -> void:
+	assert(false, "not implemented")
+
+func _check_parent() -> void:
+	var can_enable := true
+	if parent_setting:
+		var setting := get_node(parent_setting)
+		if _parent_value_check_fn:
+			can_enable = _parent_value_check_fn.call(setting.value)
+		else:
+			can_enable = bool(setting.value)
+
+	# invert if needed
+	can_enable = !can_enable if parent_setting_invert else can_enable
+
+	if parent_setting_mode == 0:
+		enabled = can_enable
+	else:
+		visible = can_enable
+
+func _emit_value_changed() -> void:
+	if _value_changed_signal_enabled:
+		value_changed.emit(get("value"))
+
+func _clear_signals() -> void:
+	for conn: Dictionary in value_changed.get_connections():
+		value_changed.disconnect(conn.callable)
