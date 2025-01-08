@@ -137,7 +137,7 @@ libm8::Error libm8::Client::read()
 		else if (bytes_read == 0)
 		{
 			zero_reads++;
-			if (zero_reads > MAX_ZERO_READS)
+			if (zero_reads >= max_zero_reads)
 			{
 				print("zero_reads = %d, disconnecting...", zero_reads);
 				disconnect();

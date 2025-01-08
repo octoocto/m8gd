@@ -179,6 +179,7 @@ namespace libm8
 		uint8_t cmd_buffer[CMD_BUFFER_SIZE] = {0}; // decoded data buffer
 		uint32_t cmd_size = 0;
 
+		int max_zero_reads = MAX_ZERO_READS;
 		int zero_reads = 0;
 
 	public:
@@ -189,7 +190,80 @@ namespace libm8
 			sp_free_port(m8_port);
 		}
 
+	public:
+		void set_max_zero_reads(int max_zero_reads)
+		{
+			this->max_zero_reads = max_zero_reads;
+		}
+
+		Error send_reset_display()
+		{
+			return send_command({TX_RESET_DISPLAY}, 1);
+		}
+
+		Error send_enable_display()
+		{
+			return send_command({TX_ENABLE_DISPLAY}, 1);
+		}
+
+		Error send_disable_display()
+		{
+			return send_command({TX_DISCONNECT}, 1);
+		}
+
+		Error disconnect()
+		{
+			if (is_connected())
+			{
+				send_disable_display();
+				on_disconnect();
+				sp_close(m8_port);
+				sp_free_port(m8_port);
+				m8_port = nullptr;
+				cmd_size = 0;	// also reset cmd_buffer
+				zero_reads = 0; // also reset zero_reads counter
+								// print("disconnected");
+			}
+			return OK;
+		}
+
+		Error send_keyjazz(uint8_t note, uint8_t velocity)
+		{
+			return send_command({TX_KEYJAZZ, note, velocity}, 3);
+		}
+
+		Error send_control_keys(uint8_t keystate)
+		{
+			return send_command({TX_CONTROL_KEYS, keystate}, 2);
+		}
+
+		Error send_theme_color(uint8_t index, uint8_t r, uint8_t g, uint8_t b)
+		{
+			return send_command({TX_THEME_COLOR, index, r, g, b}, 5);
+		}
+
+		Error connect(godot::String port_name);
+
+		bool is_connected()
+		{
+			return m8_port != nullptr;
+		}
+
+		Error read();
+
 	private:
+		/// @brief Send a command to the M8.
+		/// @param data an array of bytes containing the command and arguments
+		/// @param size the size of the array
+		Error send_command(const uint8_t (&data)[], size_t size)
+		{
+			if (m8_port == nullptr)
+				return ERR_NOT_CONNECTED;
+
+			sp_return result = sp_blocking_write(m8_port, data, size, 10);
+			return sp_to_m8(result);
+		}
+
 		Error sp_to_m8(sp_return code)
 		{
 			char *error_msg;
@@ -254,74 +328,6 @@ namespace libm8
 			HardwareModel model,
 			uint8_t fw_major, uint8_t fw_minor, uint8_t fw_patch,
 			Font font) = 0;
-
-	public:
-		/// @brief Send a command to the M8.
-		/// @param data an array of bytes containing the command and arguments
-		/// @param size the size of the array
-		Error send_command(const uint8_t (&data)[], size_t size)
-		{
-			if (m8_port == nullptr)
-				return ERR_NOT_CONNECTED;
-
-			sp_return result = sp_blocking_write(m8_port, data, size, 10);
-			return sp_to_m8(result);
-		}
-
-		Error send_reset_display()
-		{
-			return send_command({TX_RESET_DISPLAY}, 1);
-		}
-
-		Error send_enable_display()
-		{
-			return send_command({TX_ENABLE_DISPLAY}, 1);
-		}
-
-		Error send_disable_display()
-		{
-			return send_command({TX_DISCONNECT}, 1);
-		}
-
-		Error disconnect()
-		{
-			if (is_connected())
-			{
-				send_disable_display();
-				on_disconnect();
-				sp_close(m8_port);
-				sp_free_port(m8_port);
-				m8_port = nullptr;
-				cmd_size = 0;	// also reset cmd_buffer
-				zero_reads = 0; // also reset zero_reads counter
-								// print("disconnected");
-			}
-			return OK;
-		}
-
-		Error send_keyjazz(uint8_t note, uint8_t velocity)
-		{
-			return send_command({TX_KEYJAZZ, note, velocity}, 3);
-		}
-
-		Error send_control_keys(uint8_t keystate)
-		{
-			return send_command({TX_CONTROL_KEYS, keystate}, 2);
-		}
-
-		Error send_theme_color(uint8_t index, uint8_t r, uint8_t g, uint8_t b)
-		{
-			return send_command({TX_THEME_COLOR, index, r, g, b}, 5);
-		}
-
-		Error connect(godot::String port_name);
-
-		bool is_connected()
-		{
-			return m8_port != nullptr;
-		}
-
-		Error read();
 
 	private:
 		/// @brief Append a byte to the command buffer.
