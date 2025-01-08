@@ -228,6 +228,8 @@ func _init_menu_camera() -> void:
 	%Setting_HumanCamera.init_config_camera(main, "humanized_movement", func(value: bool) -> void:
 		main.current_scene.get_3d_camera().humanized_movement = value
 	)
+	%Setting_HumanCameraStrength.init_config_camera(main, "humanize_amount")
+	%Setting_HumanCameraFrequency.init_config_camera(main, "humanize_freq")
 
 	main.scene_loaded.connect(func(_scene_path: String, scene: M8Scene) -> void:
 		if !scene.has_3d_camera():
@@ -242,6 +244,8 @@ func _init_menu_camera() -> void:
 
 		%Setting_MouseCamera.reinit()
 		%Setting_HumanCamera.reinit()
+		%Setting_HumanCameraStrength.reinit()
+		%Setting_HumanCameraFrequency.reinit()
 	)
 
 ##

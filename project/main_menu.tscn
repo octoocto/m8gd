@@ -149,6 +149,32 @@ unique_name_in_owner = true
 layout_mode = 2
 setting_name = "Humanize Camera Movements"
 
+[node name="Setting_HumanCameraStrength" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer" instance=ExtResource("6_07wpv")]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 0.1
+step = 0.001
+value = 0.05
+as_percent = true
+percent_factor = 1000.0
+format_string = "%d%%"
+setting_name = "Noise Strength"
+setting_name_indent = 32
+parent_setting = NodePath("../Setting_HumanCamera")
+
+[node name="Setting_HumanCameraFrequency" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer" instance=ExtResource("6_07wpv")]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 2.0
+step = 0.02
+value = 1.0
+as_percent = true
+percent_factor = 50.0
+format_string = "%d%%"
+setting_name = "Noise Frequency"
+setting_name_indent = 32
+parent_setting = NodePath("../Setting_HumanCamera")
+
 [node name="Button_SceneCameraMenu" type="Button" parent="CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(160, 0)
