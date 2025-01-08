@@ -139,6 +139,11 @@ def find_godot() -> str | None:
             _println_info(f"Could not find godot in {file_path}!")
 
 
+def chmod_x(path: str) -> None:
+    file_path = Path(path)
+    file_path.chmod(file_path.stat().st_mode | stat.S_IEXEC)
+
+
 def find_command(cmd: str) -> str | None:
     path: str = which(cmd)
     if path != None:
@@ -246,7 +251,9 @@ make_path = find_command("make")
 _println("Compiling libserialport...")
 
 try:
+    chmod_x("thirdparty/libserialport/autogen.sh")
     run("./autogen.sh", "thirdparty/libserialport")
+    chmod_x("thirdparty/libserialport/configure")
     run("./configure", "thirdparty/libserialport")
     run("%s CFLAGS=-fPIC" % make_path, "thirdparty/libserialport")
 except subprocess.CalledProcessError:
