@@ -10,7 +10,7 @@ void M8GDClient::on_disconnect()
 	// print("disconnecting from port");
 	m8gd->display_buffer->clear(0, 0, 0);
 	m8gd->copy_buffer_to_texture();
-	m8gd->emit_signal("device_disconnected");
+	m8gd->emit_signal("disconnected");
 }
 
 void M8GDClient::on_draw_rect(
@@ -97,10 +97,9 @@ void M8GD::_bind_methods()
 {
 	ADD_SIGNAL(MethodInfo("system_info", PropertyInfo(Variant::STRING, "hardware"), PropertyInfo(Variant::STRING, "firmware")));
 	ADD_SIGNAL(MethodInfo("font_changed", PropertyInfo(Variant::INT, "font")));
-	// ADD_SIGNAL(MethodInfo("keystate_changed", PropertyInfo(Variant::INT, "keystate")));
-	ADD_SIGNAL(MethodInfo("key_pressed", PropertyInfo(Variant::INT, "keycode"), PropertyInfo(Variant::BOOL, "pressed")));
-	ADD_SIGNAL(MethodInfo("device_disconnected"));
 	ADD_SIGNAL(MethodInfo("theme_changed", PropertyInfo(Variant::PACKED_COLOR_ARRAY, "colors"), PropertyInfo(Variant::BOOL, "complete")));
+	ADD_SIGNAL(MethodInfo("key_pressed", PropertyInfo(Variant::INT, "keycode"), PropertyInfo(Variant::BOOL, "pressed")));
+	ADD_SIGNAL(MethodInfo("disconnected"));
 
 	BIND_ENUM_CONSTANT(M8_KEY_UP);
 	BIND_ENUM_CONSTANT(M8_KEY_DOWN);

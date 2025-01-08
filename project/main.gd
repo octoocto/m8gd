@@ -478,7 +478,7 @@ func m8_device_connect(port: String) -> void:
 	m8_is_connected = true
 	%LabelPort.text = m8_ports[0]
 	m8_client.system_info.connect(on_m8_system_info)
-	m8_client.device_disconnected.connect(on_m8_device_disconnect)
+	m8_client.disconnected.connect(on_m8_device_disconnect)
 	m8_client.theme_changed.connect(on_m8_theme_changed)
 	current_serial_device = port
 	m8_connected.emit()
@@ -605,7 +605,7 @@ func on_m8_device_disconnect() -> void:
 	%LabelPort.text = ""
 
 	m8_client.system_info.disconnect(on_m8_system_info)
-	m8_client.device_disconnected.disconnect(on_m8_device_disconnect)
+	m8_client.disconnected.disconnect(on_m8_device_disconnect)
 	m8_client.theme_changed.disconnect(on_m8_theme_changed)
 
 	if m8_audio_connected:
