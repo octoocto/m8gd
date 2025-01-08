@@ -29,7 +29,7 @@ var _is_int_type := false
 		value = p_value
 		await _update()
 		value = %HSlider.value
-		_emit_value_changed()
+		force_update()
 
 @export var show_ticks := false:
 	set(p_value):

@@ -7,7 +7,7 @@ class_name SettingColor extends SettingBase
 	set(p_value):
 		value = p_value
 		await _update()
-		_emit_value_changed()
+		force_update()
 
 @export var edit_alpha := true:
 	set(p_value):

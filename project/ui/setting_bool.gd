@@ -6,7 +6,7 @@ extends SettingBase
 	set(p_value):
 		value = p_value
 		await _update()
-		_emit_value_changed()
+		force_update()
 
 @export var text_true := "On":
 	set(value):

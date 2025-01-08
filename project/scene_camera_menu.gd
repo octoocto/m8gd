@@ -67,10 +67,10 @@ func on_camera_reposition_stopped() -> void:
 	var camera := main.get_scene_camera()
 	if camera:
 		camera.set_current_transform_as_base()
-		%Setting_Position._emit_value_changed()
-		%Setting_Angle._emit_value_changed()
-		%Setting_Focus._emit_value_changed()
-		%Setting_Blur._emit_value_changed()
+		%Setting_Position.force_update()
+		%Setting_Angle.force_update()
+		%Setting_Focus.force_update()
+		%Setting_Blur.force_update()
 		# print("camera menu: camera reposition stopped")
 
 ##

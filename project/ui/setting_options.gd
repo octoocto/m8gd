@@ -13,7 +13,7 @@ extends SettingBase
 	set(p_value):
 		value = clampi(p_value, 0, items.size() - 1) if items.size() else -1
 		await _update()
-		_emit_value_changed()
+		force_update()
 
 
 func _ready() -> void:

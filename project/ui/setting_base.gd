@@ -316,7 +316,7 @@ func _check_parent() -> void:
 	else:
 		visible = can_enable
 
-func _emit_value_changed() -> void:
+func force_update() -> void:
 	if _value_changed_signal_enabled:
 		value_changed.emit(get("value"))
 

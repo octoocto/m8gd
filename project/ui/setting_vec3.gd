@@ -6,7 +6,7 @@ extends SettingBase
 	set(p_value):
 		value = p_value.clamp(min_value, max_value)
 		await _update()
-		_emit_value_changed()
+		force_update()
 
 @export var min_value := Vector3.ZERO:
 	set(p_value):

@@ -306,7 +306,7 @@ func _init_menu_video() -> void:
 			get_window().mode = Window.MODE_EXCLUSIVE_FULLSCREEN
 		else:
 			get_window().mode = Window.MODE_WINDOWED
-			%Setting_WindowBorderless._emit_value_changed()
+			%Setting_WindowBorderless.force_update()
 	)
 
 	%Setting_WindowBorderless.init_config_global(main, "window_borderless", func(value: bool) -> void:

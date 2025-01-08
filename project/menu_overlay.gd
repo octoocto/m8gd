@@ -43,7 +43,7 @@ func init_settings(overlay: OverlayBase) -> void:
 	%Setting_Size.uninit()
 
 	%Setting_Size.init_config_overlay(main, overlay, "size", func(_value: Vector2) -> void:
-		%Setting_Anchor._emit_value_changed()
+		%Setting_Anchor.force_update()
 	)
 	%Setting_Anchor.init_config_overlay(main, overlay, "anchors_preset", func(_value: int) -> void:
 		%Setting_Position.value = Vector2i.ZERO
