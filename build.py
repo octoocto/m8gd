@@ -49,8 +49,8 @@ parser.add_argument(
 parser.add_argument(
     "--target",
     type=str,
-    choices=["debug", "release"],
-    default="release",
+    choices=["template_debug", "template_release"],
+    default="template_release",
     help="set building the debug or release version of m8gd",
 )
 parser.add_argument(
@@ -92,7 +92,7 @@ parser.add_argument(
 args = parser.parse_args()
 
 if args.dev:
-    args.target = "debug"
+    args.target = "template_debug"
     args.extension_only = True
 
 
@@ -152,7 +152,6 @@ def find_command(cmd: str) -> str | None:
 def find_bash() -> str | None:
     path: str = shutil.which("bash")
     if path != None:
-        _println_info(f"Found bash! (%s)" % path)
         return path
     else:
         _println_err("Could not find bash!")
@@ -171,18 +170,28 @@ def which(path: str) -> str | None:
                 pass
 
 
-def run(command: str) -> None:
+def run(command: str, working_directory: str = None) -> None:
+    if working_directory:
+        cwd = os.getcwd()
+        os.chdir(working_directory)
+
     print(command)
     if not using_cygwin():
-        subprocess.run(shlex.split(command), check=True)
+        subprocess.run(
+            shlex.split(command),
+            check=True,
+        )
     else:
         bash_path = find_bash()
         if bash_path:
             subprocess.run([bash_path, "--login", "-c", command], check=True)
 
+    if working_directory:
+        os.chdir(cwd)
+
 
 def run_scons(target: str = "", platform: str = "", arch: str = "") -> None:
-    scons_target = "target=template_%s" % target if target else ""
+    scons_target = "target=%s" % target if target else ""
     scons_platform = "platform=%s" % platform if platform else ""
     scons_arch = "arch=%s" % arch if arch else ""
     try:
@@ -221,28 +230,36 @@ def _println_err(text: str) -> None:
 
 target_platform = platform.system().lower() if args.platform == "" else args.platform
 
-godot_target = "--export-{}".format(args.target)
+if args.target == "template_debug":
+    godot_target = "--export-debug"
+else:
+    godot_target = "--export-release"
 
 if platform.system() == "Windows":
     os.system("color")
 
-if using_cygwin():
-    find_bash()
-
 # create build directory if doesn't exist
 Path(BUILD_DIR).mkdir(exist_ok=True)
 
-# git_path = find_command("git")
-# run(git_path + " submodule set-branch -b 4.3 thirdparty/godot-cpp")
-# run(git_path + " submodule sync")
-# run(git_path + " submodule update --init --recursive --remote")
+# compile libserialport
+make_path = find_command("make")
+_println("Compiling libserialport...")
 
+try:
+    run("./autogen.sh", "thirdparty/libserialport")
+    run("./configure", "thirdparty/libserialport")
+    run("%s CFLAGS=-fPIC" % make_path, "thirdparty/libserialport")
+except subprocess.CalledProcessError:
+    _println_err("Errors occured while compiling libserialport. Exiting.")
+    quit(1)
+
+# compile gdextension
 scons_path = find_command("scons")
-
 _println("Compiling libm8gd extension...")
+
 if args.full:
-    run_scons("debug", args.platform, args.arch)
-    run_scons("release", args.platform, args.arch)
+    run_scons("template_debug", args.platform, args.arch)
+    run_scons("template_release", args.platform, args.arch)
 else:
     run_scons(args.target, args.platform, args.arch)
 
@@ -250,6 +267,7 @@ if args.extension_only:
     _println("Done!")
     quit(0)
 
+# find or download export templates
 export_templates_path = get_export_templates_path()
 if os.path.exists(export_templates_path):
     _println_info("Found export templates!")
@@ -277,6 +295,7 @@ else:
     _println("Download required to continue, but found --nodownload flag. Exiting.")
     quit(1)
 
+# find or download godot
 godot_path = find_godot()
 
 if godot_path:
@@ -312,7 +331,7 @@ else:
     _println("Download required to continue, but found --nodownload flag. Exiting.")
     quit(1)
 
-
+# export m8gd
 _println("Exporting Godot project...")
 try:
     if platform.system() == "Linux" and args.osxcross_sdk:

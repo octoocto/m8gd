@@ -9,17 +9,20 @@ env = SConscript("thirdparty/godot-cpp/SConstruct")
 env.Append(CPPPATH=["src/"])
 sources = Glob("src/*.cpp")
 
-# env.Append(CPPPATH=["thirdparty/libserialport/"])
-# sources.append("thirdparty/libserialport/config.h")
-# sources.append("thirdparty/libserialport/serialport.c")
-# sources.append("thirdparty/libserialport/test_timing.c")
-# if env["platform"] == "linux":
-#     sources.append("thirdparty/libserialport/linux_termios.c")
-#     sources.append("thirdparty/libserialport/linux.c")
-# elif env["platform"] == "windows":
-#     sources.append("thirdparty/libserialport/windows.c")
-# elif env["platform"] == "macos":
-#     sources.append("thirdparty/libserialport/macosx.c")
+# link libserialport (statically)
+env.Append(CPPPATH=["thirdparty/libserialport"])
+env.Append(LIBS=File("thirdparty/libserialport/.libs/libserialport.a"))
+if env["platform"] == "windows":
+    env.Append(LIBS=["setupapi"])
+
+# # find pkg-config command
+# if env["platform"] == "macos" and "OSXCROSS_ROOT" in os.environ:
+#     pkg_config = "x86_64-apple-%s-pkg-config" % env["osxcross_sdk"]
+# else:
+#     pkg_config = "pkg-config"
+
+# # link libserialport (shared)
+# env.ParseConfig(f"{pkg_config} libserialport --cflags --libs --static")
 
 # find extension path
 (extension_path,) = glob("project/addons/*/*.gdextension")
@@ -32,15 +35,6 @@ if scons_cache_path:
     CacheDir(scons_cache_path)
 else:
     CacheDir(".scons_cache/%s_%s_%s" % (env["platform"], env["arch"], env["target"]))
-
-# find pkg-config command
-if env["platform"] == "macos" and "OSXCROSS_ROOT" in os.environ:
-    pkg_config = "x86_64-apple-%s-pkg-config" % env["osxcross_sdk"]
-else:
-    pkg_config = "pkg-config"
-
-# link with libserialport
-env.ParseConfig(f"{pkg_config} libserialport --cflags --libs --static")
 
 # create library target
 debug_or_release = "release" if env["target"] == "template_release" else "debug"
