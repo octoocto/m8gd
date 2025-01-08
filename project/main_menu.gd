@@ -450,6 +450,8 @@ func _init_menu_filters() -> void:
 	%Setting_ShaderCRTAudioCA.init_config_global(main, "audio_to_aberration", func(value: float) -> void:
 		main.visualizer_aberration_amount = value
 	)
+	
+	%Setting_ShaderNoiseStrength.init_config_shader(main, "%NoiseShader", "noise_strength")
 
 	%Setting_ShaderVHS.connect_to_enable(%Setting_ShaderVHSSmear)
 	%Setting_ShaderVHS.connect_to_enable(%Setting_ShaderVHSWiggle)
@@ -477,6 +479,7 @@ func _init_menu_filters() -> void:
 		%Setting_ShaderCRTAudioB.reinit()
 		%Setting_ShaderCRTAudioCA.reinit()
 		%Setting_ShaderNoise.reinit()
+		%Setting_ShaderNoiseStrength.reinit()
 	)
 
 ##

@@ -89,10 +89,9 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-current_tab = 5
+current_tab = 0
 
 [node name="Scene" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
-visible = false
 layout_mode = 2
 theme_override_constants/margin_top = 18
 metadata/_tab_index = 0
@@ -626,6 +625,21 @@ unique_name_in_owner = true
 layout_mode = 2
 setting_name = "Noise"
 
+[node name="Setting_ShaderNoiseStrength" parent="CenterContainer/VBoxContainer/TabContainer/Filters/ScrollContainer/VBoxContainer" instance=ExtResource("6_07wpv")]
+unique_name_in_owner = true
+modulate = Color(0.25, 0.25, 0.25, 1)
+layout_mode = 2
+max_value = 0.1
+step = 0.001
+as_percent = true
+percent_factor = 1000.0
+format_string = "%d%%"
+enabled = false
+setting_name = "Noise Strength"
+setting_name_min_width = 200
+setting_name_indent = 32
+parent_setting = NodePath("../Setting_ShaderNoise")
+
 [node name="Devices" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
 visible = false
 layout_mode = 2
@@ -1076,6 +1090,7 @@ layout_mode = 2
 text = "Clear"
 
 [node name="Video" type="MarginContainer" parent="CenterContainer/VBoxContainer/TabContainer"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 5
 

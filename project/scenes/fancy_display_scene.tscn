@@ -25,7 +25,7 @@ shader_parameter/blur_amount = 3.5
 shader_parameter/tint_color = Color(1, 1, 1, 1)
 shader_parameter/tint_amount = 1.0
 shader_parameter/brightness = 0.9
-shader_parameter/noise_strength = 0.01
+shader_parameter/noise_strength = 0.0
 shader_parameter/noise_texture = SubResource("NoiseTexture2D_uag16")
 
 [sub_resource type="Gradient" id="Gradient_bpb5k"]
