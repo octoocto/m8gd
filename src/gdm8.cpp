@@ -459,7 +459,7 @@ godot::TypedArray<godot::String> M8GD::list_devices()
 	return port_names;
 }
 
-void M8GD::set_font(libm8::HardwareModel model, u_int8_t font)
+void M8GD::set_font(libm8::HardwareModel model, uint8_t font)
 {
 	current_font = M8GD::get_font_type(model, font);
 

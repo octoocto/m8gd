@@ -236,9 +236,9 @@ private:
 	/// @param bigfont
 	void set_model(libm8::HardwareModel model, uint8_t fw_1, uint8_t fw_2, uint8_t fw_3, uint8_t font);
 
-	void set_font(libm8::HardwareModel model, u_int8_t font);
+	void set_font(libm8::HardwareModel model, uint8_t font);
 
-	static M8Font get_font_type(libm8::HardwareModel model, u_int8_t font)
+	static M8Font get_font_type(libm8::HardwareModel model, uint8_t font)
 	{
 		if (model == libm8::HardwareModel::MODEL_02)
 		{
