@@ -47,6 +47,12 @@ parser.add_argument(
     help="enable building with OSXCross and specify OSXCross SDK",
 )
 parser.add_argument(
+    "--host",
+    type=str,
+    default="",
+    help="set C compiler to use to compile libserialport",
+)
+parser.add_argument(
     "--target",
     type=str,
     choices=["template_debug", "template_release"],
@@ -137,6 +143,11 @@ def find_godot() -> str | None:
             return path
         else:
             _println_info(f"Could not find godot in {file_path}!")
+
+
+def chmod_x(path: str) -> None:
+    file_path = Path(path)
+    file_path.chmod(file_path.stat().st_mode | stat.S_IEXEC)
 
 
 def find_command(cmd: str) -> str | None:
@@ -246,9 +257,26 @@ make_path = find_command("make")
 _println("Compiling libserialport...")
 
 try:
+    chmod_x("thirdparty/libserialport/autogen.sh")
     run("./autogen.sh", "thirdparty/libserialport")
-    run("./configure", "thirdparty/libserialport")
-    run("%s CFLAGS=-fPIC" % make_path, "thirdparty/libserialport")
+    chmod_x("thirdparty/libserialport/configure")
+    if args.host != "":
+        run(
+            "./configure --prefix=/usr/{0} --host={0}".format(args.host),
+            "thirdparty/libserialport",
+        )
+    elif args.arch == "universal":
+        run('./configure CFLAGS="-arch arm64 -arch x86_64"', "thirdparty/libserialport")
+    else:
+        run("./configure", "thirdparty/libserialport")
+
+    if args.arch == "universal":
+        run(
+            '%s CFLAGS="-fPIC -arch arm64 -arch x86_64"' % make_path,
+            "thirdparty/libserialport",
+        )
+    else:
+        run("%s CFLAGS=-fPIC" % make_path, "thirdparty/libserialport")
 except subprocess.CalledProcessError:
     _println_err("Errors occured while compiling libserialport. Exiting.")
     quit(1)

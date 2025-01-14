@@ -1,0 +1,136 @@
+name: libm8gd Build
+description: Build GDExtension
+
+inputs:
+  platform:
+    required: true
+    description: Target platform.
+  arch:
+    required: true
+    description: Target architecture.
+  host:
+    default: ""
+    description: libserialport cross-compilation prefix.
+  float-precision:
+    default: "single"
+    description: Float precision (single or double).
+  build-target-type:
+    default: "template_debug"
+    description: Build type (template_debug or template_release).
+  scons-cache:
+    default: ".scons-cache/"
+    description: Scons cache folder name, relative to each scons directory. Must not contain relative path signifiers (. or ..). Must be a transparent path part (empty or 'path/to/directory/', ending in a slash).
+  em_version:
+    default: 3.1.62
+    description: Emscripten version.
+  em-cache-directory:
+    default: emsdk-cache
+    description: Emscripten cache directory.
+  gdextension-directory:
+    default: ""
+    description: Location of the gdextension project within the repository. Must not contain relative path signifiers (. or ..). Must be a transparent path part (empty or 'path/to/directory/', ending in a slash).
+
+runs:
+  using: composite
+  steps:
+    # Android only
+    - name: Android - Set up Java 17
+      uses: actions/setup-java@v4
+      if: ${{ inputs.platform == 'android' }}
+      with:
+        distribution: temurin
+        java-version: 17
+
+    - name: Android - Remove existing Android SDK, and set up ENV vars
+      if: ${{ inputs.platform == 'android' }}
+      shell: sh
+      run: |
+        sudo rm -r /usr/local/lib/android/sdk/**
+        export ANDROID_HOME=/usr/local/lib/android/sdk
+        export ANDROID_SDK_ROOT=$ANDROID_HOME
+        export ANDROID_NDK_VERSION=23.2.8568313
+        export ANDROID_NDK_ROOT=${ANDROID_SDK_ROOT}/ndk/${ANDROID_NDK_VERSION}
+        echo "ANDROID_HOME=$ANDROID_HOME" >> "$GITHUB_ENV"
+        echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT" >> "$GITHUB_ENV"
+        echo "ANDROID_NDK_VERSION=$ANDROID_NDK_VERSION" >> "$GITHUB_ENV"
+        echo "ANDROID_NDK_ROOT=$ANDROID_NDK_ROOT" >> "$GITHUB_ENV"
+
+    - name: Android - Set up Android SDK
+      if: ${{ inputs.platform == 'android' }}
+      uses: android-actions/setup-android@v3
+      with:
+        packages: "ndk;${{ env.ANDROID_NDK_VERSION }} cmdline-tools;latest build-tools;34.0.0 platforms;android-34 cmake;3.22.1"
+    # Linux only
+    - name: Linux - dependencies
+      if: ${{ inputs.platform == 'linux' }}
+      shell: sh
+      run: |
+        sudo apt-get update -qq
+        sudo apt-get install -qqq build-essential pkg-config
+    # MacOS only
+    - name: MacOS - Set up Homebrew
+      if: ${{ inputs.platform == 'macos' }}
+      uses: Homebrew/actions/setup-homebrew@master
+    - name: MacOS - Install dependencies
+      shell: sh
+      if: ${{ inputs.platform == 'macos' }}
+      run: brew install autoconf automake libtool
+    # Web only
+    - name: Web - Set up Emscripten latest
+      if: ${{ inputs.platform == 'web' }}
+      uses: mymindstorm/setup-emsdk@v14
+      with:
+        version: ${{ inputs.em_version }}
+        actions-cache-folder: ${{ inputs.em-cache-directory }}.${{ inputs.float-precision }}.${{ inputs.build-target-type }}
+    - name: Web - Verify Emscripten setup
+      if: ${{ inputs.platform == 'web' }}
+      shell: sh
+      run: |
+        emcc -v
+    # Windows only
+    - name: Windows - Install mingw64
+      if: ${{ inputs.platform == 'windows' }}
+      shell: sh
+      run: |
+        sudo apt-get install mingw-w64
+        sudo apt-get install autotools-dev autoconf libtool-bin
+        sudo update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix
+        sudo update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
+    # Dependencies of godot
+    # Use python 3.x release (works cross platform)
+    - name: Set up Python 3.x
+      uses: actions/setup-python@v5
+      with:
+        # Semantic version range syntax or exact version of a Python version
+        python-version: "3.x"
+        # Optional - x64 or x86 architecture, defaults to x64
+        architecture: "x64"
+    - name: Setup scons
+      shell: bash
+      run: |
+        python -c "import sys; print(sys.version)"
+        python -m pip install scons
+        scons --version
+    # Build
+    - name: Cache .scons_cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          ${{ github.workspace }}/.scons-cache/
+          ${{ github.workspace }}/**/.sconsign.dblite
+          ${{ github.workspace }}/godot-cpp/gen
+        key: ${{ inputs.platform }}_${{ inputs.arch }}_${{ inputs.float-precision }}_${{ inputs.build-target-type }}_cache
+        restore-keys: |
+          ${{ inputs.platform }}_${{ inputs.arch }}_${{ inputs.float-precision }}_${{ inputs.build-target-type }}_cache
+          ${{ inputs.platform }}_${{ inputs.arch }}_${{ inputs.float-precision }}_
+          ${{ inputs.platform }}_${{ inputs.arch }}_
+          ${{ inputs.platform }}_
+    # Build gdextension
+    - name: Build GDExtension Debug Build
+      shell: bash
+      env:
+        SCONS_CACHE: ${{ github.workspace }}/.scons-cache/
+        SCONS_CACHE_LIMIT: 4096
+      run: |
+        python build.py --host=${{ inputs.host }} --target=${{ inputs.build-target-type }} --platform=${{ inputs.platform }} --arch=${{ inputs.arch }} --extension-only
+      working-directory: ${{ inputs.gdextension-directory }}
