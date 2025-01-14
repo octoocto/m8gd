@@ -65,6 +65,11 @@ parser.add_argument(
     help="only build the gdextension (does not export m8gd)",
 )
 parser.add_argument(
+    "--export-only",
+    action="store_true",
+    help="only export m8gd (does not compile the gdextension)",
+)
+parser.add_argument(
     "--dev",
     action="store_true",
     help='only build the debug version of the gdextension. an alias for "--extension-only --target=debug"',
@@ -252,44 +257,48 @@ if platform.system() == "Windows":
 # create build directory if doesn't exist
 Path(BUILD_DIR).mkdir(exist_ok=True)
 
-# compile libserialport
-make_path = find_command("make")
-_println("Compiling libserialport...")
+if not args.export_only:
+    # compile libserialport
+    make_path = find_command("make")
+    _println("Compiling libserialport...")
 
-try:
-    chmod_x("thirdparty/libserialport/autogen.sh")
-    run("./autogen.sh", "thirdparty/libserialport")
-    chmod_x("thirdparty/libserialport/configure")
-    if args.host != "":
-        run(
-            "./configure --prefix=/usr/{0} --host={0}".format(args.host),
-            "thirdparty/libserialport",
-        )
-    elif args.arch == "universal":
-        run('./configure CFLAGS="-arch arm64 -arch x86_64"', "thirdparty/libserialport")
+    try:
+        chmod_x("thirdparty/libserialport/autogen.sh")
+        run("./autogen.sh", "thirdparty/libserialport")
+        chmod_x("thirdparty/libserialport/configure")
+        if args.host != "":
+            run(
+                "./configure --prefix=/usr/{0} --host={0}".format(args.host),
+                "thirdparty/libserialport",
+            )
+        elif args.arch == "universal":
+            run(
+                './configure CFLAGS="-arch arm64 -arch x86_64"',
+                "thirdparty/libserialport",
+            )
+        else:
+            run("./configure", "thirdparty/libserialport")
+
+        if args.arch == "universal":
+            run(
+                '%s CFLAGS="-fPIC -arch arm64 -arch x86_64"' % make_path,
+                "thirdparty/libserialport",
+            )
+        else:
+            run("%s CFLAGS=-fPIC" % make_path, "thirdparty/libserialport")
+    except subprocess.CalledProcessError:
+        _println_err("Errors occured while compiling libserialport. Exiting.")
+        quit(1)
+
+    # compile gdextension
+    scons_path = find_command("scons")
+    _println("Compiling libm8gd extension...")
+
+    if args.full:
+        run_scons("template_debug", args.platform, args.arch)
+        run_scons("template_release", args.platform, args.arch)
     else:
-        run("./configure", "thirdparty/libserialport")
-
-    if args.arch == "universal":
-        run(
-            '%s CFLAGS="-fPIC -arch arm64 -arch x86_64"' % make_path,
-            "thirdparty/libserialport",
-        )
-    else:
-        run("%s CFLAGS=-fPIC" % make_path, "thirdparty/libserialport")
-except subprocess.CalledProcessError:
-    _println_err("Errors occured while compiling libserialport. Exiting.")
-    quit(1)
-
-# compile gdextension
-scons_path = find_command("scons")
-_println("Compiling libm8gd extension...")
-
-if args.full:
-    run_scons("template_debug", args.platform, args.arch)
-    run_scons("template_release", args.platform, args.arch)
-else:
-    run_scons(args.target, args.platform, args.arch)
+        run_scons(args.target, args.platform, args.arch)
 
 if args.extension_only:
     _println("Done!")
