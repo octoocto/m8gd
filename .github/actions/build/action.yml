@@ -40,7 +40,6 @@ runs:
       with:
         distribution: temurin
         java-version: 17
-
     - name: Android - Remove existing Android SDK, and set up ENV vars
       if: ${{ inputs.platform == 'android' }}
       shell: sh
@@ -61,7 +60,7 @@ runs:
       with:
         packages: "ndk;${{ env.ANDROID_NDK_VERSION }} cmdline-tools;latest build-tools;34.0.0 platforms;android-34 cmake;3.22.1"
     # Linux only
-    - name: Linux - dependencies
+    - name: Linux - Install dependencies
       if: ${{ inputs.platform == 'linux' }}
       shell: sh
       run: |
@@ -88,7 +87,7 @@ runs:
       run: |
         emcc -v
     # Windows only
-    - name: Windows - Install mingw64
+    - name: Windows - Set up mingw64
       if: ${{ inputs.platform == 'windows' }}
       shell: sh
       run: |
@@ -96,6 +95,7 @@ runs:
         sudo apt-get install autotools-dev autoconf libtool-bin
         sudo update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix
         sudo update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
+
     # Dependencies of godot
     # Use python 3.x release (works cross platform)
     - name: Set up Python 3.x
@@ -105,14 +105,15 @@ runs:
         python-version: "3.x"
         # Optional - x64 or x86 architecture, defaults to x64
         architecture: "x64"
-    - name: Setup scons
+
+    - name: Set up scons
       shell: bash
       run: |
         python -c "import sys; print(sys.version)"
         python -m pip install scons
         scons --version
-    # Build
-    - name: Cache .scons_cache
+
+    - name: Set up cache
       uses: actions/cache@v4
       with:
         path: |
@@ -125,8 +126,8 @@ runs:
           ${{ inputs.platform }}_${{ inputs.arch }}_${{ inputs.float-precision }}_
           ${{ inputs.platform }}_${{ inputs.arch }}_
           ${{ inputs.platform }}_
-    # Build gdextension
-    - name: Build GDExtension Debug Build
+
+    - name: Compile extension
       shell: bash
       env:
         SCONS_CACHE: ${{ github.workspace }}/.scons-cache/
