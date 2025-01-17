@@ -12,13 +12,6 @@ extends M8Scene
 		if is_inside_tree():
 			update_panel_size()
 
-@export var enable_particles: bool = false:
-	set(value):
-		enable_particles = value
-		if is_inside_tree():
-			%GPUParticles2D.visible = value
-			%GPUParticles2D2.visible = value
-
 @export var panel_offset: Vector2i = Vector2i.ZERO:
 	set(value):
 		panel_offset = value
@@ -78,23 +71,18 @@ extends M8Scene
 		if is_inside_tree():
 			%BGShader.material.set_shader_parameter("blur_amount", value)
 
-@onready var panel: PanelContainer = %PanelContainer
+
+func _process(_delta: float) -> void:
+	var bg_color: Color = main.m8_get_theme_colors()[0]
+	%BGColorRect.color = bg_color
+	%BGShader.material.set_shader_parameter("tint_color", bg_color)
+	%PanelContainer.material.set_shader_parameter("panel_color", bg_color)
 
 func init(p_main: Main) -> void:
 	super(p_main)
 
-	%AudioSpectrum.init(main)
-	%AudioWaveform.init(main)
-
-	main.m8_client.set_display_background_alpha(0)
-
-	# %TextureRect.texture = _display.m8_display_texture
 	var texture := main.m8_client.get_display()
 	%DisplayTextureRect.texture = texture
-	# %BGTextureRect.texture.atlas = texture
-	# region.size = Vector2i(texture.get_size())
-	# %PanelContainer.size = texture.get_size()
-	# %PanelContainer.anchors_preset = Control.PRESET_CENTER
 
 	get_window().size_changed.connect(func() -> void:
 		update_viewport_size()
@@ -110,8 +98,6 @@ func init(p_main: Main) -> void:
 func init_menu(menu: SceneMenu) -> void:
 
 	menu.add_auto("integer_zoom")
-
-	menu.add_auto("enable_particles")
 
 	menu.add_section("Panel")
 	menu.add_auto("panel_integer_scale")
@@ -148,7 +134,6 @@ func init_menu(menu: SceneMenu) -> void:
 	menu.add_auto("background_blur_amount")
 
 func update_viewport_size() -> void:
-
 	var window_size := get_window().get_size()
 	var viewport_size := Vector2i((window_size / float(integer_zoom)).ceil())
 	%SubViewport.set_size(viewport_size)
@@ -159,41 +144,9 @@ func update_viewport_size() -> void:
 	%CenterContainer.set_anchors_preset(Control.PRESET_FULL_RECT)
 	%CenterContainer.set_anchors_preset(Control.PRESET_TOP_LEFT)
 
-	%GPUParticles2D.process_material.emission_box_extents.x = viewport_size.x
-	%GPUParticles2D2.position = viewport_size / 2.0
-	%GPUParticles2D2.process_material.emission_box_extents.x = viewport_size.x / 2.0
-	%GPUParticles2D2.process_material.emission_box_extents.y = viewport_size.y / 2.0
-
 func update_panel_size() -> void:
 	var display_size := main.m8_client.get_display().get_size()
 	if panel_integer_scale == 0: # auto
 		%DisplayTextureRect.custom_minimum_size = display_size * get_auto_display_integer_scale()
 	else:
 		%DisplayTextureRect.custom_minimum_size = display_size * panel_integer_scale
-
-func _process(_delta: float) -> void:
-
-	# RenderingServer.set_default_clear_color(main.m8_client.get_background_color())
-	var bg_color: Color = main.m8_get_theme_colors()[0]
-	%BGColorRect.color = bg_color
-
-	var modulate_color := bg_color
-	# modulate_color.v = 1.0
-	%BGShader.material.set_shader_parameter("tint_color", modulate_color)
-
-	%PanelContainer.material.set_shader_parameter("panel_color", bg_color)
-
-	%GPUParticles2D.modulate.a = 0.0 + pow(main.audio_get_level(), 2) * 1.0
-	%GPUParticles2D.amount_ratio = 0.1 + main.audio_get_level() * 0.9
-	%GPUParticles2D.speed_scale = 0.1 + main.audio_get_level() * 4.0
-
-	%GPUParticles2D2.modulate.a = 0.25 + pow(main.audio_get_level(), 2) * 0.75
-	%GPUParticles2D2.speed_scale = 0.5 + main.audio_get_level() * 1.5
-	%GPUParticles2D2.amount_ratio = 0.5 + main.audio_get_level() * 0.5
-
-	# %AudioSpectrum.modulate.a = pow(main.audio_get_level(), 3)
-
-	# if force_integer_scale == 0:
-	# 	%TextureRect.custom_minimum_size = %TextureRect.texture.get_size() * get_auto_display_integer_scale();
-	# else:
-	# 	%TextureRect.custom_minimum_size = %TextureRect.texture.get_size() * force_integer_scale;
