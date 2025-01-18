@@ -6,6 +6,13 @@ func init(p_main: Main) -> void:
 	main = p_main
 
 ##
+## Called by the scene menu when it is first opened.
+## Add settings to the menu here.
+##
+func init_menu(_menu: SceneMenu) -> void:
+	pass
+
+##
 ## Returns true if this scene contains a DeviceModel.
 ##
 func has_device_model() -> bool:

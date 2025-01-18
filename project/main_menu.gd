@@ -152,7 +152,7 @@ func _init_menu_scene() -> void:
 
 	%Button_OpenSceneMenu.pressed.connect(func() -> void:
 		visible = false
-		main.menu_scene.visible = true
+		main.menu_scene.menu_open()
 	)
 
 	main.scene_loaded.connect(func(scene_path: String, _scene: M8Scene) -> void:
@@ -654,9 +654,10 @@ func _init_menu_model() -> void:
 			%Setting_ModelScreenFilter.enabled = enabled
 			%Setting_ModelScreenEmission.enabled = enabled
 
-		%Setting_ModelHighlightOpacity.reinit()
-		%Setting_ModelScreenFilter.reinit()
-		%Setting_ModelScreenEmission.reinit()
+		if enabled:
+			%Setting_ModelHighlightOpacity.reinit()
+			%Setting_ModelScreenFilter.reinit()
+			%Setting_ModelScreenEmission.reinit()
 	)
 
 ##

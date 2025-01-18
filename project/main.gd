@@ -297,7 +297,7 @@ func load_scene(scene_path: String) -> bool:
 		current_scene = scene
 
 		menu_scene.clear_params()
-		scene.init_menu(menu_scene)
+		menu_scene.init_menu()
 
 		scene_loaded.emit(p_scene_path, scene)
 
