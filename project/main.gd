@@ -98,7 +98,7 @@ func _ready() -> void:
 	m8_client.load_font(M8GD.M8_FONT_02_BOLD, FONT_01_BIG)
 	m8_client.load_font(M8GD.M8_FONT_02_HUGE, FONT_02_HUGE)
 
-	get_window().min_size = Vector2i(960, 640)
+	get_window().min_size = Vector2i(640, 480)
 
 	var start_time := Time.get_ticks_msec()
 
