@@ -3,14 +3,12 @@ extends M8Scene
 @export_range(1, 6) var integer_zoom: int = 0:
 	set(value):
 		integer_zoom = value
-		if is_inside_tree():
-			update_viewport_size()
+		_update()
 
 @export_range(0, 6) var panel_integer_scale: int = 1:
 	set(value):
 		panel_integer_scale = value
-		if is_inside_tree():
-			update_panel_size()
+		_update()
 
 @export var panel_offset: Vector2i = Vector2i.ZERO:
 	set(value):
@@ -57,26 +55,20 @@ extends M8Scene
 	set(value):
 		background_brightness = value
 		if is_inside_tree():
-			%BGShader.material.set_shader_parameter("brightness", value)
+			%BackgroundShader.material.set_shader_parameter("brightness", value)
 
 @export_range(0.0, 1.0, 0.01) var background_theme_tint: float = 0.0:
 	set(value):
 		background_theme_tint = value
 		if is_inside_tree():
-			%BGShader.material.set_shader_parameter("tint_amount", value)
+			%BackgroundShader.material.set_shader_parameter("tint_amount", value)
 
 @export_range(0.0, 8.0, 0.1) var background_blur_amount: float = 4.0:
 	set(value):
 		background_blur_amount = value
 		if is_inside_tree():
-			%BGShader.material.set_shader_parameter("blur_amount", value)
+			%BackgroundShader.material.set_shader_parameter("blur_amount", value)
 
-
-func _process(_delta: float) -> void:
-	var bg_color: Color = main.m8_get_theme_colors()[0]
-	%BGColorRect.color = bg_color
-	%BGShader.material.set_shader_parameter("tint_color", bg_color)
-	%PanelContainer.material.set_shader_parameter("panel_color", bg_color)
 
 func init(p_main: Main) -> void:
 	super(p_main)
@@ -85,15 +77,19 @@ func init(p_main: Main) -> void:
 	%DisplayTextureRect.texture = texture
 
 	get_window().size_changed.connect(func() -> void:
-		update_viewport_size()
+		_update()
 	)
-
-	update_viewport_size()
-	update_panel_size()
 
 	main.m8_system_info_received.connect(func(_hw: String, _fw: String) -> void:
-		update_panel_size()
+		_update()
 	)
+
+	main.m8_theme_changed.connect(func(_colors: PackedColorArray, _complete: bool) -> void:
+		_update_background_color()
+	)
+
+	_update()
+	_update_background_color()
 
 func init_menu(menu: SceneMenu) -> void:
 
@@ -115,38 +111,41 @@ func init_menu(menu: SceneMenu) -> void:
 	], func(index: int) -> void:
 		match index:
 			0:
-				%BGTextureRect.visible = false
+				%BackgroundTextureRect.visible = false
 			1:
-				%BGTextureRect.visible = true
-				%BGTextureRect.texture = main.m8_client.get_display()
+				%BackgroundTextureRect.visible = true
+				%BackgroundTextureRect.texture = main.m8_client.get_display()
 			2:
-				%BGTextureRect.visible = true
-				%BGTextureRect.texture = load_media_to_texture_rect(get_setting("background_file"), %BGVideoStreamPlayer)
+				%BackgroundTextureRect.visible = true
+				%BackgroundTextureRect.texture = load_media_to_texture_rect(get_setting("background_file"), %BGVideoStreamPlayer)
 	)
 
 	menu.add_file_custom("background_file", "", func(path: String) -> void:
 		if get_setting("background_mode") == 2:
-			%BGTextureRect.texture = load_media_to_texture_rect(path, %BGVideoStreamPlayer)
+			%BackgroundTextureRect.texture = load_media_to_texture_rect(path, %BGVideoStreamPlayer)
 	)
 
 	menu.add_auto("background_brightness")
 	menu.add_auto("background_theme_tint")
 	menu.add_auto("background_blur_amount")
 
-func update_viewport_size() -> void:
+func _update() -> void:
+	if not is_inside_tree(): return
+
 	var window_size := get_window().get_size()
 	var viewport_size := Vector2i((window_size / float(integer_zoom)).ceil())
-	%SubViewport.set_size(viewport_size)
-	%SubViewportContainer.scale = Vector2(integer_zoom, integer_zoom)
-
-	%Control.custom_minimum_size = window_size * integer_zoom
-
+	%SubViewport.integer_size = viewport_size
+	%SubViewport.integer_scale = integer_zoom
 	%CenterContainer.set_anchors_preset(Control.PRESET_FULL_RECT)
-	%CenterContainer.set_anchors_preset(Control.PRESET_TOP_LEFT)
 
-func update_panel_size() -> void:
 	var display_size := main.m8_client.get_display().get_size()
 	if panel_integer_scale == 0: # auto
 		%DisplayTextureRect.custom_minimum_size = display_size * get_auto_display_integer_scale()
 	else:
 		%DisplayTextureRect.custom_minimum_size = display_size * panel_integer_scale
+
+func _update_background_color() -> void:
+	var bg_color: Color = main.m8_get_theme_colors()[0]
+	%BackgroundColorRect.color = bg_color
+	%BackgroundShader.material.set_shader_parameter("tint_color", bg_color)
+	%PanelContainer.material.set_shader_parameter("panel_color", bg_color)

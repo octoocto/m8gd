@@ -1,6 +1,7 @@
-[gd_scene load_steps=15 format=3 uid="uid://bu28kwqtn6cdg"]
+[gd_scene load_steps=16 format=3 uid="uid://bu28kwqtn6cdg"]
 
 [ext_resource type="Script" path="res://scenes/fancy_display_scene.gd" id="1_jfrc1"]
+[ext_resource type="Script" path="res://scenes/scalable_sub_viewport.gd" id="2_k48ro"]
 [ext_resource type="Shader" path="res://shaders/screen_blur.gdshader" id="2_rpd8y"]
 [ext_resource type="Shader" path="res://shaders/panel_blur.gdshader" id="4_y8ora"]
 [ext_resource type="Texture2D" uid="uid://ras5y3yqijkx" path="res://assets/m8_screen_placeholder.png" id="5_ihehy"]
@@ -81,22 +82,20 @@ loop = true
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 unique_name_in_owner = true
-size_flags_horizontal = 2
-size_flags_vertical = 2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="Control" type="Control" parent="CenterContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="SubViewportContainer" type="SubViewportContainer" parent="CenterContainer/Control"]
+[node name="SubViewportContainer" type="SubViewportContainer" parent="CenterContainer"]
 unique_name_in_owner = true
 texture_filter = 1
-layout_mode = 1
-offset_right = 640.0
-offset_bottom = 480.0
-scale = Vector2(2, 2)
+layout_mode = 2
 
-[node name="SubViewport" type="SubViewport" parent="CenterContainer/Control/SubViewportContainer"]
+[node name="SubViewport" type="SubViewport" parent="CenterContainer/SubViewportContainer"]
 unique_name_in_owner = true
 disable_3d = true
 transparent_bg = true
@@ -105,18 +104,21 @@ snap_2d_transforms_to_pixel = true
 snap_2d_vertices_to_pixel = true
 canvas_item_default_texture_filter = 0
 size = Vector2i(640, 480)
+size_2d_override = Vector2i(640, 480)
+size_2d_override_stretch = true
 render_target_update_mode = 4
+script = ExtResource("2_k48ro")
+integer_scale = 1
 
-[node name="BGColorRect" type="ColorRect" parent="CenterContainer/Control/SubViewportContainer/SubViewport"]
+[node name="BackgroundColorRect" type="ColorRect" parent="CenterContainer/SubViewportContainer/SubViewport"]
 unique_name_in_owner = true
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(1, 1, 1, 0)
 
-[node name="BGTextureRect" type="TextureRect" parent="CenterContainer/Control/SubViewportContainer/SubViewport"]
+[node name="BackgroundTextureRect" type="TextureRect" parent="CenterContainer/SubViewportContainer/SubViewport"]
 unique_name_in_owner = true
 texture_filter = 2
 clip_contents = true
@@ -130,7 +132,7 @@ size_flags_vertical = 4
 expand_mode = 1
 stretch_mode = 6
 
-[node name="BGShader" type="ColorRect" parent="CenterContainer/Control/SubViewportContainer/SubViewport"]
+[node name="BackgroundShader" type="ColorRect" parent="CenterContainer/SubViewportContainer/SubViewport"]
 unique_name_in_owner = true
 material = SubResource("ShaderMaterial_rqrn1")
 anchors_preset = 15
@@ -139,11 +141,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="BackBufferCopy" type="BackBufferCopy" parent="CenterContainer/Control/SubViewportContainer/SubViewport"]
-position = Vector2(320, 240)
+[node name="BackBufferCopy" type="BackBufferCopy" parent="CenterContainer/SubViewportContainer/SubViewport"]
 copy_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="CenterContainer/Control/SubViewportContainer/SubViewport"]
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer/SubViewportContainer/SubViewport"]
 unique_name_in_owner = true
 material = SubResource("ShaderMaterial_y1b4h")
 anchors_preset = 8
@@ -161,7 +162,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_410rj")
 
-[node name="DisplayTextureRect" type="TextureRect" parent="CenterContainer/Control/SubViewportContainer/SubViewport/PanelContainer"]
+[node name="DisplayTextureRect" type="TextureRect" parent="CenterContainer/SubViewportContainer/SubViewport/PanelContainer"]
 unique_name_in_owner = true
 texture_filter = 1
 custom_minimum_size = Vector2(320, 240)
