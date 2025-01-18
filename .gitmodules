@@ -2,6 +2,8 @@
 	path = thirdparty/godot-cpp
 	url = https://github.com/godotengine/godot-cpp
 	branch = 4.3
+	ignore = untracked
 [submodule "thirdparty/libserialport"]
 	path = thirdparty/libserialport
 	url = https://github.com/sigrokproject/libserialport
+	ignore = untracked
