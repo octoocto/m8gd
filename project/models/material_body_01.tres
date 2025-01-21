@@ -1,0 +1,10 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://g8po1mp7xinq"]
+
+[ext_resource type="Texture2D" uid="uid://cnm2iqhf11y5c" path="res://models/material_noise.tres" id="1_qx8x5"]
+
+[resource]
+albedo_color = Color(0.25, 0.25, 0.25, 1)
+albedo_texture = ExtResource("1_qx8x5")
+metallic = 1.0
+roughness = 0.6
+texture_filter = 2

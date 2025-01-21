@@ -24,3 +24,10 @@
 /.scons_cache/
 
 thirdparty/*/**
+
+# 3d modeling files
+*.blend
+*.blend1
+
+# image editing files
+*.kra

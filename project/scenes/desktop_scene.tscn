@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scenes/desktop_scene.gd" id="1_0y3bn"]
 [ext_resource type="PackedScene" uid="uid://bckroenwlecqv" path="res://scene_camera_3d.tscn" id="5_d472a"]
 [ext_resource type="Material" uid="uid://dv1jtj3wvh678" path="res://assets/grid_overlay.tres" id="7_7cg8p"]
-[ext_resource type="PackedScene" uid="uid://iwhr1bmv263q" path="res://models/m8_model.tscn" id="8_a1o7u"]
+[ext_resource type="PackedScene" uid="uid://dk52g4jj43v12" path="res://models/m8_model.tscn" id="7_y135g"]
 [ext_resource type="PackedScene" uid="uid://ceqlf8kgdxjeb" path="res://grass_area.tscn" id="8_ophi6"]
 [ext_resource type="PackedScene" uid="uid://nepv47umjdf0" path="res://models/plant_model.tscn" id="9_c3a4o"]
 [ext_resource type="Shader" path="res://grass_area.gdshader" id="9_wvtmw"]
@@ -199,8 +199,8 @@ extents = Vector3(20, 0, 20)
 grass_mesh = SubResource("RibbonTrailMesh_xwsvd")
 num_meshes = 32000
 
-[node name="M8Model" parent="." instance=ExtResource("8_a1o7u")]
+[node name="M8Model" parent="." instance=ExtResource("7_y135g")]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.416673, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.410945, 0)
 
 [editable path="Camera3D"]

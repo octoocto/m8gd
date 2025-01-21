@@ -402,7 +402,7 @@ size_flags_horizontal = 3
 [node name="Setting_ModelColorBody" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer/Scene/VBoxContainer/HBoxContainer3/VBoxContainer2" instance=ExtResource("5_i4355")]
 unique_name_in_owner = true
 layout_mode = 2
-value = Color(0, 0, 0, 1)
+value = Color(0.15, 0.15, 0.15, 1)
 setting_name = "Body Color"
 setting_name_min_width = 100
 

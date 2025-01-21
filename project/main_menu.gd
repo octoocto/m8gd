@@ -541,23 +541,26 @@ func _init_menu_input() -> void:
 func _init_menu_model() -> void:
 
 	for arr: Array in [
-		[%Setting_ModelColorUp, "%KeyUp", "model_color_key_up"],
-		[%Setting_ModelColorDown, "%KeyDown", "model_color_key_down"],
-		[%Setting_ModelColorLeft, "%KeyLeft", "model_color_key_left"],
-		[%Setting_ModelColorRight, "%KeyRight", "model_color_key_right"],
-		[%Setting_ModelColorOption, "%KeyOption", "model_color_key_option"],
-		[%Setting_ModelColorEdit, "%KeyEdit", "model_color_key_edit"],
-		[%Setting_ModelColorShift, "%KeyShift", "model_color_key_shift"],
-		[%Setting_ModelColorPlay, "%KeyPlay", "model_color_key_play"],
-		[%Setting_ModelColorBody, "%Body", "model_color_body"]
+		[%Setting_ModelColorUp, "Up", "model_color_key_up"],
+		[%Setting_ModelColorDown, "Down", "model_color_key_down"],
+		[%Setting_ModelColorLeft, "Left", "model_color_key_left"],
+		[%Setting_ModelColorRight, "Right", "model_color_key_right"],
+		[%Setting_ModelColorOption, "Option", "model_color_key_option"],
+		[%Setting_ModelColorEdit, "Edit", "model_color_key_edit"],
+		[%Setting_ModelColorShift, "Shift", "model_color_key_shift"],
+		[%Setting_ModelColorPlay, "Play", "model_color_key_play"],
 	]:
 		var setting: SettingBase = arr[0]
 		var node_path: String = arr[1]
 		var config_property: String = arr[2]
 
 		setting.init_config_profile(main, config_property, func(value: Color) -> void:
-			if _model(): _model(node_path).material_override.albedo_color = value
+			if _model(): _model().set_key_cap_color(node_path, value)
 		)
+
+	%Setting_ModelColorBody.init_config_profile(main, "model_color_body", func(value: Color) -> void:
+		if _model(): _model().set_part_color("Body", value)
+	)
 
 	# highlight color for directional buttons (can only edit together)
 	var color_settings_highlights: Array[SettingBase] = [
@@ -569,39 +572,25 @@ func _init_menu_model() -> void:
 
 	for setting in color_settings_highlights:
 		setting.init_config_profile(main, "hl_color_directional", func(value: Color) -> void:
-			for s in color_settings_highlights:
-				s.set_value_no_signal(value)
-			if _model():
-				var colors: Array[Color] = [
-					_model("%KeyUp").material_overlay.albedo_color,
-					_model("%KeyDown").material_overlay.albedo_color,
-					_model("%KeyLeft").material_overlay.albedo_color,
-					_model("%KeyRight").material_overlay.albedo_color
-				]
-				_model("%KeyUp").material_overlay.albedo_color = Color(value, colors[0].a)
-				_model("%KeyDown").material_overlay.albedo_color = Color(value, colors[1].a)
-				_model("%KeyLeft").material_overlay.albedo_color = Color(value, colors[2].a)
-				_model("%KeyRight").material_overlay.albedo_color = Color(value, colors[3].a)
+			for s in color_settings_highlights: s.set_value_no_signal(value)
+			if _model(): _model().set_dir_key_highlight_color(value)
 			main.overlay_keys.color_directional = value
 		)
 
 	# highlight color for other buttons
 	for arr: Array in [
-		[%Setting_ModelColorHLOption, "%KeyOption", "color_option", "hl_color_option"],
-		[%Setting_ModelColorHLEdit, "%KeyEdit", "color_edit", "hl_color_edit"],
-		[%Setting_ModelColorHLShift, "%KeyShift", "color_shift", "hl_color_shift"],
-		[%Setting_ModelColorHLPlay, "%KeyPlay", "color_play", "hl_color_play"],
+		[%Setting_ModelColorHLOption, "Option", "color_option", "hl_color_option"],
+		[%Setting_ModelColorHLEdit, "Edit", "color_edit", "hl_color_edit"],
+		[%Setting_ModelColorHLShift, "Shift", "color_shift", "hl_color_shift"],
+		[%Setting_ModelColorHLPlay, "Play", "color_play", "hl_color_play"],
 	]:
 		var setting: SettingBase = arr[0]
-		var node_path: String = arr[1]
+		var key_name: String = arr[1]
 		var overlay_prop: String = arr[2]
 		var config_property: String = arr[3]
 
 		setting.init_config_profile(main, config_property, func(value: Color) -> void:
-				# set highlight color on model and key overlay
-				if _model():
-					var color: Color = _model(node_path).material_overlay.albedo_color
-					_model(node_path).material_overlay.albedo_color = Color(value, color.a)
+				if _model(): _model().set_key_highlight_color(key_name, value)
 				main.overlay_keys.set(overlay_prop, value)
 		)
 
@@ -876,7 +865,7 @@ func _link_control_to_disable(setting: Control, control: Control) -> void:
 ## Try to return the device model in the current scene.
 ## If there isn't one, returns null.
 ##
-func _model(path: String = "") -> Node:
+func _model(path: String = "") -> DeviceModel:
 	if main.current_scene and main.current_scene.has_device_model():
 		if path == "":
 			return main.current_scene.get_device_model()
