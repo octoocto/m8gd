@@ -94,8 +94,7 @@ func _ready() -> void:
 	m8_client.load_font(M8GD.M8_FONT_01_SMALL, FONT_01_SMALL)
 	m8_client.load_font(M8GD.M8_FONT_01_BIG, FONT_01_BIG)
 	m8_client.load_font(M8GD.M8_FONT_02_SMALL, FONT_02_SMALL)
-	# m8_client.load_font(M8GD.M8_FONT_02_BOLD, FONT_02_BOLD)
-	m8_client.load_font(M8GD.M8_FONT_02_BOLD, FONT_01_BIG)
+	m8_client.load_font(M8GD.M8_FONT_02_BOLD, FONT_02_BOLD)
 	m8_client.load_font(M8GD.M8_FONT_02_HUGE, FONT_02_HUGE)
 
 	get_window().min_size = Vector2i(640, 480)
