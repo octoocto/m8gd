@@ -53,6 +53,11 @@ var surface_material_custom: StandardMaterial3D = null
 		directional_light_color = value
 		%DirectionalLight3D.light_color = value
 		%DirectionalLight3D.light_energy = value.a * 8
+
+@export_range(0.0, 360.0) var directional_light_angle := 240.0:
+	set(value):
+		directional_light_angle = value
+		%DirectionalLight3D.rotation_degrees.y = value
 	
 @export var enable_lamp_light := true:
 	set(value):
@@ -132,6 +137,7 @@ func init_menu(menu: SceneMenu) -> void:
 
 	var setting_light_dir := menu.add_auto("enable_directional_light")
 	setting_light_dir.connect_to_visible(menu.add_auto("directional_light_color", "• Light Color"))
+	setting_light_dir.connect_to_visible(menu.add_auto("directional_light_angle", "• Light Angle"))
 	var setting_light_lamp := menu.add_auto("enable_lamp_light")
 	setting_light_lamp.connect_to_visible(menu.add_auto("lamp_light_color", "• Light Color"))
 	var setting_light_left := menu.add_auto("enable_left_light")
