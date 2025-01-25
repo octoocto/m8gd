@@ -1,0 +1,40 @@
+[gd_scene load_steps=3 format=3 uid="uid://c5kj6fcv4g2ux"]
+
+[ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/menu_theme.tres" id="1_7udu3"]
+[ext_resource type="Script" path="res://ui/setting_string.gd" id="2_jwi12"]
+
+[node name="SettingString" type="PanelContainer"]
+offset_right = 132.0
+offset_bottom = 27.0
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme = ExtResource("1_7udu3")
+theme_type_variation = &"SettingBackground"
+script = ExtResource("2_jwi12")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Control" type="Control" parent="HBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="LabelName" type="Label" parent="HBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+text = "t"
+
+[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"SettingControl"
+
+[node name="LineEdit" type="LineEdit" parent="HBoxContainer/PanelContainer"]
+unique_name_in_owner = true
+layout_mode = 2

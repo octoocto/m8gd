@@ -1,0 +1,323 @@
+[gd_scene load_steps=27 format=3 uid="uid://yvgf0ok5tp6r"]
+
+[ext_resource type="Script" path="res://overlays/overlay_keys_item.gd" id="1_mywub"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_my6qi"]
+content_margin_left = 8.0
+content_margin_top = 4.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 1, 1, 1)
+border_width_bottom = 2
+border_color = Color(0.5, 0.5, 0.5, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+anti_aliasing = false
+
+[sub_resource type="SystemFont" id="SystemFont_dlkwr"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_yo4hc"]
+font = SubResource("SystemFont_dlkwr")
+font_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_w02ew"]
+font = SubResource("SystemFont_dlkwr")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rehpp"]
+content_margin_left = 8.0
+content_margin_top = 4.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 1, 1, 1)
+border_width_bottom = 2
+border_color = Color(0.5, 0.5, 0.5, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+anti_aliasing = false
+
+[sub_resource type="LabelSettings" id="LabelSettings_qoi3d"]
+font = SubResource("SystemFont_dlkwr")
+font_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_bjc8v"]
+font = SubResource("SystemFont_dlkwr")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tjk0s"]
+content_margin_left = 8.0
+content_margin_top = 4.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 1, 1, 1)
+border_width_bottom = 2
+border_color = Color(0.5, 0.5, 0.5, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+anti_aliasing = false
+
+[sub_resource type="LabelSettings" id="LabelSettings_2bd4j"]
+font = SubResource("SystemFont_dlkwr")
+font_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_wo8kh"]
+font = SubResource("SystemFont_dlkwr")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qied2"]
+content_margin_left = 8.0
+content_margin_top = 4.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 1, 1, 1)
+border_width_bottom = 2
+border_color = Color(0.5, 0.5, 0.5, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+anti_aliasing = false
+
+[sub_resource type="LabelSettings" id="LabelSettings_lyoqc"]
+font = SubResource("SystemFont_dlkwr")
+font_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_ugl57"]
+font = SubResource("SystemFont_dlkwr")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c8kfo"]
+content_margin_left = 8.0
+content_margin_top = 4.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 1, 1, 1)
+border_width_bottom = 2
+border_color = Color(0.5, 0.5, 0.5, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+anti_aliasing = false
+
+[sub_resource type="LabelSettings" id="LabelSettings_boet3"]
+font = SubResource("SystemFont_dlkwr")
+font_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_5yh7v"]
+font = SubResource("SystemFont_dlkwr")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g7j3r"]
+content_margin_left = 8.0
+content_margin_top = 4.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 1, 1, 1)
+border_width_bottom = 2
+border_color = Color(0.5, 0.5, 0.5, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+anti_aliasing = false
+
+[sub_resource type="LabelSettings" id="LabelSettings_80tjr"]
+font = SubResource("SystemFont_dlkwr")
+font_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_0tcsl"]
+font = SubResource("SystemFont_dlkwr")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x3akc"]
+content_margin_left = 8.0
+content_margin_top = 4.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 1, 1, 1)
+border_width_bottom = 2
+border_color = Color(0.5, 0.5, 0.5, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+anti_aliasing = false
+
+[sub_resource type="LabelSettings" id="LabelSettings_a77ox"]
+font = SubResource("SystemFont_dlkwr")
+font_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_lss8i"]
+font = SubResource("SystemFont_dlkwr")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rio05"]
+content_margin_left = 8.0
+content_margin_top = 4.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 1, 1, 1)
+border_width_bottom = 2
+border_color = Color(0.5, 0.5, 0.5, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+anti_aliasing = false
+
+[sub_resource type="LabelSettings" id="LabelSettings_f2owf"]
+font = SubResource("SystemFont_dlkwr")
+font_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_f78y7"]
+font = SubResource("SystemFont_dlkwr")
+
+[node name="OverlayKeysItem" type="HBoxContainer"]
+offset_right = 16.0
+offset_bottom = 2.0
+script = ExtResource("1_mywub")
+style_padding = Vector2i(8, 4)
+
+[node name="Shift" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_my6qi")
+
+[node name="Label" type="Label" parent="Shift"]
+layout_mode = 2
+text = "SHIFT"
+label_settings = SubResource("LabelSettings_yo4hc")
+
+[node name="ShiftPlus" type="Label" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "+"
+label_settings = SubResource("LabelSettings_w02ew")
+
+[node name="Up" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_rehpp")
+
+[node name="Label" type="Label" parent="Up"]
+layout_mode = 2
+text = "UP"
+label_settings = SubResource("LabelSettings_qoi3d")
+
+[node name="UpPlus" type="Label" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "+"
+label_settings = SubResource("LabelSettings_bjc8v")
+
+[node name="Down" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_tjk0s")
+
+[node name="Label" type="Label" parent="Down"]
+layout_mode = 2
+text = "DOWN"
+label_settings = SubResource("LabelSettings_2bd4j")
+
+[node name="DownPlus" type="Label" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "+"
+label_settings = SubResource("LabelSettings_wo8kh")
+
+[node name="Left" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_qied2")
+
+[node name="Label" type="Label" parent="Left"]
+layout_mode = 2
+text = "LEFT"
+label_settings = SubResource("LabelSettings_lyoqc")
+
+[node name="LeftPlus" type="Label" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "+"
+label_settings = SubResource("LabelSettings_ugl57")
+
+[node name="Right" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_c8kfo")
+
+[node name="Label" type="Label" parent="Right"]
+layout_mode = 2
+text = "RIGHT"
+label_settings = SubResource("LabelSettings_boet3")
+
+[node name="RightPlus" type="Label" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "+"
+label_settings = SubResource("LabelSettings_5yh7v")
+
+[node name="Option" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_g7j3r")
+
+[node name="Label" type="Label" parent="Option"]
+layout_mode = 2
+text = "OPTION"
+label_settings = SubResource("LabelSettings_80tjr")
+
+[node name="OptionPlus" type="Label" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "+"
+label_settings = SubResource("LabelSettings_0tcsl")
+
+[node name="Edit" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_x3akc")
+
+[node name="Label" type="Label" parent="Edit"]
+layout_mode = 2
+text = "EDIT"
+label_settings = SubResource("LabelSettings_a77ox")
+
+[node name="EditPlus" type="Label" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "+"
+label_settings = SubResource("LabelSettings_lss8i")
+
+[node name="Play" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_rio05")
+
+[node name="Label" type="Label" parent="Play"]
+layout_mode = 2
+text = "PLAY"
+label_settings = SubResource("LabelSettings_f2owf")
+
+[node name="Times" type="Label" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "x1"
+label_settings = SubResource("LabelSettings_f78y7")

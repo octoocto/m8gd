@@ -1,102 +1,15 @@
-[gd_scene load_steps=14 format=3 uid="uid://ca2jqh2tc7jix"]
+[gd_scene load_steps=3 format=3 uid="uid://ca2jqh2tc7jix"]
 
 [ext_resource type="Script" path="res://overlays/overlay_keys.gd" id="1_tnj14"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v85e1"]
-content_margin_left = 8.0
-content_margin_right = 8.0
-bg_color = Color(1, 0.86179, 0.866894, 1)
-border_width_bottom = 2
-border_color = Color(0.4, 0.4, 0.4, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-anti_aliasing = false
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o6gxx"]
-content_margin_left = 8.0
-content_margin_right = 8.0
-bg_color = Color(0.9, 0.9, 0.9, 1)
-border_width_bottom = 2
-border_color = Color(0.4, 0.4, 0.4, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-anti_aliasing = false
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_apn7d"]
-content_margin_left = 8.0
-content_margin_right = 8.0
-bg_color = Color(0.9, 0.9, 0.9, 1)
-border_width_bottom = 2
-border_color = Color(0.4, 0.4, 0.4, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-anti_aliasing = false
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5aded"]
-content_margin_left = 8.0
-content_margin_right = 8.0
-bg_color = Color(0.9, 0.9, 0.9, 1)
-border_width_bottom = 2
-border_color = Color(0.4, 0.4, 0.4, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-anti_aliasing = false
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0e0yo"]
-content_margin_left = 8.0
-content_margin_right = 8.0
-bg_color = Color(0.9, 0.9, 0.9, 1)
-border_width_bottom = 2
-border_color = Color(0.4, 0.4, 0.4, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-anti_aliasing = false
-
-[sub_resource type="LabelSettings" id="LabelSettings_aiwcp"]
-
-[sub_resource type="LabelSettings" id="LabelSettings_w1myr"]
-
-[sub_resource type="LabelSettings" id="LabelSettings_uwuav"]
-
-[sub_resource type="LabelSettings" id="LabelSettings_krp3h"]
-
-[sub_resource type="LabelSettings" id="LabelSettings_cd5gv"]
-
-[sub_resource type="FontVariation" id="FontVariation_rngjy"]
-variation_embolden = 1.5
-
-[sub_resource type="Theme" id="Theme_fm7ya"]
-default_font = SubResource("FontVariation_rngjy")
-Label/colors/font_color = Color(1, 1, 1, 1)
-PanelContainer/styles/panel = SubResource("StyleBoxFlat_v85e1")
+[ext_resource type="PackedScene" uid="uid://yvgf0ok5tp6r" path="res://overlays/overlay_keys_item.tscn" id="2_yi3d0"]
 
 [node name="KeyOverlay" type="Control"]
 custom_minimum_size = Vector2(320, 320)
 layout_mode = 3
 anchors_preset = 0
 offset_right = 320.0
-offset_bottom = 240.0
+offset_bottom = 320.0
 script = ExtResource("1_tnj14")
-panel_directional = SubResource("StyleBoxFlat_v85e1")
-panel_shift = SubResource("StyleBoxFlat_o6gxx")
-panel_play = SubResource("StyleBoxFlat_apn7d")
-panel_option = SubResource("StyleBoxFlat_5aded")
-panel_edit = SubResource("StyleBoxFlat_0e0yo")
-label_directional = SubResource("LabelSettings_aiwcp")
-label_shift = SubResource("LabelSettings_w1myr")
-label_play = SubResource("LabelSettings_uwuav")
-label_option = SubResource("LabelSettings_krp3h")
-label_edit = SubResource("LabelSettings_cd5gv")
 
 [node name="ControlOffset" type="Control" parent="."]
 unique_name_in_owner = true
@@ -104,8 +17,8 @@ layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_top = -40.0
-offset_right = 40.0
+offset_top = -320.0
+offset_right = 320.0
 grow_vertical = 0
 
 [node name="Control" type="Control" parent="ControlOffset"]
@@ -114,10 +27,38 @@ layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
+offset_top = -320.0
 grow_vertical = 0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ControlOffset/Control"]
 unique_name_in_owner = true
 layout_mode = 0
-theme = SubResource("Theme_fm7ya")
+offset_right = 320.0
+offset_bottom = 320.0
 alignment = 2
+
+[node name="ItemSample1" parent="ControlOffset/Control/VBoxContainer" instance=ExtResource("2_yi3d0")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+pressed_u = true
+pressed_d = true
+pressed_l = true
+pressed_r = true
+style_padding = Vector2i(8, -1)
+
+[node name="ItemSample2" parent="ControlOffset/Control/VBoxContainer" instance=ExtResource("2_yi3d0")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+pressed_o = true
+pressed_e = true
+style_padding = Vector2i(8, -1)
+
+[node name="ItemSample3" parent="ControlOffset/Control/VBoxContainer" instance=ExtResource("2_yi3d0")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+pressed_s = true
+pressed_p = true
+style_padding = Vector2i(8, -1)

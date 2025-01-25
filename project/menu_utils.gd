@@ -4,6 +4,7 @@ const SETTING_NUMBER := preload("res://ui/setting_number.tscn")
 const SETTING_VEC2I := preload("res://ui/setting_vec2i.tscn")
 const SETTING_BOOL := preload("res://ui/setting_bool.tscn")
 const SETTING_OPTIONS := preload("res://ui/setting_options.tscn")
+const SETTING_STRING := preload("res://ui/setting_string.tscn")
 const SETTING_COLOR := preload("res://ui/setting_color.tscn")
 const SETTING_FILE := preload("res://ui/setting_file.tscn")
 
@@ -36,6 +37,8 @@ static func create_setting_from_property(prop: Dictionary) -> SettingBase:
 				TYPE_FLOAT:
 					setting = SETTING_NUMBER.instantiate()
 					setting.step = 0.01
+				TYPE_STRING:
+					setting = SETTING_STRING.instantiate()
 				TYPE_COLOR:
 					setting = SETTING_COLOR.instantiate()
 				var x:
