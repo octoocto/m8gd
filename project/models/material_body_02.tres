@@ -1,23 +1,26 @@
-[gd_resource type="StandardMaterial3D" load_steps=4 format=3 uid="uid://ceus1nseg5p1a"]
+[gd_resource type="StandardMaterial3D" load_steps=5 format=3 uid="uid://ceus1nseg5p1a"]
 
 [ext_resource type="Texture2D" uid="uid://cm84lsw54cq8t" path="res://assets/m8_tracker/textures/labels_02.png" id="1_dyl76"]
 [ext_resource type="Texture2D" uid="uid://cnm2iqhf11y5c" path="res://models/material_noise.tres" id="1_gsvwo"]
+[ext_resource type="Texture2D" uid="uid://dkl4iuf1hg2la" path="res://models/noise_normal.tres" id="3_y2xpi"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ujn6n"]
 transparency = 1
 albedo_texture = ExtResource("1_dyl76")
-emission_enabled = true
+metallic = 0.6
+roughness = 0.3
 emission = Color(1, 1, 1, 1)
-emission_energy_multiplier = 0.1
-texture_filter = 5
+emission_energy_multiplier = 0.15
 texture_repeat = false
 
 [resource]
 next_pass = SubResource("StandardMaterial3D_ujn6n")
-albedo_color = Color(0.157034, 0.157034, 0.157034, 1)
+albedo_color = Color(0.15, 0.15, 0.15, 1)
 albedo_texture = ExtResource("1_gsvwo")
-metallic = 0.9
-roughness = 0.5
+metallic = 0.8
+roughness = 0.4
+normal_enabled = true
+normal_texture = ExtResource("3_y2xpi")
+uv1_scale = Vector3(1.25, 1.25, 1.25)
 uv1_triplanar = true
 uv1_world_triplanar = true
-texture_filter = 2

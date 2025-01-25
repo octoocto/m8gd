@@ -19,292 +19,336 @@ script = ExtResource("2_ag158")
 
 [node name="M02_Body" parent="." index="0"]
 unique_name_in_owner = true
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000492573, 0.414844, 0.0302715)
 material_override = ExtResource("2_jmko1")
 
 [node name="M02_Screen" parent="." index="1"]
 unique_name_in_owner = true
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000492573, 0.414844, 0.0302715)
 material_override = ExtResource("10_3s7in")
 
 [node name="M02_ScreenOuter" parent="." index="2"]
 unique_name_in_owner = true
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000492573, 0.414844, 0.0302715)
 surface_material_override/0 = ExtResource("3_8hyn2")
 
 [node name="M02_ScreenGlass" parent="." index="3"]
 unique_name_in_owner = true
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000492573, 0.414844, 0.0302715)
 surface_material_override/0 = ExtResource("4_feft7")
 
-[node name="M02_KeyUpCap" parent="." index="4"]
+[node name="M02_AudioJack_001" parent="." index="4"]
 unique_name_in_owner = true
-visible = false
+
+[node name="M02_AudioJack_002" parent="." index="5"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75375, 0.355, -3.06688)
+
+[node name="M02_AudioJack_003" parent="." index="6"]
+unique_name_in_owner = true
+
+[node name="M02_AudioJack_004" parent="." index="7"]
+unique_name_in_owner = true
+
+[node name="M02_KeyUpCap" parent="." index="8"]
+unique_name_in_owner = true
 material_override = ExtResource("3_3rxoc")
 material_overlay = ExtResource("8_plqn4")
 
-[node name="M02_KeyUpSwitch" parent="." index="5"]
+[node name="M02_KeyUpSwitch" parent="." index="9"]
 unique_name_in_owner = true
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.555657, 0.555001, 0.598967)
 
-[node name="M02_KeyUpStem" parent="." index="6"]
+[node name="M02_KeyUpStem" parent="." index="10"]
 unique_name_in_owner = true
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.556011, 0.555001, 0.604048)
 
-[node name="M02_KeyDownCap" parent="." index="7"]
+[node name="M02_KeyDownCap" parent="." index="11"]
 unique_name_in_owner = true
-visible = false
 material_override = ExtResource("3_3rxoc")
 material_overlay = ExtResource("8_plqn4")
 
-[node name="M02_KeyDownSwitch" parent="." index="8"]
+[node name="M02_KeyDownSwitch" parent="." index="12"]
 unique_name_in_owner = true
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.555892, 0.555001, 1.46867)
 
-[node name="M02_KeyDownStem" parent="." index="9"]
+[node name="M02_KeyDownStem" parent="." index="13"]
 unique_name_in_owner = true
-visible = false
 
-[node name="M02_KeyLeftCap" parent="." index="10"]
+[node name="M02_KeyLeftCap" parent="." index="14"]
 unique_name_in_owner = true
-visible = false
 material_override = ExtResource("3_3rxoc")
 material_overlay = ExtResource("8_plqn4")
 
-[node name="M02_KeyLeftSwitch" parent="." index="11"]
+[node name="M02_KeyLeftSwitch" parent="." index="15"]
 unique_name_in_owner = true
-visible = false
 
-[node name="M02_KeyLeftStem" parent="." index="12"]
+[node name="M02_KeyLeftStem" parent="." index="16"]
 unique_name_in_owner = true
-visible = false
 
-[node name="M02_KeyRightCap" parent="." index="13"]
+[node name="M02_KeyRightCap" parent="." index="17"]
 unique_name_in_owner = true
-visible = false
 material_override = ExtResource("3_3rxoc")
 material_overlay = ExtResource("8_plqn4")
 
-[node name="M02_KeyRightSwitch" parent="." index="14"]
+[node name="M02_KeyRightSwitch" parent="." index="18"]
 unique_name_in_owner = true
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.363841, 0.555001, 1.46845)
 
-[node name="M02_KeyRightStem" parent="." index="15"]
+[node name="M02_KeyRightStem" parent="." index="19"]
 unique_name_in_owner = true
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.363487, 0.555001, 1.47353)
 
-[node name="M02_KeyOptionCap" parent="." index="16"]
+[node name="M02_KeyOptionCap" parent="." index="20"]
 unique_name_in_owner = true
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.555905, 0.555001, 0.38875)
 material_override = ExtResource("3_3rxoc")
 material_overlay = ExtResource("8_plqn4")
 
-[node name="M02_KeyOptionSwitch" parent="." index="17"]
+[node name="M02_KeyOptionSwitch" parent="." index="21"]
 unique_name_in_owner = true
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.55626, 0.555001, 0.38867)
 
-[node name="M02_KeyOptionStem" parent="." index="18"]
+[node name="M02_KeyOptionStem" parent="." index="22"]
 unique_name_in_owner = true
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.555905, 0.555002, 0.39375)
 
-[node name="M02_KeyEditCap" parent="." index="19"]
+[node name="M02_KeyEditCap" parent="." index="23"]
 unique_name_in_owner = true
-visible = false
 material_override = ExtResource("3_3rxoc")
 material_overlay = ExtResource("8_plqn4")
 
-[node name="M02_KeyEditSwitch" parent="." index="20"]
+[node name="M02_KeyEditSwitch" parent="." index="24"]
 unique_name_in_owner = true
-visible = false
 
-[node name="M02_KeyEditStem" parent="." index="21"]
+[node name="M02_KeyEditStem" parent="." index="25"]
 unique_name_in_owner = true
-visible = false
 
-[node name="M02_KeyShiftCap" parent="." index="22"]
+[node name="M02_KeyShiftCap" parent="." index="26"]
 unique_name_in_owner = true
-visible = false
 material_override = ExtResource("3_3rxoc")
 material_overlay = ExtResource("8_plqn4")
 
-[node name="M02_KeyShiftSwitch" parent="." index="23"]
+[node name="M02_KeyShiftSwitch" parent="." index="27"]
 unique_name_in_owner = true
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.555892, 0.555001, 2.55867)
 
-[node name="M02_KeyShiftStem" parent="." index="24"]
+[node name="M02_KeyShiftStem" parent="." index="28"]
 unique_name_in_owner = true
-visible = false
 
-[node name="M02_KeyPlayCap" parent="." index="25"]
+[node name="M02_KeyPlayCap" parent="." index="29"]
 unique_name_in_owner = true
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.363487, 0.555001, 2.55875)
 material_override = ExtResource("3_3rxoc")
 material_overlay = ExtResource("8_plqn4")
 
-[node name="M02_KeyPlaySwitch" parent="." index="26"]
+[node name="M02_KeyPlaySwitch" parent="." index="30"]
 unique_name_in_owner = true
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.363842, 0.555001, 2.55867)
 
-[node name="M02_KeyPlayStem" parent="." index="27"]
+[node name="M02_KeyPlayStem" parent="." index="31"]
 unique_name_in_owner = true
-visible = false
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.363487, 0.555001, 2.56375)
 
-[node name="M01_ScrewBottomLeft" parent="." index="28"]
+[node name="M01_ScrewBottomLeft" parent="." index="32"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.00944, 0.569455, 2.98131)
+surface_material_override/0 = ExtResource("7_kboll")
+
+[node name="M01_ScrewBottomRight" parent="." index="33"]
 unique_name_in_owner = true
 surface_material_override/0 = ExtResource("7_kboll")
 
-[node name="M01_ScrewBottomRight" parent="." index="29"]
+[node name="M01_ScrewTopLeft" parent="." index="34"]
 unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.00944, 0.569455, -3.0131)
 surface_material_override/0 = ExtResource("7_kboll")
 
-[node name="M01_ScrewTopLeft" parent="." index="30"]
+[node name="M01_ScrewTopRight" parent="." index="35"]
 unique_name_in_owner = true
 surface_material_override/0 = ExtResource("7_kboll")
-
-[node name="M01_ScrewTopRight" parent="." index="31"]
-unique_name_in_owner = true
-surface_material_override/0 = ExtResource("7_kboll")
-
-[node name="M01_AudioJacks" parent="." index="32"]
-unique_name_in_owner = true
-surface_material_override/0 = ExtResource("2_jmh23")
-
-[node name="M01_Bezel" parent="." index="33"]
-unique_name_in_owner = true
-surface_material_override/0 = ExtResource("2_jmh23")
-
-[node name="M01_Body" parent="." index="34"]
-unique_name_in_owner = true
-material_override = ExtResource("9_u5rgg")
-
-[node name="M01_Feet" parent="." index="35"]
-unique_name_in_owner = true
-surface_material_override/0 = ExtResource("9_u5rgg")
 
 [node name="M01_Inside" parent="." index="36"]
 unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00296831, 0.298363, 0.0230579)
 surface_material_override/0 = ExtResource("3_8hyn2")
 
 [node name="M01_Labels" parent="." index="37"]
 unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00296831, 0.569454, 0.0230579)
 surface_material_override/0 = ExtResource("10_6f2qv")
 
 [node name="M01_MicroUSBPort" parent="." index="38"]
 unique_name_in_owner = true
+transform = Transform3D(1, 2.99663e-06, -2.99662e-06, 2.99663e-06, -3.57628e-06, 1, 2.99662e-06, -1, -3.57628e-06, 0.000820875, 0.369429, -2.97897)
 surface_material_override/0 = ExtResource("2_jmh23")
 
-[node name="M01_PowerButton" parent="." index="39"]
+[node name="M01_Screen" parent="." index="39"]
 unique_name_in_owner = true
-surface_material_override/0 = ExtResource("2_jmh23")
-
-[node name="M01_Screen" parent="." index="40"]
-unique_name_in_owner = true
+transform = Transform3D(-1, 0, 3.25841e-07, 0, 1, 0, -3.25841e-07, 0, -1, -0.00296831, 0.83264, -1.58842)
 material_override = ExtResource("10_3s7in")
 
-[node name="M01_ScreenBlackPart" parent="." index="41"]
+[node name="M01_ScreenBlackPart" parent="." index="40"]
 unique_name_in_owner = true
+transform = Transform3D(-1, 0, 3.25841e-07, 0, 1, 0, -3.25841e-07, 0, -1, -0.00296831, 0.83264, -1.58842)
 surface_material_override/0 = ExtResource("3_8hyn2")
 
-[node name="M01_ScreenGlass" parent="." index="42"]
+[node name="M01_ScreenGlass" parent="." index="41"]
 unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0190179, 0.208428, -0.985955)
 surface_material_override/0 = ExtResource("4_feft7")
 
-[node name="M01_ScreenHousing" parent="." index="43"]
+[node name="M01_ScreenHousing" parent="." index="42"]
 unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00296831, 0.125907, -0.985955)
 surface_material_override/0 = ExtResource("11_j3nc0")
 
-[node name="M01_SDCard" parent="." index="44"]
+[node name="M01_SDCard" parent="." index="43"]
 unique_name_in_owner = true
 surface_material_override/0 = ExtResource("2_jmh23")
 
-[node name="M01_SDCardSlot" parent="." index="45"]
+[node name="M01_Feet_001" parent="." index="44"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.67, 0.010371, 2.55309)
+
+[node name="M01_Feet_002" parent="." index="45"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.67, 0.010371, -2.55309)
+
+[node name="M01_Feet_003" parent="." index="46"]
+unique_name_in_owner = true
+
+[node name="M01_Feet_004" parent="." index="47"]
+unique_name_in_owner = true
+
+[node name="M01_PowerButton" parent="." index="48"]
 unique_name_in_owner = true
 surface_material_override/0 = ExtResource("2_jmh23")
 
-[node name="M01_KeyUpCap" parent="." index="46"]
+[node name="M01_AudioJacks_001" parent="." index="49"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.33405, 0.392775, -3.06688)
+
+[node name="M01_AudioJacks_002" parent="." index="50"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.748246, 0.392775, -3.06688)
+
+[node name="M01_AudioJacks_003" parent="." index="51"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.74231, 0.392775, -3.06688)
+
+[node name="M01_AudioJacks_004" parent="." index="52"]
+unique_name_in_owner = true
+
+[node name="M01_CaseBack" parent="." index="53"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00296831, 0.297712, 0)
+surface_material_override/0 = ExtResource("2_jmh23")
+
+[node name="M01_Body" parent="." index="54"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00296831, 0.297712, 0)
+material_override = ExtResource("9_u5rgg")
+lod_bias = 3.0
+
+[node name="M01_KeyUpCap" parent="." index="55"]
 unique_name_in_owner = true
 material_override = ExtResource("3_3rxoc")
 material_overlay = ExtResource("8_plqn4")
 
-[node name="M01_KeyUpSwitch" parent="." index="47"]
+[node name="M01_KeyUpSwitch" parent="." index="56"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.566151, 0.576503, 0.443681)
+
+[node name="M01_KeyUpStem" parent="." index="57"]
 unique_name_in_owner = true
 
-[node name="M01_KeyUpStem" parent="." index="48"]
-unique_name_in_owner = true
-
-[node name="M01_KeyShiftCap" parent="." index="49"]
+[node name="M01_KeyShiftCap" parent="." index="58"]
 unique_name_in_owner = true
 material_override = ExtResource("3_3rxoc")
 material_overlay = ExtResource("8_plqn4")
 
-[node name="M01_KeyShiftSwitch" parent="." index="50"]
+[node name="M01_KeyShiftSwitch" parent="." index="59"]
 unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.563623, 0.576503, 2.44812)
 
-[node name="M01_KeyShiftStem" parent="." index="51"]
+[node name="M01_KeyShiftStem" parent="." index="60"]
 unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.563968, 0.576503, 2.45312)
 
-[node name="M01_KeyRightCap" parent="." index="52"]
+[node name="M01_KeyRightCap" parent="." index="61"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.385003, 0.576503, 1.3517)
+material_override = ExtResource("3_3rxoc")
+material_overlay = ExtResource("8_plqn4")
+
+[node name="M01_KeyRightSwitch" parent="." index="62"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.385348, 0.576503, 1.3517)
+
+[node name="M01_KeyRightStem" parent="." index="63"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.385003, 0.576503, 1.3567)
+
+[node name="M01_KeyPlayCap" parent="." index="64"]
 unique_name_in_owner = true
 material_override = ExtResource("3_3rxoc")
 material_overlay = ExtResource("8_plqn4")
 
-[node name="M01_KeyRightSwitch" parent="." index="53"]
+[node name="M01_KeyPlaySwitch" parent="." index="65"]
 unique_name_in_owner = true
 
-[node name="M01_KeyRightStem" parent="." index="54"]
+[node name="M01_KeyPlayStem" parent="." index="66"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.385003, 0.576503, 2.45312)
+
+[node name="M01_KeyOptionCap" parent="." index="67"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.571587, 0.576503, 0.25366)
+material_override = ExtResource("3_3rxoc")
+material_overlay = ExtResource("8_plqn4")
+
+[node name="M01_KeyOptionSwitch" parent="." index="68"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.571933, 0.576503, 0.25366)
+
+[node name="M01_KeyOptionStem" parent="." index="69"]
 unique_name_in_owner = true
 
-[node name="M01_KeyPlayCap" parent="." index="55"]
+[node name="M01_KeyLeftCap" parent="." index="70"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.51648, 0.576503, 1.3517)
+material_override = ExtResource("3_3rxoc")
+material_overlay = ExtResource("8_plqn4")
+
+[node name="M01_KeyLeftSwitch" parent="." index="71"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.51613, 0.576503, 1.3517)
+
+[node name="M01_KeyLeftStem" parent="." index="72"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.51648, 0.576503, 1.3567)
+
+[node name="M01_KeyEditCap" parent="." index="73"]
 unique_name_in_owner = true
 material_override = ExtResource("3_3rxoc")
 material_overlay = ExtResource("8_plqn4")
 
-[node name="M01_KeyPlaySwitch" parent="." index="56"]
+[node name="M01_KeyEditSwitch" parent="." index="74"]
 unique_name_in_owner = true
 
-[node name="M01_KeyPlayStem" parent="." index="57"]
+[node name="M01_KeyEditStem" parent="." index="75"]
 unique_name_in_owner = true
 
-[node name="M01_KeyOptionCap" parent="." index="58"]
+[node name="M01_KeyDownCap" parent="." index="76"]
 unique_name_in_owner = true
 material_override = ExtResource("3_3rxoc")
 material_overlay = ExtResource("8_plqn4")
 
-[node name="M01_KeyOptionSwitch" parent="." index="59"]
+[node name="M01_KeyDownSwitch" parent="." index="77"]
 unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.563623, 0.576503, 1.3517)
 
-[node name="M01_KeyOptionStem" parent="." index="60"]
+[node name="M01_KeyDownStem" parent="." index="78"]
 unique_name_in_owner = true
-
-[node name="M01_KeyLeftCap" parent="." index="61"]
-unique_name_in_owner = true
-material_override = ExtResource("3_3rxoc")
-material_overlay = ExtResource("8_plqn4")
-
-[node name="M01_KeyLeftSwitch" parent="." index="62"]
-unique_name_in_owner = true
-
-[node name="M01_KeyLeftStem" parent="." index="63"]
-unique_name_in_owner = true
-
-[node name="M01_KeyEditCap" parent="." index="64"]
-unique_name_in_owner = true
-material_override = ExtResource("3_3rxoc")
-material_overlay = ExtResource("8_plqn4")
-
-[node name="M01_KeyEditSwitch" parent="." index="65"]
-unique_name_in_owner = true
-
-[node name="M01_KeyEditStem" parent="." index="66"]
-unique_name_in_owner = true
-
-[node name="M01_KeyDownCap" parent="." index="67"]
-unique_name_in_owner = true
-material_override = ExtResource("3_3rxoc")
-material_overlay = ExtResource("8_plqn4")
-
-[node name="M01_KeyDownSwitch" parent="." index="68"]
-unique_name_in_owner = true
-
-[node name="M01_KeyDownStem" parent="." index="69"]
-unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.563968, 0.576503, 1.3567)

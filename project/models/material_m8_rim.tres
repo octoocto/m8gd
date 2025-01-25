@@ -1,12 +1,14 @@
 [gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://be3p66xqo7iqm"]
 
-[ext_resource type="Texture2D" uid="uid://cnm2iqhf11y5c" path="res://models/material_noise.tres" id="1_vj53q"]
+[ext_resource type="Texture2D" uid="uid://dkl4iuf1hg2la" path="res://models/noise_normal.tres" id="1_v4j5g"]
 
 [resource]
-albedo_color = Color(0.090866, 0.0908659, 0.0908659, 1)
-albedo_texture = ExtResource("1_vj53q")
-metallic = 0.5
-roughness = 0.3
+albedo_color = Color(0.1, 0.1, 0.1, 1)
+metallic = 0.8
+roughness = 0.4
+normal_enabled = true
+normal_texture = ExtResource("1_v4j5g")
+uv1_scale = Vector3(1.2, 1.2, 1.2)
 uv1_triplanar = true
 uv1_world_triplanar = true
 texture_filter = 2

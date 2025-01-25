@@ -4,4 +4,7 @@
 
 [resource]
 transparency = 1
+albedo_color = Color(1, 1, 1, 0.191)
 albedo_texture = ExtResource("1_pp58m")
+metallic = 0.3
+roughness = 0.5

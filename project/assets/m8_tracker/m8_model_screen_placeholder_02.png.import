@@ -2,21 +2,21 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dhjv453vn7f1a"
-path.s3tc="res://.godot/imported/m8_model_labels_02.png-d71edc100d87e0eb138e0a14ed0194b7.s3tc.ctex"
-path.etc2="res://.godot/imported/m8_model_labels_02.png-d71edc100d87e0eb138e0a14ed0194b7.etc2.ctex"
+uid="uid://ctmenab88t3xs"
+path.s3tc="res://.godot/imported/m8_model_screen_placeholder_02.png-6966e3e6690d4b24e21ab8174f663b32.s3tc.ctex"
+path.etc2="res://.godot/imported/m8_model_screen_placeholder_02.png-6966e3e6690d4b24e21ab8174f663b32.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "54b13dbdd254d587cb02e9b90b25a290"
+"md5": "d9f136b14228e019987af4f524f47e77"
 }
 
 [deps]
 
-source_file="res://assets/m8_tracker/m8_model_labels_02.png"
-dest_files=["res://.godot/imported/m8_model_labels_02.png-d71edc100d87e0eb138e0a14ed0194b7.s3tc.ctex", "res://.godot/imported/m8_model_labels_02.png-d71edc100d87e0eb138e0a14ed0194b7.etc2.ctex"]
+source_file="res://assets/m8_tracker/m8_model_screen_placeholder_02.png"
+dest_files=["res://.godot/imported/m8_model_screen_placeholder_02.png-6966e3e6690d4b24e21ab8174f663b32.s3tc.ctex", "res://.godot/imported/m8_model_screen_placeholder_02.png-6966e3e6690d4b24e21ab8174f663b32.etc2.ctex"]
 
 [params]
 

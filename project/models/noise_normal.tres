@@ -1,0 +1,17 @@
+[gd_resource type="NoiseTexture2D" load_steps=3 format=3 uid="uid://dkl4iuf1hg2la"]
+
+[sub_resource type="Gradient" id="Gradient_mneab"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_axpvc"]
+noise_type = 3
+seed = 2
+frequency = 0.8
+domain_warp_enabled = true
+
+[resource]
+width = 1024
+height = 1024
+as_normal_map = true
+bump_strength = 4.0
+color_ramp = SubResource("Gradient_mneab")
+noise = SubResource("FastNoiseLite_axpvc")

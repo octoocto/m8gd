@@ -11,7 +11,7 @@
 [sub_resource type="Environment" id="Environment_ayqpk"]
 ambient_light_source = 2
 ambient_light_color = Color(1, 1, 1, 1)
-ambient_light_energy = 0.1
+ambient_light_energy = 0.05
 tonemap_mode = 2
 tonemap_white = 10.0
 fog_light_color = Color(0, 0, 0, 1)
@@ -136,49 +136,46 @@ environment = SubResource("Environment_ayqpk")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(0.477159, -0.528885, -0.701855, -6.98189e-08, -0.798635, 0.601815, -0.878817, -0.287161, -0.381076, 0.087698, 4.97022, -16.5359)
+transform = Transform3D(0.5, -0.496732, -0.709407, 7.16125e-08, -0.819151, 0.573577, -0.866025, -0.286788, -0.409576, 0.087698, 4.97022, -16.5359)
 light_color = Color(1, 0.958, 0.91, 1)
+light_angular_distance = 4.0
 shadow_enabled = true
-shadow_bias = 0.01
-shadow_opacity = 0.83
-shadow_blur = 3.0
+shadow_normal_bias = 4.0
+shadow_opacity = 0.9
 
 [node name="LightLamp" type="SpotLight3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(0.266284, 0.95967, -0.0901449, -0.46377, 0.209544, 0.860819, 0.844991, -0.187416, 0.500865, -0.919, 16.42, 9.424)
+transform = Transform3D(0.0908976, 0.974832, -0.20357, -0.491037, 0.221712, 0.842452, 0.866383, 0.0233833, 0.498832, -0.311, 13.482, 5.885)
 visible = false
 light_color = Color(0.8, 0.866667, 1, 1)
-light_size = 3.0
+light_size = 2.5
 shadow_enabled = true
 shadow_bias = 0.06
 spot_range = 43.892
-spot_attenuation = 0.0
-spot_angle = 16.72
-spot_angle_attenuation = 0.406125
+spot_attenuation = 0.3
+spot_angle = 30.0
 
 [node name="LightLeft" type="SpotLight3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(0.231346, 0.952383, -0.198611, -0.918842, 0.280983, 0.27709, 0.319702, 0.118389, 0.940093, -4.77328, 6.32057, 10.2875)
-visible = false
+transform = Transform3D(0.720551, 0.383723, -0.577549, 0, 0.832921, 0.553392, 0.693402, -0.398747, 0.600162, -8.65174, 6.441, 6.68209)
 light_color = Color(1, 0.11, 0.11, 1)
 light_energy = 16.0
-light_size = 3.0
+light_size = 1.0
+light_specular = 0.1
 shadow_enabled = true
-shadow_blur = 0.5
-spot_range = 43.892
-spot_angle = 36.8368
+shadow_bias = 0.04
+spot_range = 23.064
+spot_attenuation = 0.3
 
 [node name="LightRight" type="SpotLight3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(0.652098, -0.104201, 0.750939, 0, 0.990509, 0.137445, -0.758134, -0.0896274, 0.64591, 6.968, 5.274, 6.753)
-visible = false
-light_color = Color(0.614333, 0.11, 1, 1)
-light_energy = 16.0
-light_size = 3.0
+transform = Transform3D(0.711885, -0.460246, 0.530466, 0.0999514, 0.814039, 0.572146, -0.695147, -0.354281, 0.625504, 7.74783, 8.51745, 7.10884)
+light_color = Color(0.781815, 0, 0.294521, 1)
 shadow_enabled = true
-shadow_blur = 0.5
-spot_range = 43.892
-spot_angle = 36.8368
+shadow_bias = 0.01
+shadow_blur = 0.884
+spot_range = 50.0
+spot_attenuation = 0.5
 
 [node name="PlantModel" parent="." instance=ExtResource("9_c3a4o")]
 unique_name_in_owner = true
@@ -201,6 +198,5 @@ num_meshes = 32000
 
 [node name="M8Model" parent="." instance=ExtResource("7_y135g")]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.410945, 0)
 
 [editable path="Camera3D"]

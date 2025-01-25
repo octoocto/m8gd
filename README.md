@@ -219,6 +219,7 @@ This project has been tested to work on [Godot 4.3-stable](https://godotengine.o
 # Credits
 
 - Thanks to laamaa for creating [m8c](https://github.com/laamaa/m8c)! This was used as a reference when creating `libm8gd`.
+- Thanks to rm for creating a model of the M8 M:02!
 - m8stealth57 and m8stealth89 fonts by Trash80. These fonts were converted to bitmaps.
 - [M8 Tracker 3D Model](https://sketchfab.com/3d-models/dirtywave-m8-tracker-05ba530f902e4474b0e01ae2750eec3c) by David Junghanns
 - [Prototype Textures](https://kenney-assets.itch.io/prototype-textures) by Kenney
