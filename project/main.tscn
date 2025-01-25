@@ -69,6 +69,7 @@ shader_parameter/tint_color = Color(1, 1, 1, 1)
 shader_parameter/tint_amount = 0.0
 shader_parameter/brightness = 1.2
 shader_parameter/noise_strength = 0.0
+shader_parameter/noise_speed = 1.0
 shader_parameter/noise_texture = SubResource("NoiseTexture2D_lsac7")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_x0ssf"]
@@ -169,6 +170,7 @@ shader_parameter/tint_color = Color(1, 1, 1, 1)
 shader_parameter/tint_amount = 0.0
 shader_parameter/brightness = 1.0
 shader_parameter/noise_strength = 0.015
+shader_parameter/noise_speed = 1.0
 shader_parameter/noise_texture = SubResource("NoiseTexture2D_m6tfj")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0a764"]

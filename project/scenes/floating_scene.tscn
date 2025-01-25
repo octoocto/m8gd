@@ -27,6 +27,7 @@ shader_parameter/tint_color = Color(1, 1, 1, 1)
 shader_parameter/tint_amount = 0.0
 shader_parameter/brightness = 1.0
 shader_parameter/noise_strength = 0.0
+shader_parameter/noise_speed = 1.0
 shader_parameter/noise_texture = SubResource("NoiseTexture2D_t5wih")
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_h8o1l"]
