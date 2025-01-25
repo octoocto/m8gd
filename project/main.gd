@@ -472,6 +472,7 @@ func m8_device_connect(port: String) -> void:
 
 	if !m8_client.connect(port):
 		menu.set_status_serialport("Failed: failed to connect to port: %s" % port)
+		is_waiting_for_device = false
 		return
 
 	m8_is_connected = true
