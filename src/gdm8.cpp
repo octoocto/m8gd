@@ -120,6 +120,8 @@ void M8GD::_bind_methods()
 	ClassDB::bind_method(D_METHOD("connect", "device"), &M8GD::connect);
 	ClassDB::bind_method(D_METHOD("is_connected"), &M8GD::is_connected);
 	ClassDB::bind_method(D_METHOD("disconnect"), &M8GD::disconnect);
+	ClassDB::bind_method(D_METHOD("get_hardware_name"), &M8GD::get_hardware_name);
+	ClassDB::bind_method(D_METHOD("get_firmware_version"), &M8GD::get_firmware_version);
 
 	ClassDB::bind_method(D_METHOD("is_key_pressed"), &M8GD::is_key_pressed);
 	ClassDB::bind_method(D_METHOD("get_key_state"), &M8GD::get_key_state);

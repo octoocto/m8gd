@@ -130,6 +130,14 @@ public:
 	/// @return true if there is an M8 currently connected
 	bool is_connected();
 
+	/// @brief Returns the hardware name of the current or last connected device.
+	/// @return the hardware name of the connected device
+	String get_hardware_name() { return sys_hardware; }
+
+	/// @brief Returns the firmware version of the current or last connected device.
+	/// @return the firmware version of the connected device
+	String get_firmware_version() { return sys_firmware; }
+
 public:
 	// display methods
 
