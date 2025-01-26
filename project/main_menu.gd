@@ -689,6 +689,7 @@ func _init_menu_devices() -> void:
 
 	%ButtonDisconnectSerialPort.pressed.connect(func() -> void:
 		main.m8_device_disconnect(false)
+		%ButtonConnectSerialPort.text = "Connect"
 	)
 
 	# audio devices
@@ -731,6 +732,9 @@ func _init_menu_devices() -> void:
 
 	%ButtonDisconnectAudioDevice.pressed.connect(func() -> void:
 		main.m8_audio_disconnect(false)
+		%ButtonConnectAudioDevice.text = "Connect"
+		%ButtonDisconnectAudioDevice.disabled = true
+		%ButtonHardResetAudioDevice.disabled = true
 	)
 
 	get_tree().process_frame.connect(func() -> void:
