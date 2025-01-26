@@ -190,23 +190,12 @@ m8gd will also detect if the audio device is connected but not playing (this may
 
 At this time, the macOS build included in the releases does not have an official Apple Developer code signature and will likely not start as-is. 
 
-Please read [this guide](https://docs.godotengine.org/en/stable/tutorials/export/running_on_macos.html#app-is-signed-including-ad-hoc-signatures-but-not-notarized) from the Godot docs on how to allow m8gd to run.
-
-The macOS build is also compiled specifically for x86_64 CPUs. If you are on a macOS system with the M1 chip or newer, enabling "Open using Rosetta" in the app's info window is also needed for it to start.
-
-## Running on Steam Deck
-
-On the Steam Deck, installing the `libserialport` package via `pacman` is required to run m8gd. Assuming you've already set up a `sudo` password, run the below commands in Desktop Mode with Konsole to install `libserialport`.
-
-Note: this will temporarily disable read-only mode on the Steam Deck. This also means that `libserialport` will have to be installed again when SteamOS updates.
-
-```sh
-$ sudo steamos-readonly disable
-$ sudo pacman-key init
-$ sudo pacman-key --populate archlinux
-$ sudo pacman -S libserialport
-$ sudo steamos-readonly enable
+To allow the app to run, run the following command (replace `"m8gd.app"` with the location of the downloaded app if needed):
 ```
+$ xattr -dr com.apple.quarantine "m8gd.app"
+```
+
+Please read [this guide](https://docs.godotengine.org/en/stable/tutorials/export/running_on_macos.html#app-is-signed-including-ad-hoc-signatures-but-not-notarized) from the Godot docs for more info on this workaround.
 
 # Editing
 
