@@ -624,6 +624,12 @@ func _init_menu_model() -> void:
 
 	# Model settings
 
+	%Setting_ModelType.init_config_profile(main, "model_type", func(value: int) -> void:
+		if not _model(): return
+		_model().model_auto = value == 0
+		if value == 1: _model().model = 0
+		elif value == 2: _model().model = 1
+	)
 	%Setting_ModelHighlightOpacity.init_config_profile(main, "model_hl_opacity", func(value: float) -> void:
 		if _model(): _model().highlight_opacity = value
 	)
@@ -639,11 +645,13 @@ func _init_menu_model() -> void:
 
 		for setting in color_settings:
 			setting.enabled = enabled
+			%Setting_ModelType.enabled = enabled
 			%Setting_ModelHighlightOpacity.enabled = enabled
 			%Setting_ModelScreenFilter.enabled = enabled
 			%Setting_ModelScreenEmission.enabled = enabled
 
 		if enabled:
+			%Setting_ModelType.reinit()
 			%Setting_ModelHighlightOpacity.reinit()
 			%Setting_ModelScreenFilter.reinit()
 			%Setting_ModelScreenEmission.reinit()

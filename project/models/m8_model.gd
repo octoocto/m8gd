@@ -1,6 +1,11 @@
 class_name DeviceModel extends StaticBody3D
 
-@export_enum("Model 01", "Model 02") var model := 0:
+@export var model_auto := true:
+	set(value):
+		model_auto = value
+		if value: _auto_model_type()
+
+@export_enum("M8 M:01", "M8 M:02") var model := 0:
 	set(value):
 		model = value
 		_update_model()
@@ -15,6 +20,8 @@ class_name DeviceModel extends StaticBody3D
 @export var key_play := false
 @export var key_option := false
 @export var key_edit := false
+
+var _main: Main
 
 var _node_prefix := "M01_"
 
@@ -73,6 +80,8 @@ func _physics_process(_delta: float) -> void:
 
 func init(main: Main) -> void:
 
+	_main = main
+
 	screen_material.set_shader_parameter("texture_linear", main.m8_client.get_display())
 	screen_material.set_shader_parameter("texture_nearest", main.m8_client.get_display())
 
@@ -108,8 +117,8 @@ func init(main: Main) -> void:
 				key_play = pressed
 	)
 
-	main.m8_client.system_info.connect(func(hw: String, _fw: String) -> void:
-		model = 1 if hw == "model_02" else 0
+	main.m8_client.system_info.connect(func(_hw: String, _fw: String) -> void:
+		_auto_model_type()
 	)
 
 ##
@@ -170,6 +179,10 @@ func set_screen_filter(use_linear_filter: bool) -> void:
 ##
 func set_screen_emission(emission: float) -> void:
 	screen_material.set_shader_parameter("emission_amount", emission)
+
+func _auto_model_type() -> void:
+	if not is_inside_tree(): return
+	if model_auto: model = 1 if _main.m8_client.get_hardware_name() == "model_02" else 0
 
 func _update_model() -> void:
 	if not is_inside_tree(): return
