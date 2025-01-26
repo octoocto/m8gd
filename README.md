@@ -76,18 +76,19 @@ Various filters/shaders can be toggled on/off and configured in the main menu.
 ### General
 
 Action               | Binding
----------------------|----------
+---------------------|--------------------------
 Open/Close Main Menu | ESC
 Toggle Fullscreen    | Alt+Enter
+Drag Window          | Hold Alt+LMB & Mouse Move
 Take Screenshot      | F12
 
 ### Camera controls (only applicable to 3D scenes)
 
 Action                                                    | Binding
-----------------------------------------------------------|-----------------------
+----------------------------------------------------------|---------------------
 Pan camera                                                | Mouse Move
-Zoom camera                                               | Hold Mouse Right-Click
-Move camera mode (when in camera or scene menu)           | Hold Mouse Right-Click
+Zoom camera                                               | Hold RMB
+Move camera mode (when in camera or scene menu)           | Hold RMB
 Move camera (when in "move camera mode")                  | WASD
 Adjust camera angle (when in "move camera mode")          | Mouse Move
 Adjust camera focal distance (when in "move camera mode") | Mouse Scroll Up/Down
