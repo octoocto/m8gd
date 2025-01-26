@@ -46,6 +46,7 @@ var current_audio_device: String = ""
 
 ## if true, keep scanning for devices until one is found
 var is_waiting_for_device := true
+var is_waiting_for_audio_device := true
 
 ## true if audio device is in the middle of connecting
 var is_audio_connecting := false
@@ -139,7 +140,7 @@ func _process(_delta: float) -> void:
 	if m8_is_connected:
 		if m8_audio_connected:
 			m8_audio_check()
-		else:
+		elif is_waiting_for_audio_device:
 			m8_audio_connect_auto()
 
 	%LabelFPS.text = "%d" % Engine.get_frames_per_second()
@@ -549,6 +550,7 @@ func m8_audio_connect(device_name: String, hard_reset: bool = false) -> void:
 	audio_monitor.playing = true
 	m8_audio_connected = true
 	is_audio_connecting = false
+	is_waiting_for_device = true # auto connect again if there are any random disconnects
 	audio_set_muted(false)
 
 	current_audio_device = device_name
@@ -572,13 +574,14 @@ func m8_audio_connect_auto() -> void:
 ##
 ## Disconnect the M8 audio device from the monitor.
 ##
-func m8_audio_disconnect() -> void:
+func m8_audio_disconnect(wait_for_device := true) -> void:
 	m8_audio_connected = false
 	AudioServer.input_device = "Default"
 	audio_monitor.playing = false
 	current_audio_device = ""
 	print("audio: disconnected")
 	menu.set_status_audiodevice("Not connected (Disconnected)")
+	is_waiting_for_audio_device = wait_for_device
 
 ## Check if the M8 audio device still exists. If not, disconnect.
 func m8_audio_check() -> void:

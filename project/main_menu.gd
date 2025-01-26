@@ -730,7 +730,7 @@ func _init_menu_devices() -> void:
 	)
 
 	%ButtonDisconnectAudioDevice.pressed.connect(func() -> void:
-		main.m8_audio_disconnect()
+		main.m8_audio_disconnect(false)
 	)
 
 	get_tree().process_frame.connect(func() -> void:
