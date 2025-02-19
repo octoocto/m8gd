@@ -352,8 +352,9 @@ func get_property_global(property: String) -> Variant:
 ## Set a profile's hotkey to an [InputEvent].
 ##
 func set_profile_hotkey(profile_name: String, event: InputEvent) -> void:
-	profile_hotkeys[profile_name] = event
-	_print("set profile hotkey: %s -> %s" % [event.as_text(), profile_name])
+	if event:
+		profile_hotkeys[profile_name] = event
+		_print("set profile hotkey: %s -> %s" % [event.as_text(), profile_name])
 
 ##
 ## Returns a profile's hotkey ([InputEvent]). If the profile does not have a hotkey,
