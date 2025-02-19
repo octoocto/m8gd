@@ -170,7 +170,7 @@ func get_current_scene_path() -> String:
 ## The current scene of the new profile will be the same as the one used by
 ## the current profile.
 ##
-func init_profile(profile_name: String) -> void:
+func init_profile(profile_name: String, use_current_profile_settings := true) -> void:
 
 	var scene_file_path: String
 
@@ -181,11 +181,14 @@ func init_profile(profile_name: String) -> void:
 		scene_file_path = get_current_scene_path()
 
 	if profile_name not in profiles.keys():
-		profiles[profile_name] = {
-			"scene_file_path": scene_file_path,
-			"scene_properties": {},
-			"properties": {}
-		}
+		if use_current_profile_settings:
+			profiles[profile_name] = profiles[current_profile].duplicate(true)
+		else:
+			profiles[profile_name] = {
+				"scene_file_path": scene_file_path,
+				"scene_properties": {},
+				"properties": {}
+			}
 		_print("init profile: %s" % profile_name)
 
 func list_profile_names() -> Array:
@@ -222,7 +225,7 @@ func create_new_profile() -> String:
 
 	while true:
 		if profile_name not in profiles.keys():
-			init_profile(profile_name)
+			init_profile(profile_name, true)
 			_print("created profile: %s" % [profile_name])
 			return profile_name
 
@@ -270,7 +273,9 @@ func use_scene(scene: M8Scene) -> void:
 	profiles[current_profile]["scene_file_path"] = scene.scene_file_path
 	_print("USING scene file path: %s" % scene.scene_file_path)
 
+##
 ## Get the scene properties dict for the current profile/scene.
+##
 func _get_scene_properties() -> Dictionary:
 	var profile: Dictionary = profiles[current_profile]
 	var scene_file_path: String = profile["scene_file_path"]
@@ -281,6 +286,12 @@ func _get_scene_properties() -> Dictionary:
 		_print("INIT scene props for scene: %s" % scene_file_path)
 
 	return scene_prop_dict[scene_file_path]
+
+##
+## Get the properties dict for the current profile.
+##
+func _get_profile_properties() -> Dictionary:
+	return profiles[current_profile]["properties"]
 
 ##
 ## Get a scene property for the current profile and current scene.
@@ -311,7 +322,7 @@ func set_property_scene(propname: String, value: Variant) -> void:
 ## Get a property for the current profile.
 ##
 func get_property(propname: String, default: Variant = null) -> Variant:
-	var props: Dictionary = profiles[current_profile]["properties"]
+	var props := _get_profile_properties()
 
 	# set parameter from config, or add parameter to config
 	if !props.has(propname) or props[propname] == null:
@@ -325,7 +336,8 @@ func get_property(propname: String, default: Variant = null) -> Variant:
 ## Set a property for the current profile.
 ##
 func set_property(propname: String, value: Variant) -> void:
-	var props: Dictionary = profiles[current_profile]["properties"]
+	var props := _get_profile_properties()
+
 	if !props.has(propname) or props[propname] != value:
 		props[propname] = value
 		_print("SET profile prop: %s = %s" % [propname, value])
