@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://overlays/overlay_keys_item.gd" id="1_mywub"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3p6tf"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jjcqt"]
 content_margin_left = 8.0
 content_margin_top = 4.0
 content_margin_right = 8.0
@@ -16,16 +16,16 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 anti_aliasing = false
 
-[sub_resource type="SystemFont" id="SystemFont_lr6i7"]
+[sub_resource type="SystemFont" id="SystemFont_cww7n"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_juhaw"]
-font = SubResource("SystemFont_lr6i7")
+[sub_resource type="LabelSettings" id="LabelSettings_ofas3"]
+font = SubResource("SystemFont_cww7n")
 font_color = Color(0, 0, 0, 1)
 
-[sub_resource type="LabelSettings" id="LabelSettings_4b385"]
-font = SubResource("SystemFont_lr6i7")
+[sub_resource type="LabelSettings" id="LabelSettings_p2rah"]
+font = SubResource("SystemFont_cww7n")
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2hyos"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7gtvo"]
 content_margin_left = 8.0
 content_margin_top = 4.0
 content_margin_right = 8.0
@@ -39,14 +39,14 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 anti_aliasing = false
 
-[sub_resource type="LabelSettings" id="LabelSettings_ptnug"]
-font = SubResource("SystemFont_lr6i7")
+[sub_resource type="LabelSettings" id="LabelSettings_5b44x"]
+font = SubResource("SystemFont_cww7n")
 font_color = Color(0, 0, 0, 1)
 
-[sub_resource type="LabelSettings" id="LabelSettings_11k4q"]
-font = SubResource("SystemFont_lr6i7")
+[sub_resource type="LabelSettings" id="LabelSettings_ycm8n"]
+font = SubResource("SystemFont_cww7n")
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g6rgt"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dxqha"]
 content_margin_left = 8.0
 content_margin_top = 4.0
 content_margin_right = 8.0
@@ -60,14 +60,14 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 anti_aliasing = false
 
-[sub_resource type="LabelSettings" id="LabelSettings_joysl"]
-font = SubResource("SystemFont_lr6i7")
+[sub_resource type="LabelSettings" id="LabelSettings_i5bq3"]
+font = SubResource("SystemFont_cww7n")
 font_color = Color(0, 0, 0, 1)
 
-[sub_resource type="LabelSettings" id="LabelSettings_bmr0q"]
-font = SubResource("SystemFont_lr6i7")
+[sub_resource type="LabelSettings" id="LabelSettings_msyyv"]
+font = SubResource("SystemFont_cww7n")
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j021h"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_estcl"]
 content_margin_left = 8.0
 content_margin_top = 4.0
 content_margin_right = 8.0
@@ -81,14 +81,14 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 anti_aliasing = false
 
-[sub_resource type="LabelSettings" id="LabelSettings_y5itg"]
-font = SubResource("SystemFont_lr6i7")
+[sub_resource type="LabelSettings" id="LabelSettings_5yn8b"]
+font = SubResource("SystemFont_cww7n")
 font_color = Color(0, 0, 0, 1)
 
-[sub_resource type="LabelSettings" id="LabelSettings_7uycl"]
-font = SubResource("SystemFont_lr6i7")
+[sub_resource type="LabelSettings" id="LabelSettings_mdll3"]
+font = SubResource("SystemFont_cww7n")
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cn8cc"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_33slu"]
 content_margin_left = 8.0
 content_margin_top = 4.0
 content_margin_right = 8.0
@@ -102,14 +102,14 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 anti_aliasing = false
 
-[sub_resource type="LabelSettings" id="LabelSettings_t4jgw"]
-font = SubResource("SystemFont_lr6i7")
+[sub_resource type="LabelSettings" id="LabelSettings_mqqdo"]
+font = SubResource("SystemFont_cww7n")
 font_color = Color(0, 0, 0, 1)
 
-[sub_resource type="LabelSettings" id="LabelSettings_j2i5a"]
-font = SubResource("SystemFont_lr6i7")
+[sub_resource type="LabelSettings" id="LabelSettings_ifsvs"]
+font = SubResource("SystemFont_cww7n")
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k5g8c"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t4lqs"]
 content_margin_left = 8.0
 content_margin_top = 4.0
 content_margin_right = 8.0
@@ -123,14 +123,14 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 anti_aliasing = false
 
-[sub_resource type="LabelSettings" id="LabelSettings_uqld2"]
-font = SubResource("SystemFont_lr6i7")
+[sub_resource type="LabelSettings" id="LabelSettings_rx324"]
+font = SubResource("SystemFont_cww7n")
 font_color = Color(0, 0, 0, 1)
 
-[sub_resource type="LabelSettings" id="LabelSettings_amaoy"]
-font = SubResource("SystemFont_lr6i7")
+[sub_resource type="LabelSettings" id="LabelSettings_c3n7y"]
+font = SubResource("SystemFont_cww7n")
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3dn60"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w7csk"]
 content_margin_left = 8.0
 content_margin_top = 4.0
 content_margin_right = 8.0
@@ -144,14 +144,14 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 anti_aliasing = false
 
-[sub_resource type="LabelSettings" id="LabelSettings_54w5l"]
-font = SubResource("SystemFont_lr6i7")
+[sub_resource type="LabelSettings" id="LabelSettings_mxvk2"]
+font = SubResource("SystemFont_cww7n")
 font_color = Color(0, 0, 0, 1)
 
-[sub_resource type="LabelSettings" id="LabelSettings_wmqj2"]
-font = SubResource("SystemFont_lr6i7")
+[sub_resource type="LabelSettings" id="LabelSettings_84do1"]
+font = SubResource("SystemFont_cww7n")
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_if7qr"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tsbvf"]
 content_margin_left = 8.0
 content_margin_top = 4.0
 content_margin_right = 8.0
@@ -165,12 +165,12 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 anti_aliasing = false
 
-[sub_resource type="LabelSettings" id="LabelSettings_crvcv"]
-font = SubResource("SystemFont_lr6i7")
+[sub_resource type="LabelSettings" id="LabelSettings_n1fgh"]
+font = SubResource("SystemFont_cww7n")
 font_color = Color(0, 0, 0, 1)
 
-[sub_resource type="LabelSettings" id="LabelSettings_0yt31"]
-font = SubResource("SystemFont_lr6i7")
+[sub_resource type="LabelSettings" id="LabelSettings_ttls2"]
+font = SubResource("SystemFont_cww7n")
 
 [node name="OverlayKeysItem" type="HBoxContainer"]
 offset_right = 16.0
@@ -182,142 +182,142 @@ style_padding = Vector2i(8, 4)
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_3p6tf")
+theme_override_styles/panel = SubResource("StyleBoxFlat_jjcqt")
 
 [node name="Label" type="Label" parent="Shift"]
 layout_mode = 2
 text = "SHIFT"
-label_settings = SubResource("LabelSettings_juhaw")
+label_settings = SubResource("LabelSettings_ofas3")
 
 [node name="ShiftPlus" type="Label" parent="."]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 text = "+"
-label_settings = SubResource("LabelSettings_4b385")
+label_settings = SubResource("LabelSettings_p2rah")
 
 [node name="Up" type="PanelContainer" parent="."]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_2hyos")
+theme_override_styles/panel = SubResource("StyleBoxFlat_7gtvo")
 
 [node name="Label" type="Label" parent="Up"]
 layout_mode = 2
 text = "UP"
-label_settings = SubResource("LabelSettings_ptnug")
+label_settings = SubResource("LabelSettings_5b44x")
 
 [node name="UpPlus" type="Label" parent="."]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 text = "+"
-label_settings = SubResource("LabelSettings_11k4q")
+label_settings = SubResource("LabelSettings_ycm8n")
 
 [node name="Down" type="PanelContainer" parent="."]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_g6rgt")
+theme_override_styles/panel = SubResource("StyleBoxFlat_dxqha")
 
 [node name="Label" type="Label" parent="Down"]
 layout_mode = 2
 text = "DOWN"
-label_settings = SubResource("LabelSettings_joysl")
+label_settings = SubResource("LabelSettings_i5bq3")
 
 [node name="DownPlus" type="Label" parent="."]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 text = "+"
-label_settings = SubResource("LabelSettings_bmr0q")
+label_settings = SubResource("LabelSettings_msyyv")
 
 [node name="Left" type="PanelContainer" parent="."]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_j021h")
+theme_override_styles/panel = SubResource("StyleBoxFlat_estcl")
 
 [node name="Label" type="Label" parent="Left"]
 layout_mode = 2
 text = "LEFT"
-label_settings = SubResource("LabelSettings_y5itg")
+label_settings = SubResource("LabelSettings_5yn8b")
 
 [node name="LeftPlus" type="Label" parent="."]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 text = "+"
-label_settings = SubResource("LabelSettings_7uycl")
+label_settings = SubResource("LabelSettings_mdll3")
 
 [node name="Right" type="PanelContainer" parent="."]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_cn8cc")
+theme_override_styles/panel = SubResource("StyleBoxFlat_33slu")
 
 [node name="Label" type="Label" parent="Right"]
 layout_mode = 2
 text = "RIGHT"
-label_settings = SubResource("LabelSettings_t4jgw")
+label_settings = SubResource("LabelSettings_mqqdo")
 
 [node name="RightPlus" type="Label" parent="."]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 text = "+"
-label_settings = SubResource("LabelSettings_j2i5a")
+label_settings = SubResource("LabelSettings_ifsvs")
 
 [node name="Option" type="PanelContainer" parent="."]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_k5g8c")
+theme_override_styles/panel = SubResource("StyleBoxFlat_t4lqs")
 
 [node name="Label" type="Label" parent="Option"]
 layout_mode = 2
 text = "OPTION"
-label_settings = SubResource("LabelSettings_uqld2")
+label_settings = SubResource("LabelSettings_rx324")
 
 [node name="OptionPlus" type="Label" parent="."]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 text = "+"
-label_settings = SubResource("LabelSettings_amaoy")
+label_settings = SubResource("LabelSettings_c3n7y")
 
 [node name="Edit" type="PanelContainer" parent="."]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_3dn60")
+theme_override_styles/panel = SubResource("StyleBoxFlat_w7csk")
 
 [node name="Label" type="Label" parent="Edit"]
 layout_mode = 2
 text = "EDIT"
-label_settings = SubResource("LabelSettings_54w5l")
+label_settings = SubResource("LabelSettings_mxvk2")
 
 [node name="EditPlus" type="Label" parent="."]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 text = "+"
-label_settings = SubResource("LabelSettings_wmqj2")
+label_settings = SubResource("LabelSettings_84do1")
 
 [node name="Play" type="PanelContainer" parent="."]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_if7qr")
+theme_override_styles/panel = SubResource("StyleBoxFlat_tsbvf")
 
 [node name="Label" type="Label" parent="Play"]
 layout_mode = 2
 text = "PLAY"
-label_settings = SubResource("LabelSettings_crvcv")
+label_settings = SubResource("LabelSettings_n1fgh")
 
 [node name="Times" type="Label" parent="."]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 text = "x1"
-label_settings = SubResource("LabelSettings_0yt31")
+label_settings = SubResource("LabelSettings_ttls2")

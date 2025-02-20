@@ -42,7 +42,7 @@ const KEY_ITEM := preload("res://overlays/overlay_keys_item.tscn")
 
 @onready var current_fade_tween: Tween # tween for scroll animation
 
-@onready var current_item: HBoxContainer # last added item in the key overlay list
+@onready var current_item: OverlayKeysItem # last added item in the key overlay list
 @onready var current_keystate: int = -1 # bitfield of the pressed keys for the current item
 
 func _ready() -> void:
@@ -71,6 +71,7 @@ func init(p_main: Main) -> void:
 			return
 		elif key in [M8GD.M8_KEY_UP, M8GD.M8_KEY_DOWN, M8GD.M8_KEY_LEFT, M8GD.M8_KEY_RIGHT]:
 			if (main.m8_is_key_pressed(M8GD.M8_KEY_SHIFT) and
+				current_item and
 				current_item.pressed_times == 1 and
 				current_item.keys_pressed == 1
 			):
@@ -140,6 +141,21 @@ func update_current_item() -> void:
 		return
 
 	current_keystate = main.m8_client.get_key_state()
+
+	current_item.style_background_enabled = style_background_enabled
+	current_item.style_corner_radius = style_corner_radius
+	current_item.style_border_width_bottom = style_border_width_bottom
+	current_item.style_padding = style_padding
+
+	current_item.color_d = color_directional
+	current_item.color_o = color_option
+	current_item.color_e = color_edit
+	current_item.color_s = color_shift
+	current_item.color_p = color_play
+
+	current_item.style_font_family = style_font_family
+	current_item.style_font_weight = style_font_weight
+	current_item.style_font_size = style_font_size
 
 	current_item.pressed_u = main.m8_is_key_pressed(M8GD.M8_KEY_UP)
 	current_item.pressed_d = main.m8_is_key_pressed(M8GD.M8_KEY_DOWN)

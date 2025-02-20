@@ -1,5 +1,5 @@
 @tool
-extends HBoxContainer
+class_name OverlayKeysItem extends HBoxContainer
 
 @export var pressed_u := false:
 	set(value): pressed_u = value; _update()
