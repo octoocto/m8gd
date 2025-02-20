@@ -209,6 +209,13 @@ func _input(event: InputEvent) -> void:
 			else:
 				get_window().mode = Window.MODE_WINDOWED
 
+		# manual reset audio
+		if event.pressed and event.keycode == KEY_R and event.ctrl_pressed:
+			if m8_audio_connected:
+				var audio_device := current_audio_device
+				m8_audio_disconnect(false)
+				m8_audio_connect(audio_device)
+
 		if event.pressed and event.keycode == KEY_ESCAPE:
 
 			if %SplashContainer.visible:
