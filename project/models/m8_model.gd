@@ -21,7 +21,7 @@ class_name DeviceModel extends StaticBody3D
 @export var key_option := false
 @export var key_edit := false
 
-var _main: Main
+var main: Main
 
 var _node_prefix := "M01_"
 
@@ -42,7 +42,6 @@ func _ready() -> void:
 		_node_origin_positions[keycap] = keycap.position
 
 	# %M02_Screen.material_override = %M01_Screen.material_override
-	_update_model()
 
 func _physics_process(_delta: float) -> void:
 	# translation of keys that are pressed
@@ -78,9 +77,9 @@ func _physics_process(_delta: float) -> void:
 	key_s.material_overlay.albedo_color.a = highlight_opacity if key_shift else 0.0
 	key_p.material_overlay.albedo_color.a = highlight_opacity if key_play else 0.0
 
-func init(main: Main) -> void:
+func init(p_main: Main) -> void:
 
-	_main = main
+	main = p_main
 
 	screen_material.set_shader_parameter("texture_linear", main.m8_client.get_display())
 	screen_material.set_shader_parameter("texture_nearest", main.m8_client.get_display())
@@ -120,6 +119,8 @@ func init(main: Main) -> void:
 	main.m8_client.system_info.connect(func(_hw: String, _fw: String) -> void:
 		_auto_model_type()
 	)
+
+	_update_model()
 
 ##
 ## Sets the color of a key cap. [key_name] must be capitalized and
@@ -182,12 +183,38 @@ func set_screen_emission(emission: float) -> void:
 
 func _auto_model_type() -> void:
 	if not is_inside_tree(): return
-	if model_auto: model = 1 if _main.m8_client.get_hardware_name() == "model_02" else 0
+	if model_auto: model = 1 if main.m8_client.get_hardware_name() == "model_02" else 0
 
 func _update_model() -> void:
 	if not is_inside_tree(): return
+
+	# update 3D model
 	_node_prefix = "M01_" if model == 0 else "M02_"
 	for child in get_children():
 		child.visible = child.name.begins_with(_node_prefix)
 		if child.name.ends_with("Stem"): # hide switch stems
 			child.visible = false
+
+	set_part_color("Body", main.config.get_property(&"model_color_body"))
+
+	# update 3D model screen
+	set_screen_filter(main.config.get_property(&"model_screen_linear_filter"))
+	set_screen_emission(main.config.get_property(&"model_screen_emission"))
+
+	# update keycap colors
+	for key_name: String in ["Up", "Down", "Left", "Right", "Option", "Edit", "Shift", "Play"]:
+		var property := StringName("model_color_key_%s" % key_name.to_lower())
+		set_key_cap_color(key_name, main.config.get_property(property))
+
+	# update highlight colors
+	for key_name: String in ["Up", "Down", "Left", "Right"]:
+		var property := StringName("hl_color_directional")
+		set_key_highlight_color(key_name, main.config.get_property(property))
+
+	for key_name: String in ["Option", "Edit", "Shift", "Play"]:
+		var property := StringName("hl_color_%s" % key_name.to_lower())
+		set_key_highlight_color(key_name, main.config.get_property(property))
+
+	highlight_opacity = main.config.get_property(&"model_hl_opacity")
+
+	print("m8_model.gd: updated model")

@@ -66,17 +66,17 @@ func init(p_main: Main) -> void:
 	main.m8_client.key_pressed.connect(func(key: int, pressed: bool) -> void:
 		if not pressed: return
 
-		if main.m8_client.get_key_state() == current_keystate:
-			inc_current_item()
-			return
-		elif key in [M8GD.M8_KEY_UP, M8GD.M8_KEY_DOWN, M8GD.M8_KEY_LEFT, M8GD.M8_KEY_RIGHT]:
-			if (main.m8_is_key_pressed(M8GD.M8_KEY_SHIFT) and
-				current_item and
-				current_item.pressed_times == 1 and
-				current_item.keys_pressed == 1
-			):
-				update_current_item()
+		if is_instance_valid(current_item):
+			if main.m8_client.get_key_state() == current_keystate:
+				inc_current_item()
 				return
+			elif key in [M8GD.M8_KEY_UP, M8GD.M8_KEY_DOWN, M8GD.M8_KEY_LEFT, M8GD.M8_KEY_RIGHT]:
+				if (main.m8_is_key_pressed(M8GD.M8_KEY_SHIFT) and
+					current_item.pressed_times == 1 and
+					current_item.keys_pressed == 1
+				):
+					update_current_item()
+					return
 
 		# add a new item
 		add_item()
@@ -125,8 +125,17 @@ func add_item() -> void:
 	%VBoxContainer.add_child(current_item)
 	update_current_item()
 
+	# remove front item if over max
+	if %VBoxContainer.get_children().size() > MAX_ITEMS:
+		var child := %VBoxContainer.get_child(3)
+		%VBoxContainer.remove_child(child)
+
+	_restart_fade_tween()
+
+func _restart_fade_tween() -> void:
 	if current_fade_tween: current_fade_tween.kill()
 	current_fade_tween = create_tween()
+	current_fade_tween.tween_property(current_item, "modulate:a", 1, 0.0).set_ease(Tween.EASE_IN)
 	current_fade_tween.tween_property(current_item, "modulate:a", 0, 10.0).set_ease(Tween.EASE_IN)
 	current_fade_tween.tween_callback(func() -> void:
 		if is_instance_valid(current_item):
@@ -137,26 +146,11 @@ func add_item() -> void:
 ## Update the current item in the key overlay list.
 ##
 func update_current_item() -> void:
-	if !is_inside_tree() or !is_instance_valid(current_item):
+	if not is_inside_tree() or not is_instance_valid(current_item):
 		return
-
+		
 	current_keystate = main.m8_client.get_key_state()
-
-	current_item.style_background_enabled = style_background_enabled
-	current_item.style_corner_radius = style_corner_radius
-	current_item.style_border_width_bottom = style_border_width_bottom
-	current_item.style_padding = style_padding
-
-	current_item.color_d = color_directional
-	current_item.color_o = color_option
-	current_item.color_e = color_edit
-	current_item.color_s = color_shift
-	current_item.color_p = color_play
-
-	current_item.style_font_family = style_font_family
-	current_item.style_font_weight = style_font_weight
-	current_item.style_font_size = style_font_size
-
+	update_item(current_item)
 	current_item.pressed_u = main.m8_is_key_pressed(M8GD.M8_KEY_UP)
 	current_item.pressed_d = main.m8_is_key_pressed(M8GD.M8_KEY_DOWN)
 	current_item.pressed_l = main.m8_is_key_pressed(M8GD.M8_KEY_LEFT)
@@ -165,10 +159,26 @@ func update_current_item() -> void:
 	current_item.pressed_e = main.m8_is_key_pressed(M8GD.M8_KEY_EDIT)
 	current_item.pressed_s = main.m8_is_key_pressed(M8GD.M8_KEY_SHIFT)
 	current_item.pressed_p = main.m8_is_key_pressed(M8GD.M8_KEY_PLAY)
+	_restart_fade_tween()
 
-	if %VBoxContainer.get_children().size() > MAX_ITEMS:
-		var child := %VBoxContainer.get_child(3)
-		%VBoxContainer.remove_child(child)
+func update_item(item: OverlayKeysItem) -> void:
+	if not is_inside_tree() or not is_instance_valid(item):
+		return
+
+	item.style_background_enabled = style_background_enabled
+	item.style_corner_radius = style_corner_radius
+	item.style_border_width_bottom = style_border_width_bottom
+	item.style_padding = style_padding
+
+	item.color_d = main.config.get_property(&"hl_color_directional")
+	item.color_o = main.config.get_property(&"hl_color_option")
+	item.color_e = main.config.get_property(&"hl_color_edit")
+	item.color_s = main.config.get_property(&"hl_color_shift")
+	item.color_p = main.config.get_property(&"hl_color_play")
+
+	item.style_font_family = style_font_family
+	item.style_font_weight = style_font_weight
+	item.style_font_size = style_font_size
 
 ##
 ## Increment the displayed number of times the item was pressed for the current item.
@@ -186,7 +196,6 @@ func _update_colors() -> void:
 	color_option = color_option
 	color_edit = color_edit
 
-
 func _update() -> void:
 	if not is_inside_tree(): return
 
@@ -199,15 +208,4 @@ func _update() -> void:
 	anchors_preset = anchors_preset
 
 	for item in %VBoxContainer.get_children():
-		item.color_d = color_directional
-		item.color_o = color_option
-		item.color_e = color_edit
-		item.color_s = color_shift
-		item.color_p = color_play
-		item.style_background_enabled = style_background_enabled
-		item.style_corner_radius = style_corner_radius
-		item.style_border_width_bottom = style_border_width_bottom
-		item.style_padding = style_padding
-		item.style_font_family = style_font_family
-		item.style_font_weight = style_font_weight
-		item.style_font_size = style_font_size
+		update_item(item)

@@ -877,48 +877,8 @@ func _link_control_to_disable(setting: Control, control: Control) -> void:
 ## Try to return the device model in the current scene.
 ## If there isn't one, returns null.
 ##
-func _model(path: String = "") -> DeviceModel:
-	if main.current_scene and main.current_scene.has_device_model():
-		if path == "":
-			return main.current_scene.get_device_model()
-		else:
-			return main.current_scene.get_device_model().get_node(path)
-	else:
-		return null
-
-func update_device_colors() -> void:
-
-	var config := main.config
-
-	if _model():
-
-		_model().highlight_opacity = %SliderHL_Opacity.value
-
-		_model("%Body").material_override.albedo_color = config.model_color_body
-
-		# update model keycap and highlight colors
-		for arr: Array in [
-			[_model("%Keycap_Up"), config.hl_color_directional, config.model_color_key_up],
-			[_model("%Keycap_Down"), config.hl_color_directional, config.model_color_key_down],
-			[_model("%Keycap_Left"), config.hl_color_directional, config.model_color_key_left],
-			[_model("%Keycap_Right"), config.hl_color_directional, config.model_color_key_right],
-			[_model("%Keycap_Option"), config.hl_color_option, config.model_color_key_option],
-			[_model("%Keycap_Edit"), config.hl_color_edit, config.model_color_key_edit],
-			[_model("%Keycap_Shift"), config.hl_color_shift, config.model_color_key_shift],
-			[_model("%Keycap_Play"), config.hl_color_play, config.model_color_key_play],
-		]:
-			var keycap: MeshInstance3D = arr[0]
-			var color: Color = arr[2]
-			var hl_color: Color = arr[1]
-			keycap.material_override.albedo_color = color
-			keycap.material_overlay.albedo_color = hl_color
-
-	# update key overlay colors
-	main.overlay_keys.color_directional = config.hl_color_directional
-	main.overlay_keys.color_shift = config.hl_color_shift
-	main.overlay_keys.color_play = config.hl_color_play
-	main.overlay_keys.color_option = config.hl_color_option
-	main.overlay_keys.color_edit = config.hl_color_edit
+func _model() -> DeviceModel:
+	return main.get_scene_m8_model()
 
 func reset_key_rebinds() -> void:
 	for action: String in [

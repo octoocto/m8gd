@@ -281,34 +281,45 @@ func get_scene_name(scene_path: String) -> String:
 func load_scene(scene_path: String) -> bool:
 	return _start_task("load scene \"%s\"" % scene_path, func() -> bool:
 
+		var scene: M8Scene
 		var p_scene_path := scene_path
-		var scene := _load_scene_from_file_path(p_scene_path)
 
-		if !scene is M8Scene:
-			p_scene_path = MAIN_SCENE_PATH
-			scene = _load_scene_from_file_path(MAIN_SCENE_PATH)
+		if current_scene == null or scene_path != current_scene.scene_file_path:
+			print("load_scene(): loading new scene...")
 
-		# remove existing scene from viewport
-		if current_scene:
-			print("freeing current scene...")
-			scene_root.remove_child(current_scene)
-			current_scene.queue_free()
-			current_scene = null
+			scene = _load_scene_from_file_path(p_scene_path)
 
-		# add new scene and initialize
-		print("adding new scene...")
-		scene_root.add_child(scene)
+			if !scene is M8Scene:
+				p_scene_path = MAIN_SCENE_PATH
+				scene = _load_scene_from_file_path(MAIN_SCENE_PATH)
+
+			# remove existing scene from viewport if there is one
+			if current_scene:
+				print("freeing current scene...")
+				scene_root.remove_child(current_scene)
+				current_scene.queue_free()
+				current_scene = null
+
+			# add new scene
+			scene_root.add_child(scene)
+		else:
+			print("load_scene(): reloading same scene...")
+			scene = current_scene
+
+		print("load_scene(): initializing scene...")
+
+		# initialize scene and config
 		scene.init(self)
-		menu.update_device_colors()
 		config.use_scene(scene)
 		current_scene = scene
 
+		# initialize scene menu
 		menu_scene.clear_params()
 		menu_scene.init_menu()
 
 		scene_loaded.emit(p_scene_path, scene)
 
-		print("scene loaded!")
+		print("load_scene(): scene loaded!")
 
 		return true
 	)
@@ -359,14 +370,7 @@ func load_profile(profile_name: String) -> bool:
 		var scene_path := config.get_current_scene_path()
 		assert(scene_path != null)
 
-		if current_scene == null or scene_path != current_scene.scene_file_path:
-			load_scene(scene_path)
-		else: # just reset the scene menu (also loads properties from config)
-			menu_scene.clear_params()
-			current_scene.init(self)
-			current_scene.init_menu(menu_scene)
-			scene_loaded.emit(scene_path, current_scene)
-
+		load_scene(scene_path)
 		init_overlays()
 
 		profile_loaded.emit(profile_name)
@@ -449,6 +453,16 @@ func init_overlays() -> void:
 func get_scene_camera() -> M8SceneCamera3D:
 	if current_scene:
 		return current_scene.get_3d_camera()
+	else:
+		return null
+
+##
+## Try to return the device model in the current scene.
+## If there isn't one, returns null.
+##
+func get_scene_m8_model() -> DeviceModel:
+	if current_scene and current_scene.has_device_model():
+		return current_scene.get_device_model()
 	else:
 		return null
 
