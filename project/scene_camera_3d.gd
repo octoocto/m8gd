@@ -71,6 +71,10 @@ signal reposition_stopped
 
 var rclick_pressed := false
 
+# number of ticks that the camera is being continuously repositioned
+# (any direction held down)
+var ticks_repositioning := 0
+
 func is_between(x: float, a: float, b: float) -> bool:
 	return a < x and x < b
 
@@ -183,14 +187,29 @@ func _new_rotation(mouse_position: Vector2, mouse_clicked: bool) -> Vector3:
 func update_reposition(delta: float) -> void:
 
 	if (main.menu_camera.visible or main.menu_scene.visible) and rclick_pressed:
+		var input_dir := Vector3.ZERO
+
 		if Input.is_action_pressed("cam_forward"):
-			global_position -= global_transform.basis.z * delta * 10
+			input_dir -= global_transform.basis.z
 		if Input.is_action_pressed("cam_back"):
-			global_position += global_transform.basis.z * delta * 10
+			input_dir += global_transform.basis.z
 		if Input.is_action_pressed("cam_left"):
-			global_position -= global_transform.basis.x * delta * 10
+			input_dir -= global_transform.basis.x
 		if Input.is_action_pressed("cam_right"):
-			global_position += global_transform.basis.x * delta * 10
+			input_dir += global_transform.basis.x
+		if Input.is_action_pressed("cam_up"):
+			input_dir += global_transform.basis.y
+		if Input.is_action_pressed("cam_down"):
+			input_dir -= global_transform.basis.y
+
+		if input_dir.is_zero_approx():
+			ticks_repositioning = 0
+		else:
+			ticks_repositioning += 1
+
+		var acceleration: float = ease(min(ticks_repositioning / 20.0, 1.0), 0.5)
+
+		global_position += input_dir * delta * acceleration * 10
 
 		camera_updated.emit()
 
