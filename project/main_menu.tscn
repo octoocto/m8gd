@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://d13t756slc8b0"]
+[gd_scene load_steps=24 format=3 uid="uid://d13t756slc8b0"]
 
 [ext_resource type="Script" path="res://main_menu.gd" id="1_7xjs6"]
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/menu_theme.tres" id="1_qr6r4"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://b1r8nehsgp111" path="res://ui/setting_number.tscn" id="6_07wpv"]
 [ext_resource type="PackedScene" uid="uid://bgsxagi62acni" path="res://ui/setting_options.tscn" id="6_mvtic"]
 [ext_resource type="PackedScene" uid="uid://bevoopcdq5dsh" path="res://ui/setting_vec2i.tscn" id="7_t1h81"]
+[ext_resource type="PackedScene" uid="uid://dh6y5qxmki43x" path="res://ui/setting_file.tscn" id="9_swc7d"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_23yct"]
 
@@ -1489,6 +1490,100 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="LabelHeader" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer/Debug/VBoxContainer" instance=ExtResource("3_pyc3l")]
+layout_mode = 2
+text = "M8 Fonts"
+
+[node name="Font01Normal" type="HBoxContainer" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer/Debug/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SettingOptions" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer/Debug/VBoxContainer/Font01Normal" instance=ExtResource("6_mvtic")]
+layout_mode = 2
+setting_type = 1
+items = PackedStringArray("M:01 Normal Font", "M:01 Big Font", "M:02 Normal Font", "M:02 Bold Font", "M:02 Huge Font", "Custom")
+value = 0
+setting_name = "M:01 Normal Font"
+setting_name_min_width = 120
+
+[node name="SettingFile" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer/Debug/VBoxContainer/Font01Normal" instance=ExtResource("9_swc7d")]
+layout_mode = 2
+empty_text = "Load Font Spritesheet..."
+filters = "*.bmp; Font Bitmap"
+setting_name_min_width = 75
+
+[node name="Font01Big" type="HBoxContainer" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer/Debug/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SettingOptions" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer/Debug/VBoxContainer/Font01Big" instance=ExtResource("6_mvtic")]
+layout_mode = 2
+setting_type = 1
+items = PackedStringArray("M:01 Normal Font", "M:01 Big Font", "M:02 Normal Font", "M:02 Bold Font", "M:02 Huge Font", "Custom")
+value = 1
+setting_name = "M:01 Big Font"
+setting_name_min_width = 120
+
+[node name="SettingFile" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer/Debug/VBoxContainer/Font01Big" instance=ExtResource("9_swc7d")]
+layout_mode = 2
+empty_text = "Load Font Spritesheet..."
+filters = "*.bmp; Font Bitmap"
+setting_name_min_width = 75
+
+[node name="Font02Normal" type="HBoxContainer" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer/Debug/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SettingOptions" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer/Debug/VBoxContainer/Font02Normal" instance=ExtResource("6_mvtic")]
+layout_mode = 2
+setting_type = 1
+items = PackedStringArray("M:01 Normal Font", "M:01 Big Font", "M:02 Normal Font", "M:02 Bold Font", "M:02 Huge Font", "Custom")
+value = 2
+setting_name = "M:02 Normal Font"
+setting_name_min_width = 120
+
+[node name="SettingFile" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer/Debug/VBoxContainer/Font02Normal" instance=ExtResource("9_swc7d")]
+layout_mode = 2
+empty_text = "Load Font Spritesheet..."
+filters = "*.bmp; Font Bitmap"
+setting_name_min_width = 75
+
+[node name="Font02Bold" type="HBoxContainer" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer/Debug/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SettingOptions" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer/Debug/VBoxContainer/Font02Bold" instance=ExtResource("6_mvtic")]
+layout_mode = 2
+setting_type = 1
+items = PackedStringArray("M:01 Normal Font", "M:01 Big Font", "M:02 Normal Font", "M:02 Bold Font", "M:02 Huge Font", "Custom")
+value = 3
+setting_name = "M:02 Bold Font"
+setting_name_min_width = 120
+
+[node name="SettingFile" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer/Debug/VBoxContainer/Font02Bold" instance=ExtResource("9_swc7d")]
+layout_mode = 2
+empty_text = "Load Font Spritesheet..."
+filters = "*.bmp; Font Bitmap"
+setting_name_min_width = 75
+
+[node name="Font02Huge" type="HBoxContainer" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer/Debug/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SettingOptions" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer/Debug/VBoxContainer/Font02Huge" instance=ExtResource("6_mvtic")]
+layout_mode = 2
+setting_type = 1
+items = PackedStringArray("M:01 Normal Font", "M:01 Big Font", "M:02 Normal Font", "M:02 Bold Font", "M:02 Huge Font", "Custom")
+value = 4
+setting_name = "M:02 Huge Font"
+setting_name_min_width = 120
+
+[node name="SettingFile" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer/Debug/VBoxContainer/Font02Huge" instance=ExtResource("9_swc7d")]
+layout_mode = 2
+empty_text = "Load Font Spritesheet..."
+filters = "*.bmp; Font Bitmap"
+setting_name_min_width = 75
+
+[node name="LabelHeader2" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer/Debug/VBoxContainer" instance=ExtResource("3_pyc3l")]
 layout_mode = 2
 text = "M8 Remote Commands"
 

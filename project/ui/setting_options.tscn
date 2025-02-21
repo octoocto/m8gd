@@ -28,7 +28,7 @@ Button/styles/pressed = SubResource("StyleBoxEmpty_o323t")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_m06sh"]
 
-[node name="ControlOptions" type="PanelContainer"]
+[node name="SettingOptions" type="PanelContainer"]
 offset_right = 132.0
 offset_bottom = 27.0
 size_flags_horizontal = 3

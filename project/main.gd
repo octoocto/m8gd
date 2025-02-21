@@ -669,6 +669,24 @@ func m8_is_key_pressed(keycode: int) -> bool:
 func m8_get_theme_colors() -> PackedColorArray:
 	return m8_client.get_theme_colors()
 
+func m8_set_font(font: int, bitmap: BitMap) -> void:
+	m8_client.load_font(font, bitmap)
+	m8_send_reset_display()
+
+func m8_set_font_from_file(font: int, path: String) -> void:
+	if not path: return
+	# no BitMap loader at the moment, so we load an image then
+	# create a BitMap from scratch here
+	var image := Image.load_from_file(path)
+	if image:
+		var bitmap := BitMap.new()
+		bitmap.create(image.get_size())
+		for i in image.get_width():
+			for j in image.get_height():
+				bitmap.set_bit(i, j, image.get_pixel(i, j).r)
+
+		m8_set_font(font, bitmap)
+
 func audio_get_level() -> float:
 	return audio_level
 

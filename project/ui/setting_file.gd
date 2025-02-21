@@ -7,6 +7,16 @@ class_name SettingFile extends SettingBase
 		await _update()
 		force_update()
 
+@export var empty_text := "Open File...":
+	set(p_value):
+		empty_text = p_value
+		_update()
+		
+@export var filters := "*.png, *.jpg, *.jpeg, *.hdr, *.ogv; Supported Filetypes":
+	set(p_value):
+		filters = p_value
+		_update()
+
 @export var edit_alpha := true:
 	set(p_value):
 		edit_alpha = p_value
@@ -54,16 +64,18 @@ func _update() -> void:
 		%LabelName.visible = true
 		%HBoxContainer.visible = true
 
+	%FileDialog.filters = [filters]
+
 	%PanelContainer.set("theme_override_styles/panel", panel_style_value)
 
 	%LabelName.custom_minimum_size.x = setting_name_min_width
 	%HBoxContainer.set("theme_override_constants/separation", setting_name_indent)
 
-	%Button.text = value.get_file() if value != "" else "Open File..."
+	%Button.text = value.get_file() if value != "" else empty_text
 
 
 func init(p_value: Variant, changed_fn: Callable) -> void:
-	assert(p_value is Color)
+	assert(p_value is String)
 	super(p_value, changed_fn)
 
 
