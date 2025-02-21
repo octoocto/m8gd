@@ -243,12 +243,21 @@ func _input(event: InputEvent) -> void:
 			if event is InputEventMouseMotion:
 				rotation.y -= event.relative.x * 0.001
 				rotation.x -= event.relative.y * 0.001
+
+			const FOCUS_W_ADJUST_AMOUNT := 0.1
+			const FOCUS_L_ADJUST_AMOUNT := 0.25
 		
 			if event is InputEventMouseButton and event.pressed:
-				if event.button_index == MOUSE_BUTTON_WHEEL_UP:
-					dof_focus_distance += 0.1
-				if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-					dof_focus_distance -= 0.1
+				if Input.is_key_pressed(KEY_SHIFT):
+					if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+						dof_focus_width += FOCUS_W_ADJUST_AMOUNT
+					if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+						dof_focus_width -= FOCUS_W_ADJUST_AMOUNT
+				else:
+					if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+						dof_focus_distance += FOCUS_L_ADJUST_AMOUNT
+					if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+						dof_focus_distance -= FOCUS_L_ADJUST_AMOUNT
 
 			camera_updated.emit()
 

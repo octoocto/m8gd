@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=3 uid="uid://b265ke8cr3dgr"]
+[gd_scene load_steps=40 format=3 uid="uid://b265ke8cr3dgr"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_4g2n0"]
 [ext_resource type="Shader" path="res://shaders/post_process.gdshader" id="1_tjung"]
@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://ca2jqh2tc7jix" path="res://overlays/overlay_keys.tscn" id="8_dnyct"]
 [ext_resource type="PackedScene" uid="uid://geilakxinhul" path="res://scene_camera_menu.tscn" id="8_v4lip"]
 [ext_resource type="PackedScene" uid="uid://dv8crbibtrpck" path="res://scene_menu.tscn" id="9_bisyb"]
+[ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/menu_theme.tres" id="13_e5i6c"]
 [ext_resource type="Texture2D" uid="uid://bnktl64c363mh" path="res://assets/icon/TripleBar.png" id="13_gepng"]
 [ext_resource type="Texture2D" uid="uid://bmg26rkxtqtso" path="res://assets/icon/Close.png" id="14_p46wh"]
 [ext_resource type="PackedScene" uid="uid://bebvc2datqp85" path="res://menu_overlay.tscn" id="16_4bi6d"]
@@ -499,10 +500,14 @@ offset_bottom = 172.0
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+theme = ExtResource("13_e5i6c")
+theme_override_constants/line_separation = 0
 bbcode_enabled = true
-text = "WASD			Move camera
-Mouse		Look
-MWheel 	Adjust focus distance"
+text = "WASD						Move camera forward/back/left/right
+Space/Ctrl				Move camera up/down
+Mouse					Look
+MWheel 				Adjust focus distance
+Shift+MWheel 		Adjust focus width"
 fit_content = true
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/UI/MarginContainer/GridContainer"]
