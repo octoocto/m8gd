@@ -760,6 +760,8 @@ func _start_task(task_name: String, fn: Callable) -> Variant:
 	return ret
 
 func _handle_input_keys(event: InputEvent) -> bool:
+	if is_any_menu_open(): return false
+
 	var key := M8GD.M8_KEY_UP
 	if event.is_action("key_up"): pass
 	elif event.is_action("key_down"): key = M8GD.M8_KEY_DOWN
