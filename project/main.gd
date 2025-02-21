@@ -230,6 +230,8 @@ func _input(event: InputEvent) -> void:
 
 	if _handle_input_keys(event): return
 
+	if _handle_input_overlay_hotkeys(event): return
+
 	if _handle_input_profile_hotkeys(event): return
 
 	if _handle_input_keyjazz(event): return
@@ -797,6 +799,30 @@ func _handle_input_profile_hotkeys(event: InputEvent) -> bool:
 		return true
 	
 	return false
+
+func _handle_input_overlay_hotkeys(event: InputEvent) -> bool:
+
+	if (
+		is_any_menu_open() or
+		(
+			event is not InputEventKey and
+			event is not InputEventJoypadButton
+		) or
+		!event.is_pressed() or
+		event.is_echo()
+	):
+		return false
+
+	var overlay_node_path: Variant = config.find_overlay_node_path_from_hotkey(event)
+	if overlay_node_path is String:
+		print("toggling overlay from hotkey: %s" % overlay_node_path)
+		var overlay := get_node("%" + overlay_node_path)
+		if overlay:
+			overlay.visible = not overlay.visible
+		return true
+	
+	return false
+
 
 func _handle_input_keyjazz(event: InputEvent) -> bool:
 

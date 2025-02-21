@@ -184,6 +184,19 @@ func _init_menu_overlays() -> void:
 	%Setting_OverlayDisplay.connect_to_enable(%Button_OverlayDisplayConfig)
 	%Setting_OverlayKeys.connect_to_enable(%Button_OverlayKeysConfig)
 
+	main.overlay_waveform.visibility_changed.connect(func() -> void:
+		%Setting_OverlayWaveform.value = main.overlay_waveform.visible
+	)
+	main.overlay_spectrum.visibility_changed.connect(func() -> void:
+		%Setting_OverlaySpectrum.value = main.overlay_spectrum.visible
+	)
+	main.overlay_display.visibility_changed.connect(func() -> void:
+		%Setting_OverlayDisplay.value = main.overlay_display.visible
+	)
+	main.overlay_keys.visibility_changed.connect(func() -> void:
+		%Setting_OverlayKeys.value = main.overlay_keys.visible
+	)
+
 	main.profile_loaded.connect(func(_profile_name: String) -> void:
 		%Setting_OverlayScale.reinit()
 		%Setting_OverlayFilters.reinit()
@@ -534,6 +547,23 @@ func _init_menu_input() -> void:
 	%ButtonResetBinds.button_down.connect(reset_key_rebinds.bind());
 
 	load_key_rebinds()
+
+	# bind overlay hotkeys
+	for tuple: Array in [
+		[%OverlayHotkeyWaveform, &"OverlayAudioWaveform"],
+		[%OverlayHotkeySpectrum, &"OverlayAudioSpectrum"],
+		[%OverlayHotkeyDisplay, &"OverlayDisplayPanel"],
+		[%OverlayHotkeyKey, &"KeyOverlay"],
+	]:
+		var control: Control = tuple[0]
+		var node_path: String = tuple[1]
+		_init_hotkey_node(control,
+			func(event: InputEvent) -> void:
+				main.config.set_overlay_hotkey(node_path, event),
+			func() -> void:
+				main.config.clear_overlay_hotkey(node_path)
+		)
+		_update_hotkey_node(control, main.config.get_overlay_hotkey(node_path))
 
 ##
 ## Setup the 3d model menu controls.
@@ -1015,6 +1045,31 @@ func _input(event: InputEvent) -> void:
 	_handle_input_rebind(event)
 
 ##
+## Initialize a hotkey node (found in Controls tab, for profile and overlay hotkeys).
+##
+## [rebind_fn] is called when the user wants to rebind, and takes the InputEvent as an argument.
+## [clear_fn] is called when the user clears the binding.
+##
+func _init_hotkey_node(hotkey_node: Control, rebind_fn: Callable, clear_fn: Callable) -> void:
+	hotkey_node.get_node("ButtonBind").pressed.connect(func() -> void:
+		start_rebind(func(e: InputEvent) -> void:
+			rebind_fn.call(e)
+			_update_hotkey_node(hotkey_node, e)
+		)
+	)
+	hotkey_node.get_node("ButtonClear").pressed.connect(func() -> void:
+		clear_fn.call()
+		_update_hotkey_node(hotkey_node, null)
+	)
+
+func _update_hotkey_node(hotkey_node: Control, event: InputEvent) -> void:
+	if event:
+		hotkey_node.get_node("ButtonBind").text = event.as_text()
+	else:
+		hotkey_node.get_node("ButtonBind").text = "---"
+
+
+##
 ## Recreate the profile hotkey UI with the current list of profiles and
 ## their saved hotkey bindings.
 ##
@@ -1028,20 +1083,14 @@ func refresh_profile_hotkeys() -> void:
 		var event: Variant = main.config.get_profile_hotkey(profile_name)
 		container.visible = true
 		container.get_node("Label").text = profile_name
-		if event is InputEvent:
-			container.get_node("ButtonBind").text = event.as_text()
-		else:
-			container.get_node("ButtonBind").text = "---"
+		_update_hotkey_node(container, event)
 		%ProfileHotkeysContainer.add_child(container)
 
-		container.get_node("ButtonBind").pressed.connect(func() -> void:
-			start_rebind(func(e: InputEvent) -> void:
+		_init_hotkey_node(container,
+			func(e: InputEvent) -> void:
 				main.config.set_profile_hotkey(profile_name, e)
+				refresh_profile_hotkeys(),
+			func() -> void:
+				main.config.clear_profile_hotkey(profile_name)
 				refresh_profile_hotkeys()
-			)
-		)
-
-		container.get_node("ButtonClear").pressed.connect(func() -> void:
-			main.config.clear_profile_hotkey(profile_name)
-			refresh_profile_hotkeys()
 		)

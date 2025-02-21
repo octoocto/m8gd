@@ -32,6 +32,7 @@ var version: int = 0
 @export var profiles := {}
 @export var current_profile := DEFAULT_PROFILE
 @export var profile_hotkeys := {}
+@export var overlay_hotkeys := {}
 
 @export var camera_mouse_control := true
 @export var camera_humanize := true
@@ -379,8 +380,26 @@ func clear_profile_hotkey(profile_name: String) -> void:
 	profile_hotkeys.erase(profile_name)
 	_print("cleared profile hotkey for: %s" % profile_name)
 
+func set_overlay_hotkey(overlay_node_path: String, event: InputEvent) -> void:
+	if event:
+		overlay_hotkeys[overlay_node_path] = event
+		_print("set overlay hotkey: %s -> %s" % [event.as_text(), overlay_node_path])
+
+func get_overlay_hotkey(overlay_node_path: String) -> Variant:
+	return overlay_hotkeys.get(overlay_node_path)
+
+func clear_overlay_hotkey(overlay_node_path: String) -> void:
+	profile_hotkeys.erase(overlay_node_path)
+	_print("cleared overlay hotkey for: %s" % overlay_node_path)
+
 func find_profile_name_from_hotkey(event: InputEvent) -> Variant:
 	for key: String in profile_hotkeys.keys():
 		if event.is_match(profile_hotkeys[key]):
+			return key
+	return null
+
+func find_overlay_node_path_from_hotkey(event: InputEvent) -> Variant:
+	for key: String in overlay_hotkeys.keys():
+		if event.is_match(overlay_hotkeys[key]):
 			return key
 	return null
