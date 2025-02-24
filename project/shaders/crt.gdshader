@@ -47,6 +47,7 @@ uniform bool clip_warp = false;
 
 uniform float vignette_intensity = 0.4; // Size of the vignette, how far towards the middle it should go.
 uniform float vignette_opacity : hint_range(0.0, 1.0) = 0.5;
+uniform float vignette_noise = 0.0;
 
 // Used by the noise functin to generate a pseudo random value between 0.0 and 1.0
 vec2 random(vec2 uv){
@@ -90,9 +91,10 @@ float border (vec2 uv){
 
 // Adds a vignette shadow to the edges of the image
 float vignette(vec2 uv){
+    float noise = clamp(random(uv).x * vignette_noise, 0.0, 1.0);
 	uv *= 1.0 - uv.xy;
 	float vignette = uv.x * uv.y * 15.0;
-	return pow(vignette, vignette_intensity * vignette_opacity);
+	return pow(vignette, (vignette_intensity + noise) * vignette_opacity);
 }
 
 void fragment()

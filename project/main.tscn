@@ -152,6 +152,7 @@ shader_parameter/warp_amount = 0.5
 shader_parameter/clip_warp = false
 shader_parameter/vignette_intensity = 0.4
 shader_parameter/vignette_opacity = 0.5
+shader_parameter/vignette_noise = 0.1
 
 [sub_resource type="Gradient" id="Gradient_2ccln"]
 
