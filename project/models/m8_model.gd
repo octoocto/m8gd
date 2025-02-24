@@ -78,7 +78,6 @@ func _physics_process(_delta: float) -> void:
 	key_p.material_overlay.albedo_color.a = highlight_opacity if key_play else 0.0
 
 func init(p_main: Main) -> void:
-
 	main = p_main
 
 	screen_material.set_shader_parameter("texture_linear", main.m8_client.get_display())
@@ -93,8 +92,6 @@ func init(p_main: Main) -> void:
 	)
 
 	screen_material.set_shader_parameter("backlight", main.m8_is_connected)
-
-	screen_material.set_shader_parameter("use_linear_filter", main.config.model_use_linear_filter)
 
 	main.m8_client.key_pressed.connect(func(key: int, pressed: bool) -> void:
 		match key:

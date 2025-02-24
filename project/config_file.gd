@@ -34,42 +34,6 @@ var version: int = 0
 @export var profile_hotkeys := {}
 @export var overlay_hotkeys := {}
 
-@export var camera_mouse_control := true
-@export var camera_humanize := true
-
-# overlay settings
-@export var overlay_scale := 1
-@export var overlay_apply_filters := true
-@export var overlay_spectrum := false
-@export var overlay_waveform := false
-@export var overlay_display := false
-@export var overlay_key := false
-
-# device model settings
-@export var model_color_key_up := DEFAULT_COLOR_KEYCAP
-@export var model_color_key_down := DEFAULT_COLOR_KEYCAP
-@export var model_color_key_left := DEFAULT_COLOR_KEYCAP
-@export var model_color_key_right := DEFAULT_COLOR_KEYCAP
-@export var model_color_key_option := DEFAULT_COLOR_KEYCAP
-@export var model_color_key_edit := DEFAULT_COLOR_KEYCAP
-@export var model_color_key_shift := DEFAULT_COLOR_KEYCAP
-@export var model_color_key_play := DEFAULT_COLOR_KEYCAP
-@export var model_color_body := DEFAULT_COLOR_BODY
-
-@export var hl_opacity := 1.0
-@export var hl_filters := false
-@export var hl_color_directional := Color.WHITE
-@export var hl_color_shift := Color.WHITE
-@export var hl_color_play := Color.WHITE
-@export var hl_color_option := Color.WHITE
-@export var hl_color_edit := Color.WHITE
-
-@export var model_use_linear_filter := true
-
-# key overlay settings
-@export var key_overlay_enabled := false
-@export var key_overlay_style := 0
-
 # video settings
 @export var fullscreen := false
 @export var window_borderless := false
@@ -87,21 +51,6 @@ var version: int = 0
 @export var scale_mode := 0
 @export var render_scale := 1.0
 @export var fsr_sharpness := 0.9
-
-# filter/shader settings
-@export var filter_1 := false
-@export var filter_2 := false
-@export var filter_3 := false
-@export var filter_4 := false
-@export var crt_filter := false
-@export var filter_noise := false
-
-@export var pp_vhs_smear := 1.0
-@export var pp_vhs_wiggle := 0.03
-@export var pp_vhs_noise_crease_opacity := 0.5
-@export var pp_vhs_tape_crease_amount := 0.2
-@export var pp_crt_curvature := 0.5
-@export var pp_vignette_amount := 0.5
 
 # visualizer settings
 @export var audio_analyzer_enabled := true
@@ -172,7 +121,6 @@ func get_current_scene_path() -> String:
 ## the current profile.
 ##
 func init_profile(profile_name: String, use_current_profile_settings := true) -> void:
-
 	var scene_file_path: String
 
 	# if creating the default profile, use the default scene
@@ -220,7 +168,6 @@ func rename_current_profile(new_profile_name: String) -> void:
 ## Create a new profile. A name will be generated.
 ##
 func create_new_profile() -> String:
-
 	var profile_name := "new profile"
 	var iterations := 1
 
