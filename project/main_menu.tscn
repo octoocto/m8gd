@@ -89,9 +89,10 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-current_tab = 0
+current_tab = 6
 
 [node name="Scene" type="MarginContainer" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer"]
+visible = false
 layout_mode = 2
 theme_override_constants/margin_top = 18
 metadata/_tab_index = 0
@@ -1346,7 +1347,6 @@ value = 2
 setting_name = "DOF Blur Quality"
 
 [node name="Audio" type="MarginContainer" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer"]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 6
 

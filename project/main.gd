@@ -695,20 +695,18 @@ func audio_get_level() -> float:
 ##
 func audio_get_peak_volume() -> Vector2:
 	return Vector2(
-		# db_to_linear(AudioServer.get_bus_peak_volume_left_db(1, 0)),
-		# db_to_linear(AudioServer.get_bus_peak_volume_right_db(1, 0))
-		AudioServer.get_bus_peak_volume_left_db(1, 0),
-		AudioServer.get_bus_peak_volume_right_db(1, 0)
+		AudioServer.get_bus_peak_volume_left_db(0, 0),
+		AudioServer.get_bus_peak_volume_right_db(0, 0)
 	)
 
 func audio_get_spectrum_analyzer() -> AudioEffectSpectrumAnalyzerInstance:
-	return AudioServer.get_bus_effect_instance(1, 0)
+	return AudioServer.get_bus_effect_instance(0, 0)
 
 func audio_set_spectrum_analyzer_enabled(enabled: bool) -> void:
-	AudioServer.set_bus_effect_enabled(1, 0, enabled)
+	AudioServer.set_bus_effect_enabled(0, 0, enabled)
 
 func audio_is_spectrum_analyzer_enabled() -> bool:
-	return AudioServer.is_bus_effect_enabled(1, 0)
+	return AudioServer.is_bus_effect_enabled(0, 0)
 
 func audio_set_muted(muted: bool) -> void:
 	AudioServer.set_bus_mute(0, muted)
