@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://ca2jqh2tc7jix"]
 
-[ext_resource type="Script" path="res://overlays/overlay_keys.gd" id="1_tnj14"]
+[ext_resource type="Script" uid="uid://c2udx15le3kvv" path="res://overlays/overlay_keys.gd" id="1_tnj14"]
 [ext_resource type="PackedScene" uid="uid://yvgf0ok5tp6r" path="res://overlays/overlay_keys_item.tscn" id="2_yi3d0"]
 
 [node name="KeyOverlay" type="Control"]

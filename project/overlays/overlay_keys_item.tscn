@@ -1,6 +1,6 @@
 [gd_scene load_steps=27 format=3 uid="uid://yvgf0ok5tp6r"]
 
-[ext_resource type="Script" path="res://overlays/overlay_keys_item.gd" id="1_mywub"]
+[ext_resource type="Script" uid="uid://d2cyloffcnk2m" path="res://overlays/overlay_keys_item.gd" id="1_mywub"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_60pbi"]
 content_margin_left = 8.0
@@ -17,6 +17,7 @@ corner_radius_bottom_left = 4
 anti_aliasing = false
 
 [sub_resource type="SystemFont" id="SystemFont_slvb0"]
+subpixel_positioning = 0
 
 [sub_resource type="LabelSettings" id="LabelSettings_4vn7e"]
 font = SubResource("SystemFont_slvb0")

@@ -1,7 +1,7 @@
 [gd_scene load_steps=14 format=3 uid="uid://dk52g4jj43v12"]
 
 [ext_resource type="PackedScene" uid="uid://cbuqy2oe67w1h" path="res://assets/m8_tracker/m8_model.glb" id="1_3ysi4"]
-[ext_resource type="Script" path="res://models/m8_model.gd" id="2_ag158"]
+[ext_resource type="Script" uid="uid://b3nts52y6tvvc" path="res://models/m8_model.gd" id="2_ag158"]
 [ext_resource type="Material" uid="uid://be3p66xqo7iqm" path="res://models/material_m8_rim.tres" id="2_jmh23"]
 [ext_resource type="Material" uid="uid://ceus1nseg5p1a" path="res://models/material_body_02.tres" id="2_jmko1"]
 [ext_resource type="Material" uid="uid://bteaijler8fto" path="res://models/material_m8_keycap.tres" id="3_3rxoc"]

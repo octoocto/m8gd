@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://nepv47umjdf0"]
 
 [ext_resource type="PackedScene" uid="uid://d2812ej708k17" path="res://assets/succulent_plants/scene.gltf" id="1_8xls6"]
-[ext_resource type="Script" path="res://models/plant_model.gd" id="2_4nfm1"]
+[ext_resource type="Script" uid="uid://dng23ebxkacd5" path="res://models/plant_model.gd" id="2_4nfm1"]
 
 [node name="PlantModel" instance=ExtResource("1_8xls6")]
 transform = Transform3D(0.423425, 0, 0.905931, 0, 1, 0, -0.905931, 0, 0.423425, 0, 0, 0)

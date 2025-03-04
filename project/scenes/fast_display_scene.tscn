@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://dh1klpvygnyuf"]
 
-[ext_resource type="Script" path="res://scenes/fast_display_scene.gd" id="1_edxk2"]
+[ext_resource type="Script" uid="uid://cxekfeylprcwt" path="res://scenes/fast_display_scene.gd" id="1_edxk2"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_5kl75"]
 

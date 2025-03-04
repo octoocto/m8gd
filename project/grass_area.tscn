@@ -1,7 +1,7 @@
 [gd_scene load_steps=17 format=3 uid="uid://ceqlf8kgdxjeb"]
 
-[ext_resource type="Shader" path="res://grass_area.gdshader" id="1_hbdoa"]
-[ext_resource type="Script" path="res://grass_area.gd" id="2_xcclk"]
+[ext_resource type="Shader" uid="uid://dgk5yk5qsu2d8" path="res://grass_area.gdshader" id="1_hbdoa"]
+[ext_resource type="Script" uid="uid://cmoiixyatv1mq" path="res://grass_area.gd" id="2_xcclk"]
 
 [sub_resource type="Gradient" id="Gradient_axbuj"]
 interpolation_mode = 2
@@ -38,18 +38,19 @@ noise = SubResource("FastNoiseLite_vibqe")
 resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("1_hbdoa")
+shader_parameter/color_ramp = SubResource("GradientTexture1D_lep2l")
+shader_parameter/wind_noise = SubResource("NoiseTexture2D_fge5u")
 shader_parameter/uv_offset = 0.365
 shader_parameter/heightmap_offset = Vector2(0, 0)
+shader_parameter/heightmap_scale = Vector2(1, 1)
 shader_parameter/heightmap_strength = 1.0
 shader_parameter/wind_dir = Vector2(1, 1)
 shader_parameter/wind_strength = 10.0
 shader_parameter/wind_speed = 10.0
+shader_parameter/heightmap = SubResource("GradientTexture2D_gjont")
 shader_parameter/proximity_fade_distance = 0.0
 shader_parameter/distance_fade_min = 0.0
 shader_parameter/distance_fade_max = 0.0
-shader_parameter/color_ramp = SubResource("GradientTexture1D_lep2l")
-shader_parameter/wind_noise = SubResource("NoiseTexture2D_fge5u")
-shader_parameter/heightmap = SubResource("GradientTexture2D_gjont")
 
 [sub_resource type="Curve" id="Curve_y7obg"]
 _data = [Vector2(0, 0), 0.0, 5.75705, 0, 0, Vector2(0.485294, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -0.0962715, 0.0, 0, 0]

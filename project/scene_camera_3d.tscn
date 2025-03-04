@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bckroenwlecqv"]
 
-[ext_resource type="Script" path="res://scene_camera_3d.gd" id="1_idfgn"]
+[ext_resource type="Script" uid="uid://cki43uor5p6oe" path="res://scene_camera_3d.gd" id="1_idfgn"]
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_wopxj"]
 auto_exposure_scale = 0.02

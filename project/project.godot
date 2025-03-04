@@ -11,10 +11,9 @@ config_version=5
 [application]
 
 config/name="m8gd"
-config/version="0.2.0"
 run/main_scene="res://main.tscn"
 config/auto_accept_quit=false
-config/features=PackedStringArray("4.3")
+config/features=PackedStringArray("4.4")
 boot_splash/show_image=false
 config/icon="res://assets/icon/m8_emoji.png"
 
@@ -128,7 +127,7 @@ lights_and_shadows/directional_shadow/soft_shadow_filter_quality=5
 lights_and_shadows/positional_shadow/soft_shadow_filter_quality=5
 camera/depth_of_field/depth_of_field_bokeh_quality=2
 camera/depth_of_field/depth_of_field_use_jitter=true
+anti_aliasing/quality/msaa_3d=2
 environment/screen_space_reflection/roughness_quality=3
 environment/subsurface_scattering/subsurface_scattering_quality=3
 environment/defaults/default_clear_color=Color(0, 0, 0, 1)
-anti_aliasing/quality/msaa_3d=2

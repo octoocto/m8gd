@@ -1,12 +1,12 @@
 [gd_scene load_steps=24 format=3 uid="uid://f2tvhcv8kiuu"]
 
-[ext_resource type="Script" path="res://scenes/desktop_scene.gd" id="1_0y3bn"]
+[ext_resource type="Script" uid="uid://cg73j23kegkdr" path="res://scenes/desktop_scene.gd" id="1_0y3bn"]
 [ext_resource type="PackedScene" uid="uid://bckroenwlecqv" path="res://scene_camera_3d.tscn" id="5_d472a"]
 [ext_resource type="Material" uid="uid://dv1jtj3wvh678" path="res://assets/grid_overlay.tres" id="7_7cg8p"]
 [ext_resource type="PackedScene" uid="uid://dk52g4jj43v12" path="res://models/m8_model.tscn" id="7_y135g"]
 [ext_resource type="PackedScene" uid="uid://ceqlf8kgdxjeb" path="res://grass_area.tscn" id="8_ophi6"]
 [ext_resource type="PackedScene" uid="uid://nepv47umjdf0" path="res://models/plant_model.tscn" id="9_c3a4o"]
-[ext_resource type="Shader" path="res://grass_area.gdshader" id="9_wvtmw"]
+[ext_resource type="Shader" uid="uid://dgk5yk5qsu2d8" path="res://grass_area.gdshader" id="9_wvtmw"]
 
 [sub_resource type="Environment" id="Environment_ayqpk"]
 ambient_light_source = 2
@@ -74,6 +74,8 @@ noise = SubResource("FastNoiseLite_3605e")
 resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("9_wvtmw")
+shader_parameter/color_ramp = SubResource("GradientTexture1D_o6olw")
+shader_parameter/wind_noise = SubResource("NoiseTexture2D_otixg")
 shader_parameter/uv_offset = -0.1
 shader_parameter/heightmap_offset = Vector2(40.11, 40.015)
 shader_parameter/heightmap_scale = Vector2(1.65, 1.125)
@@ -81,13 +83,11 @@ shader_parameter/heightmap_strength = 1.7
 shader_parameter/wind_dir = Vector2(1, 1)
 shader_parameter/wind_strength = 2.0
 shader_parameter/wind_speed = 10.0
+shader_parameter/heightmap = SubResource("NoiseTexture2D_b4fil")
+shader_parameter/heightmap_mask = SubResource("GradientTexture2D_1ikkl")
 shader_parameter/proximity_fade_distance = 0.5
 shader_parameter/distance_fade_min = 0.0
 shader_parameter/distance_fade_max = 0.0
-shader_parameter/color_ramp = SubResource("GradientTexture1D_o6olw")
-shader_parameter/wind_noise = SubResource("NoiseTexture2D_otixg")
-shader_parameter/heightmap = SubResource("NoiseTexture2D_b4fil")
-shader_parameter/heightmap_mask = SubResource("GradientTexture2D_1ikkl")
 
 [sub_resource type="Curve" id="Curve_y7obg"]
 _data = [Vector2(0, 0), 0.0, 5.75705, 0, 0, Vector2(0.485294, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -0.0962715, 0.0, 0, 0]

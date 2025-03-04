@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://cr88nkt47umul"]
 
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/menu_theme.tres" id="1_5h7am"]
-[ext_resource type="Script" path="res://ui/setting_vec3.gd" id="1_v816i"]
+[ext_resource type="Script" uid="uid://cunmuvx6l0bqw" path="res://ui/setting_vec3.gd" id="1_v816i"]
 
 [node name="SettingVec3" type="PanelContainer"]
 offset_right = 132.0

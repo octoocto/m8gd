@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://d2wnq8ai2ykus"]
 
-[ext_resource type="Script" path="res://ui/setting_vec2.gd" id="1_6vysa"]
+[ext_resource type="Script" uid="uid://dlkrwb25egyq" path="res://ui/setting_vec2.gd" id="1_6vysa"]
 
 [node name="SettingVec2" type="PanelContainer"]
 offset_right = 132.0

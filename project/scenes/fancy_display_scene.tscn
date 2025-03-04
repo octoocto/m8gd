@@ -1,9 +1,9 @@
 [gd_scene load_steps=16 format=3 uid="uid://bu28kwqtn6cdg"]
 
-[ext_resource type="Script" path="res://scenes/fancy_display_scene.gd" id="1_jfrc1"]
-[ext_resource type="Script" path="res://scenes/scalable_sub_viewport.gd" id="2_k48ro"]
-[ext_resource type="Shader" path="res://shaders/screen_blur.gdshader" id="2_rpd8y"]
-[ext_resource type="Shader" path="res://shaders/panel_blur.gdshader" id="4_y8ora"]
+[ext_resource type="Script" uid="uid://cjoo1hy85e5ad" path="res://scenes/fancy_display_scene.gd" id="1_jfrc1"]
+[ext_resource type="Script" uid="uid://ctx3fbd4vqf5t" path="res://scenes/scalable_sub_viewport.gd" id="2_k48ro"]
+[ext_resource type="Shader" uid="uid://okxo3d88kn1h" path="res://shaders/screen_blur.gdshader" id="2_rpd8y"]
+[ext_resource type="Shader" uid="uid://egeyyolvm0rs" path="res://shaders/panel_blur.gdshader" id="4_y8ora"]
 [ext_resource type="Texture2D" uid="uid://ras5y3yqijkx" path="res://assets/m8_screen_placeholder.png" id="5_ihehy"]
 
 [sub_resource type="Gradient" id="Gradient_gskhf"]
@@ -24,9 +24,9 @@ shader_parameter/blur_amount = 3.5
 shader_parameter/tint_color = Color(1, 1, 1, 1)
 shader_parameter/tint_amount = 1.0
 shader_parameter/brightness = 0.9
+shader_parameter/noise_texture = SubResource("NoiseTexture2D_uag16")
 shader_parameter/noise_strength = 0.015
 shader_parameter/noise_speed = 0.0
-shader_parameter/noise_texture = SubResource("NoiseTexture2D_uag16")
 
 [sub_resource type="Gradient" id="Gradient_2ccln"]
 
@@ -45,8 +45,8 @@ shader = ExtResource("4_y8ora")
 shader_parameter/blur_amount = 5.231
 shader_parameter/panel_color = Color(0, 0, 0, 1)
 shader_parameter/panel_opacity = 1.0
-shader_parameter/noise_strength = 0.005
 shader_parameter/noise_texture = SubResource("NoiseTexture2D_5dadj")
+shader_parameter/noise_strength = 0.005
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_410rj"]
 content_margin_left = 16.0

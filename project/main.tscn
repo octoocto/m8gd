@@ -1,16 +1,16 @@
 [gd_scene load_steps=40 format=3 uid="uid://b265ke8cr3dgr"]
 
-[ext_resource type="Script" path="res://main.gd" id="1_4g2n0"]
-[ext_resource type="Shader" path="res://shaders/post_process.gdshader" id="1_tjung"]
-[ext_resource type="Shader" path="res://shaders/crt.gdshader" id="2_2rjfu"]
-[ext_resource type="Shader" path="res://shaders/vhs.gdshader" id="2_34vyn"]
+[ext_resource type="Script" uid="uid://d0olbd611iax7" path="res://main.gd" id="1_4g2n0"]
+[ext_resource type="Shader" uid="uid://ddeledy6hskpq" path="res://shaders/post_process.gdshader" id="1_tjung"]
+[ext_resource type="Shader" uid="uid://uqrhgh7cj8gu" path="res://shaders/crt.gdshader" id="2_2rjfu"]
+[ext_resource type="Shader" uid="uid://i526eiqcypjg" path="res://shaders/vhs.gdshader" id="2_34vyn"]
 [ext_resource type="PackedScene" uid="uid://263mog4cxgwr" path="res://overlays/overlay_audio_spectrum.tscn" id="2_tbmna"]
 [ext_resource type="Texture2D" uid="uid://7y0rs0v6d4nk" path="res://assets/noise.png" id="4_gv8ps"]
-[ext_resource type="Shader" path="res://shaders/vhs2.gdshader" id="4_ioov3"]
+[ext_resource type="Shader" uid="uid://ckswjnsuddnrt" path="res://shaders/vhs2.gdshader" id="4_ioov3"]
 [ext_resource type="PackedScene" uid="uid://bkmg6tijdna2y" path="res://overlays/overlay_display_panel.tscn" id="4_nrhlm"]
-[ext_resource type="Shader" path="res://shaders/vhs3.gdshader" id="4_tq17m"]
+[ext_resource type="Shader" uid="uid://6tp4l6soye54" path="res://shaders/vhs3.gdshader" id="4_tq17m"]
 [ext_resource type="PackedScene" uid="uid://dq6heks88e2ip" path="res://overlays/overlay_audio_waveform.tscn" id="5_p87tv"]
-[ext_resource type="Shader" path="res://shaders/screen_blur.gdshader" id="7_5hn1q"]
+[ext_resource type="Shader" uid="uid://okxo3d88kn1h" path="res://shaders/screen_blur.gdshader" id="7_5hn1q"]
 [ext_resource type="PackedScene" uid="uid://d13t756slc8b0" path="res://main_menu.tscn" id="7_k5oyo"]
 [ext_resource type="PackedScene" uid="uid://ca2jqh2tc7jix" path="res://overlays/overlay_keys.tscn" id="8_dnyct"]
 [ext_resource type="PackedScene" uid="uid://geilakxinhul" path="res://scene_camera_menu.tscn" id="8_v4lip"]
@@ -69,9 +69,9 @@ shader_parameter/blur_amount = 0.0
 shader_parameter/tint_color = Color(1, 1, 1, 1)
 shader_parameter/tint_amount = 0.0
 shader_parameter/brightness = 1.2
+shader_parameter/noise_texture = SubResource("NoiseTexture2D_lsac7")
 shader_parameter/noise_strength = 0.0
 shader_parameter/noise_speed = 1.0
-shader_parameter/noise_texture = SubResource("NoiseTexture2D_lsac7")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_x0ssf"]
 shader = ExtResource("4_ioov3")
@@ -171,9 +171,9 @@ shader_parameter/blur_amount = 0.0
 shader_parameter/tint_color = Color(1, 1, 1, 1)
 shader_parameter/tint_amount = 0.0
 shader_parameter/brightness = 1.0
+shader_parameter/noise_texture = SubResource("NoiseTexture2D_m6tfj")
 shader_parameter/noise_strength = 0.015
 shader_parameter/noise_speed = 1.0
-shader_parameter/noise_texture = SubResource("NoiseTexture2D_m6tfj")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0a764"]
 
