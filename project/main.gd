@@ -91,7 +91,6 @@ var _window_drag_initial_pos := Vector2.ZERO
 @onready var m8_audio_connected := false
 
 func _ready() -> void:
-
 	m8_client.load_font(M8GD.M8_FONT_01_SMALL, FONT_01_SMALL)
 	m8_client.load_font(M8GD.M8_FONT_01_BIG, FONT_01_BIG)
 	m8_client.load_font(M8GD.M8_FONT_02_SMALL, FONT_02_SMALL)
@@ -131,7 +130,6 @@ func _ready() -> void:
 	%SplashContainer.visible = config.splash_show
 
 func _process(_delta: float) -> void:
-
 	# auto connect to m8s
 	if !m8_is_connected and is_waiting_for_device:
 		m8_device_connect_auto()
@@ -155,7 +153,6 @@ func _process(_delta: float) -> void:
 
 
 func _physics_process(delta: float) -> void:
-
 	update_audio_analyzer()
 
 	var modulate_color := m8_client.get_theme_colors()[0]
@@ -174,7 +171,6 @@ func _physics_process(delta: float) -> void:
 		%LabelStatus.modulate.a = lerp(%LabelStatus.modulate.a, %LabelStatus.modulate.a - delta * 2.0, 0.2)
 
 func _input(event: InputEvent) -> void:
-
 	# ALT+mouse window dragging
 	if get_window().mode == Window.MODE_WINDOWED:
 		if event is InputEventMouseButton:
@@ -217,7 +213,6 @@ func _input(event: InputEvent) -> void:
 				m8_audio_connect(audio_device)
 
 		if event.pressed and event.keycode == KEY_ESCAPE:
-
 			if %SplashContainer.visible:
 				%SplashContainer.visible = false
 				return
@@ -282,7 +277,6 @@ func get_scene_name(scene_path: String) -> String:
 ##
 func load_scene(scene_path: String) -> bool:
 	return _start_task("load scene \"%s\"" % scene_path, func() -> bool:
-
 		var scene: M8Scene
 		var p_scene_path := scene_path
 
@@ -339,7 +333,6 @@ func reset_scene_to_default() -> void:
 ## Get the list of filepaths to M8 scene files.
 ##
 func get_scene_paths() -> PackedStringArray:
-
 	var scene_paths: PackedStringArray = []
 	var dir_scenes: DirAccess = DirAccess.open(PATH_SCENES)
 
@@ -424,7 +417,6 @@ func _get_propkey_filter_shader(filter: ColorRect, property: String) -> String:
 ## Set properties of the given overlay according to the current profile/scene.
 ##
 func _init_overlay(overlay: OverlayBase) -> void:
-
 	# manually init the overlay properties here since we won't have a
 	# Setting node for all of them
 	menu_overlay.init_settings(overlay)
@@ -436,7 +428,6 @@ func _init_overlay(overlay: OverlayBase) -> void:
 ## The overlays' states will be loaded from the config.
 ##
 func init_overlays() -> void:
-
 	m8_client.set_display_background_alpha(0)
 
 	_init_overlay(overlay_display)
@@ -482,7 +473,6 @@ func set_filter_shader_parameter(shader_node_path: NodePath, shader_parameter: S
 ################################################################################
 
 func m8_device_connect(port: String) -> void:
-
 	if m8_client.is_connected():
 		m8_device_disconnect()
 
@@ -512,7 +502,6 @@ func m8_device_connect(port: String) -> void:
 
 ## Automatically detect and connect to any M8 device.
 func m8_device_connect_auto() -> void:
-
 	menu.set_status_serialport("Scanning for M8 devices...")
 
 	var m8_ports: Array = M8GD.list_devices()
@@ -584,7 +573,6 @@ func m8_audio_connect(device_name: String, hard_reset: bool = false) -> void:
 ## Automatically detect and monitor an M8 audio device.
 ##
 func m8_audio_connect_auto() -> void:
-
 	# If the M8 device is plugged in and detected, use it as a microphone and
 	# playback to the default audio output device.
 	for device in AudioServer.get_input_device_list():
@@ -626,7 +614,6 @@ func on_m8_system_info(hardware: String, firmware: String) -> void:
 
 ## Called when the M8 has been disconnected.
 func on_m8_device_disconnect() -> void:
-
 	m8_is_connected = false
 	%LabelPort.text = ""
 
@@ -723,7 +710,6 @@ func audio_fft(from_hz: float, to_hz: float) -> float:
 	return (magnitude.x + magnitude.y) / 2.0
 
 func update_audio_analyzer() -> void:
-
 	if !audio_is_spectrum_analyzer_enabled():
 		audio_level = 0.0
 		return
@@ -796,7 +782,6 @@ func _handle_input_keys(event: InputEvent) -> bool:
 	return true
 
 func _handle_input_profile_hotkeys(event: InputEvent) -> bool:
-
 	if (
 		is_any_menu_open() or
 		(
@@ -817,7 +802,6 @@ func _handle_input_profile_hotkeys(event: InputEvent) -> bool:
 	return false
 
 func _handle_input_overlay_hotkeys(event: InputEvent) -> bool:
-
 	if (
 		is_any_menu_open() or
 		(
@@ -841,7 +825,6 @@ func _handle_input_overlay_hotkeys(event: InputEvent) -> bool:
 
 
 func _handle_input_keyjazz(event: InputEvent) -> bool:
-
 	if (
 		!m8_virtual_keyboard_enabled or
 		is_any_menu_open() or
@@ -935,7 +918,6 @@ func _handle_input_keyjazz(event: InputEvent) -> bool:
 ## Returns [null] if the scene is unable to load.
 ##
 func _load_scene_from_file_path(scene_path: String) -> M8Scene:
-
 	# load packed scene from file
 	print("loading new scene from %s..." % scene_path)
 	var packed_scene: PackedScene = load(scene_path.trim_suffix(".remap"))
@@ -951,7 +933,6 @@ func _load_scene_from_file_path(scene_path: String) -> M8Scene:
 	return scene
 
 func _overlay_update_viewport_size() -> void:
-
 	var window_size := get_window().get_size()
 	var viewport_size := Vector2i((window_size / float(overlay_integer_zoom)).ceil())
 

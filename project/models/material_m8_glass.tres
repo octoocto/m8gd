@@ -1,6 +1,6 @@
 [gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://bx4wimtm1r58y"]
 
-[ext_resource type="Shader" path="res://shaders/device_screen_glass.gdshader" id="1_4ogah"]
+[ext_resource type="Shader" uid="uid://bpp0n34npuj1s" path="res://shaders/device_screen_glass.gdshader" id="1_4ogah"]
 
 [resource]
 render_priority = 0

@@ -24,4 +24,3 @@ void fragment() {
 		COLOR.rgb = mix(soft_light(screen_color, COLOR.rgb), COLOR.rgb, COLOR.a);
 	}
 }
-
