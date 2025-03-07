@@ -16,7 +16,7 @@ from pathlib import Path
 
 
 BUILD_DIR = "build"
-GODOT_VERSION = "4.3"
+GODOT_VERSION = "4.4"
 GODOT_BRANCH = "stable"
 
 ################################################################################
@@ -82,7 +82,7 @@ parser.add_argument(
 parser.add_argument(
     "--platform",
     type=str,
-    choices=["windows", "linux", "macos"],
+    choices=["windows", "linux", "macos", "all"],
     default="",
     help="set the target platform to build for",
 )
@@ -368,22 +368,37 @@ else:
     _println("Download required to continue, but found --nodownload flag. Exiting.")
     quit(1)
 
+
+def godot_export(godot_path: str, target: str, plat: str) -> bool:
+    try:
+        if platform.system() == "Linux" and args.osxcross_sdk:
+            run(
+                "%s --headless --path project %s macos ../build/m8gd_macos.zip"
+                % (godot_path, target)
+            )
+        else:
+            run(
+                "%s --headless --path project %s %s ../build/m8gd_%s.zip"
+                % (godot_path, target, plat, plat)
+            )
+        return True
+    except subprocess.CalledProcessError:
+        return False
+
+
 # export m8gd
 _println("Exporting Godot project...")
-try:
-    if platform.system() == "Linux" and args.osxcross_sdk:
-        run(
-            "%s --headless --path project %s macos ../build/m8gd_macos.zip"
-            % (godot_path, godot_target)
-        )
-    else:
-        run(
-            "%s --headless --path project %s %s ../build/m8gd_%s.zip"
-            % (godot_path, godot_target, target_platform, target_platform)
-        )
-except subprocess.CalledProcessError:
-    _println_err("Godot was not able to export successfully. Exiting.")
-    quit(1)
+
+if target_platform == "all":
+    for plat in ["windows", "linux", "macos"]:
+        _println("Exporting for %s..." % plat)
+        if not godot_export(godot_path, godot_target, plat):
+            _println_err("Godot was not able to export successfully. Exiting.")
+            quit(1)
+else:
+    if not godot_export(godot_path, godot_target, target_platform):
+        _println_err("Godot was not able to export successfully. Exiting.")
+        quit(1)
 
 _println('Done! The exported app will be found in the "build" folder.')
 quit(0)
