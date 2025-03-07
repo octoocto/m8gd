@@ -130,7 +130,7 @@ func init_profile(profile_name: String, use_current_profile_settings := true) ->
 		scene_file_path = get_current_scene_path()
 
 	if profile_name not in profiles.keys():
-		if use_current_profile_settings:
+		if use_current_profile_settings and current_profile in profiles.keys():
 			profiles[profile_name] = profiles[current_profile].duplicate(true)
 		else:
 			profiles[profile_name] = {

@@ -170,11 +170,11 @@ func update_item(item: OverlayKeysItem) -> void:
 	item.style_border_width_bottom = style_border_width_bottom
 	item.style_padding = style_padding
 
-	item.color_d = main.config.get_property(&"hl_color_directional")
-	item.color_o = main.config.get_property(&"hl_color_option")
-	item.color_e = main.config.get_property(&"hl_color_edit")
-	item.color_s = main.config.get_property(&"hl_color_shift")
-	item.color_p = main.config.get_property(&"hl_color_play")
+	item.color_d = main.config.get_property(&"hl_color_directional", Color.WHITE)
+	item.color_o = main.config.get_property(&"hl_color_option", Color.WHITE)
+	item.color_e = main.config.get_property(&"hl_color_edit", Color.WHITE)
+	item.color_s = main.config.get_property(&"hl_color_shift", Color.WHITE)
+	item.color_p = main.config.get_property(&"hl_color_play", Color.WHITE)
 
 	item.style_font_family = style_font_family
 	item.style_font_weight = style_font_weight
