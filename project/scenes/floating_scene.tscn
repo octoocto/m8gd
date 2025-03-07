@@ -182,16 +182,13 @@ shadow_blur = 3.0
 
 [node name="LightLamp" type="SpotLight3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(0.949972, 0.233564, -0.207367, 0, 0.663926, 0.747798, 0.312335, -0.710387, 0.630711, -2.964, 11.885, 10.369)
+transform = Transform3D(0.957214, 0.214455, -0.194293, -0.0293021, 0.73979, 0.6722, 0.287892, -0.637746, 0.714421, -1.21051, 5.27836, 6.0408)
 shadow_enabled = true
-shadow_bias = 0.001
-shadow_normal_bias = 0.0
-shadow_opacity = 0.72
-shadow_blur = 3.0
-spot_range = 128.0
-spot_attenuation = 0.0
-spot_angle = 15.0
-spot_angle_attenuation = 0.5
+shadow_bias = 0.007
+shadow_opacity = 0.95
+shadow_blur = 1.1
+spot_range = 20.0
+spot_attenuation = -0.5
 
 [node name="LightLeft" type="SpotLight3D" parent="."]
 unique_name_in_owner = true
