@@ -2,6 +2,8 @@
 
 #include "utilities.hpp"
 #include <cstdio>
+#include <chrono>
+#include <thread>
 #include <libserialport.h>
 
 // max amount of bytes that can be received in one read

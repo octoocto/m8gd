@@ -63,6 +63,7 @@ libm8::Error libm8::Client::connect(godot::String target_port_name)
 	print("port successfully opened!");
 
 	send_disable_display();
+	std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	send_enable_display();
 	send_reset_display();
 	return OK;
