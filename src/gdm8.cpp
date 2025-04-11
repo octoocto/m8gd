@@ -354,9 +354,9 @@ PackedColorArray M8GD::get_theme_colors()
 void M8GD::set_background_alpha(float a)
 {
 	if (a < 0.0)
-		a == 0.0;
+		a = 0.0;
 	if (a > 1.0)
-		a == 1.0;
+		a = 1.0;
 
 	display_buffer->set_background_alpha((uint8_t)(a * 255));
 }
