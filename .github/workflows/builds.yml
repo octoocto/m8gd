@@ -142,7 +142,7 @@ jobs:
             float-precision: double
             arch: x86_64
             target-type: template_debug
-            os: ubuntu-20.04
+            os: ubuntu-22.04
 
           # - platform: windows
           #   float-precision: double
@@ -204,7 +204,7 @@ jobs:
             float-precision: double
             arch: x86_64
             target-type: template_release
-            os: ubuntu-20.04
+            os: ubuntu-22.04
 
           # - platform: windows
           #   float-precision: double
