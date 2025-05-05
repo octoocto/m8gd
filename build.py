@@ -27,7 +27,7 @@ godot_url_root = (
         GODOT_VERSION, GODOT_BRANCH
     )
 )
-godot_zip_export_templates = "Godot_v{0}-{1}.tpz".format(GODOT_VERSION, GODOT_BRANCH)
+godot_zip_export_templates = "Godot_v{0}-{1}_export_templates.tpz".format(GODOT_VERSION, GODOT_BRANCH)
 godot_zip_win = "Godot_v{0}-{1}_win64.exe.zip".format(GODOT_VERSION, GODOT_BRANCH)
 godot_zip_linux = "Godot_v{0}-{1}_linux.x86_64.zip".format(GODOT_VERSION, GODOT_BRANCH)
 godot_zip_mac = "Godot_v{0}-{1}_macos.universal.zip".format(GODOT_VERSION, GODOT_BRANCH)
@@ -110,14 +110,14 @@ if args.dev:
 def get_export_templates_path() -> str:
     match platform.system():
         case "Windows":
-            return os.path.expandvars("%APPDATA%\\Godot\\export_templates\\4.3.stable")
+            return os.path.expandvars(f"%APPDATA%\\Godot\\export_templates\\{GODOT_VERSION}.stable")
         case "Linux":
             return os.path.expanduser(
-                "~/.local/share/godot/export_templates/4.3.stable"
+                f"~/.local/share/godot/export_templates/{GODOT_VERSION}.stable"
             )
-        case "MacOS":
+        case "MacOS" | "Darwin":
             return os.path.expanduser(
-                "~/Library/Application Support/Godot/export_templates/4.3.stable"
+                f"~/Library/Application Support/Godot/export_templates/{GODOT_VERSION}.stable"
             )
         case _:
             raise EnvironmentError()
@@ -245,6 +245,9 @@ def _println_err(text: str) -> None:
 # Build Script
 
 target_platform = platform.system().lower() if args.platform == "" else args.platform
+
+if target_platform == "darwin":
+    target_platform = "macos"
 
 if args.target == "template_debug":
     godot_target = "--export-debug"
@@ -387,7 +390,7 @@ def godot_export(godot_path: str, target: str, plat: str) -> bool:
 
 
 # export m8gd
-_println("Exporting Godot project...")
+_println(f"Exporting Godot project for {target_platform} platform...")
 
 if target_platform == "all":
     for plat in ["windows", "linux", "macos"]:

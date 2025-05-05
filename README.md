@@ -152,10 +152,12 @@ $ python -m pip install scons
 ```bash
 # with Homebrew
 $ brew install scons
+$ brew install python3
 $ brew install libserialport
 
 # with MacPorts
 $ macports install scons
+$ macports install python3
 $ macports install libserialport
 ```
 
@@ -165,8 +167,11 @@ $ macports install libserialport
 $ git clone https://github.com/octoocto/m8gd
 $ cd m8gd
 $ git submodule update --init
-$ python build.py
+$ export SCONS_CACHE=/tmp
+$ python3 build.py
 ```
+
+To build on Apple Silicon M-chips, add `--arch arm64` parameter to the build command.
 
 The `build.py` script will automatically download Godot and its export templates in order to export the project if it does not find a `godot` command. To force the script to run without downloading anything, run `python build.py --nodownload` instead.
 
