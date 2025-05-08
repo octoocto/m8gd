@@ -151,14 +151,13 @@ $ python -m pip install scons
 
 ```bash
 # with Homebrew
-$ brew install scons
-$ brew install python3
-$ brew install libserialport
+$ brew install scons python3 libserialport libtool
 
 # with MacPorts
 $ macports install scons
 $ macports install python3
 $ macports install libserialport
+$ macports install libtool
 ```
 
 ## Building From Source
