@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdint.h>
 #include <godot_cpp/classes/image_texture.hpp>
 #include <godot_cpp/classes/bit_map.hpp>

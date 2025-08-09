@@ -120,6 +120,9 @@ runs:
           ${{ github.workspace }}/.scons-cache/
           ${{ github.workspace }}/**/.sconsign.dblite
           ${{ github.workspace }}/godot-cpp/gen
+          ${{ github.workspace }}/thirdparty/libserialport/.libs/libserialport.a
+          ${{ github.workspace }}/thirdparty/SDL/build/.libs/libSDL2.a
+          ${{ github.workspace }}/thirdparty/SDL/build/.libs/libSDL2main.a
         key: ${{ inputs.platform }}_${{ inputs.arch }}_${{ inputs.float-precision }}_${{ inputs.build-target-type }}_cache
         restore-keys: |
           ${{ inputs.platform }}_${{ inputs.arch }}_${{ inputs.float-precision }}_${{ inputs.build-target-type }}_cache
