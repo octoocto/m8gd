@@ -2,8 +2,10 @@
 
 #include "display_buffer.hpp"
 #include "libm8.hpp"
+#include "utilities.hpp"
 
 #include <libserialport.h>
+#include <SDL.h>
 #include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/classes/image_texture.hpp>
@@ -137,6 +139,153 @@ public:
 	/// @brief Returns the firmware version of the current or last connected device.
 	/// @return the firmware version of the connected device
 	String get_firmware_version() { return sys_firmware; }
+
+private:
+	static void sdl_audio_in_callback(void *userdata, uint8_t *stream, int len)
+	{
+		(void)userdata; // unused
+		SDL_QueueAudio(sdl_audio_device_id_out, stream, len);
+	}
+
+public:
+	bool sdl_audio_initialized = false;
+	bool sdl_audio_paused = false;
+
+	static SDL_AudioDeviceID sdl_audio_device_id_out; // SDL audio device ID for output
+
+	SDL_AudioDeviceID sdl_audio_device_id_in = 0; // SDL audio device ID for input
+
+	// audio methods
+
+	/// @brief Initializes the audio subsystem.
+	/// @param audio_buffer_size the size of the audio buffer
+	/// @return true if successful, false otherwise
+	bool sdl_audio_init(const uint16_t audio_buffer_size = 1024, String output_device_name = "")
+	{
+		if (sdl_audio_initialized)
+		{
+			printerr("SDL: Audio subsystem already initialized!");
+			return false;
+		}
+
+		int m8_device_id = -1;
+
+		print("SDL: Initializing audio subsystem");
+
+		// Initialize SDL audio
+		if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0)
+		{
+			printerr("SDL: Failed to initialize audio subsystem! (SDL error: %s)", SDL_GetError());
+			return false;
+		}
+
+		const int num_audio_devices = SDL_GetNumAudioDevices(SDL_TRUE);
+		if (num_audio_devices < 1)
+		{
+			printerr("SDL: No audio devices found! (SDL error: %s)", SDL_GetError());
+			return false;
+		}
+
+		for (int i = 0; i < num_audio_devices; i++)
+		{
+			const char *device_name = SDL_GetAudioDeviceName(i, SDL_TRUE);
+			if (device_name)
+			{
+				print("SDL: Found audio device %d: %s", i, device_name);
+			}
+			else
+			{
+				printerr("SDL: Failed to get audio device name! (SDL error: %s)", SDL_GetError());
+			}
+
+			if (SDL_strstr(device_name, "M8") != NULL)
+			{
+				m8_device_id = i; // store the index of the M8 audio device
+			}
+		}
+
+		if (m8_device_id == -1)
+		{
+			printerr("SDL: No M8 audio device found! (SDL error: %s)", SDL_GetError());
+			return false;
+		}
+
+		print("SDL: Found M8 audio device: %s", SDL_GetAudioDeviceName(m8_device_id, SDL_TRUE));
+
+		SDL_AudioSpec want_in, have_in, want_out, have_out;
+
+		print("SDL: Opening audio devices");
+
+		SDL_zero(want_out);
+		want_out.freq = 44100;
+		want_out.format = AUDIO_S16;
+		want_out.channels = 2;				  // stereo
+		want_out.samples = audio_buffer_size; // buffer size
+
+		if (output_device_name.is_empty())
+		{
+			// Use the default audio output device
+			sdl_audio_device_id_out = SDL_OpenAudioDevice(
+				NULL, SDL_FALSE,
+				&want_out, &have_out, SDL_AUDIO_ALLOW_ANY_CHANGE);
+		}
+		else
+		{
+			sdl_audio_device_id_out = SDL_OpenAudioDevice(
+				output_device_name.utf8().get_data(), SDL_FALSE,
+				&want_out, &have_out, SDL_AUDIO_ALLOW_ANY_CHANGE);
+		}
+
+		if (sdl_audio_device_id_out == 0)
+		{
+			printerr("SDL: Failed to open output audio device! (SDL error: %s)", SDL_GetError());
+			return false;
+		}
+
+		SDL_zero(want_in);
+		want_in.freq = 44100;
+		want_in.format = AUDIO_S16;
+		want_in.channels = 2;				 // stereo
+		want_in.samples = audio_buffer_size; // buffer size
+		want_in.callback = sdl_audio_in_callback;
+
+		sdl_audio_device_id_in = SDL_OpenAudioDevice(
+			SDL_GetAudioDeviceName(m8_device_id, SDL_TRUE), SDL_TRUE,
+			&want_in, &have_in, SDL_AUDIO_ALLOW_ANY_CHANGE);
+
+		if (sdl_audio_device_id_in == 0)
+		{
+			printerr("SDL: Failed to open input audio device! (SDL error: %s)", SDL_GetError());
+			return false;
+		}
+
+		SDL_PauseAudioDevice(sdl_audio_device_id_out, 0);
+		SDL_PauseAudioDevice(sdl_audio_device_id_in, 0);
+
+		sdl_audio_paused = false;
+		sdl_audio_initialized = true;
+
+		return true;
+	}
+
+	void sdl_audio_shutdown()
+	{
+		if (!sdl_audio_initialized)
+			return;
+
+		print("SDL: Closing audio devices");
+
+		SDL_PauseAudioDevice(sdl_audio_device_id_out, 1);
+		SDL_PauseAudioDevice(sdl_audio_device_id_in, 1);
+		SDL_CloseAudioDevice(sdl_audio_device_id_out);
+		SDL_CloseAudioDevice(sdl_audio_device_id_in);
+
+		SDL_QuitSubSystem(SDL_INIT_AUDIO);
+
+		print("SDL: Audio subsystem shut down");
+
+		sdl_audio_initialized = false;
+	}
 
 public:
 	// display methods

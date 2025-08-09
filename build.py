@@ -14,6 +14,8 @@ import urllib.error
 import time
 from pathlib import Path
 
+LIBSERIALPORT_PATH = "thirdparty/libserialport/.libs/libserialport.a"
+SDL2_PATH = "thirdparty/sdl/build/.libs/libSDL2.a"
 
 BUILD_DIR = "build"
 GODOT_VERSION = "4.4"
@@ -27,7 +29,9 @@ godot_url_root = (
         GODOT_VERSION, GODOT_BRANCH
     )
 )
-godot_zip_export_templates = "Godot_v{0}-{1}_export_templates.tpz".format(GODOT_VERSION, GODOT_BRANCH)
+godot_zip_export_templates = "Godot_v{0}-{1}_export_templates.tpz".format(
+    GODOT_VERSION, GODOT_BRANCH
+)
 godot_zip_win = "Godot_v{0}-{1}_win64.exe.zip".format(GODOT_VERSION, GODOT_BRANCH)
 godot_zip_linux = "Godot_v{0}-{1}_linux.x86_64.zip".format(GODOT_VERSION, GODOT_BRANCH)
 godot_zip_mac = "Godot_v{0}-{1}_macos.universal.zip".format(GODOT_VERSION, GODOT_BRANCH)
@@ -110,7 +114,9 @@ if args.dev:
 def get_export_templates_path() -> str:
     match platform.system():
         case "Windows":
-            return os.path.expandvars(f"%APPDATA%\\Godot\\export_templates\\{GODOT_VERSION}.stable")
+            return os.path.expandvars(
+                f"%APPDATA%\\Godot\\export_templates\\{GODOT_VERSION}.stable"
+            )
         case "Linux":
             return os.path.expanduser(
                 f"~/.local/share/godot/export_templates/{GODOT_VERSION}.stable"
@@ -261,37 +267,76 @@ if platform.system() == "Windows":
 Path(BUILD_DIR).mkdir(exist_ok=True)
 
 if not args.export_only:
-    # compile libserialport
     make_path = find_command("make")
-    _println("Compiling libserialport...")
 
-    try:
-        chmod_x("thirdparty/libserialport/autogen.sh")
-        run("./autogen.sh", "thirdparty/libserialport")
-        chmod_x("thirdparty/libserialport/configure")
-        if args.host != "":
-            run(
-                "./configure --prefix=/usr/{0} --host={0}".format(args.host),
-                "thirdparty/libserialport",
-            )
-        elif args.arch == "universal":
-            run(
-                './configure CFLAGS="-arch arm64 -arch x86_64"',
-                "thirdparty/libserialport",
-            )
-        else:
-            run("./configure", "thirdparty/libserialport")
+    # compile libserialport
+    if not os.path.exists(LIBSERIALPORT_PATH):
+        _println("Compiling libserialport...")
 
-        if args.arch == "universal":
-            run(
-                '%s CFLAGS="-fPIC -arch arm64 -arch x86_64"' % make_path,
-                "thirdparty/libserialport",
-            )
-        else:
-            run("%s CFLAGS=-fPIC" % make_path, "thirdparty/libserialport")
-    except subprocess.CalledProcessError:
-        _println_err("Errors occured while compiling libserialport. Exiting.")
-        quit(1)
+        try:
+            chmod_x("thirdparty/libserialport/autogen.sh")
+            run("./autogen.sh", "thirdparty/libserialport")
+            chmod_x("thirdparty/libserialport/configure")
+            if args.host != "":
+                run(
+                    "./configure --prefix=/usr/{0} --host={0}".format(args.host),
+                    "thirdparty/libserialport",
+                )
+            elif args.arch == "universal":
+                run(
+                    './configure CFLAGS="-arch arm64 -arch x86_64"',
+                    "thirdparty/libserialport",
+                )
+            else:
+                run("./configure", "thirdparty/libserialport")
+
+            if args.arch == "universal":
+                run(
+                    '%s CFLAGS="-fPIC -arch arm64 -arch x86_64"' % make_path,
+                    "thirdparty/libserialport",
+                )
+            else:
+                run("%s CFLAGS=-fPIC" % make_path, "thirdparty/libserialport")
+        except subprocess.CalledProcessError:
+            _println_err("Errors occured while compiling libserialport. Exiting.")
+            quit(1)
+    else:
+        _println("Found libserialport!")
+
+    # compile sdl2
+    if not os.path.exists(SDL2_PATH):
+        _println("Compiling sdl2...")
+
+        try:
+            chmod_x("thirdparty/sdl/autogen.sh")
+            run("./autogen.sh", "thirdparty/sdl")
+
+            chmod_x("thirdparty/sdl/configure")
+            if args.host != "":
+                run(
+                    "./configure --prefix=/usr/{0} --host={0}".format(args.host),
+                    "thirdparty/sdl",
+                )
+            elif args.arch == "universal":
+                run(
+                    './configure CFLAGS="-arch arm64 -arch x86_64"',
+                    "thirdparty/sdl",
+                )
+            else:
+                run("./configure", "thirdparty/sdl")
+
+            if args.arch == "universal":
+                run(
+                    '%s CFLAGS="-fPIC -arch arm64 -arch x86_64"' % make_path,
+                    "thirdparty/sdl",
+                )
+            else:
+                run("%s CFLAGS=-fPIC" % make_path, "thirdparty/sdl")
+        except subprocess.CalledProcessError:
+            _println_err("Errors occured while compiling sdl2. Exiting.")
+            quit(1)
+    else:
+        _println("Found sdl2!")
 
     # compile gdextension
     scons_path = find_command("scons")

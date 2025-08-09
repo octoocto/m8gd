@@ -139,7 +139,12 @@ void M8GD::_bind_methods()
 	ClassDB::bind_method(D_METHOD("send_enable_display"), &M8GD::send_enable_display);
 	ClassDB::bind_method(D_METHOD("send_disable_display"), &M8GD::send_disable_display);
 	ClassDB::bind_method(D_METHOD("send_reset_display"), &M8GD::reset_display);
+
+	ClassDB::bind_method(D_METHOD("sdl_audio_init", "audio_buffer_size", "output_device_name"), &M8GD::sdl_audio_init, DEFVAL(""), 1024);
+	ClassDB::bind_method(D_METHOD("sdl_audio_shutdown"), &M8GD::sdl_audio_shutdown);
 }
+
+SDL_AudioDeviceID M8GD::sdl_audio_device_id_out = 0;
 
 M8GD::M8GD()
 {

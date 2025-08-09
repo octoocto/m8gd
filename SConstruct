@@ -9,11 +9,42 @@ env = SConscript("thirdparty/godot-cpp/SConstruct")
 env.Append(CPPPATH=["src/"])
 sources = Glob("src/*.cpp")
 
-# link libserialport (statically)
+if env["platform"] == "windows":
+    env.Append(LIBS=["mingw32"])
+    # env.Append(LINKFLAGS=["-mwindows"])
+
+# link libserialport
 env.Append(CPPPATH=["thirdparty/libserialport"])
 env.Append(LIBS=File("thirdparty/libserialport/.libs/libserialport.a"))
+
+# link SDL
+env.Append(CPPPATH=["thirdparty/sdl/include"])
+env.Append(LIBS=File("thirdparty/sdl/build/.libs/libSDL2main.a"))
+env.Append(LIBS=File("thirdparty/sdl/build/.libs/libSDL2.a"))
+# env.Append(LIBPATH=["thirdparty/sdl/build/.libs"])
+# env.Append(LIBS=["SDL2main", "SDL2"])
+
 if env["platform"] == "windows":
-    env.Append(LIBS=["setupapi"])
+    env.Append(
+        LIBS=[
+            "m",
+            "kernel32",
+            "user32",
+            "gdi32",
+            "winmm",
+            "imm32",
+            "ole32",
+            "oleaut32",
+            "version",
+            "uuid",
+            "advapi32",
+            "setupapi",
+            "shell32",
+            "dinput8",
+            "msvcrt",
+        ]
+    )
+
 
 # # find pkg-config command
 # if env["platform"] == "macos" and "OSXCROSS_ROOT" in os.environ:
