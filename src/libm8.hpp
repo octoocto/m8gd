@@ -131,40 +131,22 @@ namespace libm8
 		ERR_NOT_CONNECTED = 11,
 	};
 
-	static bool is_m8_serial_port(sp_port *port)
-	{
-		int usb_vid, usb_pid;
-		sp_get_port_usb_vid_pid(port, &usb_vid, &usb_pid);
-		return usb_vid == M8_USB_VID && usb_pid == M8_USB_PID;
-	}
+	/// @brief Check if a serial port is an M8 device.
+	/// @param port The serial port to check.
+	/// @return True if the port is an M8 device, false otherwise.
+	bool is_m8_serial_port(sp_port *port);
+	bool is_m8_serial_port(const char *port_name);
 
-	static FontParameters get_font_params(uint8_t model, uint8_t font)
-	{
-		if (model == MODEL_02)
-		{
-			switch (font)
-			{
-			case FONT_SMALL:
-				return FONT_02_SMALL;
-			case FONT_LARGE:
-				return FONT_02_BOLD;
-			case FONT_HUGE:
-				return FONT_02_HUGE;
-			}
-		}
-		else
-		{
-			switch (font)
-			{
-			case FONT_SMALL:
-				return FONT_01_SMALL;
-			case FONT_LARGE:
-				return FONT_01_BIG;
-			}
-		}
-		printerr("unable to find correct font parameters! (model=%d, font=%d)", model, font);
-		return FONT_01_SMALL;
-	}
+	/// @brief Get the description of a serial port.
+	/// @param port_name The name of the port to get the description for.
+	/// @return A string containing the description of the port, or an empty string if the port is not found.
+	char *get_serial_port_description(const char *port_name);
+
+	/// @brief Get the font parameters for a specific M8 model and font.
+	/// @param model The M8 model.
+	/// @param font The font to get parameters for.
+	/// @return The font parameters for the specified model and font.
+	FontParameters get_font_params(uint8_t model, uint8_t font);
 
 	static uint16_t decode_u16(uint8_t *data, uint8_t start)
 	{
@@ -244,7 +226,11 @@ namespace libm8
 			return send_command({TX_THEME_COLOR, index, r, g, b}, 5);
 		}
 
-		Error connect(godot::String port_name);
+		/// @brief Connect to an M8 device.
+		/// @param port_name The name of the serial port to connect to.
+		/// @param force Whether to force the connection even if the port is not an M8.
+		/// @return An error code indicating the result of the operation.
+		Error connect(godot::String port_name, bool force = false);
 
 		bool is_connected()
 		{

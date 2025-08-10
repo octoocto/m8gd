@@ -1,5 +1,4 @@
 #include "gdm8.hpp"
-#include "utilities.hpp"
 
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
@@ -116,8 +115,11 @@ void M8GD::_bind_methods()
 	BIND_ENUM_CONSTANT(M8_FONT_02_BOLD);
 	BIND_ENUM_CONSTANT(M8_FONT_02_HUGE);
 
-	ClassDB::bind_static_method("M8GD", D_METHOD("list_devices"), &M8GD::list_devices);
-	ClassDB::bind_method(D_METHOD("connect", "device"), &M8GD::connect);
+	ClassDB::bind_static_method("M8GD", D_METHOD("list_devices", "show_all"), &M8GD::list_devices);
+	ClassDB::bind_static_method("M8GD", D_METHOD("is_m8_serial_port", "port_name"), &M8GD::is_m8_serial_port);
+	ClassDB::bind_static_method("M8GD", D_METHOD("get_serial_port_description", "port_name"), &M8GD::get_serial_port_description);
+
+	ClassDB::bind_method(D_METHOD("connect", "device", "force"), &M8GD::connect, DEFVAL(false));
 	ClassDB::bind_method(D_METHOD("is_connected"), &M8GD::is_connected);
 	ClassDB::bind_method(D_METHOD("disconnect"), &M8GD::disconnect);
 	ClassDB::bind_method(D_METHOD("get_hardware_name"), &M8GD::get_hardware_name);
@@ -140,7 +142,7 @@ void M8GD::_bind_methods()
 	ClassDB::bind_method(D_METHOD("send_disable_display"), &M8GD::send_disable_display);
 	ClassDB::bind_method(D_METHOD("send_reset_display"), &M8GD::reset_display);
 
-	ClassDB::bind_method(D_METHOD("sdl_audio_init", "audio_buffer_size", "output_device_name"), &M8GD::sdl_audio_init, DEFVAL(""), 1024);
+	ClassDB::bind_method(D_METHOD("sdl_audio_init", "audio_buffer_size", "output_device_name"), &M8GD::sdl_audio_init, DEFVAL(""), DEFVAL(1024));
 	ClassDB::bind_method(D_METHOD("sdl_audio_shutdown"), &M8GD::sdl_audio_shutdown);
 }
 
@@ -172,11 +174,11 @@ bool M8GD::is_connected()
 	return m8_client.is_connected();
 }
 
-bool M8GD::connect(String target_port_name)
+bool M8GD::connect(String target_port_name, bool force)
 {
 	print("connecting to port \"%s\"...", target_port_name);
 
-	libm8::Error error = m8_client.connect(target_port_name);
+	libm8::Error error = m8_client.connect(target_port_name, force);
 
 	if (error == libm8::OK)
 	{
@@ -437,10 +439,12 @@ void M8GD::send_disable_display()
 	m8_client.send_disable_display();
 }
 
-godot::TypedArray<godot::String> M8GD::list_devices()
+godot::TypedArray<godot::String> M8GD::list_devices(bool show_all)
 {
 	TypedArray<String> port_names;
 	struct sp_port **port_list;
+
+	print("listing serial ports...");
 
 	enum sp_return result = sp_list_ports(&port_list);
 
@@ -453,15 +457,32 @@ godot::TypedArray<godot::String> M8GD::list_devices()
 	for (int i = 0; port_list[i] != nullptr; i++)
 	{
 		struct sp_port *port = port_list[i];
+		int usb_vid, usb_pid;
 		char *port_name = sp_get_port_name(port);
+		sp_get_port_usb_vid_pid(port, &usb_vid, &usb_pid);
 
-		if (libm8::is_m8_serial_port(port))
+		enum sp_transport transport = sp_get_port_transport(port);
+
+		if (transport != SP_TRANSPORT_USB)
 		{
+			continue;
+		}
+
+		print("found serial port: %s (%04X:%04X)", port_name, usb_vid, usb_pid);
+
+		if (libm8::is_m8_serial_port(port) || show_all)
+		{
+			// if the port is an M8 serial port or we want to show all ports
+			if (libm8::is_m8_serial_port(port))
+			{
+				print("detected M8 serial port: %s (%04X:%04X)", port_name, usb_vid, usb_pid);
+			}
 			port_names.append(port_name);
 		}
 	}
-
 	sp_free_port_list(port_list);
+
+	print("finished listing serial ports, found %d devices", port_names.size());
 
 	return port_names;
 }

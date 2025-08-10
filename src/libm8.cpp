@@ -1,6 +1,65 @@
 #include "libm8.hpp"
 
-libm8::Error libm8::Client::connect(godot::String target_port_name)
+bool libm8::is_m8_serial_port(sp_port *port)
+{
+	int usb_vid, usb_pid;
+	sp_get_port_usb_vid_pid(port, &usb_vid, &usb_pid);
+	return usb_vid == M8_USB_VID && usb_pid == M8_USB_PID;
+}
+
+bool libm8::is_m8_serial_port(const char *port_name)
+{
+	struct sp_port *port;
+	sp_get_port_by_name(port_name, &port);
+	if (port == nullptr)
+		return false;
+
+	bool is_m8 = libm8::is_m8_serial_port(port);
+	sp_free_port(port);
+	return is_m8;
+}
+
+char *libm8::get_serial_port_description(const char *port_name)
+{
+	struct sp_port *port;
+	sp_get_port_by_name(port_name, &port);
+	if (port == nullptr)
+		return "";
+
+	char *description = sp_get_port_description(port);
+	sp_free_port(port);
+	return description;
+}
+
+libm8::FontParameters libm8::get_font_params(uint8_t model, uint8_t font)
+{
+	if (model == MODEL_02)
+	{
+		switch (font)
+		{
+		case FONT_SMALL:
+			return FONT_02_SMALL;
+		case FONT_LARGE:
+			return FONT_02_BOLD;
+		case FONT_HUGE:
+			return FONT_02_HUGE;
+		}
+	}
+	else
+	{
+		switch (font)
+		{
+		case FONT_SMALL:
+			return FONT_01_SMALL;
+		case FONT_LARGE:
+			return FONT_01_BIG;
+		}
+	}
+	printerr("unable to find correct font parameters! (model=%d, font=%d)", model, font);
+	return FONT_01_SMALL;
+}
+
+libm8::Error libm8::Client::connect(godot::String target_port_name, bool force)
 {
 	enum sp_return result;
 
@@ -18,7 +77,7 @@ libm8::Error libm8::Client::connect(godot::String target_port_name)
 		struct sp_port *port = port_list[i];
 		char *port_name = sp_get_port_name(port);
 
-		if (libm8::is_m8_serial_port(port) && target_port_name == port_name)
+		if (target_port_name == port_name && (libm8::is_m8_serial_port(port) || force))
 		{
 			sp_copy_port(port, &m8_port);
 		}

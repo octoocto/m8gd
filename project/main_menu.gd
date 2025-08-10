@@ -3,6 +3,7 @@ class_name MainMenu extends Panel
 const REBIND_COOLDOWN := 100 # ms until can rebind again
 
 const ICON_LOAD := preload("res://assets/icon/Load.png")
+const ICON_WARNING := preload("res://assets/icon/StatusWarning.png")
 
 @onready var button_exit: Button = %ButtonExit
 
@@ -12,8 +13,17 @@ var is_key_rebinding := false
 var last_rebind_time := 0.0
 var key_rebind_callback: Callable
 
-func init(p_main: Main) -> void:
+var serial_show_all: bool = false
 
+@onready var list_serial_ports: ItemList = %ListSerialPorts
+@onready var check_box_serial_show_all: CheckBox = %CheckBoxSerialShowAll
+@onready var button_serial_status: Button = %SerialPortStatus
+@onready var button_serial_refresh: Button = %ButtonRefreshSerialPorts
+@onready var button_serial_connect: Button = %ButtonConnectSerialPort
+@onready var button_serial_disconnect: Button = %ButtonDisconnectSerialPort
+
+
+func init(p_main: Main) -> void:
 	main = p_main
 
 	button_exit.pressed.connect(func() -> void:
@@ -42,7 +52,6 @@ func init(p_main: Main) -> void:
 ## Setup the profile menu controls.
 ##
 func _init_menu_profiles() -> void:
-
 	var _setup_as_button := func() -> void:
 		# ensure this function gets called after _setup_as_list
 		await get_tree().process_frame
@@ -122,7 +131,6 @@ func _init_menu_profiles() -> void:
 ## Setup the scene menu controls.
 ##
 func _init_menu_scene() -> void:
-
 	var _setup_as_button := func() -> void:
 		# ensure this function gets called after _setup_as_list
 		await get_tree().process_frame
@@ -165,7 +173,6 @@ func _init_menu_scene() -> void:
 ## Setup the overlay menu controls.
 ##
 func _init_menu_overlays() -> void:
-
 	%Setting_OverlayScale.init_config_profile(main, "overlay_scale", func(value: int) -> void:
 		main.overlay_integer_zoom = value
 	)
@@ -227,7 +234,6 @@ func _init_menu_overlays() -> void:
 ## Setup the camera menu controls.
 ##
 func _init_menu_camera() -> void:
-
 	%Button_SceneCameraMenu.pressed.connect(func() -> void:
 		visible = false
 		main.menu_camera.menu_open()
@@ -265,9 +271,7 @@ func _init_menu_camera() -> void:
 ## Setup the audio menu controls.
 ##
 func _init_menu_audio() -> void:
-
 	# volume
-
 	%Setting_Volume.init_config_global(main, "volume", func(value: float) -> void:
 		var volume_db: float = linear_to_db(pow(value, 2))
 		main.audio_set_volume(volume_db)
@@ -313,7 +317,6 @@ func _init_menu_audio() -> void:
 ## Setup the video menu controls.
 ##
 func _init_menu_video() -> void:
-
 	var config := main.config
 
 	# Display
@@ -433,7 +436,6 @@ func _init_menu_video() -> void:
 ## Setup the filter menu controls.
 ##
 func _init_menu_filters() -> void:
-
 	%Setting_ShaderVHS.init_config_profile(main, "shader_vhs", func(value: bool) -> void:
 		main.get_node("%VHSShader1").visible = value
 		main.get_node("%VHSShader2").visible = value
@@ -503,7 +505,6 @@ func _init_menu_filters() -> void:
 ## Setup the input menu controls.
 ##
 func _init_menu_input() -> void:
-
 	_connect_config_global("virtual_keyboard_enabled", %Check_VirtualKeyboard, func(value: bool) -> void:
 		main.m8_virtual_keyboard_enabled = value
 	)
@@ -569,7 +570,6 @@ func _init_menu_input() -> void:
 ## Setup the 3d model menu controls.
 ##
 func _init_menu_model() -> void:
-
 	for arr: Array in [
 		[%Setting_ModelColorUp, "Up", "model_color_key_up"],
 		[%Setting_ModelColorDown, "Down", "model_color_key_down"],
@@ -691,35 +691,38 @@ func _init_menu_model() -> void:
 ## Setup the device connection menu controls.
 ##
 func _init_menu_devices() -> void:
-
 	# serial ports
-
 	refresh_serial_device_list()
 
-	%ListSerialPorts.item_selected.connect(func(index: int) -> void:
-		%ButtonConnectSerialPort.disabled = false
-		if main.current_serial_device == %ListSerialPorts.get_item_text(index):
-			%ButtonConnectSerialPort.text = "Reconnect"
-			%ButtonDisconnectSerialPort.disabled = false
+	list_serial_ports.item_selected.connect(func(index: int) -> void:
+		button_serial_connect.disabled = false
+		if main.current_serial_device == list_serial_ports.get_item_text(index):
+			button_serial_connect.text = "Reconnect"
+			button_serial_disconnect.disabled = false
 		else:
-			%ButtonConnectSerialPort.text = "Connect"
-			%ButtonDisconnectSerialPort.disabled = true
+			button_serial_connect.text = "Connect"
+			button_serial_disconnect.disabled = true
 	)
 
-	%ButtonRefreshSerialPorts.pressed.connect(refresh_audio_device_list)
-
-	%ButtonConnectSerialPort.pressed.connect(func() -> void:
-		var index: int = %ListSerialPorts.get_selected_items()[0]
-		var text: String = %ListSerialPorts.get_item_text(index)
-		main.m8_device_connect(text)
-		%ListSerialPorts.deselect_all()
-		%ButtonConnectSerialPort.disabled = true
-		%ButtonConnectSerialPort.text = "Connect"
+	check_box_serial_show_all.toggled.connect(func(checked: bool) -> void:
+		serial_show_all = checked
+		refresh_serial_device_list()
 	)
 
-	%ButtonDisconnectSerialPort.pressed.connect(func() -> void:
+	button_serial_refresh.pressed.connect(refresh_audio_device_list)
+
+	button_serial_connect.pressed.connect(func() -> void:
+		var index: int = list_serial_ports.get_selected_items()[0]
+		var text: String = list_serial_ports.get_item_text(index)
+		main.m8_device_connect(text, true)
+		list_serial_ports.deselect_all()
+		button_serial_connect.disabled = true
+		button_serial_connect.text = "Connect"
+	)
+
+	button_serial_disconnect.pressed.connect(func() -> void:
 		main.m8_device_disconnect(false)
-		%ButtonConnectSerialPort.text = "Connect"
+		button_serial_connect.text = "Connect"
 	)
 
 	# audio devices
@@ -789,7 +792,6 @@ func _init_menu_devices() -> void:
 ## Setup the debug menu controls.
 ##
 func _init_menu_debug() -> void:
-
 	var config := main.config
 
 	# custom font loading
@@ -887,7 +889,6 @@ func _connect_config_global(property: String, control: Control, fn: Callable) ->
 	_connect(control, default, callback)
 
 func _connect(control: Control, default: Variant, fn: Callable) -> void:
-
 	if control is Slider: # fn should be func(value: float)
 		control.value_changed.connect(fn)
 		control.set_value_no_signal(default)
@@ -969,7 +970,6 @@ func save_key_rebinds() -> void:
 	print("key bindings saved to config")
 
 func get_key_bind(action: String, index: int) -> String:
-
 	var events := InputMap.action_get_events(action)
 	var event: InputEvent
 	if index == 0 and events.size() == 0:
@@ -986,7 +986,6 @@ func get_key_bind(action: String, index: int) -> String:
 ## with the InputEvent as the first argument.
 ##
 func start_rebind(fn: Callable) -> void:
-
 	# prevent opening rebind prompt too fast
 	if Time.get_ticks_msec() - last_rebind_time < REBIND_COOLDOWN:
 		return
@@ -1002,7 +1001,6 @@ func start_rebind(fn: Callable) -> void:
 ## The index chooses which InputEvent to rebind.
 ##
 func start_rebind_action(action: String, index: int = 0) -> void:
-
 	var callback := func(event: InputEvent) -> void:
 		var events := InputMap.action_get_events(action)
 
@@ -1051,14 +1049,22 @@ func set_status_audiodevice(text: String) -> void:
 ## Refresh the serial device list UI.
 ##
 func refresh_serial_device_list() -> void:
-	%ListSerialPorts.clear()
+	list_serial_ports.clear()
 
-	for port in M8GD.list_devices():
-		%ListSerialPorts.add_item(port)
+	for port_name in M8GD.list_devices(serial_show_all):
+		var port_desc := M8GD.get_serial_port_description(port_name)
+		if M8GD.is_m8_serial_port(port_name):
+			list_serial_ports.add_item("%s (%s)" % [port_desc, port_name])
+		else:
+			list_serial_ports.add_item("%s (%s)" % [port_desc, port_name], ICON_WARNING)
+			list_serial_ports.set_item_tooltip(
+				list_serial_ports.item_count - 1,
+				"This port might not be an M8 device."
+			)
 
-	for i in range(%ListSerialPorts.item_count):
-		if %ListSerialPorts.get_item_text(i) == main.current_serial_device:
-			%ListSerialPorts.select(i)
+	for i in range(list_serial_ports.item_count):
+		if list_serial_ports.get_item_text(i) == main.current_serial_device:
+			list_serial_ports.select(i)
 			break
 
 ##

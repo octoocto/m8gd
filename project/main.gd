@@ -12,6 +12,8 @@ signal profile_loaded(profile_name: String)
 ## Loading a profile will also emit this signal if a new scene wasn't loaded.
 signal scene_loaded(scene_path: String, scene: M8Scene)
 
+const DEVICE_SCAN_INTERVAL: float = 5.0
+
 const MAIN_SCENE_PATH: String = "res://scenes/floating_scene.tscn"
 const PATH_SCENES: String = "res://scenes/"
 
@@ -47,6 +49,7 @@ var current_audio_device: String = ""
 ## if true, keep scanning for devices until one is found
 var is_waiting_for_device := true
 var is_waiting_for_audio_device := true
+var next_device_scan := 0.0 # time in seconds to wait before scanning for devices again
 
 ## true if audio device is in the middle of connecting
 var is_audio_connecting := false
@@ -129,10 +132,16 @@ func _ready() -> void:
 
 	%SplashContainer.visible = config.splash_show
 
-func _process(_delta: float) -> void:
+	await get_tree().create_timer(1.0).timeout
+
+func _process(delta: float) -> void:
 	# auto connect to m8s
-	if !m8_is_connected and is_waiting_for_device:
-		m8_device_connect_auto()
+	if next_device_scan <= 0.0:
+		if !m8_is_connected and is_waiting_for_device:
+			m8_device_connect_auto()
+		next_device_scan = DEVICE_SCAN_INTERVAL
+	else:
+		next_device_scan -= delta
 
 	# auto monitor audio if m8 is connected
 	if m8_is_connected:
@@ -472,41 +481,42 @@ func set_filter_shader_parameter(shader_node_path: NodePath, shader_parameter: S
 # M8 client methods
 ################################################################################
 
-func m8_device_connect(port: String) -> void:
+func m8_device_connect(port: String, force: bool = false) -> void:
 	if m8_client.is_connected():
 		m8_device_disconnect()
 
-	var m8_ports: Array = M8GD.list_devices()
+	# var m8_ports: Array = M8GD.list_devices()
 
-	if !port in m8_ports:
-		menu.set_status_serialport("Failed: port not found: %s" % port)
-		return
+	# if !port in m8_ports:
+	# 	menu.set_status_serialport("Failed: port not found: %s" % port)
+	# 	return
 
-	menu.set_status_serialport("Connecting to serial port %s..." % m8_ports[0])
+	menu.set_status_serialport("Connecting to serial port %s..." % port)
 
-	if !m8_client.connect(port):
+	if !m8_client.connect(port, force):
 		menu.set_status_serialport("Failed: failed to connect to port: %s" % port)
 		is_waiting_for_device = false
 		return
 
 	m8_is_connected = true
-	%LabelPort.text = m8_ports[0]
+	%LabelPort.text = port
 	m8_client.system_info.connect(on_m8_system_info)
 	m8_client.disconnected.connect(on_m8_device_disconnect)
 	m8_client.theme_changed.connect(on_m8_theme_changed)
 	current_serial_device = port
 	m8_connected.emit()
 
-	print_blink("connected to M8 at %s!" % m8_ports[0])
-	menu.set_status_serialport("Connected to: %s" % m8_ports[0])
+	print_blink("connected to M8 at %s!" % port)
+	menu.set_status_serialport("Connected to: %s" % port)
 
 ## Automatically detect and connect to any M8 device.
 func m8_device_connect_auto() -> void:
 	menu.set_status_serialport("Scanning for M8 devices...")
+	print("Scanning for M8 devices...")
 
-	var m8_ports: Array = M8GD.list_devices()
+	var m8_ports: Array = M8GD.list_devices(false)
 	if m8_ports.size():
-		m8_device_connect(m8_ports[0])
+		m8_device_connect(m8_ports[0], false)
 	else:
 		menu.set_status_serialport("Not connected: No M8 devices found")
 

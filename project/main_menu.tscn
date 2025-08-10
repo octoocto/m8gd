@@ -89,10 +89,9 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-current_tab = 6
+current_tab = 0
 
 [node name="Scene" type="MarginContainer" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer"]
-visible = false
 layout_mode = 2
 theme_override_constants/margin_top = 18
 metadata/_tab_index = 0
@@ -729,6 +728,11 @@ size_flags_vertical = 3
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_06k14")
 
+[node name="CheckBoxSerialShowAll" type="CheckBox" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Show all serial devices"
+
 [node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer"]
 layout_mode = 2
 
@@ -1347,6 +1351,7 @@ value = 2
 setting_name = "DOF Blur Quality"
 
 [node name="Audio" type="MarginContainer" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 6
 

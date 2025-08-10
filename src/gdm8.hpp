@@ -107,9 +107,6 @@ public:
 	uint8_t cfg_tx_timeout_ms = 5; // timeout ms for write calls
 
 public:
-	static godot::TypedArray<godot::String> list_devices();
-
-public:
 	M8GD();
 	~M8GD();
 
@@ -119,11 +116,33 @@ public:
 
 	// device methods
 public:
+	/// @brief Lists all available serial devices.
+	/// @param show_all Whether to show all devices or only M8 devices.
+	/// @return An array of strings containing the names of the available serial devices.
+	static godot::TypedArray<godot::String> list_devices(bool show_all = false);
+
+	/// @brief Checks if a serial port is an M8 device.
+	/// @param port_name The name of the serial port to check.
+	/// @return true if the serial port is an M8 device, false otherwise.
+	static bool is_m8_serial_port(const String &port_name)
+	{
+		return libm8::is_m8_serial_port(port_name.utf8().get_data());
+	}
+
+	/// @brief Gets the description of a serial port.
+	/// @param port_name The name of the serial port to get the description for.
+	/// @return The description of the serial port, or an empty string if not found.
+	static String get_serial_port_description(const String &port_name)
+	{
+		return libm8::get_serial_port_description(port_name.utf8().get_data());
+	}
+
 	/// @brief Attempts to connect to the serial port at port_name.
 	///        Serial port name must be of a valid M8 device.
-	/// @param port_name
+	/// @param port_name The name of the serial port to connect to.
+	/// @param force Whether to force the connection even if the port is not an M8.
 	/// @return true if the connection was successful.
-	bool connect(String port_name);
+	bool connect(String port_name, bool force = false);
 
 	/// @brief Disconnects the M8 and opens the serial port.
 	void disconnect();
