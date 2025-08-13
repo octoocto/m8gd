@@ -271,34 +271,27 @@ func _init_menu_camera() -> void:
 ## Setup the audio menu controls.
 ##
 func _init_menu_audio() -> void:
-	# volume
-	%Setting_Volume.init_config_global(main, "volume", func(value: float) -> void:
-		var volume_db: float = linear_to_db(pow(value, 2))
-		main.audio_set_volume(volume_db)
+	%Setting_AudioHandler.init_config_global(main, "audio_handler", func(value: int) -> void:
+		main.audio_set_handler(value)
 	)
 
-	# audio driver (readonly)
-
-	%LineEditAudioDriver.placeholder_text = ProjectSettings.get_setting("audio/driver/driver")
-
-	# audio mix rate (readonly)
-
-	%LineEditAudioRate.placeholder_text = "%d Hz" % AudioServer.get_mix_rate()
-	# %LineEditAudioRate.text_submitted.connect(func(text):
-	# 	if text.is_valid_int():
-	# 		ProjectSettings.set_setting("audio/driver/mix_rate", int(text))
-	# 	%LineEditAudioRate.text=""
-	# 	%LineEditAudioRate.placeholder_text="%d Hz" % AudioServer.get_mix_rate()
-	# )
-
-	# audio latency (readonly)
+	# volume
+	%Setting_Volume.init_config_global(main, "volume", func(value: float) -> void:
+		var volume: float = pow(value, 2)
+		main.audio_set_volume(volume)
+	)
 
 	var audio_latency_update_timer := Timer.new()
 	add_child(audio_latency_update_timer)
 	audio_latency_update_timer.start(1.0)
 	audio_latency_update_timer.timeout.connect(func() -> void:
 		if visible:
-			%LineEditAudioLatency.placeholder_text = "%f ms" % AudioServer.get_output_latency()
+			# audio driver (readonly)
+			%LineEditAudioDriver.placeholder_text = main.device_manager.audio_get_driver_name()
+			# audio mix rate (readonly)
+			%LineEditAudioRate.placeholder_text = "%d Hz" % main.device_manager.audio_get_mix_rate()
+			# audio latency (readonly)
+			%LineEditAudioLatency.placeholder_text = "%f ms" % main.device_manager.audio_get_latency()
 	)
 
 	%Setting_SAEnable.init_config_global(main, "audio_analyzer_enabled", func(value: bool) -> void:
@@ -773,8 +766,8 @@ func _init_menu_devices() -> void:
 	get_tree().process_frame.connect(func() -> void:
 		if main.is_menu_open():
 			var volume := main.audio_get_peak_volume()
-			%Bar_AudioLevelL.value = volume.x
-			%Bar_AudioLevelR.value = volume.y
+			%Bar_AudioLevelL.value = max(-1000, volume.x)
+			%Bar_AudioLevelR.value = max(-1000, volume.y)
 	)
 
 	# auto refresh list

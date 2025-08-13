@@ -60,6 +60,7 @@ var version: int = 0
 @export var audio_to_aberration := 0.02
 
 # audio settings
+@export var audio_handler := 0 # 0 = Godot, 1 = SDL
 @export var volume := 0.8
 
 # misc settings

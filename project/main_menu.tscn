@@ -1364,6 +1364,14 @@ layout_mode = 2
 text = "Output"
 top_spacing = false
 
+[node name="Setting_AudioHandler" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer" instance=ExtResource("6_mvtic")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_type = 1
+items = PackedStringArray("Godot", "SDL")
+value = 0
+setting_name = "Audio Handler"
+
 [node name="Setting_Volume" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer/Audio/VBoxContainer" instance=ExtResource("6_07wpv")]
 unique_name_in_owner = true
 layout_mode = 2

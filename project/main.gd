@@ -46,6 +46,8 @@ var m8_virtual_keyboard_velocity := 127
 var current_serial_device: String = ""
 var current_audio_device: String = ""
 
+var device_manager := DeviceManager.new()
+
 ## if true, keep scanning for devices until one is found
 var is_waiting_for_device := true
 var is_waiting_for_audio_device := true
@@ -104,6 +106,10 @@ func _ready() -> void:
 
 	var start_time := Time.get_ticks_msec()
 
+	_start_task("init devices", func() -> void:
+		device_manager.init(self)
+	)
+
 	_start_task("init overlays", func() -> void:
 		overlay_spectrum.init(self)
 		overlay_waveform.init(self)
@@ -143,12 +149,14 @@ func _process(delta: float) -> void:
 	else:
 		next_device_scan -= delta
 
+	device_manager._process(delta)
+	
 	# auto monitor audio if m8 is connected
-	if m8_is_connected:
-		if m8_audio_connected:
-			m8_audio_check()
-		elif is_waiting_for_audio_device:
-			m8_audio_connect_auto()
+	# if m8_is_connected:
+	# 	if m8_audio_connected:
+	# 		m8_audio_check()
+	# 	elif is_waiting_for_audio_device:
+	# 		m8_audio_connect_auto()
 
 	%LabelFPS.text = "%d" % Engine.get_frames_per_second()
 
@@ -216,10 +224,7 @@ func _input(event: InputEvent) -> void:
 
 		# manual reset audio
 		if event.pressed and event.keycode == KEY_R and event.ctrl_pressed:
-			if m8_audio_connected:
-				var audio_device := current_audio_device
-				m8_audio_disconnect(false)
-				m8_audio_connect(audio_device)
+			device_manager.reset_audio_device()
 
 		if event.pressed and event.keycode == KEY_ESCAPE:
 			if %SplashContainer.visible:
@@ -528,96 +533,6 @@ func m8_device_disconnect(wait_for_device := true) -> void:
 		if is_waiting_for_device:
 			menu.set_status_serialport("Not connected. Waiting for device...")
 
-##
-## Connect to the audio input device with name `device_name`.
-## If `hard_reset` is true, also free and create a new AudioStreamPlayer.
-##
-func m8_audio_connect(device_name: String, hard_reset: bool = false) -> void:
-	if !device_name in AudioServer.get_input_device_list():
-		menu.set_status_audiodevice("Failed: audio device not found: %s" % device_name)
-		return
-
-	if is_audio_connecting: return
-	is_audio_connecting = true
-	audio_set_muted(true)
-
-	if m8_audio_connected:
-		m8_audio_disconnect()
-
-	if hard_reset and is_instance_valid(audio_monitor):
-		print("audio: removing AudioStreamPlayer")
-		remove_child(audio_monitor)
-		audio_monitor.stream = null
-		audio_monitor.queue_free()
-		audio_monitor = null
-
-	menu.set_status_audiodevice("Not connected")
-	await get_tree().create_timer(0.1).timeout
-
-	AudioServer.input_device = device_name
-
-	if hard_reset or !is_instance_valid(audio_monitor):
-		print("audio: adding AudioStreamPlayer")
-		audio_monitor = AudioStreamPlayer.new()
-		audio_monitor.stream = AudioStreamMicrophone.new()
-		audio_monitor.bus = "Analyzer"
-		add_child(audio_monitor)
-
-	audio_monitor.playing = false
-
-	menu.set_status_audiodevice("Starting...")
-	await get_tree().create_timer(0.1).timeout
-
-	audio_device_last = device_name
-	audio_monitor.playing = true
-	m8_audio_connected = true
-	is_audio_connecting = false
-	is_waiting_for_device = true # auto connect again if there are any random disconnects
-	audio_set_muted(false)
-
-	current_audio_device = device_name
-	print("audio: connected to device %s" % device_name)
-	menu.set_status_audiodevice("Connected to: %s" % device_name)
-
-##
-## Automatically detect and monitor an M8 audio device.
-##
-func m8_audio_connect_auto() -> void:
-	# If the M8 device is plugged in and detected, use it as a microphone and
-	# playback to the default audio output device.
-	for device in AudioServer.get_input_device_list():
-		if device.contains("M8"):
-			m8_audio_connect(device)
-			return
-	
-	menu.set_status_audiodevice("Not connected: No M8 audio device found")
-
-##
-## Disconnect the M8 audio device from the monitor.
-##
-func m8_audio_disconnect(wait_for_device := true) -> void:
-	m8_audio_connected = false
-	AudioServer.input_device = "Default"
-	audio_monitor.playing = false
-	current_audio_device = ""
-	print("audio: disconnected")
-	menu.set_status_audiodevice("Not connected (Disconnected)")
-	is_waiting_for_audio_device = wait_for_device
-
-## Check if the M8 audio device still exists. If not, disconnect.
-func m8_audio_check() -> void:
-	if is_audio_connecting: return
-
-	if is_instance_valid(audio_monitor):
-		if !AudioServer.input_device in AudioServer.get_input_device_list():
-			print("audio: device no longer found, disconnecting...")
-			m8_audio_disconnect()
-			return
-
-		if !audio_monitor.playing or audio_monitor.stream_paused:
-			print("audio: stream stopped, reconnecting...")
-			m8_audio_connect(audio_device_last)
-
 func on_m8_system_info(hardware: String, firmware: String) -> void:
 	%LabelVersion.text = "%s %s" % [hardware, firmware]
 	m8_system_info_received.emit(hardware, firmware)
@@ -632,7 +547,7 @@ func on_m8_device_disconnect() -> void:
 	m8_client.theme_changed.disconnect(on_m8_theme_changed)
 
 	if m8_audio_connected:
-		m8_audio_disconnect()
+		device_manager.disconnect_audio_device()
 
 	current_serial_device = ""
 	m8_disconnected.emit()
@@ -684,17 +599,14 @@ func m8_set_font_from_file(font: int, path: String) -> void:
 
 		m8_set_font(font, bitmap)
 
-func audio_get_level() -> float:
-	return audio_level
+func audio_set_handler(handler: DeviceManager.AudioHandler) -> void:
+	device_manager.audio_set_handler(handler)
 
 ##
 ## Get the peak volume of the "Analyzer" bus.
 ##
 func audio_get_peak_volume() -> Vector2:
-	return Vector2(
-		AudioServer.get_bus_peak_volume_left_db(0, 0),
-		AudioServer.get_bus_peak_volume_right_db(0, 0)
-	)
+	return device_manager.audio_get_peak_volume()
 
 func audio_get_spectrum_analyzer() -> AudioEffectSpectrumAnalyzerInstance:
 	return AudioServer.get_bus_effect_instance(0, 0)
@@ -705,11 +617,9 @@ func audio_set_spectrum_analyzer_enabled(enabled: bool) -> void:
 func audio_is_spectrum_analyzer_enabled() -> bool:
 	return AudioServer.is_bus_effect_enabled(0, 0)
 
-func audio_set_muted(muted: bool) -> void:
-	AudioServer.set_bus_mute(0, muted)
-
-func audio_set_volume(volume_db: float) -> void:
-	AudioServer.set_bus_volume_db(0, volume_db)
+## Set audio volume, where [volume] is a float between 0.0 and 1.0.
+func audio_set_volume(volume: float) -> void:
+	device_manager.audio_set_volume(volume)
 
 func audio_fft(from_hz: float, to_hz: float) -> float:
 	var magnitude := audio_get_spectrum_analyzer().get_magnitude_for_frequency_range(
