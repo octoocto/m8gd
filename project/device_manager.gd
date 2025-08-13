@@ -107,6 +107,7 @@ func connect_audio_device(device: String = "") -> void:
 	is_audio_connecting = false
 	is_waiting_for_audio_device = true # auto connect again if there are any random disconnects
 	print("audio: connected to device %s" % device)
+	main.print_to_screen("connected to audio device (%s): %s" % [AudioHandler.keys()[audio_handler], device])
 	main.menu.set_status_audiodevice("Connected to: %s" % device)
 
 func disconnect_audio_device() -> void:
@@ -133,6 +134,7 @@ func disconnect_audio_device() -> void:
 		main.m8_client.sdl_audio_shutdown()
 
 	current_audio_device = ""
+	main.print_to_screen("disconnected audio device")
 	main.menu.set_status_audiodevice("Not connected")
 
 func reset_audio_device() -> void:
@@ -148,7 +150,7 @@ func check_audio_device() -> void:
 	if is_audio_connecting:
 		return
 
-	if is_instance_valid(audio_monitor):
+	if audio_handler == AudioHandler.GODOT and is_instance_valid(audio_monitor):
 		if !AudioServer.input_device in AudioServer.get_input_device_list():
 			print("audio: input device no longer connected")
 			disconnect_audio_device()

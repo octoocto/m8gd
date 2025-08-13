@@ -71,6 +71,7 @@ var _window_drag_initial_pos := Vector2.ZERO
 
 @onready var config := M8Config.load()
 
+@onready var console: Console = %LabelConsole
 @onready var audio_monitor: AudioStreamPlayer = %AudioStreamPlayer
 
 # @onready var scene_viewport: SubViewport = %SceneViewport
@@ -256,9 +257,8 @@ func quit() -> void:
 	get_tree().quit()
 
 ## Temporarily show a message on the bottom-left of the screen.
-func print_blink(msg: String) -> void:
-	%LabelStatus.text = msg
-	%LabelStatus.modulate.a = 1.0
+func print_to_screen(msg: String) -> void:
+	console.print_line(msg)
 
 ## Return true if user is in the menu.
 func is_menu_open() -> bool:
@@ -511,7 +511,7 @@ func m8_device_connect(port: String, force: bool = false) -> void:
 	current_serial_device = port
 	m8_connected.emit()
 
-	print_blink("connected to M8 at %s!" % port)
+	print_to_screen("connected to serial device: %s" % port)
 	menu.set_status_serialport("Connected to: %s" % port)
 
 ## Automatically detect and connect to any M8 device.
@@ -551,7 +551,7 @@ func on_m8_device_disconnect() -> void:
 
 	current_serial_device = ""
 	m8_disconnected.emit()
-	print_blink("disconnected")
+	print_to_screen("disconnected serial device")
 	menu.set_status_serialport("Not connected (Disconnected)")
 
 func on_m8_theme_changed(colors: PackedColorArray, complete: bool) -> void:
@@ -759,25 +759,25 @@ func _handle_input_keyjazz(event: InputEvent) -> bool:
 			if event.pressed and m8_virtual_keyboard_octave > 0:
 				m8_virtual_keyboard_octave -= 1
 				m8_virtual_keyboard_notes.clear()
-				print_blink("octave = %d" % m8_virtual_keyboard_octave)
+				print_to_screen("octave = %d" % m8_virtual_keyboard_octave)
 				m8_send_keyjazz(255, 0)
 			return true
 		KEY_EQUAL:
 			if event.pressed and m8_virtual_keyboard_octave < 10:
 				m8_virtual_keyboard_octave += 1
 				m8_virtual_keyboard_notes.clear()
-				print_blink("octave = %d" % m8_virtual_keyboard_octave)
+				print_to_screen("octave = %d" % m8_virtual_keyboard_octave)
 				m8_send_keyjazz(255, 0)
 			return true
 		KEY_BRACKETLEFT:
 			if event.pressed and m8_virtual_keyboard_velocity > 1:
 				m8_virtual_keyboard_velocity -= 1
-				print_blink("velocity = %X (%d)" % [m8_virtual_keyboard_velocity, m8_virtual_keyboard_velocity])
+				print_to_screen("velocity = %X (%d)" % [m8_virtual_keyboard_velocity, m8_virtual_keyboard_velocity])
 			return true
 		KEY_BRACKETRIGHT:
 			if event.pressed and m8_virtual_keyboard_velocity < 127:
 				m8_virtual_keyboard_velocity += 1
-				print_blink("velocity = %X (%d)" % [m8_virtual_keyboard_velocity, m8_virtual_keyboard_velocity])
+				print_to_screen("velocity = %X (%d)" % [m8_virtual_keyboard_velocity, m8_virtual_keyboard_velocity])
 			return true
 		KEY_A:
 			pass

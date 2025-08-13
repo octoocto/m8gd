@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://b265ke8cr3dgr"]
+[gd_scene load_steps=43 format=3 uid="uid://b265ke8cr3dgr"]
 
 [ext_resource type="Script" uid="uid://d0olbd611iax7" path="res://main.gd" id="1_4g2n0"]
 [ext_resource type="Shader" uid="uid://ddeledy6hskpq" path="res://shaders/post_process.gdshader" id="1_tjung"]
@@ -15,8 +15,10 @@
 [ext_resource type="PackedScene" uid="uid://ca2jqh2tc7jix" path="res://overlays/overlay_keys.tscn" id="8_dnyct"]
 [ext_resource type="PackedScene" uid="uid://geilakxinhul" path="res://scene_camera_menu.tscn" id="8_v4lip"]
 [ext_resource type="PackedScene" uid="uid://dv8crbibtrpck" path="res://scene_menu.tscn" id="9_bisyb"]
+[ext_resource type="FontFile" uid="uid://c2qpt2alp4ic3" path="res://assets/FSEX302.ttf" id="13_82xsv"]
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/menu_theme.tres" id="13_e5i6c"]
 [ext_resource type="Texture2D" uid="uid://bnktl64c363mh" path="res://assets/icon/TripleBar.png" id="13_gepng"]
+[ext_resource type="Script" uid="uid://dboaq4avw66tx" path="res://console.gd" id="14_getpj"]
 [ext_resource type="Texture2D" uid="uid://bmg26rkxtqtso" path="res://assets/icon/Close.png" id="14_p46wh"]
 [ext_resource type="PackedScene" uid="uid://bebvc2datqp85" path="res://menu_overlay.tscn" id="16_4bi6d"]
 
@@ -50,6 +52,8 @@ MarginContainer/constants/margin_left = 32
 MarginContainer/constants/margin_right = 32
 MarginContainer/constants/margin_top = 16
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_hbdmc")
+console/base_type = &"RichTextLabel"
+console/fonts/normal_font = ExtResource("13_82xsv")
 
 [sub_resource type="Gradient" id="Gradient_v10jr"]
 
@@ -175,6 +179,9 @@ shader_parameter/noise_texture = SubResource("NoiseTexture2D_m6tfj")
 shader_parameter/noise_strength = 0.015
 shader_parameter/noise_speed = 1.0
 
+[sub_resource type="LabelSettings" id="LabelSettings_getpj"]
+font = ExtResource("13_82xsv")
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0a764"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xqpi0"]
@@ -296,6 +303,7 @@ size_flags_vertical = 10
 position_offset = Vector2i(-30, -100)
 
 [node name="BackBufferCopy2" type="BackBufferCopy" parent="CanvasLayer/UI"]
+position = Vector2(-24, -160)
 copy_mode = 2
 
 [node name="VHSShader1" type="ColorRect" parent="CanvasLayer/UI"]
@@ -392,6 +400,13 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="LabelConsole" type="RichTextLabel" parent="CanvasLayer/UI/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"console"
+fit_content = true
+script = ExtResource("14_getpj")
+
 [node name="GridContainer" type="GridContainer" parent="CanvasLayer/UI/MarginContainer"]
 layout_mode = 2
 columns = 2
@@ -416,6 +431,8 @@ offset_right = 1.0
 offset_bottom = 27.0
 size_flags_horizontal = 0
 size_flags_vertical = 2
+text = "0"
+label_settings = SubResource("LabelSettings_getpj")
 
 [node name="LabelVersion" type="Label" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
 unique_name_in_owner = true
@@ -424,6 +441,7 @@ offset_top = 32.0
 offset_right = 622.0
 offset_bottom = 55.0
 size_flags_vertical = 10
+label_settings = SubResource("LabelSettings_getpj")
 vertical_alignment = 2
 
 [node name="LabelPort" type="Label" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
@@ -434,6 +452,7 @@ offset_right = 622.0
 offset_bottom = 87.0
 size_flags_vertical = 10
 text = "*no device"
+label_settings = SubResource("LabelSettings_getpj")
 vertical_alignment = 2
 
 [node name="LabelAudioPeak" type="Label" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
@@ -444,6 +463,7 @@ offset_right = 622.0
 offset_bottom = 119.0
 size_flags_vertical = 10
 text = "0.0 dB"
+label_settings = SubResource("LabelSettings_getpj")
 vertical_alignment = 2
 
 [node name="LabelAudioPeakAvg" type="Label" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
@@ -455,6 +475,7 @@ offset_right = 622.0
 offset_bottom = 135.0
 size_flags_vertical = 10
 text = "0.0 dB"
+label_settings = SubResource("LabelSettings_getpj")
 vertical_alignment = 2
 
 [node name="LabelAudioPeakMax" type="Label" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
@@ -466,6 +487,7 @@ offset_right = 622.0
 offset_bottom = 151.0
 size_flags_vertical = 10
 text = "0.0 dB"
+label_settings = SubResource("LabelSettings_getpj")
 vertical_alignment = 2
 
 [node name="LabelAudioLevel" type="Label" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
@@ -477,6 +499,7 @@ offset_right = 622.0
 offset_bottom = 175.0
 size_flags_vertical = 10
 text = "0.0 dB"
+label_settings = SubResource("LabelSettings_getpj")
 vertical_alignment = 2
 
 [node name="RectAudioLevel" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer/DebugLabels"]
