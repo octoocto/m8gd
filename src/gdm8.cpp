@@ -142,11 +142,18 @@ void M8GD::_bind_methods()
 	ClassDB::bind_method(D_METHOD("send_disable_display"), &M8GD::send_disable_display);
 	ClassDB::bind_method(D_METHOD("send_reset_display"), &M8GD::reset_display);
 
-	ClassDB::bind_method(D_METHOD("sdl_audio_init", "audio_buffer_size", "output_device_name"), &M8GD::sdl_audio_init, DEFVAL(""), DEFVAL(1024));
+	ClassDB::bind_method(D_METHOD("sdl_audio_init", "audio_buffer_size", "output_device_name", "input_device_name"), &M8GD::sdl_audio_init, DEFVAL(""), DEFVAL(""), DEFVAL(1024));
 	ClassDB::bind_method(D_METHOD("sdl_audio_shutdown"), &M8GD::sdl_audio_shutdown);
+	ClassDB::bind_method(D_METHOD("sdl_audio_get_peak_volume"), &M8GD::sdl_audio_get_peak_volume);
+	ClassDB::bind_method(D_METHOD("sdl_audio_is_initialized"), &M8GD::sdl_audio_is_initialized);
+	ClassDB::bind_method(D_METHOD("sdl_audio_get_volume"), &M8GD::sdl_audio_get_volume);
+	ClassDB::bind_method(D_METHOD("sdl_audio_set_volume", "volume"), &M8GD::sdl_audio_set_volume);
+	ClassDB::bind_method(D_METHOD("sdl_audio_get_driver_name"), &M8GD::sdl_audio_get_driver_name);
+	ClassDB::bind_method(D_METHOD("sdl_audio_get_format_name"), &M8GD::sdl_audio_get_format_name);
+	ClassDB::bind_method(D_METHOD("sdl_audio_get_buffer_size"), &M8GD::sdl_audio_get_buffer_size);
+	ClassDB::bind_method(D_METHOD("sdl_audio_get_latency"), &M8GD::sdl_audio_get_latency);
+	ClassDB::bind_method(D_METHOD("sdl_audio_get_mix_rate"), &M8GD::sdl_audio_get_mix_rate);
 }
-
-SDL_AudioDeviceID M8GD::sdl_audio_device_id_out = 0;
 
 M8GD::M8GD()
 {
@@ -500,4 +507,181 @@ void M8GD::set_font(libm8::HardwareModel model, uint8_t font)
 	display_buffer->font_offset_y = font_params.font_y_offset;
 	display_buffer->waveform_max = font_params.waveform_max;
 	display_buffer->set_font(custom_font_bitmaps[current_font]);
+}
+
+void M8GD::sdl_audio_in_callback(void *userdata, uint8_t *stream, int len)
+{
+	M8GD *m8gd = (M8GD *)userdata;
+	uint8_t data_mix[len] = {0};
+
+	// adjust incoming data for volume
+	// M8 audio input format is AUDIO_F32SYS
+	SDL_MixAudioFormat(data_mix, stream, m8gd->sdl_audio_spec_in.format, len, m8gd->sdl_audio_volume);
+
+	// calculate the peak volume from the audio stream
+
+	float *samples = (float *)data_mix;
+	int sample_count = len / sizeof(float);
+
+	float peak_left = 0, peak_right = 0;
+
+	for (int i = 0; i < sample_count; i += 2)
+	{
+		float sample_left = abs(samples[i]);
+		float sample_right = abs(samples[i + 1]);
+		if (sample_left > peak_left)
+		{
+			peak_left = sample_left;
+		}
+		if (sample_right > peak_right)
+		{
+			peak_right = sample_right;
+		}
+	}
+
+	m8gd->sdl_audio_peak_left = peak_left;
+	m8gd->sdl_audio_peak_right = peak_right;
+
+	// push audio input data to output device
+
+	SDL_QueueAudio(m8gd->sdl_audio_device_id_out, data_mix, len);
+}
+
+bool M8GD::sdl_audio_init(const uint16_t audio_buffer_size, String output_device_name, String input_device_name)
+{
+	if (sdl_audio_initialized)
+	{
+		printerr("SDL: Audio subsystem already initialized!");
+		return false;
+	}
+
+	int m8_device_id = -1;
+
+	print("SDL: Initializing audio subsystem");
+
+	// Initialize SDL audio
+	if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0)
+	{
+		printerr("SDL: Failed to initialize audio subsystem! (SDL error: %s)", SDL_GetError());
+		return false;
+	}
+
+	const int num_audio_devices = SDL_GetNumAudioDevices(SDL_TRUE);
+	if (num_audio_devices < 1)
+	{
+		printerr("SDL: No audio devices found! (SDL error: %s)", SDL_GetError());
+		return false;
+	}
+
+	if (input_device_name.is_empty())
+	{
+		for (int i = 0; i < num_audio_devices; i++)
+		{
+			const char *device_name = SDL_GetAudioDeviceName(i, SDL_TRUE);
+			if (device_name)
+			{
+				print("SDL: Found audio device %d: %s", i, device_name);
+			}
+			else
+			{
+				printerr("SDL: Failed to get audio device name! (SDL error: %s)", SDL_GetError());
+			}
+
+			if (SDL_strstr(device_name, "M8") != NULL)
+			{
+				m8_device_id = i; // store the index of the M8 audio device
+			}
+		}
+
+		if (m8_device_id == -1)
+		{
+			printerr("SDL: No M8 audio device found! (SDL error: %s)", SDL_GetError());
+			return false;
+		}
+
+		print("SDL: Found M8 audio device: %s", SDL_GetAudioDeviceName(m8_device_id, SDL_TRUE));
+
+		input_device_name = SDL_GetAudioDeviceName(m8_device_id, SDL_TRUE);
+	}
+
+	SDL_AudioSpec want_in, have_in, want_out, have_out;
+
+	SDL_zero(want_out);
+	want_out.freq = 44100;
+	want_out.format = AUDIO_S16SYS;
+	want_out.channels = 2;
+	want_out.samples = audio_buffer_size;
+
+	if (output_device_name.is_empty() || output_device_name.to_lower() == "default")
+	{
+		// Use the default audio output device
+		print("SDL: Opening audio output device: default");
+		sdl_audio_device_id_out = SDL_OpenAudioDevice(
+			NULL, SDL_FALSE,
+			&want_out, &have_out, SDL_AUDIO_ALLOW_ANY_CHANGE);
+	}
+	else
+	{
+		print("SDL: Opening audio output device: %s", output_device_name);
+		sdl_audio_device_id_out = SDL_OpenAudioDevice(
+			output_device_name.utf8().get_data(), SDL_FALSE,
+			&want_out, &have_out, SDL_AUDIO_ALLOW_ANY_CHANGE);
+	}
+
+	if (sdl_audio_device_id_out == 0)
+	{
+		printerr("SDL: Failed to open output audio device! (SDL error: %s)", SDL_GetError());
+		return false;
+	}
+
+	SDL_zero(want_in);
+	want_in.freq = 44100;
+	want_in.format = AUDIO_S16SYS;
+	want_in.channels = 2;
+	want_in.samples = audio_buffer_size;
+	want_in.callback = sdl_audio_in_callback;
+	want_in.userdata = (void *)this;
+
+	print("SDL: Opening audio input device: %s", input_device_name);
+	sdl_audio_device_id_in = SDL_OpenAudioDevice(
+		input_device_name.utf8().get_data(), SDL_TRUE,
+		&want_in, &have_in, SDL_AUDIO_ALLOW_ANY_CHANGE);
+
+	if (sdl_audio_device_id_in == 0)
+	{
+		printerr("SDL: Failed to open input audio device! (SDL error: %s)", SDL_GetError());
+		return false;
+	}
+
+	sdl_audio_spec_in = have_in;
+
+	SDL_PauseAudioDevice(sdl_audio_device_id_out, 0);
+	SDL_PauseAudioDevice(sdl_audio_device_id_in, 0);
+
+	sdl_audio_initialized = true;
+
+	print("SDL: Audio input device format: %d Hz, %d channels", have_in.freq, have_in.channels);
+	print("SDL:     sample size: %d", have_in.samples);
+	print("SDL:     format: %s", sdl_audio_get_format_name());
+
+	return true;
+}
+
+void M8GD::sdl_audio_shutdown()
+{
+	if (!sdl_audio_initialized)
+		return;
+
+	print("SDL: Closing audio devices");
+
+	SDL_PauseAudioDevice(sdl_audio_device_id_out, 1);
+	SDL_PauseAudioDevice(sdl_audio_device_id_in, 1);
+	SDL_CloseAudioDevice(sdl_audio_device_id_out);
+	SDL_CloseAudioDevice(sdl_audio_device_id_in);
+
+	SDL_QuitSubSystem(SDL_INIT_AUDIO);
+
+	print("SDL: Audio subsystem shut down");
+
+	sdl_audio_initialized = false;
 }

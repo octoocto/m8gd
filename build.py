@@ -312,18 +312,19 @@ if not args.export_only:
             run("./autogen.sh", "thirdparty/sdl")
 
             chmod_x("thirdparty/sdl/configure")
+            configure_args = [
+                "--disable-timers",
+                "--disable-video",
+                "--disable-joystick",
+                "--disable-haptic",
+            ]
             if args.host != "":
-                run(
-                    "./configure --prefix=/usr/{0} --host={0}".format(args.host),
-                    "thirdparty/sdl",
-                )
+                configure_args.append("--prefix=/usr/%s" % args.host)
+                configure_args.append("--host=%s" % args.host)
             elif args.arch == "universal":
-                run(
-                    './configure CFLAGS="-arch arm64 -arch x86_64"',
-                    "thirdparty/sdl",
-                )
-            else:
-                run("./configure", "thirdparty/sdl")
+                configure_args.append("CFLAGS=\"-arch arm64 -arch x86_64\"")
+
+            run("./configure %s" % " ".join(configure_args), "thirdparty/sdl")
 
             if args.arch == "universal":
                 run(

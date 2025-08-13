@@ -213,6 +213,7 @@ libm8::Error libm8::Client::read_command(uint8_t *cmd_buffer, const uint16_t &cm
 	switch (cmd_buffer[0])
 	{
 	case libm8::DRAW_RECT:
+	{
 
 		if (cmd_size != libm8::DRAW_RECT_SIZE_1 && cmd_size != libm8::DRAW_RECT_SIZE_2 && cmd_size != libm8::DRAW_RECT_SIZE_3 && cmd_size != libm8::DRAW_RECT_SIZE_4)
 		{
@@ -279,6 +280,7 @@ libm8::Error libm8::Client::read_command(uint8_t *cmd_buffer, const uint16_t &cm
 		}
 
 		break;
+	}
 
 	case libm8::DRAW_CHAR:
 

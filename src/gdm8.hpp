@@ -160,150 +160,121 @@ public:
 	String get_firmware_version() { return sys_firmware; }
 
 private:
-	static void sdl_audio_in_callback(void *userdata, uint8_t *stream, int len)
-	{
-		(void)userdata; // unused
-		SDL_QueueAudio(sdl_audio_device_id_out, stream, len);
-	}
+	static void sdl_audio_in_callback(void *userdata, uint8_t *stream, int len);
+
+	float sdl_audio_peak_left = 0;
+	float sdl_audio_peak_right = 0;
+	uint8_t sdl_audio_volume = SDL_MIX_MAXVOLUME;
 
 public:
 	bool sdl_audio_initialized = false;
-	bool sdl_audio_paused = false;
 
-	static SDL_AudioDeviceID sdl_audio_device_id_out; // SDL audio device ID for output
-
-	SDL_AudioDeviceID sdl_audio_device_id_in = 0; // SDL audio device ID for input
+	SDL_AudioDeviceID sdl_audio_device_id_out = 0; // SDL audio device ID for output
+	SDL_AudioDeviceID sdl_audio_device_id_in = 0;  // SDL audio device ID for input
+	SDL_AudioSpec sdl_audio_spec_in;			   // SDL audio spec for input
 
 	// audio methods
 
 	/// @brief Initializes the audio subsystem.
 	/// @param audio_buffer_size the size of the audio buffer
 	/// @return true if successful, false otherwise
-	bool sdl_audio_init(const uint16_t audio_buffer_size = 1024, String output_device_name = "")
+	bool sdl_audio_init(const uint16_t audio_buffer_size, String output_device_name, String input_device_name);
+
+	void sdl_audio_shutdown();
+
+	/// @brief Returns the peak volume of the audio stream.
+	/// @return A Vector2 containing the peak volume of the left and right channels.
+	Vector2 sdl_audio_get_peak_volume()
 	{
 		if (sdl_audio_initialized)
 		{
-			printerr("SDL: Audio subsystem already initialized!");
-			return false;
-		}
-
-		int m8_device_id = -1;
-
-		print("SDL: Initializing audio subsystem");
-
-		// Initialize SDL audio
-		if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0)
-		{
-			printerr("SDL: Failed to initialize audio subsystem! (SDL error: %s)", SDL_GetError());
-			return false;
-		}
-
-		const int num_audio_devices = SDL_GetNumAudioDevices(SDL_TRUE);
-		if (num_audio_devices < 1)
-		{
-			printerr("SDL: No audio devices found! (SDL error: %s)", SDL_GetError());
-			return false;
-		}
-
-		for (int i = 0; i < num_audio_devices; i++)
-		{
-			const char *device_name = SDL_GetAudioDeviceName(i, SDL_TRUE);
-			if (device_name)
-			{
-				print("SDL: Found audio device %d: %s", i, device_name);
-			}
-			else
-			{
-				printerr("SDL: Failed to get audio device name! (SDL error: %s)", SDL_GetError());
-			}
-
-			if (SDL_strstr(device_name, "M8") != NULL)
-			{
-				m8_device_id = i; // store the index of the M8 audio device
-			}
-		}
-
-		if (m8_device_id == -1)
-		{
-			printerr("SDL: No M8 audio device found! (SDL error: %s)", SDL_GetError());
-			return false;
-		}
-
-		print("SDL: Found M8 audio device: %s", SDL_GetAudioDeviceName(m8_device_id, SDL_TRUE));
-
-		SDL_AudioSpec want_in, have_in, want_out, have_out;
-
-		print("SDL: Opening audio devices");
-
-		SDL_zero(want_out);
-		want_out.freq = 44100;
-		want_out.format = AUDIO_S16;
-		want_out.channels = 2;				  // stereo
-		want_out.samples = audio_buffer_size; // buffer size
-
-		if (output_device_name.is_empty())
-		{
-			// Use the default audio output device
-			sdl_audio_device_id_out = SDL_OpenAudioDevice(
-				NULL, SDL_FALSE,
-				&want_out, &have_out, SDL_AUDIO_ALLOW_ANY_CHANGE);
+			return Vector2(
+				20 * log10(sdl_audio_peak_left),
+				20 * log10(sdl_audio_peak_right));
 		}
 		else
 		{
-			sdl_audio_device_id_out = SDL_OpenAudioDevice(
-				output_device_name.utf8().get_data(), SDL_FALSE,
-				&want_out, &have_out, SDL_AUDIO_ALLOW_ANY_CHANGE);
+			return Vector2(0.0, 0.0);
 		}
-
-		if (sdl_audio_device_id_out == 0)
-		{
-			printerr("SDL: Failed to open output audio device! (SDL error: %s)", SDL_GetError());
-			return false;
-		}
-
-		SDL_zero(want_in);
-		want_in.freq = 44100;
-		want_in.format = AUDIO_S16;
-		want_in.channels = 2;				 // stereo
-		want_in.samples = audio_buffer_size; // buffer size
-		want_in.callback = sdl_audio_in_callback;
-
-		sdl_audio_device_id_in = SDL_OpenAudioDevice(
-			SDL_GetAudioDeviceName(m8_device_id, SDL_TRUE), SDL_TRUE,
-			&want_in, &have_in, SDL_AUDIO_ALLOW_ANY_CHANGE);
-
-		if (sdl_audio_device_id_in == 0)
-		{
-			printerr("SDL: Failed to open input audio device! (SDL error: %s)", SDL_GetError());
-			return false;
-		}
-
-		SDL_PauseAudioDevice(sdl_audio_device_id_out, 0);
-		SDL_PauseAudioDevice(sdl_audio_device_id_in, 0);
-
-		sdl_audio_paused = false;
-		sdl_audio_initialized = true;
-
-		return true;
 	}
 
-	void sdl_audio_shutdown()
+	void sdl_audio_set_volume(float volume)
+	{
+		volume = CLAMP(volume, 0.0f, 1.0f);
+		sdl_audio_volume = (int)(volume * SDL_MIX_MAXVOLUME);
+		print("SDL: Audio volume set to %d", sdl_audio_volume);
+	}
+
+	float sdl_audio_get_volume()
+	{
+		return (float)sdl_audio_volume / SDL_MIX_MAXVOLUME;
+	}
+
+	bool sdl_audio_is_initialized()
+	{
+		return sdl_audio_initialized;
+	}
+
+	String sdl_audio_get_driver_name()
 	{
 		if (!sdl_audio_initialized)
-			return;
+		{
+			return "";
+		}
 
-		print("SDL: Closing audio devices");
+		return String(SDL_GetCurrentAudioDriver());
+	}
 
-		SDL_PauseAudioDevice(sdl_audio_device_id_out, 1);
-		SDL_PauseAudioDevice(sdl_audio_device_id_in, 1);
-		SDL_CloseAudioDevice(sdl_audio_device_id_out);
-		SDL_CloseAudioDevice(sdl_audio_device_id_in);
+	String sdl_audio_get_format_name()
+	{
+		if (!sdl_audio_initialized)
+		{
+			return "";
+		}
 
-		SDL_QuitSubSystem(SDL_INIT_AUDIO);
+		switch (sdl_audio_spec_in.format)
+		{
+		case AUDIO_S8:
+			return "S8";
+		case AUDIO_U8:
+			return "U8";
+		case AUDIO_S16LSB:
+			return "S16LSB";
+		case AUDIO_S16MSB:
+			return "S16MSB";
+		case AUDIO_S32LSB:
+			return "S32LSB";
+		case AUDIO_S32MSB:
+			return "S32MSB";
+		case AUDIO_F32LSB:
+			return "F32LSB";
+		case AUDIO_F32MSB:
+			return "F32MSB";
+		case AUDIO_U16:
+			return "U16";
+		default:
+			return "Unknown format";
+		}
+	}
 
-		print("SDL: Audio subsystem shut down");
+	int sdl_audio_get_mix_rate()
+	{
+		if (!sdl_audio_initialized)
+		{
+			return 0;
+		}
 
-		sdl_audio_initialized = false;
+		return sdl_audio_spec_in.freq;
+	}
+
+	int sdl_audio_get_buffer_size()
+	{
+		return sdl_audio_spec_in.samples;
+	}
+
+	float sdl_audio_get_latency()
+	{
+		return (float)sdl_audio_spec_in.samples * 1000 / sdl_audio_spec_in.freq;
 	}
 
 public:
