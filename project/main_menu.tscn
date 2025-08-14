@@ -24,11 +24,6 @@ colors = PackedColorArray(0, 0.95, 1, 1, 0.0833333, 1, 0, 1, 1, 1, 0, 1, 1, 0.03
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_55vtn"]
 gradient = SubResource("Gradient_t416v")
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3mi27"]
-content_margin_top = 4.0
-content_margin_bottom = 4.0
-bg_color = Color(0.5, 0, 0, 1)
-
 [sub_resource type="LabelSettings" id="LabelSettings_cher2"]
 font_size = 12
 
@@ -40,6 +35,11 @@ color = Color(1, 1, 1, 0.25)
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wlgng"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7jqdk"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3mi27"]
+content_margin_top = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.5, 0, 0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8epsv"]
 bg_color = Color(0, 0, 0, 0.5)
@@ -742,13 +742,6 @@ custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 text = "Refresh List"
 
-[node name="ButtonDisconnectSerialPort" type="Button" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer/HBoxContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 0)
-layout_mode = 2
-disabled = true
-text = "Disconnect"
-
 [node name="ButtonConnectSerialPort" type="Button" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -839,22 +832,6 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 text = "Refresh List"
-
-[node name="ButtonDisconnectAudioDevice" type="Button" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer/HBoxContainer2"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 0)
-layout_mode = 2
-disabled = true
-text = "Disconnect"
-
-[node name="ButtonHardResetAudioDevice" type="Button" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer/HBoxContainer2"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 0)
-layout_mode = 2
-tooltip_text = "A \"harder\" reconnect. Frees and creates a new AudioStreamPlayer and reconnects the audio device."
-theme_override_styles/normal = SubResource("StyleBoxFlat_3mi27")
-disabled = true
-text = "Hard Reset"
 
 [node name="ButtonConnectAudioDevice" type="Button" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer/HBoxContainer2"]
 unique_name_in_owner = true

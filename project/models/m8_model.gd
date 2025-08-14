@@ -91,7 +91,7 @@ func init(p_main: Main) -> void:
 		screen_material.set_shader_parameter("backlight", false)
 	)
 
-	screen_material.set_shader_parameter("backlight", main.m8_is_connected)
+	screen_material.set_shader_parameter("backlight", false)
 
 	main.m8_client.key_pressed.connect(func(key: int, pressed: bool) -> void:
 		match key:

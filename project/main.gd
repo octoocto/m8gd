@@ -43,19 +43,7 @@ var m8_virtual_keyboard_notes := []
 var m8_virtual_keyboard_octave := 3
 var m8_virtual_keyboard_velocity := 127
 
-var current_serial_device: String = ""
-var current_audio_device: String = ""
-
 var device_manager := DeviceManager.new()
-
-## if true, keep scanning for devices until one is found
-var is_waiting_for_device := true
-var is_waiting_for_audio_device := true
-var next_device_scan := 0.0 # time in seconds to wait before scanning for devices again
-
-## true if audio device is in the middle of connecting
-var is_audio_connecting := false
-var audio_device_last: String = ""
 
 var audio_peak := 0.0 # audio peak (in dB)
 var audio_peak_max := 0.0
@@ -69,10 +57,15 @@ var last_audio_level := 0.0
 var _window_drag_enabled := false
 var _window_drag_initial_pos := Vector2.ZERO
 
+@onready var m8_client: M8GD = %M8GD
 @onready var config := M8Config.load()
 
 @onready var console: Console = %LabelConsole
 @onready var audio_monitor: AudioStreamPlayer = %AudioStreamPlayer
+@onready var label_serial_port: Label = %LabelPort
+@onready var label_audio_device: Label = %LabelAudioDevice
+@onready var label_hardware: Label = %LabelHardware
+@onready var label_firmware: Label = %LabelFirmware
 
 # @onready var scene_viewport: SubViewport = %SceneViewport
 @onready var scene_root: Node = %SceneRoot
@@ -92,9 +85,6 @@ var _window_drag_initial_pos := Vector2.ZERO
 @onready var cam_status: RichTextLabel = %CameraStatus
 @onready var cam_help: RichTextLabel = %CameraControls
 @onready var cam_status_template: String = cam_status.text
-@onready var m8_client: M8GD = %M8GD
-@onready var m8_is_connected := false
-@onready var m8_audio_connected := false
 
 func _ready() -> void:
 	m8_client.load_font(M8GD.M8_FONT_01_SMALL, FONT_01_SMALL)
@@ -109,6 +99,9 @@ func _ready() -> void:
 
 	_start_task("init devices", func() -> void:
 		device_manager.init(self)
+		m8_client.system_info.connect(on_m8_system_info)
+		m8_client.disconnected.connect(on_m8_device_disconnect)
+		m8_client.theme_changed.connect(on_m8_theme_changed)
 	)
 
 	_start_task("init overlays", func() -> void:
@@ -141,28 +134,14 @@ func _ready() -> void:
 
 	await get_tree().create_timer(1.0).timeout
 
-func _process(delta: float) -> void:
-	# auto connect to m8s
-	if next_device_scan <= 0.0:
-		if !m8_is_connected and is_waiting_for_device:
-			m8_device_connect_auto()
-		next_device_scan = DEVICE_SCAN_INTERVAL
-	else:
-		next_device_scan -= delta
+	_update_labels()
 
+func _process(delta: float) -> void:
 	device_manager._process(delta)
 	
-	# auto monitor audio if m8 is connected
-	# if m8_is_connected:
-	# 	if m8_audio_connected:
-	# 		m8_audio_check()
-	# 	elif is_waiting_for_audio_device:
-	# 		m8_audio_connect_auto()
-
 	%LabelFPS.text = "%d" % Engine.get_frames_per_second()
 
 	var palette := m8_get_theme_colors()
-
 	if palette.size() < 16:
 		for i in range(16):
 			get_node("%%Color_Palette%d" % (i + 1)).color = Color(0, 0, 0, 0)
@@ -215,6 +194,7 @@ func _input(event: InputEvent) -> void:
 				screenshot_name = "%d.png" % id
 
 			get_viewport().get_texture().get_image().save_png(screenshot_name)
+			print_to_screen("Screenshot saved as %s" % screenshot_name)
 
 		# fullscreen ALT+ENTER toggle
 		if event.pressed and event.keycode == KEY_ENTER and event.alt_pressed:
@@ -253,7 +233,8 @@ func _notification(what: int) -> void:
 
 func quit() -> void:
 	config.save()
-	m8_device_disconnect(false)
+	device_manager.disconnect_serial_device()
+	device_manager.disconnect_audio_device()
 	get_tree().quit()
 
 ## Temporarily show a message on the bottom-left of the screen.
@@ -486,73 +467,29 @@ func set_filter_shader_parameter(shader_node_path: NodePath, shader_parameter: S
 # M8 client methods
 ################################################################################
 
-func m8_device_connect(port: String, force: bool = false) -> void:
-	if m8_client.is_connected():
-		m8_device_disconnect()
-
-	# var m8_ports: Array = M8GD.list_devices()
-
-	# if !port in m8_ports:
-	# 	menu.set_status_serialport("Failed: port not found: %s" % port)
-	# 	return
-
-	menu.set_status_serialport("Connecting to serial port %s..." % port)
-
-	if !m8_client.connect(port, force):
-		menu.set_status_serialport("Failed: failed to connect to port: %s" % port)
-		is_waiting_for_device = false
-		return
-
-	m8_is_connected = true
-	%LabelPort.text = port
-	m8_client.system_info.connect(on_m8_system_info)
-	m8_client.disconnected.connect(on_m8_device_disconnect)
-	m8_client.theme_changed.connect(on_m8_theme_changed)
-	current_serial_device = port
-	m8_connected.emit()
-
-	print_to_screen("connected to serial device: %s" % port)
-	menu.set_status_serialport("Connected to: %s" % port)
-
-## Automatically detect and connect to any M8 device.
-func m8_device_connect_auto() -> void:
-	menu.set_status_serialport("Scanning for M8 devices...")
-	print("Scanning for M8 devices...")
-
-	var m8_ports: Array = M8GD.list_devices(false)
-	if m8_ports.size():
-		m8_device_connect(m8_ports[0], false)
+func _update_labels() -> void:
+	if device_manager.is_serial_device_connected():
+		label_serial_port.text = "serial port: %s" % device_manager.current_serial_device
+		label_hardware.text = "HW: %s" % m8_client.get_hardware_name()
+		label_firmware.text = "FW: %s" % m8_client.get_firmware_version()
 	else:
-		menu.set_status_serialport("Not connected: No M8 devices found")
+		label_serial_port.text = "waiting for serial port..."
+		label_hardware.text = ""
+		label_firmware.text = ""
 
-func m8_device_disconnect(wait_for_device := true) -> void:
-	if m8_client.is_connected():
-		m8_client.disconnect()
-		on_m8_device_disconnect()
-		is_waiting_for_device = wait_for_device
-		if is_waiting_for_device:
-			menu.set_status_serialport("Not connected. Waiting for device...")
+	if device_manager.is_audio_device_connected():
+		label_audio_device.text = "audio device: %s" % device_manager.current_audio_device
+	else:
+		label_audio_device.text = "waiting for audio device..."
 
 func on_m8_system_info(hardware: String, firmware: String) -> void:
-	%LabelVersion.text = "%s %s" % [hardware, firmware]
+	_update_labels()
 	m8_system_info_received.emit(hardware, firmware)
 
 ## Called when the M8 has been disconnected.
 func on_m8_device_disconnect() -> void:
-	m8_is_connected = false
-	%LabelPort.text = ""
-
-	m8_client.system_info.disconnect(on_m8_system_info)
-	m8_client.disconnected.disconnect(on_m8_device_disconnect)
-	m8_client.theme_changed.disconnect(on_m8_theme_changed)
-
-	if m8_audio_connected:
-		device_manager.disconnect_audio_device()
-
-	current_serial_device = ""
+	_update_labels()
 	m8_disconnected.emit()
-	print_to_screen("disconnected serial device")
-	menu.set_status_serialport("Not connected (Disconnected)")
 
 func on_m8_theme_changed(colors: PackedColorArray, complete: bool) -> void:
 	m8_theme_changed.emit(colors, complete)

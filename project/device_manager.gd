@@ -6,7 +6,7 @@ enum AudioHandler {
 }
 
 const AUDIO_BUFFER_SIZE := 1024
-const DEVICE_SCAN_INTERVAL := 1.0
+const DEVICE_SCAN_INTERVAL := 5.0
 
 var main: Main
 
@@ -16,6 +16,7 @@ var audio_monitor: AudioStreamPlayer
 
 var current_serial_device: String = ""
 var current_audio_device: String = ""
+var last_serial_device: String = ""
 var last_audio_device: String = ""
 
 var is_waiting_for_serial_device := true
@@ -26,10 +27,16 @@ var is_audio_connecting := false
 
 func _process(delta: float) -> void:
 	if next_device_scan <= 0.0:
+		# scan for serial ports
+		if not is_serial_device_connected() and is_waiting_for_serial_device:
+			print("serial: scanning for serial ports...")
+			connect_serial_device()
+
+		# scan for audio devices
 		if is_audio_device_connected():
 			check_audio_device()
-		elif is_waiting_for_audio_device:
-			print("audio: scanning for audio device...")
+		elif is_serial_device_connected() and is_waiting_for_audio_device:
+			print("audio: scanning for audio devices...")
 			connect_audio_device()
 
 		next_device_scan = DEVICE_SCAN_INTERVAL
@@ -39,6 +46,54 @@ func _process(delta: float) -> void:
 func init(main: Main) -> void:
 	self.main = main
 	self.audio_monitor = main.audio_monitor
+
+func list_serial_devices(show_all: bool = false) -> Array[String]:
+	return M8GD.list_devices(show_all)
+
+func connect_serial_device(port: String = "", force: bool = false) -> void:
+	if port == "":
+		if len(list_serial_devices()) > 0:
+			port = list_serial_devices()[0]
+		else:
+			print("serial: no M8 serial ports found")
+			main.print_to_screen("No valid M8 devices found! Waiting for device...")
+			main.menu.set_status_serialport("Not connected: no valid M8 devices found")
+			is_waiting_for_serial_device = true
+			return
+
+	disconnect_serial_device()
+
+	if not main.m8_client.connect(port, force):
+		print("serial: failed to connect to port: %s", port)
+		main.menu.set_status_serialport("Not connected: failed to connect to port: %s" % port)
+		is_waiting_for_serial_device = false
+		return
+
+	current_serial_device = port
+	last_serial_device = port
+	main.m8_connected.emit()
+
+	print("serial: connected to port: %s" % port)
+	main.print_to_screen("connected to serial port: %s" % port)
+	main.menu.set_status_serialport("Connected to: %s" % port)
+
+	connect_audio_device()
+
+func disconnect_serial_device() -> void:
+	if not is_serial_device_connected():
+		return
+
+	main.m8_client.disconnect()
+	current_serial_device = ""
+	main.m8_disconnected.emit()
+
+	main.print_to_screen("disconnected serial device")
+	main.menu.set_status_serialport("Not connected (Disconnected)")
+
+	disconnect_audio_device()
+
+func is_serial_device_connected() -> bool:
+	return current_serial_device != ""
 
 func list_audio_devices(show_all: bool = false) -> Array[String]:
 	var devices: Array[String] = []
@@ -134,6 +189,7 @@ func disconnect_audio_device() -> void:
 		main.m8_client.sdl_audio_shutdown()
 
 	current_audio_device = ""
+	is_waiting_for_audio_device = false
 	main.print_to_screen("disconnected audio device")
 	main.menu.set_status_audiodevice("Not connected")
 
