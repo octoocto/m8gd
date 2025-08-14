@@ -18,7 +18,7 @@ LIBSERIALPORT_PATH = "thirdparty/libserialport/.libs/libserialport.a"
 SDL2_PATH = "thirdparty/sdl/build/.libs/libSDL2.a"
 
 BUILD_DIR = "build"
-GODOT_VERSION = "4.4"
+GODOT_VERSION = "4.4.1"
 GODOT_BRANCH = "stable"
 
 ################################################################################
@@ -322,7 +322,7 @@ if not args.export_only:
                 configure_args.append("--prefix=/usr/%s" % args.host)
                 configure_args.append("--host=%s" % args.host)
             elif args.arch == "universal":
-                configure_args.append("CFLAGS=\"-arch arm64 -arch x86_64\"")
+                configure_args.append('CFLAGS="-arch arm64 -arch x86_64"')
 
             run("./configure %s" % " ".join(configure_args), "thirdparty/sdl")
 
