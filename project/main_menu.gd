@@ -727,9 +727,10 @@ func _init_menu_devices() -> void:
 		if main.device_manager.current_serial_device == port:
 			main.device_manager.disconnect_serial_device()
 		else:
-			main.device_manager.connect_serial_device(port, true)
+			await main.device_manager.connect_serial_device(port, true)
 
 		refresh_serial_device_list()
+		refresh_audio_device_list()
 		fn_update_buttons.call()
 	)
 
@@ -1059,8 +1060,8 @@ func refresh_serial_device_list() -> void:
 	list_serial_ports.clear()
 
 	for port_name in M8GD.list_devices(serial_show_all):
-		var port_desc := M8GD.get_serial_port_description(port_name)
-		var index := list_serial_ports.add_item("%s" % [port_desc])
+		# var port_desc := M8GD.get_serial_port_description(port_name)
+		var index := list_serial_ports.add_item("%s" % [port_name])
 		list_serial_ports.set_item_metadata(index, port_name)
 		if not M8GD.is_m8_serial_port(port_name):
 			list_serial_ports.set_item_icon(index, ICON_WARNING)

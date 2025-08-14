@@ -77,7 +77,7 @@ func connect_serial_device(port: String = "", force: bool = false) -> void:
 	main.print_to_screen("connected to serial port: %s" % port)
 	main.menu.set_status_serialport("Connected to: %s" % port)
 
-	connect_audio_device()
+	await connect_audio_device()
 
 func disconnect_serial_device() -> void:
 	if not is_serial_device_connected():
@@ -97,9 +97,13 @@ func is_serial_device_connected() -> bool:
 
 func list_audio_devices(show_all: bool = false) -> Array[String]:
 	var devices: Array[String] = []
-	for dev in AudioServer.get_input_device_list():
-		if show_all or dev.contains("M8"):
+	if audio_handler == AudioHandler.SDL:
+		for dev in main.m8_client.sdl_audio_get_audio_input_devices(show_all):
 			devices.append(dev)
+	else:
+		for dev in AudioServer.get_input_device_list():
+			if show_all or dev.contains("M8"):
+				devices.append(dev)
 	return devices
 
 ## Connect to and monitor an audio input device with name [device].
@@ -113,7 +117,7 @@ func connect_audio_device(device: String = "") -> void:
 			main.menu.set_status_audiodevice("Not connected: no M8 audio device found")
 			return
 
-	if not device in AudioServer.get_input_device_list():
+	if not device in list_audio_devices():
 		print("audio: audio device not found: %s" % device)
 		main.menu.set_status_audiodevice("Not connected: audio device not found: %s" % device)
 		return
