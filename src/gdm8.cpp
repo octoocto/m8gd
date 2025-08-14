@@ -519,17 +519,54 @@ void M8GD::sdl_audio_in_callback(void *userdata, uint8_t *stream, int len)
 	// M8 audio input format is AUDIO_F32SYS
 	SDL_MixAudioFormat(data_mix.data(), stream, m8gd->sdl_audio_spec_in.format, len, m8gd->sdl_audio_volume);
 
+	// push audio input data to output device
+	SDL_QueueAudio(m8gd->sdl_audio_device_id_out, data_mix.data(), len);
+
 	// calculate the peak volume from the audio stream
 
-	float *samples = (float *)data_mix.data();
-	int sample_count = len / sizeof(float);
+	bool is_float = false;
+	void *samples;
+	int sample_count = 0;
+
+	switch (m8gd->sdl_audio_spec_in.format)
+	{
+	case AUDIO_F32SYS:
+	case AUDIO_F32MSB:
+	{
+		samples = (float *)data_mix.data();
+		sample_count = len / sizeof(float);
+		is_float = true;
+		break;
+	}
+	case AUDIO_S16SYS:
+	case AUDIO_S16MSB:
+	{
+		samples = (int16_t *)data_mix.data();
+		sample_count = len / sizeof(int16_t);
+		is_float = false;
+		break;
+	}
+	default:
+	{
+		return;
+	}
+	}
 
 	float peak_left = 0, peak_right = 0;
 
 	for (int i = 0; i < sample_count; i += 2)
 	{
-		float sample_left = abs(samples[i]);
-		float sample_right = abs(samples[i + 1]);
+		float sample_left, sample_right;
+		if (is_float)
+		{
+			sample_left = abs(((float *)samples)[i]);
+			sample_right = abs(((float *)samples)[i + 1]);
+		}
+		else
+		{
+			sample_left = abs(((int16_t *)samples)[i]) / 32768.0f;
+			sample_right = abs(((int16_t *)samples)[i + 1]) / 32768.0f;
+		}
 		if (sample_left > peak_left)
 		{
 			peak_left = sample_left;
@@ -542,10 +579,6 @@ void M8GD::sdl_audio_in_callback(void *userdata, uint8_t *stream, int len)
 
 	m8gd->sdl_audio_peak_left = peak_left;
 	m8gd->sdl_audio_peak_right = peak_right;
-
-	// push audio input data to output device
-
-	SDL_QueueAudio(m8gd->sdl_audio_device_id_out, data_mix.data(), len);
 }
 
 PackedStringArray M8GD::sdl_audio_get_audio_input_devices(bool show_all)
