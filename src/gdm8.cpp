@@ -512,15 +512,15 @@ void M8GD::set_font(libm8::HardwareModel model, uint8_t font)
 void M8GD::sdl_audio_in_callback(void *userdata, uint8_t *stream, int len)
 {
 	M8GD *m8gd = (M8GD *)userdata;
-	uint8_t data_mix[len] = {0};
+	std::vector<uint8_t> data_mix(len, 0);
 
 	// adjust incoming data for volume
 	// M8 audio input format is AUDIO_F32SYS
-	SDL_MixAudioFormat(data_mix, stream, m8gd->sdl_audio_spec_in.format, len, m8gd->sdl_audio_volume);
+	SDL_MixAudioFormat(data_mix.data(), stream, m8gd->sdl_audio_spec_in.format, len, m8gd->sdl_audio_volume);
 
 	// calculate the peak volume from the audio stream
 
-	float *samples = (float *)data_mix;
+	float *samples = (float *)data_mix.data();
 	int sample_count = len / sizeof(float);
 
 	float peak_left = 0, peak_right = 0;
@@ -544,7 +544,7 @@ void M8GD::sdl_audio_in_callback(void *userdata, uint8_t *stream, int len)
 
 	// push audio input data to output device
 
-	SDL_QueueAudio(m8gd->sdl_audio_device_id_out, data_mix, len);
+	SDL_QueueAudio(m8gd->sdl_audio_device_id_out, data_mix.data(), len);
 }
 
 bool M8GD::sdl_audio_init(const uint16_t audio_buffer_size, String output_device_name, String input_device_name)
