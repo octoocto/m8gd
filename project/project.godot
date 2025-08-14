@@ -24,6 +24,7 @@ driver/enable_input=true
 
 [debug]
 
+gdscript/warnings/shadowed_variable=0
 gdscript/warnings/untyped_declaration=1
 
 [display]
