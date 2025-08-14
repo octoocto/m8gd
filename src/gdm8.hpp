@@ -182,6 +182,8 @@ public:
 
 	void sdl_audio_shutdown();
 
+	PackedStringArray sdl_audio_get_audio_input_devices(bool show_all);
+
 	/// @brief Returns the peak volume of the audio stream.
 	/// @return A Vector2 containing the peak volume of the left and right channels.
 	Vector2 sdl_audio_get_peak_volume()

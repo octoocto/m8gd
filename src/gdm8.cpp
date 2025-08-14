@@ -153,6 +153,7 @@ void M8GD::_bind_methods()
 	ClassDB::bind_method(D_METHOD("sdl_audio_get_buffer_size"), &M8GD::sdl_audio_get_buffer_size);
 	ClassDB::bind_method(D_METHOD("sdl_audio_get_latency"), &M8GD::sdl_audio_get_latency);
 	ClassDB::bind_method(D_METHOD("sdl_audio_get_mix_rate"), &M8GD::sdl_audio_get_mix_rate);
+	ClassDB::bind_method(D_METHOD("sdl_audio_get_audio_input_devices", "show_all"), &M8GD::sdl_audio_get_audio_input_devices, DEFVAL(false));
 }
 
 M8GD::M8GD()
@@ -545,6 +546,47 @@ void M8GD::sdl_audio_in_callback(void *userdata, uint8_t *stream, int len)
 	// push audio input data to output device
 
 	SDL_QueueAudio(m8gd->sdl_audio_device_id_out, data_mix.data(), len);
+}
+
+PackedStringArray M8GD::sdl_audio_get_audio_input_devices(bool show_all)
+{
+	PackedStringArray devices;
+
+	if (!sdl_audio_initialized)
+	{
+		// temporarily initialize audio
+		if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0)
+		{
+			printerr("SDL: Failed to initialize audio subsystem! (SDL error: %s)", SDL_GetError());
+			return devices;
+		}
+	}
+
+	int num_audio_devices = SDL_GetNumAudioDevices(SDL_TRUE);
+	if (num_audio_devices < 1)
+	{
+		printerr("SDL: No audio input devices found! (SDL error: %s)", SDL_GetError());
+		return devices;
+	}
+
+	for (int i = 0; i < num_audio_devices; i++)
+	{
+		const char *device_name = SDL_GetAudioDeviceName(i, SDL_TRUE);
+		if (device_name &&
+			(show_all || SDL_strstr(device_name, "M8") != NULL))
+		{
+			// only add M8 audio input devices or all devices if show_all is true
+			print("SDL: Found audio input device %d: %s", i, device_name);
+			devices.append(device_name);
+		}
+	}
+
+	if (!sdl_audio_initialized)
+	{
+		SDL_QuitSubSystem(SDL_INIT_AUDIO);
+	}
+
+	return devices;
 }
 
 bool M8GD::sdl_audio_init(const uint16_t audio_buffer_size, String output_device_name, String input_device_name)
