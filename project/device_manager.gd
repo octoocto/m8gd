@@ -108,7 +108,7 @@ func list_audio_devices(show_all: bool = false) -> Array[String]:
 
 ## Connect to and monitor an audio input device with name [device].
 ## If [device] is empty, automatically connect to a valid M8 audio input device.
-func connect_audio_device(device: String = "") -> void:
+func connect_audio_device(device: String = "", force: bool = false) -> void:
 	if device == "":
 		if len(list_audio_devices()) > 0:
 			device = list_audio_devices()[0]
@@ -117,7 +117,7 @@ func connect_audio_device(device: String = "") -> void:
 			main.menu.set_status_audiodevice("Not connected: no M8 audio device found")
 			return
 
-	if not device in list_audio_devices():
+	if not device in list_audio_devices(force):
 		print("audio: audio device not found: %s" % device)
 		main.menu.set_status_audiodevice("Not connected: audio device not found: %s" % device)
 		return

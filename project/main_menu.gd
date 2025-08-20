@@ -13,15 +13,17 @@ var is_key_rebinding := false
 var last_rebind_time := 0.0
 var key_rebind_callback: Callable
 
-var serial_show_all: bool = false
+var show_all_serial_ports: bool = false
+var show_all_audio_devices: bool = false
 
 @onready var list_serial_ports: ItemList = %ListSerialPorts
-@onready var check_box_serial_show_all: CheckBox = %CheckBoxSerialShowAll
+@onready var check_box_show_all_serial_ports: CheckBox = %CheckBoxShowAllSerialPorts
 @onready var button_serial_status: Button = %SerialPortStatus
 @onready var button_serial_refresh: Button = %ButtonRefreshSerialPorts
 @onready var button_serial_connect: Button = %ButtonConnectSerialPort
 
 @onready var list_audio_devices: ItemList = %ListAudioDevices
+@onready var check_box_show_all_audio_devices: CheckBox = %CheckBoxShowAllAudioDevices
 @onready var button_audio_status: Button = %AudioDeviceStatus
 @onready var button_audio_refresh: Button = %ButtonRefreshAudioDevices
 @onready var button_audio_connect: Button = %ButtonConnectAudioDevice
@@ -712,8 +714,8 @@ func _init_menu_devices() -> void:
 		fn_update_buttons.call()
 	)
 
-	check_box_serial_show_all.toggled.connect(func(checked: bool) -> void:
-		serial_show_all = checked
+	check_box_show_all_serial_ports.toggled.connect(func(checked: bool) -> void:
+		show_all_serial_ports = checked
 		refresh_serial_device_list()
 		fn_update_buttons.call()
 	)
@@ -755,6 +757,12 @@ func _init_menu_devices() -> void:
 		fn_update_audio_buttons.call()
 	)
 
+	check_box_show_all_audio_devices.toggled.connect(func(checked: bool) -> void:
+		show_all_audio_devices = checked
+		refresh_audio_device_list()
+		fn_update_audio_buttons.call()
+	)
+
 	button_audio_refresh.pressed.connect(refresh_audio_device_list)
 
 	button_audio_connect.pressed.connect(func() -> void:
@@ -763,7 +771,7 @@ func _init_menu_devices() -> void:
 		if main.device_manager.current_audio_device == text:
 			main.device_manager.disconnect_audio_device()
 		else:
-			await main.device_manager.connect_audio_device(text)
+			await main.device_manager.connect_audio_device(text, show_all_audio_devices)
 		refresh_audio_device_list()
 		fn_update_audio_buttons.call()
 	)
@@ -1059,7 +1067,7 @@ func set_status_audiodevice(text: String) -> void:
 func refresh_serial_device_list() -> void:
 	list_serial_ports.clear()
 
-	for port_name in M8GD.list_devices(serial_show_all):
+	for port_name in M8GD.list_devices(show_all_serial_ports):
 		# var port_desc := M8GD.get_serial_port_description(port_name)
 		var index := list_serial_ports.add_item("%s" % [port_name])
 		list_serial_ports.set_item_metadata(index, port_name)
@@ -1085,7 +1093,7 @@ func refresh_serial_device_list() -> void:
 func refresh_audio_device_list() -> void:
 	list_audio_devices.clear()
 
-	for device in main.device_manager.list_audio_devices():
+	for device in main.device_manager.list_audio_devices(show_all_audio_devices):
 		list_audio_devices.add_item(device)
 
 	for i in range(list_audio_devices.item_count):

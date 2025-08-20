@@ -728,7 +728,7 @@ size_flags_vertical = 3
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_06k14")
 
-[node name="CheckBoxSerialShowAll" type="CheckBox" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer"]
+[node name="CheckBoxShowAllSerialPorts" type="CheckBox" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Show all serial devices"
@@ -823,6 +823,11 @@ size_flags_vertical = 3
 [node name="HSeparator3" type="HSeparator" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_06k14")
+
+[node name="CheckBoxShowAllAudioDevices" type="CheckBox" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Show all audio devices"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer/Devices/VBoxContainer"]
 layout_mode = 2
