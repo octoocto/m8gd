@@ -196,7 +196,7 @@ public:
 		}
 		else
 		{
-			return Vector2(0.0, 0.0);
+			return Vector2(-INFINITY, -INFINITY);
 		}
 	}
 
