@@ -11,10 +11,10 @@ float rand(vec2 co) {
 }
 
 void fragment() {
-    
+
     //COLOR = mix(COLOR, vec4(vec3(rand(pixel_uv + rand(vec2(TIME)))), 1.0), 0.03);
     COLOR = texture(SCREEN_TEXTURE, SCREEN_UV);
-    
+
     float n = fract(abs(rand(UV + rand(vec2(floor(TIME * noise_speed)))))) - noise_offset;
     COLOR = mix(COLOR, COLOR + vec4(vec3(n), 1.0), noise_strength);
 }
