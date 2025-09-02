@@ -19,8 +19,8 @@ var current_audio_device: String = ""
 var last_serial_device: String = ""
 var last_audio_device: String = ""
 
-var is_waiting_for_serial_device := true
-var is_waiting_for_audio_device := true
+var is_waiting_for_serial_device := false
+var is_waiting_for_audio_device := false
 var next_device_scan := 0.0
 
 var is_audio_connecting := false
@@ -46,6 +46,10 @@ func _process(delta: float) -> void:
 func init(main: Main) -> void:
 	self.main = main
 	self.audio_monitor = main.audio_monitor
+
+func start_waiting_for_devices() -> void:
+	is_waiting_for_serial_device = true
+	is_waiting_for_audio_device = true
 
 func list_serial_devices(show_all: bool = false) -> Array[String]:
 	return M8GD.list_devices(show_all)

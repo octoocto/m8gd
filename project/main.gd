@@ -127,6 +127,7 @@ func _ready() -> void:
 	)
 
 	%SplashContainer.visible = config.splash_show
+	device_manager.start_waiting_for_devices()
 
 	await get_tree().create_timer(1.0).timeout
 
