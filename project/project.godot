@@ -22,6 +22,10 @@ config/icon="res://assets/icon/m8_emoji.png"
 driver/output_latency=50
 driver/enable_input=true
 
+[autoload]
+
+Log="*res://globals/log.gd"
+
 [debug]
 
 gdscript/warnings/shadowed_variable=0

@@ -97,30 +97,26 @@ func _ready() -> void:
 
 	var start_time := Time.get_ticks_msec()
 
-	_start_task("init devices", func() -> void:
+	Log.call_task(func() -> void:
 		device_manager.init(self)
 		m8_client.system_info.connect(on_m8_system_info)
 		m8_client.disconnected.connect(on_m8_device_disconnect)
 		m8_client.theme_changed.connect(on_m8_theme_changed)
-	)
+	, "init devices")
 
-	_start_task("init overlays", func() -> void:
+	Log.call_task(func() -> void:
 		overlay_spectrum.init(self)
 		overlay_waveform.init(self)
 		overlay_display.init(self)
 		overlay_keys.init(self)
-	)
+	, "init overlays")
 
-	_start_task("init menus", func() -> void:
+	Log.call_task(func() -> void:
 		menu.init(self)
 		menu_scene.init(self)
 		menu_camera.init(self)
 		menu_overlay.init(self)
-	)
-
-	load_last_profile()
-
-	_print("finished initializing in %.3f seconds!" % ((Time.get_ticks_msec() - start_time) / 1000.0))
+	, "init menus")
 
 	%Check_SplashDoNotShow.toggled.connect(func(toggle_mode: bool) -> void:
 		config.splash_show = !toggle_mode
@@ -271,7 +267,7 @@ func get_scene_name(scene_path: String) -> String:
 ## If the filepath is invalid or the scene is unable to load, returns [false].
 ##
 func load_scene(scene_path: String) -> bool:
-	return _start_task("load scene \"%s\"" % scene_path, func() -> bool:
+	return Log.call_task(func() -> bool:
 		var scene: M8Scene
 		var p_scene_path := scene_path
 
@@ -313,7 +309,7 @@ func load_scene(scene_path: String) -> bool:
 		print("load_scene(): scene loaded!")
 
 		return true
-	)
+	, "load scene \"%s\"" % scene_path)
 
 ##
 ## Reset the current scene's properties to their default values.
@@ -355,7 +351,7 @@ func load_last_profile() -> void:
 ## scene properties, and all profile properties (overlays, filters, etc).
 ##
 func load_profile(profile_name: String) -> bool:
-	return _start_task("load profile \"%s\"" % profile_name, func() -> bool:
+	return Log.call_task(func() -> bool:
 		config.use_profile(profile_name)
 		var scene_path := config.get_current_scene_path()
 		assert(scene_path != null)
@@ -368,7 +364,7 @@ func load_profile(profile_name: String) -> bool:
 		print("profile loaded!")
 
 		return true
-	)
+	, "load profile \"%s\"" % profile_name)
 
 func load_default_profile() -> void:
 	load_profile(config.DEFAULT_PROFILE)
@@ -612,13 +608,6 @@ func update_audio_analyzer() -> void:
 
 func _print(text: String) -> void:
 	print_rich("[color=green]%s[/color]" % text)
-
-func _start_task(task_name: String, fn: Callable) -> Variant:
-	var time := Time.get_ticks_msec()
-	_print("starting task \"%s\"..." % task_name)
-	var ret: Variant = fn.call()
-	_print("finished task \"%s\" in %.3f seconds" % [task_name, ((Time.get_ticks_msec() - time) / 1000.0)])
-	return ret
 
 func _handle_input_keys(event: InputEvent) -> bool:
 	if is_any_menu_open(): return false
