@@ -5,13 +5,6 @@ signal m8_theme_changed(colors: PackedColorArray, complete: bool)
 signal m8_connected
 signal m8_disconnected
 
-## Emitted after a profile has been loaded.
-signal profile_loaded(profile_name: String)
-
-## Emitted after a scene has been loaded.
-## Loading a profile will also emit this signal if a new scene wasn't loaded.
-signal scene_loaded(scene_path: String, scene: M8Scene)
-
 const DEVICE_SCAN_INTERVAL: float = 5.0
 
 const MAIN_SCENE_PATH: String = "res://scenes/floating_scene.tscn"
@@ -127,6 +120,7 @@ func _ready() -> void:
 	)
 
 	%SplashContainer.visible = config.splash_show
+	Events.initialized.emit(self)
 	device_manager.start_waiting_for_devices()
 
 	await get_tree().create_timer(1.0).timeout
@@ -230,6 +224,7 @@ func _notification(what: int) -> void:
 
 func quit() -> void:
 	config.save()
+	Events.deinitialized.emit()
 	device_manager.disconnect_serial_device()
 	device_manager.disconnect_audio_device()
 	get_tree().quit()
@@ -305,7 +300,7 @@ func load_scene(scene_path: String) -> bool:
 		menu_scene.clear_params()
 		menu_scene.init_menu()
 
-		scene_loaded.emit(p_scene_path, scene)
+		Events.scene_loaded.emit(p_scene_path, scene)
 
 		print("load_scene(): scene loaded!")
 
@@ -360,7 +355,7 @@ func load_profile(profile_name: String) -> bool:
 		load_scene(scene_path)
 		init_overlays()
 
-		profile_loaded.emit(profile_name)
+		Events.profile_loaded.emit(profile_name)
 
 		print("profile loaded!")
 

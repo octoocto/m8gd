@@ -96,7 +96,7 @@ func _init_menu_profiles() -> void:
 		main.load_default_profile()
 		_update_ui.call()
 
-	main.profile_loaded.connect(func(_profile_name: String) -> void:
+	Events.profile_loaded.connect(func(_profile_name: String) -> void:
 		_update_ui.call()
 	)
 
@@ -169,7 +169,7 @@ func _init_menu_scene() -> void:
 		main.menu_scene.menu_open()
 	)
 
-	main.scene_loaded.connect(func(scene_path: String, _scene: M8Scene) -> void:
+	Events.scene_loaded.connect(func(scene_path: String, _scene: M8Scene) -> void:
 		var scene_name := main.get_scene_name(scene_path)
 		%Label_CurrentScene.text = "%s" % scene_name
 	)

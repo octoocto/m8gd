@@ -25,6 +25,7 @@ driver/enable_input=true
 [autoload]
 
 Log="*res://globals/log.gd"
+Events="*res://globals/events.gd"
 
 [debug]
 
