@@ -22,7 +22,7 @@ func init(p_main: Main) -> void:
 
 	%Button_Finish.pressed.connect(main.menu_open)
 
-	main.scene_loaded.connect(func(_scene_path: String, _scene: M8Scene) -> void:
+	Events.scene_loaded.connect(func(_scene_path: String, _scene: M8Scene) -> void:
 		on_scene_loaded()
 		var camera := main.get_scene_camera()
 		if camera:

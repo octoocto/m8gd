@@ -210,7 +210,7 @@ func _init_menu_overlays() -> void:
 		%Setting_OverlayKeys.value = main.overlay_keys.visible
 	)
 
-	main.profile_loaded.connect(func(_profile_name: String) -> void:
+	Events.profile_loaded.connect(func(_profile_name: String) -> void:
 		%Setting_OverlayScale.reinit()
 		%Setting_OverlayFilters.reinit()
 		%Setting_OverlaySpectrum.reinit()
@@ -256,7 +256,7 @@ func _init_menu_camera() -> void:
 	%Setting_HumanCameraStrength.init_config_camera(main, "humanize_amount")
 	%Setting_HumanCameraFrequency.init_config_camera(main, "humanize_freq")
 
-	main.scene_loaded.connect(func(_scene_path: String, scene: M8Scene) -> void:
+	Events.scene_loaded.connect(func(_scene_path: String, scene: M8Scene) -> void:
 		if !scene.has_3d_camera():
 			%Button_SceneCameraMenu.disabled = true
 			%Setting_MouseCamera.enabled = false
@@ -483,7 +483,7 @@ func _init_menu_filters() -> void:
 	%Setting_ShaderCRT.connect_to_enable(%Setting_ShaderCRTAudioB)
 	%Setting_ShaderCRT.connect_to_enable(%Setting_ShaderCRTAudioCA)
 
-	main.profile_loaded.connect(func(_profile_name: String) -> void:
+	Events.profile_loaded.connect(func(_profile_name: String) -> void:
 		%Setting_ShaderVHS.reinit()
 		%Setting_ShaderVHSSmear.reinit()
 		%Setting_ShaderVHSWiggle.reinit()
@@ -647,7 +647,7 @@ func _init_menu_model() -> void:
 				s.get_color_picker().erase_preset(color)
 		)
 
-	main.profile_loaded.connect(func(_profile_name: String) -> void:
+	Events.profile_loaded.connect(func(_profile_name: String) -> void:
 		for setting in color_settings: setting.reinit()
 	)
 
@@ -669,7 +669,7 @@ func _init_menu_model() -> void:
 		if _model(): _model().set_screen_emission(value)
 	)
 
-	main.scene_loaded.connect(func(_scene_path: String, scene: M8Scene) -> void:
+	Events.scene_loaded.connect(func(_scene_path: String, scene: M8Scene) -> void:
 		var enabled := scene.has_3d_camera()
 
 		for setting in color_settings:
