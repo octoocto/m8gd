@@ -61,7 +61,7 @@ func connect_serial_device(port: String = "", force: bool = false) -> void:
 		else:
 			print("serial: no M8 serial ports found")
 			main.print_to_screen("No valid M8 devices found! Waiting for device...")
-			main.menu.set_status_serialport("Not connected: no valid M8 devices found")
+			main.menu.devices.set_status_serialport("Not connected: no valid M8 devices found")
 			is_waiting_for_serial_device = true
 			return
 
@@ -69,7 +69,7 @@ func connect_serial_device(port: String = "", force: bool = false) -> void:
 
 	if not main.m8_client.connect(port, force):
 		print("serial: failed to connect to port: %s", port)
-		main.menu.set_status_serialport("Not connected: failed to connect to port: %s" % port)
+		main.menu.devices.set_status_serialport("Not connected: failed to connect to port: %s" % port)
 		is_waiting_for_serial_device = false
 		return
 
@@ -79,7 +79,7 @@ func connect_serial_device(port: String = "", force: bool = false) -> void:
 
 	print("serial: connected to port: %s" % port)
 	main.print_to_screen("connected to serial port: %s" % port)
-	main.menu.set_status_serialport("Connected to: %s" % port)
+	main.menu.devices.set_status_serialport("Connected to: %s" % port)
 
 	await connect_audio_device()
 
@@ -92,7 +92,7 @@ func disconnect_serial_device() -> void:
 	main.m8_disconnected.emit()
 
 	main.print_to_screen("disconnected serial device")
-	main.menu.set_status_serialport("Not connected (Disconnected)")
+	main.menu.devices.set_status_serialport("Not connected (Disconnected)")
 
 	disconnect_audio_device()
 
@@ -118,12 +118,12 @@ func connect_audio_device(device: String = "", force: bool = false) -> void:
 			device = list_audio_devices()[0]
 		else:
 			print("audio: no M8 audio devices found")
-			main.menu.set_status_audiodevice("Not connected: no M8 audio device found")
+			main.menu.devices.set_status_audiodevice("Not connected: no M8 audio device found")
 			return
 
 	if not device in list_audio_devices(force):
 		print("audio: audio device not found: %s" % device)
-		main.menu.set_status_audiodevice("Not connected: audio device not found: %s" % device)
+		main.menu.devices.set_status_audiodevice("Not connected: audio device not found: %s" % device)
 		return
 
 	if is_audio_connecting:
@@ -151,7 +151,7 @@ func connect_audio_device(device: String = "", force: bool = false) -> void:
 			main.add_child(audio_monitor)
 
 			# delay
-			main.menu.set_status_audiodevice("Starting...")
+			main.menu.devices.set_status_audiodevice("Starting...")
 			await main.get_tree().create_timer(0.1).timeout
 
 			audio_monitor.playing = true
@@ -161,7 +161,7 @@ func connect_audio_device(device: String = "", force: bool = false) -> void:
 			print("audio: initializing SDL audio")
 			if not main.m8_client.sdl_audio_init(AUDIO_BUFFER_SIZE, "", device):
 				print("audio: failed to connect to device %s" % device)
-				main.menu.set_status_audiodevice("Not connected: failed to connect to: %s" % device)
+				main.menu.devices.set_status_audiodevice("Not connected: failed to connect to: %s" % device)
 				is_audio_connecting = false
 				return
 
@@ -171,7 +171,7 @@ func connect_audio_device(device: String = "", force: bool = false) -> void:
 	is_waiting_for_audio_device = true # auto connect again if there are any random disconnects
 	print("audio: connected to device %s" % device)
 	main.print_to_screen("connected to audio device (%s): %s" % [AudioHandler.keys()[audio_handler], device])
-	main.menu.set_status_audiodevice("Connected to: %s" % device)
+	main.menu.devices.set_status_audiodevice("Connected to: %s" % device)
 
 func disconnect_audio_device() -> void:
 	if not is_audio_device_connected():
@@ -199,7 +199,7 @@ func disconnect_audio_device() -> void:
 	current_audio_device = ""
 	is_waiting_for_audio_device = false
 	main.print_to_screen("disconnected audio device")
-	main.menu.set_status_audiodevice("Not connected")
+	main.menu.devices.set_status_audiodevice("Not connected")
 
 func reset_audio_device() -> void:
 	if is_audio_device_connected():

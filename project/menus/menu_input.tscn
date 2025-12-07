@@ -1,0 +1,361 @@
+[gd_scene load_steps=7 format=3 uid="uid://c3lv6bqqi5wej"]
+
+[ext_resource type="PackedScene" uid="uid://dsgvm3dda1kjp" path="res://ui/label_header.tscn" id="1_aqk45"]
+[ext_resource type="Script" uid="uid://b8j8l0lr1k4w6" path="res://menus/menu_input.gd" id="1_vdots"]
+[ext_resource type="PackedScene" uid="uid://c5kj1uj0ohnmm" path="res://ui/setting_bool.tscn" id="3_1p8ay"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_cher2"]
+font_size = 12
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_v2m85"]
+color = Color(1, 1, 1, 0.25)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bd31u"]
+
+[node name="Input" type="PanelContainer"]
+script = ExtResource("1_vdots")
+metadata/_tab_index = 4
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="LabelHeader" parent="ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("1_aqk45")]
+layout_mode = 2
+text = "M8 Remote Input"
+top_spacing = false
+
+[node name="GridContainer" type="GridContainer" parent="ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+columns = 3
+
+[node name="LabelVideo2" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Key"
+label_settings = SubResource("LabelSettings_cher2")
+
+[node name="LabelVideo3" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Primary Binding"
+label_settings = SubResource("LabelSettings_cher2")
+
+[node name="LabelVideo4" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Secondary Binding"
+label_settings = SubResource("LabelSettings_cher2")
+
+[node name="HSeparator" type="HSeparator" parent="ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_v2m85")
+
+[node name="HSeparator2" type="HSeparator" parent="ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_v2m85")
+
+[node name="HSeparator3" type="HSeparator" parent="ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_v2m85")
+
+[node name="Label" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "Up"
+
+[node name="ButtonBindUp1" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+text_overrun_behavior = 4
+
+[node name="ButtonBindUp2" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+text_overrun_behavior = 4
+
+[node name="Label2" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "Down"
+
+[node name="ButtonBindDown1" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+text_overrun_behavior = 4
+
+[node name="ButtonBindDown2" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+text_overrun_behavior = 4
+
+[node name="Label3" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "Left"
+
+[node name="ButtonBindLeft1" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+text_overrun_behavior = 4
+
+[node name="ButtonBindLeft2" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+text_overrun_behavior = 4
+
+[node name="Label4" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "Right"
+
+[node name="ButtonBindRight1" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+text_overrun_behavior = 4
+
+[node name="ButtonBindRight2" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+text_overrun_behavior = 4
+
+[node name="Label5" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "Option"
+
+[node name="ButtonBindOpt1" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+text_overrun_behavior = 4
+
+[node name="ButtonBindOpt2" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+text_overrun_behavior = 4
+
+[node name="Label6" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "Edit"
+
+[node name="ButtonBindEdit1" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+text_overrun_behavior = 4
+
+[node name="ButtonBindEdit2" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+text_overrun_behavior = 4
+
+[node name="Label7" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "Shift"
+
+[node name="ButtonBindShift1" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+text_overrun_behavior = 4
+
+[node name="ButtonBindShift2" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+text_overrun_behavior = 4
+
+[node name="Label8" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "Play"
+
+[node name="ButtonBindPlay1" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+text_overrun_behavior = 4
+
+[node name="ButtonBindPlay2" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+text_overrun_behavior = 4
+
+[node name="HSeparator3" type="HSeparator" parent="ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_bd31u")
+
+[node name="ButtonResetBinds" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Reset to Defaults"
+
+[node name="LabelHeader2" parent="ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("1_aqk45")]
+layout_mode = 2
+text = "Virtual Keyboard"
+
+[node name="Setting_VirtualKeyboard" parent="ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("3_1p8ay")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_name = "Enable Virtual Keyboard"
+
+[node name="LabelHeader3" parent="ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("1_aqk45")]
+layout_mode = 2
+text = "Profile Hotkeys"
+
+[node name="ProfileHotkeysContainer" type="VBoxContainer" parent="ScrollContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 4
+
+[node name="ProfileHotkeyTemplate" type="HBoxContainer" parent="ScrollContainer/MarginContainer/VBoxContainer/ProfileHotkeysContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/ProfileHotkeysContainer/ProfileHotkeyTemplate"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "placeholder"
+horizontal_alignment = 2
+
+[node name="ButtonBind" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/ProfileHotkeysContainer/ProfileHotkeyTemplate"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+text_overrun_behavior = 4
+
+[node name="ButtonClear" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/ProfileHotkeysContainer/ProfileHotkeyTemplate"]
+layout_mode = 2
+text = "Clear"
+
+[node name="LabelHeader4" parent="ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("1_aqk45")]
+layout_mode = 2
+text = "Overlay Hotkeys"
+
+[node name="OverlayHotkeyWaveform" type="HBoxContainer" parent="ScrollContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/OverlayHotkeyWaveform"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "Toggle Audio Waveform"
+horizontal_alignment = 2
+
+[node name="ButtonBind" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/OverlayHotkeyWaveform"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+text_overrun_behavior = 4
+
+[node name="ButtonClear" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/OverlayHotkeyWaveform"]
+layout_mode = 2
+text = "Clear"
+
+[node name="OverlayHotkeySpectrum" type="HBoxContainer" parent="ScrollContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/OverlayHotkeySpectrum"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "Toggle Audio Spectrum"
+horizontal_alignment = 2
+
+[node name="ButtonBind" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/OverlayHotkeySpectrum"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+text_overrun_behavior = 4
+
+[node name="ButtonClear" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/OverlayHotkeySpectrum"]
+layout_mode = 2
+text = "Clear"
+
+[node name="OverlayHotkeyDisplay" type="HBoxContainer" parent="ScrollContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/OverlayHotkeyDisplay"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "Toggle Screen Display"
+horizontal_alignment = 2
+
+[node name="ButtonBind" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/OverlayHotkeyDisplay"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+text_overrun_behavior = 4
+
+[node name="ButtonClear" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/OverlayHotkeyDisplay"]
+layout_mode = 2
+text = "Clear"
+
+[node name="OverlayHotkeyKey" type="HBoxContainer" parent="ScrollContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="ScrollContainer/MarginContainer/VBoxContainer/OverlayHotkeyKey"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "Toggle Key Overlay"
+horizontal_alignment = 2
+
+[node name="ButtonBind" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/OverlayHotkeyKey"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "----"
+text_overrun_behavior = 4
+
+[node name="ButtonClear" type="Button" parent="ScrollContainer/MarginContainer/VBoxContainer/OverlayHotkeyKey"]
+layout_mode = 2
+text = "Clear"

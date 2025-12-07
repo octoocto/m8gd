@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=14 format=3 uid="uid://c8lf57q2f23tp"]
+[gd_resource type="Theme" load_steps=16 format=3 uid="uid://c8lf57q2f23tp"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cajla"]
 content_margin_top = 2.0
@@ -22,8 +22,16 @@ expand_margin_top = 1.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hc6n8"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_weiun"]
+bg_color = Color(0, 0, 0, 0.75)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1asjn"]
 bg_color = Color(0, 0, 0, 0.75)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_iao85"]
+content_margin_left = 32.0
+content_margin_top = 16.0
+content_margin_right = 32.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_g4kc8"]
 
@@ -87,7 +95,10 @@ MarginContainer/constants/margin_bottom = 16
 MarginContainer/constants/margin_left = 32
 MarginContainer/constants/margin_right = 32
 MarginContainer/constants/margin_top = 16
+MenuPanel/base_type = &"PanelContainer"
+MenuPanel/styles/panel = SubResource("StyleBoxFlat_weiun")
 Panel/styles/panel = SubResource("StyleBoxFlat_1asjn")
+PanelContainer/styles/panel = SubResource("StyleBoxEmpty_iao85")
 RichTextLabel/constants/line_separation = 8
 SettingBackground/base_type = &"PanelContainer"
 SettingBackground/styles/panel = SubResource("StyleBoxEmpty_g4kc8")

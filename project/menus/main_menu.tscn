@@ -1,0 +1,219 @@
+[gd_scene load_steps=16 format=3 uid="uid://d13t756slc8b0"]
+
+[ext_resource type="Script" uid="uid://bedwwdrrkmvn4" path="res://menus/main_menu.gd" id="1_7xjs6"]
+[ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://menus/theme/menu_theme.tres" id="1_qr6r4"]
+[ext_resource type="Texture2D" uid="uid://d1o5ho1s6e3vr" path="res://assets/icon/Add.png" id="2_mwqao"]
+[ext_resource type="PackedScene" uid="uid://disepgw6epns6" path="res://menus/menu_scene.tscn" id="3_0k4wn"]
+[ext_resource type="PackedScene" uid="uid://b8sdswwu5dtu5" path="res://menus/menu_overlays.tscn" id="4_j5v2v"]
+[ext_resource type="PackedScene" uid="uid://b42ev167pgdvl" path="res://menus/menu_shaders.tscn" id="5_iotk1"]
+[ext_resource type="PackedScene" uid="uid://beyfg0ros1ixo" path="res://menus/menu_devices.tscn" id="6_w44g7"]
+[ext_resource type="PackedScene" uid="uid://c3lv6bqqi5wej" path="res://menus/menu_input.tscn" id="7_cm266"]
+[ext_resource type="PackedScene" uid="uid://bpojkt73l3brw" path="res://menus/menu_video.tscn" id="8_g8g3n"]
+[ext_resource type="PackedScene" uid="uid://bnyisdw58c3c8" path="res://menus/menu_audio.tscn" id="9_0k4wn"]
+[ext_resource type="PackedScene" uid="uid://t27ffaww12ff" path="res://menus/menu_debug.tscn" id="10_8u0te"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7jqdk"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3mi27"]
+content_margin_top = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.5, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8epsv"]
+bg_color = Color(0, 0, 0, 0.5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nhtyl"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 2
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+expand_margin_left = 16.0
+expand_margin_top = 16.0
+expand_margin_right = 16.0
+expand_margin_bottom = 16.0
+
+[node name="MainMenuPanel" type="PanelContainer"]
+custom_minimum_size = Vector2(320, 240)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_qr6r4")
+theme_type_variation = &"MenuPanel"
+script = ExtResource("1_7xjs6")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/CenterContainer"]
+custom_minimum_size = Vector2(620, 640)
+layout_mode = 2
+
+[node name="TabContainer" type="TabContainer" parent="ScrollContainer/CenterContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+current_tab = 0
+
+[node name="Scene" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer" instance=ExtResource("3_0k4wn")]
+layout_mode = 2
+
+[node name="Overlays" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer" instance=ExtResource("4_j5v2v")]
+visible = false
+layout_mode = 2
+
+[node name="Filters" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer" instance=ExtResource("5_iotk1")]
+visible = false
+layout_mode = 2
+
+[node name="DeviceMenu" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer" instance=ExtResource("6_w44g7")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="InputMenu" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer" instance=ExtResource("7_cm266")]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(320, 240)
+layout_mode = 2
+
+[node name="Video" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer" instance=ExtResource("8_g8g3n")]
+visible = false
+custom_minimum_size = Vector2(320, 240)
+layout_mode = 2
+
+[node name="Audio" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer" instance=ExtResource("9_0k4wn")]
+visible = false
+layout_mode = 2
+
+[node name="Debug" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer" instance=ExtResource("10_8u0te")]
+visible = false
+custom_minimum_size = Vector2(320, 240)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/CenterContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="DisplayRect" type="TextureRect" parent="ScrollContainer/CenterContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+visible = false
+texture_filter = 1
+custom_minimum_size = Vector2(320, 240)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="VSeparator" type="VSeparator" parent="ScrollContainer/CenterContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+theme_override_styles/separator = SubResource("StyleBoxEmpty_7jqdk")
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="ScrollContainer/CenterContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ScrollContainer/CenterContainer/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+text = "Profile Name"
+
+[node name="LineEditProfileName" type="LineEdit" parent="ScrollContainer/CenterContainer/VBoxContainer/HBoxContainer4"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "<default>"
+editable = false
+caret_blink = true
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="ScrollContainer/CenterContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="ScrollContainer/CenterContainer/VBoxContainer/HBoxContainer3"]
+visible = false
+custom_minimum_size = Vector2(80, 18)
+layout_mode = 2
+size_flags_vertical = 4
+bbcode_enabled = true
+text = "[b]Profile[/b]"
+scroll_active = false
+
+[node name="ButtonProfileCreate" type="Button" parent="ScrollContainer/CenterContainer/VBoxContainer/HBoxContainer3"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+text = "Create new profile"
+icon = ExtResource("2_mwqao")
+
+[node name="OptionProfiles" type="OptionButton" parent="ScrollContainer/CenterContainer/VBoxContainer/HBoxContainer3"]
+unique_name_in_owner = true
+clip_contents = true
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+alignment = 1
+
+[node name="ButtonProfileReset" type="Button" parent="ScrollContainer/CenterContainer/VBoxContainer/HBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_3mi27")
+text = "Reset"
+
+[node name="ButtonProfileDelete" type="Button" parent="ScrollContainer/CenterContainer/VBoxContainer/HBoxContainer3"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_3mi27")
+text = "Delete"
+
+[node name="HSeparator" type="HSeparator" parent="ScrollContainer/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"HSpacer"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="ScrollContainer/CenterContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ButtonClose" type="Button" parent="ScrollContainer/CenterContainer/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Close Menu"
+
+[node name="ButtonExit" type="Button" parent="ScrollContainer/CenterContainer/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_3mi27")
+text = "Exit to Desktop"
+
+[node name="BindActionPopup" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8epsv")
+
+[node name="PanelContainer" type="PanelContainer" parent="BindActionPopup"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_nhtyl")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="BindActionPopup/PanelContainer"]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+bbcode_enabled = true
+text = "Press the key or button you want to bind this action to...
+
+[center]Click ESC to cancel[/center]"
+fit_content = true
+metadata/_edit_use_anchors_ = true

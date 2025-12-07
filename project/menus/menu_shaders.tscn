@@ -1,0 +1,182 @@
+[gd_scene load_steps=4 format=3 uid="uid://b42ev167pgdvl"]
+
+[ext_resource type="Script" uid="uid://babs6t3jjkoq2" path="res://menus/menu_shaders.gd" id="1_q0qgx"]
+[ext_resource type="PackedScene" uid="uid://c5kj1uj0ohnmm" path="res://ui/setting_bool.tscn" id="1_rla85"]
+[ext_resource type="PackedScene" uid="uid://b1r8nehsgp111" path="res://ui/setting_number.tscn" id="2_q0qgx"]
+
+[node name="Filters" type="PanelContainer"]
+custom_minimum_size = Vector2(320, 240)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_q0qgx")
+metadata/_tab_index = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+custom_minimum_size = Vector2(0, 400)
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Setting_ShaderVHS" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1_rla85")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_name = "VHS Shader"
+
+[node name="Setting_ShaderVHSSmear" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_q0qgx")]
+unique_name_in_owner = true
+modulate = Color(0.25, 0.25, 0.25, 1)
+layout_mode = 2
+max_value = 2.0
+step = 0.02
+as_percent = true
+percent_factor = 50.0
+format_string = "%d%%"
+enabled = false
+setting_name = "Smear Amount"
+setting_name_min_width = 200
+setting_name_indent = 32
+
+[node name="Setting_ShaderVHSWiggle" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_q0qgx")]
+unique_name_in_owner = true
+modulate = Color(0.25, 0.25, 0.25, 1)
+layout_mode = 2
+max_value = 0.2
+step = 0.002
+as_percent = true
+percent_factor = 500.0
+format_string = "%d%%"
+enabled = false
+setting_name = "Wiggle Amount"
+setting_name_min_width = 200
+setting_name_indent = 32
+
+[node name="Setting_ShaderVHSNoise" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_q0qgx")]
+unique_name_in_owner = true
+modulate = Color(0.25, 0.25, 0.25, 1)
+layout_mode = 2
+max_value = 2.0
+step = 0.02
+as_percent = true
+percent_factor = 50.0
+format_string = "%d%%"
+enabled = false
+setting_name = "Noise Crease Amount"
+setting_name_min_width = 200
+setting_name_indent = 32
+
+[node name="Setting_ShaderVHSTape" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_q0qgx")]
+unique_name_in_owner = true
+modulate = Color(0.25, 0.25, 0.25, 1)
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+as_percent = true
+format_string = "%d%%"
+enabled = false
+setting_name = "Tape Crease Amount"
+setting_name_min_width = 200
+setting_name_indent = 32
+
+[node name="Setting_ShaderCRT" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1_rla85")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_name = "CRT Shader"
+
+[node name="Setting_ShaderCRTScanLines" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1_rla85")]
+unique_name_in_owner = true
+modulate = Color(0.25, 0.25, 0.25, 1)
+layout_mode = 2
+value = true
+enabled = false
+setting_name = "Scan Lines"
+setting_name_min_width = 200
+setting_name_indent = 32
+
+[node name="Setting_ShaderCRTReverseCurvature" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1_rla85")]
+unique_name_in_owner = true
+modulate = Color(0.25, 0.25, 0.25, 1)
+layout_mode = 2
+enabled = false
+setting_name = "Reverse Curvature"
+setting_name_min_width = 200
+setting_name_indent = 32
+
+[node name="Setting_ShaderCRTCurvature" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_q0qgx")]
+unique_name_in_owner = true
+modulate = Color(0.25, 0.25, 0.25, 1)
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+as_percent = true
+format_string = "%d%%"
+enabled = false
+setting_name = "Curvature Amount"
+setting_name_min_width = 200
+setting_name_indent = 32
+
+[node name="Setting_ShaderCRTVignette" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_q0qgx")]
+unique_name_in_owner = true
+modulate = Color(0.25, 0.25, 0.25, 1)
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+as_percent = true
+format_string = "%d%%"
+enabled = false
+setting_name = "Vignette Amount"
+setting_name_min_width = 200
+setting_name_indent = 32
+
+[node name="Setting_ShaderCRTAudioB" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_q0qgx")]
+unique_name_in_owner = true
+modulate = Color(0.25, 0.25, 0.25, 1)
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+as_percent = true
+format_string = "%d%%"
+enabled = false
+setting_name = "Audio to Brightness"
+setting_name_min_width = 200
+setting_name_indent = 32
+
+[node name="Setting_ShaderCRTAudioCA" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_q0qgx")]
+unique_name_in_owner = true
+modulate = Color(0.25, 0.25, 0.25, 1)
+layout_mode = 2
+max_value = 0.1
+step = 0.001
+as_percent = true
+percent_factor = 1000.0
+format_string = "%d%%"
+enabled = false
+setting_name = "Audio to Chromatic Abberation"
+setting_name_min_width = 200
+setting_name_indent = 32
+
+[node name="Setting_ShaderNoise" parent="ScrollContainer/VBoxContainer" instance=ExtResource("1_rla85")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_name = "Noise"
+
+[node name="Setting_ShaderNoiseStrength" parent="ScrollContainer/VBoxContainer" instance=ExtResource("2_q0qgx")]
+unique_name_in_owner = true
+modulate = Color(0.25, 0.25, 0.25, 1)
+layout_mode = 2
+max_value = 0.1
+step = 0.001
+as_percent = true
+percent_factor = 1000.0
+format_string = "%d%%"
+enabled = false
+setting_name = "Noise Strength"
+setting_name_min_width = 200
+setting_name_indent = 32
+parent_setting = NodePath("../Setting_ShaderNoise")

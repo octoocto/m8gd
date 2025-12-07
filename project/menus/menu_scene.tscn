@@ -1,0 +1,375 @@
+[gd_scene load_steps=9 format=3 uid="uid://disepgw6epns6"]
+
+[ext_resource type="PackedScene" uid="uid://dsgvm3dda1kjp" path="res://ui/label_header.tscn" id="1_2ypbp"]
+[ext_resource type="Script" uid="uid://xlpmpyscjauv" path="res://menus/menu_scene.gd" id="1_uybnw"]
+[ext_resource type="PackedScene" uid="uid://c5kj1uj0ohnmm" path="res://ui/setting_bool.tscn" id="2_uybnw"]
+[ext_resource type="Texture2D" uid="uid://58ird2h11kc6" path="res://assets/icon/Load.png" id="3_ipe3s"]
+[ext_resource type="PackedScene" uid="uid://b1r8nehsgp111" path="res://ui/setting_number.tscn" id="3_sgkbc"]
+[ext_resource type="PackedScene" uid="uid://b62oydgjq232n" path="res://ui/setting_color.tscn" id="4_ipe3s"]
+[ext_resource type="PackedScene" uid="uid://bgsxagi62acni" path="res://ui/setting_options.tscn" id="5_gms2o"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_23yct"]
+
+[node name="Scene" type="PanelContainer"]
+custom_minimum_size = Vector2(320, 240)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_uybnw")
+metadata/_tab_index = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="LabelHeader3" parent="VBoxContainer/HBoxContainer4" instance=ExtResource("1_2ypbp")]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Scene"
+top_spacing = false
+
+[node name="Label_CurrentScene" type="Label" parent="VBoxContainer/HBoxContainer4"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+text = "placeholder"
+horizontal_alignment = 2
+
+[node name="Option_LoadScene" type="OptionButton" parent="VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+alignment = 1
+selected = 0
+item_count = 1
+popup/item_0/text = "Change Scene..."
+popup/item_0/icon = ExtResource("3_ipe3s")
+popup/item_0/id = 0
+
+[node name="Button_OpenSceneMenu" type="Button" parent="VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+text = "Configure Scene..."
+
+[node name="LabelHeader" parent="VBoxContainer" instance=ExtResource("1_2ypbp")]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Camera"
+
+[node name="Setting_MouseCamera" parent="VBoxContainer" instance=ExtResource("2_uybnw")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_name = "Mouse Pan & Zoom Control"
+
+[node name="Setting_HumanCamera" parent="VBoxContainer" instance=ExtResource("2_uybnw")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_name = "Humanize Camera Movements"
+
+[node name="Setting_HumanCameraStrength" parent="VBoxContainer" instance=ExtResource("3_sgkbc")]
+unique_name_in_owner = true
+modulate = Color(0.25, 0.25, 0.25, 1)
+layout_mode = 2
+max_value = 0.1
+step = 0.001
+value = 0.05
+as_percent = true
+percent_factor = 1000.0
+format_string = "%d%%"
+enabled = false
+setting_name = "Noise Strength"
+setting_name_indent = 32
+parent_setting = NodePath("../Setting_HumanCamera")
+
+[node name="Setting_HumanCameraFrequency" parent="VBoxContainer" instance=ExtResource("3_sgkbc")]
+unique_name_in_owner = true
+modulate = Color(0.25, 0.25, 0.25, 1)
+layout_mode = 2
+max_value = 2.0
+step = 0.02
+value = 1.0
+as_percent = true
+percent_factor = 50.0
+format_string = "%d%%"
+enabled = false
+setting_name = "Noise Frequency"
+setting_name_indent = 32
+parent_setting = NodePath("../Setting_HumanCamera")
+
+[node name="Button_SceneCameraMenu" type="Button" parent="VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+text = "Configure Camera..."
+
+[node name="LabelHeader2" parent="VBoxContainer" instance=ExtResource("1_2ypbp")]
+layout_mode = 2
+text = "M8 Model"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer3/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Keycap / Press Highlight Colors"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/HBoxContainer3/VBoxContainer"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="VBoxContainer/HBoxContainer3/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+mouse_filter = 1
+
+[node name="Setting_ModelColorUp" parent="VBoxContainer/HBoxContainer3/VBoxContainer/Control" instance=ExtResource("4_ipe3s")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 38.0
+offset_top = 21.0
+offset_right = 62.0
+offset_bottom = 45.0
+value = Color(0.15, 0.15, 0.15, 1)
+edit_alpha = false
+show_html = false
+panel_style_value = SubResource("StyleBoxEmpty_23yct")
+
+[node name="Setting_ModelColorDown" parent="VBoxContainer/HBoxContainer3/VBoxContainer/Control" instance=ExtResource("4_ipe3s")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 38.0
+offset_top = 45.0
+offset_right = 62.0
+offset_bottom = 69.0
+value = Color(0.15, 0.15, 0.15, 1)
+edit_alpha = false
+show_html = false
+panel_style_value = SubResource("StyleBoxEmpty_23yct")
+
+[node name="Setting_ModelColorLeft" parent="VBoxContainer/HBoxContainer3/VBoxContainer/Control" instance=ExtResource("4_ipe3s")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 14.0
+offset_top = 45.0
+offset_right = 38.0
+offset_bottom = 69.0
+value = Color(0.15, 0.15, 0.15, 1)
+edit_alpha = false
+show_html = false
+panel_style_value = SubResource("StyleBoxEmpty_23yct")
+
+[node name="Setting_ModelColorRight" parent="VBoxContainer/HBoxContainer3/VBoxContainer/Control" instance=ExtResource("4_ipe3s")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 62.0
+offset_top = 45.0
+offset_right = 86.0
+offset_bottom = 69.0
+value = Color(0.15, 0.15, 0.15, 1)
+edit_alpha = false
+show_html = false
+panel_style_value = SubResource("StyleBoxEmpty_23yct")
+
+[node name="Setting_ModelColorShift" parent="VBoxContainer/HBoxContainer3/VBoxContainer/Control" instance=ExtResource("4_ipe3s")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 38.0
+offset_top = 77.0
+offset_right = 62.0
+offset_bottom = 101.0
+value = Color(0.15, 0.15, 0.15, 1)
+edit_alpha = false
+show_html = false
+panel_style_value = SubResource("StyleBoxEmpty_23yct")
+
+[node name="Setting_ModelColorPlay" parent="VBoxContainer/HBoxContainer3/VBoxContainer/Control" instance=ExtResource("4_ipe3s")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 62.0
+offset_top = 77.0
+offset_right = 86.0
+offset_bottom = 101.0
+value = Color(0.15, 0.15, 0.15, 1)
+edit_alpha = false
+show_html = false
+panel_style_value = SubResource("StyleBoxEmpty_23yct")
+
+[node name="Setting_ModelColorOption" parent="VBoxContainer/HBoxContainer3/VBoxContainer/Control" instance=ExtResource("4_ipe3s")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 70.0
+offset_top = 13.0
+offset_right = 94.0
+offset_bottom = 37.0
+value = Color(0.15, 0.15, 0.15, 1)
+edit_alpha = false
+show_html = false
+panel_style_value = SubResource("StyleBoxEmpty_23yct")
+
+[node name="Setting_ModelColorEdit" parent="VBoxContainer/HBoxContainer3/VBoxContainer/Control" instance=ExtResource("4_ipe3s")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 94.0
+offset_top = 13.0
+offset_right = 118.0
+offset_bottom = 37.0
+value = Color(0.15, 0.15, 0.15, 1)
+edit_alpha = false
+show_html = false
+panel_style_value = SubResource("StyleBoxEmpty_23yct")
+
+[node name="Setting_ModelColorHLUp" parent="VBoxContainer/HBoxContainer3/VBoxContainer/Control" instance=ExtResource("4_ipe3s")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 158.0
+offset_top = 21.0
+offset_right = 182.0
+offset_bottom = 45.0
+edit_alpha = false
+show_html = false
+panel_style_value = SubResource("StyleBoxEmpty_23yct")
+
+[node name="Setting_ModelColorHLDown" parent="VBoxContainer/HBoxContainer3/VBoxContainer/Control" instance=ExtResource("4_ipe3s")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 158.0
+offset_top = 45.0
+offset_right = 182.0
+offset_bottom = 69.0
+edit_alpha = false
+show_html = false
+panel_style_value = SubResource("StyleBoxEmpty_23yct")
+
+[node name="Setting_ModelColorHLLeft" parent="VBoxContainer/HBoxContainer3/VBoxContainer/Control" instance=ExtResource("4_ipe3s")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 134.0
+offset_top = 45.0
+offset_right = 158.0
+offset_bottom = 69.0
+edit_alpha = false
+show_html = false
+panel_style_value = SubResource("StyleBoxEmpty_23yct")
+
+[node name="Setting_ModelColorHLRight" parent="VBoxContainer/HBoxContainer3/VBoxContainer/Control" instance=ExtResource("4_ipe3s")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 182.0
+offset_top = 45.0
+offset_right = 206.0
+offset_bottom = 69.0
+edit_alpha = false
+show_html = false
+panel_style_value = SubResource("StyleBoxEmpty_23yct")
+
+[node name="Setting_ModelColorHLShift" parent="VBoxContainer/HBoxContainer3/VBoxContainer/Control" instance=ExtResource("4_ipe3s")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 158.0
+offset_top = 77.0
+offset_right = 182.0
+offset_bottom = 101.0
+edit_alpha = false
+show_html = false
+panel_style_value = SubResource("StyleBoxEmpty_23yct")
+
+[node name="Setting_ModelColorHLPlay" parent="VBoxContainer/HBoxContainer3/VBoxContainer/Control" instance=ExtResource("4_ipe3s")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 182.0
+offset_top = 77.0
+offset_right = 206.0
+offset_bottom = 101.0
+edit_alpha = false
+show_html = false
+panel_style_value = SubResource("StyleBoxEmpty_23yct")
+
+[node name="Setting_ModelColorHLOption" parent="VBoxContainer/HBoxContainer3/VBoxContainer/Control" instance=ExtResource("4_ipe3s")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 190.0
+offset_top = 13.0
+offset_right = 214.0
+offset_bottom = 37.0
+edit_alpha = false
+show_html = false
+panel_style_value = SubResource("StyleBoxEmpty_23yct")
+
+[node name="Setting_ModelColorHLEdit" parent="VBoxContainer/HBoxContainer3/VBoxContainer/Control" instance=ExtResource("4_ipe3s")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 214.0
+offset_top = 13.0
+offset_right = 238.0
+offset_bottom = 37.0
+edit_alpha = false
+show_html = false
+panel_style_value = SubResource("StyleBoxEmpty_23yct")
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Setting_ModelType" parent="VBoxContainer/HBoxContainer3/VBoxContainer2" instance=ExtResource("5_gms2o")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_type = 1
+items = PackedStringArray("Auto", "M8 M:01", "M8 M:02")
+value = 0
+setting_name = "Device Model"
+
+[node name="Setting_ModelColorBody" parent="VBoxContainer/HBoxContainer3/VBoxContainer2" instance=ExtResource("4_ipe3s")]
+unique_name_in_owner = true
+layout_mode = 2
+value = Color(0.08, 0.08, 0.08, 1)
+setting_name = "Body Color"
+setting_name_min_width = 100
+
+[node name="Setting_ModelHighlightOpacity" parent="VBoxContainer/HBoxContainer3/VBoxContainer2" instance=ExtResource("3_sgkbc")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_value_min_width = 32
+max_value = 1.0
+step = 0.01
+value = 1.0
+as_percent = true
+format_string = "%d%%"
+setting_name = "Highlight Opacity"
+setting_name_min_width = 100
+
+[node name="Setting_ModelScreenFilter" parent="VBoxContainer/HBoxContainer3/VBoxContainer2" instance=ExtResource("2_uybnw")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_name = "Screen Linear Filter"
+setting_name_min_width = 100
+
+[node name="Setting_ModelScreenEmission" parent="VBoxContainer/HBoxContainer3/VBoxContainer2" instance=ExtResource("3_sgkbc")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_value_min_width = 32
+max_value = 1.0
+step = 0.01
+value = 0.25
+as_percent = true
+format_string = "%d%%"
+setting_name = "Screen Emission"
+setting_name_min_width = 100

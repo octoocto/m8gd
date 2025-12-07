@@ -1,0 +1,139 @@
+[gd_scene load_steps=7 format=3 uid="uid://bnyisdw58c3c8"]
+
+[ext_resource type="PackedScene" uid="uid://dsgvm3dda1kjp" path="res://ui/label_header.tscn" id="1_h0xai"]
+[ext_resource type="Script" uid="uid://dc3gl6kkbviph" path="res://menus/menu_audio.gd" id="1_xth7c"]
+[ext_resource type="PackedScene" uid="uid://bgsxagi62acni" path="res://ui/setting_options.tscn" id="2_xth7c"]
+[ext_resource type="PackedScene" uid="uid://b1r8nehsgp111" path="res://ui/setting_number.tscn" id="3_btcwg"]
+[ext_resource type="PackedScene" uid="uid://c5kj1uj0ohnmm" path="res://ui/setting_bool.tscn" id="4_xny6n"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4w3sk"]
+
+[node name="Audio" type="PanelContainer"]
+custom_minimum_size = Vector2(320, 240)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_xth7c")
+metadata/_tab_index = 6
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+
+[node name="LabelHeader" parent="VBoxContainer" instance=ExtResource("1_h0xai")]
+layout_mode = 2
+text = "Output"
+top_spacing = false
+
+[node name="Setting_AudioHandler" parent="VBoxContainer" instance=ExtResource("2_xth7c")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_type = 1
+items = PackedStringArray("Godot", "SDL")
+value = 0
+setting_name = "Audio Handler"
+
+[node name="Setting_Volume" parent="VBoxContainer" instance=ExtResource("3_btcwg")]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+value = 0.8
+as_percent = true
+format_string = "%d%%"
+setting_name = "Volume"
+
+[node name="LabelHeader2" parent="VBoxContainer" instance=ExtResource("1_h0xai")]
+layout_mode = 2
+text = "Driver Info"
+
+[node name="GridContainer2" type="GridContainer" parent="VBoxContainer"]
+layout_mode = 2
+columns = 3
+
+[node name="Label4" type="Label" parent="VBoxContainer/GridContainer2"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Audio Driver"
+
+[node name="VSeparator3" type="VSeparator" parent="VBoxContainer/GridContainer2"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_4w3sk")
+
+[node name="LineEditAudioDriver" type="LineEdit" parent="VBoxContainer/GridContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_length = 10
+editable = false
+virtual_keyboard_type = 2
+
+[node name="Label3" type="Label" parent="VBoxContainer/GridContainer2"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Mix Rate"
+
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/GridContainer2"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_4w3sk")
+
+[node name="LineEditAudioRate" type="LineEdit" parent="VBoxContainer/GridContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_length = 10
+editable = false
+virtual_keyboard_type = 2
+
+[node name="Label5" type="Label" parent="VBoxContainer/GridContainer2"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Output Latency"
+
+[node name="VSeparator2" type="VSeparator" parent="VBoxContainer/GridContainer2"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_4w3sk")
+
+[node name="LineEditAudioLatency" type="LineEdit" parent="VBoxContainer/GridContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+max_length = 10
+editable = false
+virtual_keyboard_type = 2
+
+[node name="LabelHeader3" parent="VBoxContainer" instance=ExtResource("1_h0xai")]
+layout_mode = 2
+text = "Spectrum Analyzer"
+
+[node name="Setting_SAEnable" parent="VBoxContainer" instance=ExtResource("4_xny6n")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_name = "Enable Spectrum Analyzer"
+
+[node name="Setting_SAMin" parent="VBoxContainer" instance=ExtResource("3_btcwg")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_value_min_width = 60
+min_value = 100.0
+max_value = 20000.0
+step = 100.0
+value = 100.0
+format_string = "%d hz"
+setting_name = "Min Frequency"
+
+[node name="Setting_SAMax" parent="VBoxContainer" instance=ExtResource("3_btcwg")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_value_min_width = 60
+min_value = 100.0
+max_value = 20000.0
+step = 100.0
+value = 100.0
+format_string = "%d hz"
+setting_name = "Max Frequency"

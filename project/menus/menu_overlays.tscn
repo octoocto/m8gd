@@ -1,0 +1,89 @@
+[gd_scene load_steps=4 format=3 uid="uid://b8sdswwu5dtu5"]
+
+[ext_resource type="PackedScene" uid="uid://b1r8nehsgp111" path="res://ui/setting_number.tscn" id="1_f030a"]
+[ext_resource type="Script" uid="uid://b6dhtjg3kwm7f" path="res://menus/menu_overlays.gd" id="1_ta51e"]
+[ext_resource type="PackedScene" uid="uid://c5kj1uj0ohnmm" path="res://ui/setting_bool.tscn" id="2_ta51e"]
+
+[node name="Overlays" type="PanelContainer"]
+custom_minimum_size = Vector2(320, 240)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ta51e")
+metadata/_tab_index = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Setting_OverlayScale" parent="VBoxContainer" instance=ExtResource("1_f030a")]
+unique_name_in_owner = true
+layout_mode = 2
+min_value = 1.0
+max_value = 4.0
+value = 1.0
+show_ticks = true
+format_string = "%dx"
+setting_name = "Integer Scale"
+
+[node name="Setting_OverlayFilters" parent="VBoxContainer" instance=ExtResource("2_ta51e")]
+unique_name_in_owner = true
+layout_mode = 2
+value = true
+setting_name = "Apply Filters"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="Setting_OverlaySpectrum" parent="VBoxContainer/GridContainer" instance=ExtResource("2_ta51e")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_name = "Audio Spectrum"
+
+[node name="Button_OverlaySpectrumConfig" type="Button" parent="VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+disabled = true
+text = "Configure..."
+
+[node name="Setting_OverlayWaveform" parent="VBoxContainer/GridContainer" instance=ExtResource("2_ta51e")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_name = "Audio Waveform"
+
+[node name="Button_OverlayWaveformConfig" type="Button" parent="VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+disabled = true
+text = "Configure..."
+
+[node name="Setting_OverlayDisplay" parent="VBoxContainer/GridContainer" instance=ExtResource("2_ta51e")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_name = "Screen Display"
+
+[node name="Button_OverlayDisplayConfig" type="Button" parent="VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+disabled = true
+text = "Configure..."
+
+[node name="Setting_OverlayKeys" parent="VBoxContainer/GridContainer" instance=ExtResource("2_ta51e")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_name = "Key Display"
+
+[node name="Button_OverlayKeysConfig" type="Button" parent="VBoxContainer/GridContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+disabled = true
+text = "Configure..."

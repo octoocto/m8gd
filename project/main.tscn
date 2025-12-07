@@ -11,16 +11,16 @@
 [ext_resource type="Shader" uid="uid://6tp4l6soye54" path="res://shaders/vhs3.gdshader" id="4_tq17m"]
 [ext_resource type="PackedScene" uid="uid://dq6heks88e2ip" path="res://overlays/overlay_audio_waveform.tscn" id="5_p87tv"]
 [ext_resource type="Shader" uid="uid://okxo3d88kn1h" path="res://shaders/screen_blur.gdshader" id="7_5hn1q"]
-[ext_resource type="PackedScene" uid="uid://d13t756slc8b0" path="res://main_menu.tscn" id="7_k5oyo"]
+[ext_resource type="PackedScene" uid="uid://d13t756slc8b0" path="res://menus/main_menu.tscn" id="7_k5oyo"]
 [ext_resource type="PackedScene" uid="uid://ca2jqh2tc7jix" path="res://overlays/overlay_keys.tscn" id="8_dnyct"]
-[ext_resource type="PackedScene" uid="uid://geilakxinhul" path="res://scene_camera_menu.tscn" id="8_v4lip"]
-[ext_resource type="PackedScene" uid="uid://dv8crbibtrpck" path="res://scene_menu.tscn" id="9_bisyb"]
+[ext_resource type="PackedScene" uid="uid://geilakxinhul" path="res://menus/scene_camera_menu.tscn" id="8_v4lip"]
+[ext_resource type="PackedScene" uid="uid://dv8crbibtrpck" path="res://menus/scene_menu.tscn" id="9_bisyb"]
 [ext_resource type="FontFile" uid="uid://c2qpt2alp4ic3" path="res://assets/FSEX302.ttf" id="13_82xsv"]
-[ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/menu_theme.tres" id="13_e5i6c"]
+[ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://menus/theme/menu_theme.tres" id="13_e5i6c"]
 [ext_resource type="Texture2D" uid="uid://bnktl64c363mh" path="res://assets/icon/TripleBar.png" id="13_gepng"]
 [ext_resource type="Script" uid="uid://dboaq4avw66tx" path="res://console.gd" id="14_getpj"]
 [ext_resource type="Texture2D" uid="uid://bmg26rkxtqtso" path="res://assets/icon/Close.png" id="14_p46wh"]
-[ext_resource type="PackedScene" uid="uid://bebvc2datqp85" path="res://menu_overlay.tscn" id="16_4bi6d"]
+[ext_resource type="PackedScene" uid="uid://bebvc2datqp85" path="res://menus/menu_overlay.tscn" id="16_4bi6d"]
 
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_c3wmn"]
 
@@ -716,6 +716,7 @@ size_flags_vertical = 3
 unique_name_in_owner = true
 visible = false
 z_index = 1
+custom_minimum_size = Vector2(320, 240)
 layout_mode = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI"]

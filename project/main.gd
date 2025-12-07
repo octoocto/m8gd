@@ -20,6 +20,8 @@ const M8_ACTIONS := [
 	"key_up", "key_down", "key_left", "key_right",
 	"key_shift", "key_play", "key_option", "key_edit"]
 
+static var instance: Main = null
+
 @export var visualizer_aberration_amount := 1.0
 @export var visualizer_brightness_amount := 0.1
 @export var visualizer_frequency_min := 0
@@ -105,7 +107,7 @@ func _ready() -> void:
 	, "init overlays")
 
 	Log.call_task(func() -> void:
-		menu.init(self)
+		# menu.init(self)
 		menu_scene.init(self)
 		menu_camera.init(self)
 		menu_overlay.init(self)
@@ -120,7 +122,11 @@ func _ready() -> void:
 	)
 
 	%SplashContainer.visible = config.splash_show
+
+	instance = self
+
 	Events.initialized.emit(self)
+
 	device_manager.start_waiting_for_devices()
 
 	await get_tree().create_timer(1.0).timeout

@@ -1,0 +1,139 @@
+[gd_scene load_steps=7 format=3 uid="uid://bpojkt73l3brw"]
+
+[ext_resource type="PackedScene" uid="uid://dsgvm3dda1kjp" path="res://ui/label_header.tscn" id="1_0nw4r"]
+[ext_resource type="Script" uid="uid://d1xdu68kv6hkb" path="res://menus/menu_video.gd" id="1_8qcof"]
+[ext_resource type="PackedScene" uid="uid://c5kj1uj0ohnmm" path="res://ui/setting_bool.tscn" id="2_8qcof"]
+[ext_resource type="PackedScene" uid="uid://bgsxagi62acni" path="res://ui/setting_options.tscn" id="3_j5lkk"]
+[ext_resource type="PackedScene" uid="uid://bevoopcdq5dsh" path="res://ui/setting_vec2i.tscn" id="4_jvvms"]
+[ext_resource type="PackedScene" uid="uid://b1r8nehsgp111" path="res://ui/setting_number.tscn" id="5_ho738"]
+
+[node name="Video" type="PanelContainer"]
+offset_right = 360.0
+offset_bottom = 630.0
+script = ExtResource("1_8qcof")
+metadata/_tab_index = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="LabelHeader" parent="VBoxContainer" instance=ExtResource("1_0nw4r")]
+layout_mode = 2
+text = "Display"
+top_spacing = false
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Setting_Fullscreen" parent="VBoxContainer/VBoxContainer2" instance=ExtResource("2_8qcof")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_name = "Fullscreen"
+
+[node name="Setting_WindowBorderless" parent="VBoxContainer/VBoxContainer2" instance=ExtResource("2_8qcof")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_name = "Borderless Window"
+parent_setting = NodePath("../Setting_Fullscreen")
+parent_setting_invert = true
+
+[node name="Setting_AlwaysOnTop" parent="VBoxContainer/VBoxContainer2" instance=ExtResource("2_8qcof")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_name = "Always on Top"
+parent_setting = NodePath("../Setting_Fullscreen")
+parent_setting_invert = true
+
+[node name="Setting_WindowSize" parent="VBoxContainer/VBoxContainer2" instance=ExtResource("3_j5lkk")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_type = 1
+items = PackedStringArray("640x480 (2x M01)", "960x720 (3x M01)", "1280x960 (4x M01)", "960x640 (2x M02)", "1440x960 (3x M02)", "1920x1280 (4x M02)", "Custom")
+value = 6
+setting_name = "Window Size"
+parent_setting = NodePath("../Setting_Fullscreen")
+parent_setting_invert = true
+
+[node name="Setting_CustomWindowSize" parent="VBoxContainer/VBoxContainer2" instance=ExtResource("4_jvvms")]
+unique_name_in_owner = true
+layout_mode = 2
+value = Vector2i(640, 480)
+min_value = Vector2i(640, 480)
+max_value = Vector2i(3840, 2160)
+setting_name = "Custom Window Size"
+parent_setting = NodePath("../Setting_Fullscreen")
+parent_setting_invert = true
+
+[node name="Setting_VSync" parent="VBoxContainer/VBoxContainer2" instance=ExtResource("3_j5lkk")]
+unique_name_in_owner = true
+layout_mode = 2
+items = PackedStringArray("Disabled", "Enabled", "Adaptive", "Mailbox")
+value = 1
+setting_name = "VSync"
+
+[node name="Setting_FPSLimit" parent="VBoxContainer/VBoxContainer2" instance=ExtResource("3_j5lkk")]
+unique_name_in_owner = true
+layout_mode = 2
+items = PackedStringArray("30", "45", "60", "72", "90", "120", "144", "240", "Unlimited")
+value = 8
+setting_name = "FPS Limit"
+
+[node name="LabelHeader2" parent="VBoxContainer" instance=ExtResource("1_0nw4r")]
+layout_mode = 2
+text = "Graphics"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Setting_MSAA" parent="VBoxContainer/VBoxContainer" instance=ExtResource("3_j5lkk")]
+unique_name_in_owner = true
+layout_mode = 2
+items = PackedStringArray("Disabled", "2x", "4x", "8x")
+value = 0
+setting_name = "MSAA"
+
+[node name="Setting_TAA" parent="VBoxContainer/VBoxContainer" instance=ExtResource("2_8qcof")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_name = "TAA"
+
+[node name="Setting_UpscalingMethod" parent="VBoxContainer/VBoxContainer" instance=ExtResource("3_j5lkk")]
+unique_name_in_owner = true
+layout_mode = 2
+items = PackedStringArray("None (Bilinear)", "FSR 1.0", "FSR 2.2")
+value = 0
+setting_name = "Upscaling Method"
+
+[node name="Setting_RenderScale" parent="VBoxContainer/VBoxContainer" instance=ExtResource("5_ho738")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 1
+min_value = 0.25
+max_value = 2.0
+step = 0.05
+value = 0.25
+as_percent = true
+format_string = "%d%%"
+setting_name = "Render Scale"
+
+[node name="Setting_FSRSharpness" parent="VBoxContainer/VBoxContainer" instance=ExtResource("5_ho738")]
+unique_name_in_owner = true
+layout_mode = 2
+max_value = 5.0
+value = 3.0
+show_ticks = true
+format_string = "%d"
+setting_name = "FSR Sharpness"
+
+[node name="Setting_DOFShape" parent="VBoxContainer/VBoxContainer" instance=ExtResource("3_j5lkk")]
+unique_name_in_owner = true
+layout_mode = 2
+items = PackedStringArray("Box", "Hexagon", "Circle")
+value = 1
+setting_name = "DOF Blur Bokeh Shape"
+
+[node name="Setting_DOFQuality" parent="VBoxContainer/VBoxContainer" instance=ExtResource("3_j5lkk")]
+unique_name_in_owner = true
+layout_mode = 2
+items = PackedStringArray("Very Low", "Low", "Medium", "High")
+value = 2
+setting_name = "DOF Blur Quality"

@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://b62oydgjq232n"]
 
-[ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/menu_theme.tres" id="1_2hx14"]
+[ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://menus/theme/menu_theme.tres" id="1_2hx14"]
 [ext_resource type="Script" uid="uid://bsnchhhsgn3yl" path="res://ui/setting_color.gd" id="2_wkti7"]
 
 [node name="SettingColor" type="PanelContainer"]
