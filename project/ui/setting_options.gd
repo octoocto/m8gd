@@ -1,6 +1,6 @@
 @tool
+class_name SettingOptions
 extends SettingBase
-
 
 @export_enum("Arrows", "Dropdown") var setting_type := 0:
 	set(value):

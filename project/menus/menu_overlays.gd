@@ -44,18 +44,17 @@ func _menu_init() -> void:
 
 	%Button_OverlaySpectrumConfig.pressed.connect(func() -> void:
 		visible = false
-		main.menu_overlay.menu_open(main.overlay_spectrum)
+		main.menu_overlay.menu_show_for(main.overlay_spectrum)
 	)
 	%Button_OverlayWaveformConfig.pressed.connect(func() -> void:
 		visible = false
-		main.menu_overlay.menu_open(main.overlay_waveform)
+		main.menu_overlay.menu_show_for(main.overlay_waveform)
 	)
 	%Button_OverlayDisplayConfig.pressed.connect(func() -> void:
 		visible = false
-		main.menu_overlay.menu_open(main.overlay_display)
+		main.menu_overlay.menu_show_for(main.overlay_display)
 	)
 	%Button_OverlayKeysConfig.pressed.connect(func() -> void:
 		visible = false
 		main.menu_overlay.menu_open(main.overlay_keys)
 	)
-

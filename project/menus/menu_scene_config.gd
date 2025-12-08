@@ -17,7 +17,7 @@ func _menu_init() -> void:
 		assert(main.current_scene, "There is no M8 scene loaded!")
 		_clear_params()
 		main.current_scene.init_menu(self)
-		Log.ln("added %d param(s) from scene: %s" % [_num_params(), scene_path])
+		Log.ln("initialized %d param(s) from scene: %s" % [_num_params(), scene_path])
 	)
 
 func _clear_params() -> void:

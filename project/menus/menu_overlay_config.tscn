@@ -1,13 +1,18 @@
 [gd_scene load_steps=6 format=3 uid="uid://bebvc2datqp85"]
 
-[ext_resource type="Script" uid="uid://fidys4f757e6" path="res://menus/menu_overlay.gd" id="1_biga6"]
+[ext_resource type="Script" uid="uid://fidys4f757e6" path="res://menus/menu_overlay_config.gd" id="1_biga6"]
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://menus/theme/menu_theme.tres" id="1_t3dyr"]
 [ext_resource type="PackedScene" uid="uid://dsgvm3dda1kjp" path="res://ui/label_header.tscn" id="3_40ori"]
 [ext_resource type="PackedScene" uid="uid://bgsxagi62acni" path="res://ui/setting_options.tscn" id="3_q4g74"]
 [ext_resource type="PackedScene" uid="uid://bevoopcdq5dsh" path="res://ui/setting_vec2i.tscn" id="4_s6r0s"]
 
 [node name="MenuElement" type="PanelContainer"]
-custom_minimum_size = Vector2(400, 0)
+custom_minimum_size = Vector2(320, 240)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
 theme = ExtResource("1_t3dyr")

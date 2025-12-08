@@ -16,7 +16,7 @@ func _ready() -> void:
 	anchors_preset = Control.PRESET_FULL_RECT
 
 	if not Engine.is_editor_hint():
-		_menu_init()
+		Log.call_task(_menu_init, "init menu '%s'" % name)
 
 func get_tab_title() -> String:
 	return name

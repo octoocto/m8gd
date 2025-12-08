@@ -5,7 +5,7 @@ func ln(message: String, index: int = 1) -> void:
 	if stack.size() > index:
 		var source: String = stack[index].source.trim_prefix("res://")
 		var line: int = stack[index].line
-		print_rich("[color=aqua][%s:%d][/color] %s" % [source, line, message])
+		print_rich("[color=aqua][%s:%d][/color] [color=white]%s[/color]" % [source, line, message])
 	else:
 		print(message)
 

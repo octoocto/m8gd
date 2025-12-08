@@ -1,7 +1,36 @@
 @tool
+class_name InputMenu
 extends MenuBase
 
+signal keybinds_saved()
+
 const REBIND_COOLDOWN := 100 # ms until can rebind again
+
+@onready var s_virtual_keyboard: SettingBool = %Setting_VirtualKeyboard
+
+@onready var bind_up_1: Button = %ButtonBindUp1
+@onready var bind_up_2: Button = %ButtonBindUp2
+@onready var bind_down_1: Button = %ButtonBindDown1
+@onready var bind_down_2: Button = %ButtonBindDown2
+@onready var bind_left_1: Button = %ButtonBindLeft1
+@onready var bind_left_2: Button = %ButtonBindLeft2
+@onready var bind_right_1: Button = %ButtonBindRight1
+@onready var bind_right_2: Button = %ButtonBindRight2
+@onready var bind_opt_1: Button = %ButtonBindOpt1
+@onready var bind_opt_2: Button = %ButtonBindOpt2
+@onready var bind_edit_1: Button = %ButtonBindEdit1
+@onready var bind_edit_2: Button = %ButtonBindEdit2
+@onready var bind_shift_1: Button = %ButtonBindShift1
+@onready var bind_shift_2: Button = %ButtonBindShift2
+@onready var bind_play_1: Button = %ButtonBindPlay1
+@onready var bind_play_2: Button = %ButtonBindPlay2
+
+@onready var bind_action_popup: Control = %BindActionPopup
+
+@onready var button_reset_binds: Button = %ButtonResetBinds
+
+@onready var profile_hotkey_template: HBoxContainer = %ProfileHotkeyTemplate
+@onready var profile_hotkeys_container: VBoxContainer = %ProfileHotkeysContainer
 
 var is_key_rebinding := false
 var last_rebind_time := 0.0
@@ -15,43 +44,28 @@ func _menu_init() -> void:
 		main.m8_virtual_keyboard_enabled = value
 	)
 
-	get_tree().physics_frame.connect(func() -> void:
-		%ButtonBindUp1.text = get_key_bind("key_up", 0)
-		%ButtonBindUp2.text = get_key_bind("key_up", 1)
-		%ButtonBindDown1.text = get_key_bind("key_down", 0)
-		%ButtonBindDown2.text = get_key_bind("key_down", 1)
-		%ButtonBindLeft1.text = get_key_bind("key_left", 0)
-		%ButtonBindLeft2.text = get_key_bind("key_left", 1)
-		%ButtonBindRight1.text = get_key_bind("key_right", 0)
-		%ButtonBindRight2.text = get_key_bind("key_right", 1)
-		%ButtonBindOpt1.text = get_key_bind("key_option", 0)
-		%ButtonBindOpt2.text = get_key_bind("key_option", 1)
-		%ButtonBindEdit1.text = get_key_bind("key_edit", 0)
-		%ButtonBindEdit2.text = get_key_bind("key_edit", 1)
-		%ButtonBindShift1.text = get_key_bind("key_shift", 0)
-		%ButtonBindShift2.text = get_key_bind("key_shift", 1)
-		%ButtonBindPlay1.text = get_key_bind("key_play", 0)
-		%ButtonBindPlay2.text = get_key_bind("key_play", 1)
+	keybinds_saved.connect(func() -> void:
+		_update_keybind_buttons("key_up", bind_up_1, bind_up_2)
+		_update_keybind_buttons("key_down", bind_down_1, bind_down_2)
+		_update_keybind_buttons("key_left", bind_left_1, bind_left_2)
+		_update_keybind_buttons("key_right", bind_right_1, bind_right_2)
+		_update_keybind_buttons("key_option", bind_opt_1, bind_opt_2)
+		_update_keybind_buttons("key_edit", bind_edit_1, bind_edit_2)
+		_update_keybind_buttons("key_shift", bind_shift_1, bind_shift_2)
+		_update_keybind_buttons("key_play", bind_play_1, bind_play_2)
 	)
+	keybinds_saved.emit()
 
-	%ButtonBindUp1.button_down.connect(start_rebind_action.bind("key_up", 0))
-	%ButtonBindUp2.button_down.connect(start_rebind_action.bind("key_up", 1))
-	%ButtonBindDown1.button_down.connect(start_rebind_action.bind("key_down", 0))
-	%ButtonBindDown2.button_down.connect(start_rebind_action.bind("key_down", 1))
-	%ButtonBindLeft1.button_down.connect(start_rebind_action.bind("key_left", 0))
-	%ButtonBindLeft2.button_down.connect(start_rebind_action.bind("key_left", 1))
-	%ButtonBindRight1.button_down.connect(start_rebind_action.bind("key_right", 0))
-	%ButtonBindRight2.button_down.connect(start_rebind_action.bind("key_right", 1))
-	%ButtonBindOpt1.button_down.connect(start_rebind_action.bind("key_option", 0))
-	%ButtonBindOpt2.button_down.connect(start_rebind_action.bind("key_option", 1))
-	%ButtonBindEdit1.button_down.connect(start_rebind_action.bind("key_edit", 0))
-	%ButtonBindEdit2.button_down.connect(start_rebind_action.bind("key_edit", 1))
-	%ButtonBindShift1.button_down.connect(start_rebind_action.bind("key_shift", 0))
-	%ButtonBindShift2.button_down.connect(start_rebind_action.bind("key_shift", 1))
-	%ButtonBindPlay1.button_down.connect(start_rebind_action.bind("key_play", 0))
-	%ButtonBindPlay2.button_down.connect(start_rebind_action.bind("key_play", 1))
+	_connect_keybind_buttons("key_up", bind_up_1, bind_up_2)
+	_connect_keybind_buttons("key_down", bind_down_1, bind_down_2)
+	_connect_keybind_buttons("key_left", bind_left_1, bind_left_2)
+	_connect_keybind_buttons("key_right", bind_right_1, bind_right_2)
+	_connect_keybind_buttons("key_option", bind_opt_1, bind_opt_2)
+	_connect_keybind_buttons("key_edit", bind_edit_1, bind_edit_2)
+	_connect_keybind_buttons("key_shift", bind_shift_1, bind_shift_2)
+	_connect_keybind_buttons("key_play", bind_play_1, bind_play_2)
 
-	%ButtonResetBinds.button_down.connect(reset_key_rebinds.bind());
+	button_reset_binds.button_down.connect(reset_key_rebinds.bind());
 
 	load_key_rebinds()
 
@@ -72,6 +86,14 @@ func _menu_init() -> void:
 		)
 		_update_hotkey_node(control, main.config.get_overlay_hotkey(node_path))
 
+func _update_keybind_buttons(action: String, bind_1: Button, bind_2: Button) -> void:
+	bind_1.text = get_key_bind(action, 0)
+	bind_2.text = get_key_bind(action, 1)
+
+func _connect_keybind_buttons(action: String, bind_1: Button, bind_2: Button) -> void:
+	bind_1.button_down.connect(start_rebind_action.bind(action, 0))
+	bind_2.button_down.connect(start_rebind_action.bind(action, 1))
+
 func reset_key_rebinds() -> void:
 	for action: String in [
 		"key_up", "key_down", "key_left", "key_right",
@@ -79,7 +101,7 @@ func reset_key_rebinds() -> void:
 		InputMap.action_erase_events(action)
 		InputMap.action_add_event(action, ProjectSettings.get_setting("input/" + action).events[0])
 	save_key_rebinds()
-	print("keybindings reset to default")
+	Log.ln("keybinds reset to default")
 
 func load_key_rebinds() -> void:
 	for action: String in main.config.action_events.keys():
@@ -88,13 +110,14 @@ func load_key_rebinds() -> void:
 		for event: InputEvent in events:
 			assert(event is InputEvent, "event is not InputEvent, found %s" % type_string(typeof(event)))
 			InputMap.action_add_event(action, event)
-	print("key bindings loaded from config")
+	Log.ln("keybinds loaded from config")
 
 func save_key_rebinds() -> void:
 	for action: String in main.M8_ACTIONS:
 		var events := InputMap.action_get_events(action)
 		main.config.action_events[action] = events
-	print("key bindings saved to config")
+	keybinds_saved.emit()
+	Log.ln("keybinds saved to config")
 
 func get_key_bind(action: String, index: int) -> String:
 	var events := InputMap.action_get_events(action)
@@ -117,10 +140,8 @@ func start_rebind(fn: Callable) -> void:
 	if Time.get_ticks_msec() - last_rebind_time < REBIND_COOLDOWN:
 		return
 
-	%BindActionPopup.visible = true
-
+	bind_action_popup.show()
 	key_rebind_callback = fn
-
 	is_key_rebinding = true
 
 ##
@@ -193,23 +214,22 @@ func _update_hotkey_node(hotkey_node: Control, event: InputEvent) -> void:
 	else:
 		hotkey_node.get_node("ButtonBind").text = "---"
 
-
 ##
 ## Recreate the profile hotkey UI with the current list of profiles and
 ## their saved hotkey bindings.
 ##
 func refresh_profile_hotkeys() -> void:
-	for child in %ProfileHotkeysContainer.get_children():
-		if child != %ProfileHotkeyTemplate:
+	for child in profile_hotkeys_container.get_children():
+		if child != profile_hotkey_template:
 			child.queue_free()
 
 	for profile_name: String in main.list_profile_names():
-		var container: HBoxContainer = %ProfileHotkeyTemplate.duplicate()
+		var container: HBoxContainer = profile_hotkey_template.duplicate()
 		var event: Variant = main.config.get_profile_hotkey(profile_name)
 		container.visible = true
 		container.get_node("Label").text = profile_name
 		_update_hotkey_node(container, event)
-		%ProfileHotkeysContainer.add_child(container)
+		profile_hotkeys_container.add_child(container)
 
 		_init_hotkey_node(container,
 			func(e: InputEvent) -> void:

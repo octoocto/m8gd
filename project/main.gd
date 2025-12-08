@@ -75,7 +75,7 @@ var _window_drag_initial_pos := Vector2.ZERO
 @onready var menu: MainMenu = %MainMenuPanel
 @onready var menu_scene: SceneMenu = %SceneMenu
 @onready var menu_camera: PanelContainer = %SceneCameraMenu
-@onready var menu_overlay: PanelContainer = %MenuOverlay
+@onready var menu_overlay: OverlayConfigMenu = %MenuOverlay
 
 @onready var cam_status: RichTextLabel = %CameraStatus
 @onready var cam_help: RichTextLabel = %CameraControls
@@ -123,12 +123,12 @@ func _ready() -> void:
 
 	Events.initialized.emit(self)
 
-	Log.call_task(func() -> void:
+	# Log.call_task(func() -> void:
 		# menu.init(self)
 		# menu_scene.init(self)
-		menu_camera.init(self)
-		menu_overlay.init(self)
-	, "init menus")
+		# menu_camera.init(self)
+		# menu_overlay.init(self)
+	# , "init menus")
 
 	device_manager.start_waiting_for_devices()
 
@@ -406,26 +406,18 @@ func _get_propkey_filter_shader(filter: ColorRect, property: String) -> String:
 	return "filter.%s.shader.%s" % [filter.name, property]
 
 ##
-## Set properties of the given overlay according to the current profile/scene.
-##
-func _init_overlay(overlay: OverlayBase) -> void:
-	# manually init the overlay properties here since we won't have a
-	# Setting node for all of them
-	menu_overlay.init_settings(overlay)
-	for property: String in overlay.overlay_get_properties():
-		SettingBase.init_overlay_property(self, overlay, property)
-
-##
 ## Initializes or re-initializes the state of the overlays.
 ## The overlays' states will be loaded from the config.
 ##
 func init_overlays() -> void:
 	m8_client.set_display_background_alpha(0)
 
-	_init_overlay(overlay_display)
-	_init_overlay(overlay_keys)
-	_init_overlay(overlay_spectrum)
-	_init_overlay(overlay_waveform)
+	# here we use a method from the Overlay Menu to init the overlay properties,
+	# even though we're not showing the menu here
+	menu_overlay._init_params_for(overlay_display)
+	menu_overlay._init_params_for(overlay_keys)
+	menu_overlay._init_params_for(overlay_spectrum)
+	menu_overlay._init_params_for(overlay_waveform)
 
 	if !get_window().size_changed.is_connected(_overlay_update_viewport_size):
 		get_window().size_changed.connect(_overlay_update_viewport_size)
