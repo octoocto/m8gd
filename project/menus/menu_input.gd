@@ -11,7 +11,7 @@ func get_tab_title() -> String:
 	return "Input"
 
 func _menu_init() -> void:
-	%Setting_VirtualKeyboard.init_config_global(main, "virtual_keyboard_enabled", func(value: bool) -> void:
+	%Setting_VirtualKeyboard.setting_connect_global("virtual_keyboard_enabled", func(value: bool) -> void:
 		main.m8_virtual_keyboard_enabled = value
 	)
 

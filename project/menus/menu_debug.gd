@@ -14,7 +14,7 @@ func _menu_init() -> void:
 	]:
 		var setting_options := get_node("%%%s/SettingOptions" % tuple[0])
 		var setting_file := get_node("%%%s/SettingFile" % tuple[0])
-		setting_options.init(tuple[1], func(value: int) -> void:
+		setting_options.setting_connect(tuple[1], func(value: int) -> void:
 			match value:
 				0:
 					main.m8_set_font(tuple[2], main.FONT_01_SMALL)
@@ -32,7 +32,7 @@ func _menu_init() -> void:
 					main.m8_set_font(tuple[2], main.FONT_02_HUGE)
 					setting_file.value = ""
 		)
-		setting_file.init("", func(value: String) -> void:
+		setting_file.setting_connect("", func(value: String) -> void:
 			if value:
 				setting_options.value = 5
 				main.m8_set_font_from_file(tuple[2], value)
@@ -83,4 +83,3 @@ func _menu_init() -> void:
 			for j in range(delay_frames):
 				await get_tree().physics_frame
 	)
-

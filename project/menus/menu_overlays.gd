@@ -2,23 +2,23 @@
 extends MenuBase
 
 func _menu_init() -> void:
-	%Setting_OverlayScale.init_config_profile(main, "overlay_scale", func(value: int) -> void:
+	%Setting_OverlayScale.setting_connect_profile("overlay_scale", func(value: int) -> void:
 		main.overlay_integer_zoom = value
 	)
 
-	%Setting_OverlayFilters.init_config_profile(main, "overlay_apply_filters", func(value: bool) -> void:
+	%Setting_OverlayFilters.setting_connect_profile("overlay_apply_filters", func(value: bool) -> void:
 		main.get_node("%OverlayContainer").z_index = 0 if value else 1
 	)
 
-	%Setting_OverlaySpectrum.init_config_overlay(main, main.overlay_spectrum, "visible")
-	%Setting_OverlayWaveform.init_config_overlay(main, main.overlay_waveform, "visible")
-	%Setting_OverlayDisplay.init_config_overlay(main, main.overlay_display, "visible")
-	%Setting_OverlayKeys.init_config_overlay(main, main.overlay_keys, "visible")
+	%Setting_OverlaySpectrum.setting_connect_overlay(main.overlay_spectrum, "visible")
+	%Setting_OverlayWaveform.setting_connect_overlay(main.overlay_waveform, "visible")
+	%Setting_OverlayDisplay.setting_connect_overlay(main.overlay_display, "visible")
+	%Setting_OverlayKeys.setting_connect_overlay(main.overlay_keys, "visible")
 
-	%Setting_OverlaySpectrum.connect_to_enable(%Button_OverlaySpectrumConfig)
-	%Setting_OverlayWaveform.connect_to_enable(%Button_OverlayWaveformConfig)
-	%Setting_OverlayDisplay.connect_to_enable(%Button_OverlayDisplayConfig)
-	%Setting_OverlayKeys.connect_to_enable(%Button_OverlayKeysConfig)
+	%Setting_OverlaySpectrum.setting_add_child_readonly(%Button_OverlaySpectrumConfig)
+	%Setting_OverlayWaveform.setting_add_child_readonly(%Button_OverlayWaveformConfig)
+	%Setting_OverlayDisplay.setting_add_child_readonly(%Button_OverlayDisplayConfig)
+	%Setting_OverlayKeys.setting_add_child_readonly(%Button_OverlayKeysConfig)
 
 	main.overlay_waveform.visibility_changed.connect(func() -> void:
 		%Setting_OverlayWaveform.value = main.overlay_waveform.visible

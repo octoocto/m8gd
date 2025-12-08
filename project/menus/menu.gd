@@ -21,6 +21,12 @@ func _ready() -> void:
 func get_tab_title() -> String:
 	return name
 
+func menu_show() -> void:
+	show()
+
+func menu_hide() -> void:
+	hide()
+
 ## Setup any menu control nodes.
 func _menu_init() -> void:
 	assert(false, "_menu_init() not implemented in %s" % name)

@@ -6,7 +6,7 @@ extends SettingBase
 	set(p_value):
 		value = p_value
 		await _update()
-		force_update()
+		emit_changed()
 
 @export var text_true := "On":
 	set(value):
@@ -44,8 +44,3 @@ func _update() -> void:
 
 	%CheckButton.set_pressed_no_signal(value)
 	%LabelValue.text = text_true if value else text_false
-
-
-func init(p_value: Variant, changed_fn: Callable) -> void:
-	assert(p_value is bool)
-	super(p_value, changed_fn)

@@ -1,4 +1,5 @@
 @tool
+class_name SettingNumber
 extends SettingBase
 
 
@@ -29,7 +30,7 @@ var _is_int_type := false
 		value = p_value
 		await _update()
 		value = %HSlider.value
-		force_update()
+		emit_changed()
 
 @export var show_ticks := false:
 	set(p_value):
@@ -111,8 +112,3 @@ func _update() -> void:
 		%HSlider.tick_count = max_value - min_value + 1
 	else:
 		%HSlider.tick_count = 0
-
-
-func init(p_value: Variant, changed_fn: Callable) -> void:
-	assert(p_value is float or p_value is int)
-	super(p_value, changed_fn)

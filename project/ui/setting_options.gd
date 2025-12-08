@@ -13,7 +13,7 @@ extends SettingBase
 	set(p_value):
 		value = clampi(p_value, 0, items.size() - 1) if items.size() else -1
 		await _update()
-		force_update()
+		emit_changed()
 
 
 func _ready() -> void:
@@ -62,8 +62,3 @@ func _update() -> void:
 				for item: String in items:
 					%OptionButton.add_item(item)
 				%OptionButton.selected = value
-
-
-func init(p_value: Variant, changed_fn: Callable) -> void:
-	assert(p_value is int)
-	super(p_value, changed_fn)

@@ -716,7 +716,6 @@ size_flags_vertical = 3
 unique_name_in_owner = true
 visible = false
 z_index = 1
-custom_minimum_size = Vector2(320, 240)
 layout_mode = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI"]

@@ -4,9 +4,12 @@
 [ext_resource type="Script" uid="uid://xgm5cwsm8r77" path="res://menus/scene_menu.gd" id="1_x6k17"]
 
 [node name="SceneMenu" type="PanelContainer"]
-custom_minimum_size = Vector2(400, 0)
-offset_right = 320.0
-offset_bottom = 120.0
+custom_minimum_size = Vector2(320, 240)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
 theme = ExtResource("1_pbwtn")

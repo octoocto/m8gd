@@ -1,26 +1,32 @@
-class_name SceneMenu extends PanelContainer
+@tool
+class_name SceneMenu
+extends MenuBase
 
-var main: Main
+@onready var params_container: VBoxContainer = %SceneParamsContainer
 
 
-func init(p_main: Main) -> void:
-	main = p_main
+func menu_open() -> void:
+	show()
 
+func _menu_init() -> void:
 	%ButtonFinish.pressed.connect(func() -> void:
 		visible = false
 		main.menu.visible = true
 	)
+	Events.scene_loaded.connect(func(scene_path: String, _scene: M8Scene) -> void:
+		assert(main.current_scene, "There is no M8 scene loaded!")
+		_clear_params()
+		main.current_scene.init_menu(self)
+		Log.ln("added %d param(s) from scene: %s" % [_num_params(), scene_path])
+	)
 
-func init_menu() -> void:
-	assert(main.current_scene, "There is no M8 scene loaded!")
-	main.current_scene.init_menu(self)
-
-func clear_params() -> void:
-	for c in %SceneParamsContainer.get_children():
+func _clear_params() -> void:
+	for c in params_container.get_children():
 		c.queue_free()
+	Log.ln("cleared params")
 
-func menu_open() -> void:
-	main.menu_scene.visible = true
+func _num_params() -> int:
+	return params_container.get_children().size()
 
 ##
 ## Add a control node from a scene's export variable.
@@ -48,8 +54,8 @@ func add_auto(property: String, setting_name: String = "") -> SettingBase:
 		setting.setting_name = prop.name.capitalize() if setting_name == "" else setting_name
 		setting.value = scene.get(property)
 
-		%SceneParamsContainer.add_child(setting)
-		setting.init_config_scene(main, property)
+		params_container.add_child(setting)
+		setting.setting_connect_scene(property)
 
 		return setting
 
@@ -75,8 +81,8 @@ func add_option_custom(property: String, default: int, items: Array[String], val
 	setting.setting_type = 1
 	setting.items = items
 	setting.value = default
-	%SceneParamsContainer.add_child(setting)
-	setting.init_config_scene(main, property, value_changed_fn)
+	params_container.add_child(setting)
+	setting.setting_connect_scene(property, value_changed_fn)
 
 	return setting
 
@@ -86,12 +92,12 @@ func add_file_custom(property: String, default: String, value_changed_fn: Varian
 	var setting := MenuUtils.create_setting_file()
 	setting.setting_name = property.capitalize()
 	setting.value = default
-	%SceneParamsContainer.add_child(setting)
-	setting.init_config_scene(main, property, value_changed_fn)
+	params_container.add_child(setting)
+	setting.setting_connect_scene(property, value_changed_fn)
 
 	return setting
 
 
 func add_section(title: String) -> void:
 	var label := MenuUtils.create_header(title)
-	%SceneParamsContainer.add_child(label)
+	params_container.add_child(label)

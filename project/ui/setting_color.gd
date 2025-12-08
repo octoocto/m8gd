@@ -7,7 +7,7 @@ class_name SettingColor extends SettingBase
 	set(p_value):
 		value = p_value
 		await _update()
-		force_update()
+		emit_changed()
 
 @export var edit_alpha := true:
 	set(p_value):
@@ -62,11 +62,6 @@ func _update() -> void:
 	%ColorPickerButton.color = value
 	%LabelValue.text = "#%s" % value.to_html(false).to_upper()
 	%LabelValue.visible = show_html
-
-
-func init(p_value: Variant, changed_fn: Callable) -> void:
-	assert(p_value is Color)
-	super(p_value, changed_fn)
 
 
 func get_color_picker() -> ColorPicker:

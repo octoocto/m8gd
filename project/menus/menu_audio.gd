@@ -11,11 +11,11 @@ extends MenuBase
 @onready var s_sa_max: SettingBase = %Setting_SAMax
 
 func _menu_init() -> void:
-	s_audio_handler.init_config_global(main, "audio_handler", func(value: int) -> void:
+	s_audio_handler.setting_connect_global("audio_handler", func(value: int) -> void:
 		main.audio_set_handler(value)
 	)
 
-	s_volume.init_config_global(main, "volume", func(value: float) -> void:
+	s_volume.setting_connect_global("volume", func(value: float) -> void:
 		var volume: float = pow(value, 2)
 		main.audio_set_volume(volume)
 	)
@@ -30,13 +30,13 @@ func _menu_init() -> void:
 			le_audio_latency.placeholder_text = "%.2f ms" % main.device_manager.audio_get_latency()
 	)
 
-	s_sa_enable.init_config_global(main, "audio_analyzer_enabled", func(value: bool) -> void:
+	s_sa_enable.setting_connect_global("audio_analyzer_enabled", func(value: bool) -> void:
 		main.audio_set_spectrum_analyzer_enabled(value)
 	)
-	s_sa_min.init_config_global(main, "audio_analyzer_min_freq", func(value: int) -> void:
+	s_sa_min.setting_connect_global("audio_analyzer_min_freq", func(value: int) -> void:
 		main.visualizer_frequency_min = value
 	)
-	s_sa_max.init_config_global(main, "audio_analyzer_max_freq", func(value: int) -> void:
+	s_sa_max.setting_connect_global("audio_analyzer_max_freq", func(value: int) -> void:
 		main.visualizer_frequency_max = value
 	)
 

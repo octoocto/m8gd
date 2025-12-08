@@ -5,7 +5,7 @@ class_name SettingFile extends SettingBase
 	set(p_value):
 		value = p_value
 		await _update()
-		force_update()
+		emit_changed()
 
 @export var empty_text := "Open File...":
 	set(p_value):
@@ -72,11 +72,6 @@ func _update() -> void:
 	%HBoxContainer.set("theme_override_constants/separation", setting_name_indent)
 
 	%Button.text = value.get_file() if value != "" else empty_text
-
-
-func init(p_value: Variant, changed_fn: Callable) -> void:
-	assert(p_value is String)
-	super(p_value, changed_fn)
 
 
 func get_color_picker() -> ColorPicker:

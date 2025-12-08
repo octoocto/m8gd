@@ -103,9 +103,9 @@ func init_menu(menu: SceneMenu) -> void:
 
 	menu.add_section("Audio Spectrum")
 	var setting_spectrum := menu.add_auto("enable_audio_spectrum")
-	setting_spectrum.connect_to_visible(menu.add_auto("audio_spectrum_color"))
-	setting_spectrum.connect_to_visible(menu.add_auto("audio_spectrum_width"))
-	setting_spectrum.connect_to_visible(menu.add_auto("audio_spectrum_interlace"))
+	setting_spectrum.setting_add_child_hidden(menu.add_auto("audio_spectrum_color"))
+	setting_spectrum.setting_add_child_hidden(menu.add_auto("audio_spectrum_width"))
+	setting_spectrum.setting_add_child_hidden(menu.add_auto("audio_spectrum_interlace"))
 
 	menu.add_section("Jumbotron")
 	menu.add_option_custom("jumbotron_mode", 1, [
@@ -142,11 +142,11 @@ func init_menu(menu: SceneMenu) -> void:
 				%WorldEnvironment.environment.background_mode = Environment.BG_SKY
 	)
 
-	setting_bg_mode.connect_to_visible(menu.add_auto("solid_background_color"),
+	setting_bg_mode.setting_add_child_hidden(menu.add_auto("solid_background_color"),
 		func(value: int) -> bool: return value == 0
 	)
 
-	setting_bg_mode.connect_to_visible(
+	setting_bg_mode.setting_add_child_hidden(
 		menu.add_file_custom("background_file", "", func(path: String) -> void:
 			var texture := load_media_to_texture_rect(path, %BGVideoStreamPlayer)
 			%BGTextureRect.texture = texture
@@ -158,11 +158,11 @@ func init_menu(menu: SceneMenu) -> void:
 	menu.add_section("Lighting")
 
 	var setting_light_lamp := menu.add_auto("enable_lamp_light")
-	setting_light_lamp.connect_to_visible(menu.add_auto("lamp_light_color", "• Light Color"))
+	setting_light_lamp.setting_add_child_hidden(menu.add_auto("lamp_light_color", "• Light Color"))
 	var setting_light_left := menu.add_auto("enable_left_light")
-	setting_light_left.connect_to_visible(menu.add_auto("left_light_color", "• Light Color"))
+	setting_light_left.setting_add_child_hidden(menu.add_auto("left_light_color", "• Light Color"))
 	var setting_light_right := menu.add_auto("enable_right_light")
-	setting_light_right.connect_to_visible(menu.add_auto("right_light_color", "• Light Color"))
+	setting_light_right.setting_add_child_hidden(menu.add_auto("right_light_color", "• Light Color"))
 
 func _physics_process(delta: float) -> void:
 

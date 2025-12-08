@@ -40,6 +40,7 @@ var version: int = 0
 @export var window_width := 960
 @export var window_height := 720
 @export var always_on_top := false
+@export var ui_scale := 0.0
 @export var vsync := 1
 @export var fps_cap := 8 # see %Setting_Vsync for items
 

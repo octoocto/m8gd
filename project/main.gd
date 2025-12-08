@@ -81,6 +81,9 @@ var _window_drag_initial_pos := Vector2.ZERO
 @onready var cam_help: RichTextLabel = %CameraControls
 @onready var cam_status_template: String = cam_status.text
 
+static func is_ready() -> bool:
+	return instance != null
+
 func _ready() -> void:
 	m8_client.load_font(M8GD.M8_FONT_01_SMALL, FONT_01_SMALL)
 	m8_client.load_font(M8GD.M8_FONT_01_BIG, FONT_01_BIG)
@@ -106,13 +109,6 @@ func _ready() -> void:
 		overlay_keys.init(self)
 	, "init overlays")
 
-	Log.call_task(func() -> void:
-		# menu.init(self)
-		menu_scene.init(self)
-		menu_camera.init(self)
-		menu_overlay.init(self)
-	, "init menus")
-
 	%Check_SplashDoNotShow.toggled.connect(func(toggle_mode: bool) -> void:
 		config.splash_show = !toggle_mode
 	)
@@ -126,6 +122,13 @@ func _ready() -> void:
 	instance = self
 
 	Events.initialized.emit(self)
+
+	Log.call_task(func() -> void:
+		# menu.init(self)
+		# menu_scene.init(self)
+		menu_camera.init(self)
+		menu_overlay.init(self)
+	, "init menus")
 
 	device_manager.start_waiting_for_devices()
 
@@ -211,7 +214,7 @@ func _input(event: InputEvent) -> void:
 
 			# menu on/off toggle
 			if is_menu_open():
-				menu_close()
+				menu_hide()
 			else:
 				menu_open()
 
@@ -247,12 +250,12 @@ func is_any_menu_open() -> bool:
 	return menu.visible or menu_scene.visible or menu_camera.visible or menu_overlay.visible
 
 func menu_open() -> void:
-	menu_camera.menu_close()
+	menu_camera.menu_hide()
 	menu_scene.visible = false
-	menu_overlay.menu_close()
+	menu_overlay.menu_hide()
 	menu.visible = true
 
-func menu_close() -> void:
+func menu_hide() -> void:
 	menu.visible = false
 
 ##
@@ -301,10 +304,6 @@ func load_scene(scene_path: String) -> bool:
 		scene.init(self)
 		config.use_scene(scene)
 		current_scene = scene
-
-		# initialize scene menu
-		menu_scene.clear_params()
-		menu_scene.init_menu()
 
 		Events.scene_loaded.emit(p_scene_path, scene)
 

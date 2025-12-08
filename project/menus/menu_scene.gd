@@ -38,8 +38,8 @@ func _init_menu_scene() -> void:
 	_setup_as_button.call()
 
 	%Button_OpenSceneMenu.pressed.connect(func() -> void:
-		visible = false
-		main.menu_scene.menu_open()
+		hide()
+		main.menu_scene.menu_show()
 	)
 
 	Events.scene_loaded.connect(func(scene_path: String, _scene: M8Scene) -> void:
@@ -49,20 +49,20 @@ func _init_menu_scene() -> void:
 
 func _init_menu_camera() -> void:
 	%Button_SceneCameraMenu.pressed.connect(func() -> void:
-		visible = false
-		main.menu_camera.menu_open()
+		hide()
+		main.menu_camera.menu_show()
 	)
 
-	%Setting_MouseCamera.init_config_camera(main, "mouse_controlled_pan_zoom", func(value: bool) -> void:
+	%Setting_MouseCamera.setting_connect_camera("mouse_controlled_pan_zoom", func(value: bool) -> void:
 		main.current_scene.get_3d_camera().mouse_controlled_pan_zoom = value
-		if !value: main.current_scene.get_3d_camera().set_transform_to_base()
+		if !value: main.current_scene.get_3d_camera().reset_transform()
 	)
 
-	%Setting_HumanCamera.init_config_camera(main, "humanized_movement", func(value: bool) -> void:
+	%Setting_HumanCamera.setting_connect_camera("humanized_movement", func(value: bool) -> void:
 		main.current_scene.get_3d_camera().humanized_movement = value
 	)
-	%Setting_HumanCameraStrength.init_config_camera(main, "humanize_amount")
-	%Setting_HumanCameraFrequency.init_config_camera(main, "humanize_freq")
+	%Setting_HumanCameraStrength.setting_connect_camera("humanize_amount")
+	%Setting_HumanCameraFrequency.setting_connect_camera("humanize_freq")
 
 	Events.scene_loaded.connect(func(_scene_path: String, scene: M8Scene) -> void:
 		if !scene.has_3d_camera():
@@ -96,11 +96,11 @@ func _init_menu_model() -> void:
 		var node_path: String = arr[1]
 		var config_property: String = arr[2]
 
-		setting.init_config_profile(main, config_property, func(value: Color) -> void:
+		setting.setting_connect_profile(config_property, func(value: Color) -> void:
 			if _model(): _model().set_key_cap_color(node_path, value)
 		)
 
-	%Setting_ModelColorBody.init_config_profile(main, "model_color_body", func(value: Color) -> void:
+	%Setting_ModelColorBody.setting_connect_profile("model_color_body", func(value: Color) -> void:
 		if _model(): _model().set_part_color("Body", value)
 	)
 
@@ -113,7 +113,7 @@ func _init_menu_model() -> void:
 	]
 
 	for setting in color_settings_highlights:
-		setting.init_config_profile(main, "hl_color_directional", func(value: Color) -> void:
+		setting.setting_connect_profile("hl_color_directional", func(value: Color) -> void:
 			for s in color_settings_highlights: s.set_value_no_signal(value)
 			if _model(): _model().set_dir_key_highlight_color(value)
 			main.overlay_keys.color_directional = value
@@ -131,7 +131,7 @@ func _init_menu_model() -> void:
 		var overlay_prop: String = arr[2]
 		var config_property: String = arr[3]
 
-		setting.init_config_profile(main, config_property, func(value: Color) -> void:
+		setting.setting_connect_profile(config_property, func(value: Color) -> void:
 				if _model(): _model().set_key_highlight_color(key_name, value)
 				main.overlay_keys.set(overlay_prop, value)
 		)
@@ -166,19 +166,19 @@ func _init_menu_model() -> void:
 
 	# Model settings
 
-	%Setting_ModelType.init_config_profile(main, "model_type", func(value: int) -> void:
+	%Setting_ModelType.setting_connect_profile("model_type", func(value: int) -> void:
 		if not _model(): return
 		_model().model_auto = value == 0
 		if value == 1: _model().model = 0
 		elif value == 2: _model().model = 1
 	)
-	%Setting_ModelHighlightOpacity.init_config_profile(main, "model_hl_opacity", func(value: float) -> void:
+	%Setting_ModelHighlightOpacity.setting_connect_profile("model_hl_opacity", func(value: float) -> void:
 		if _model(): _model().highlight_opacity = value
 	)
-	%Setting_ModelScreenFilter.init_config_profile(main, "model_screen_linear_filter", func(value: bool) -> void:
+	%Setting_ModelScreenFilter.setting_connect_profile("model_screen_linear_filter", func(value: bool) -> void:
 		if _model(): _model().set_screen_filter(value)
 	)
-	%Setting_ModelScreenEmission.init_config_profile(main, "model_screen_emission", func(value: float) -> void:
+	%Setting_ModelScreenEmission.setting_connect_profile("model_screen_emission", func(value: float) -> void:
 		if _model(): _model().set_screen_emission(value)
 	)
 

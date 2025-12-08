@@ -18,7 +18,7 @@ func init(p_main: Main) -> void:
 	main = p_main
 
 	%ButtonFinish.pressed.connect(func() -> void:
-		menu_close()
+		menu_hide()
 		main.menu.visible = true
 	)
 
@@ -42,18 +42,18 @@ func init_settings(overlay: OverlayBase) -> void:
 	%Setting_Anchor.uninit()
 	%Setting_Size.uninit()
 
-	%Setting_Size.init_config_overlay(main, overlay, "size", func(_value: Vector2) -> void:
-		%Setting_Anchor.force_update()
+	%Setting_Size.setting_connect_overlay(overlay, "size", func(_value: Vector2) -> void:
+		%Setting_Anchor.emit_changed()
 	)
-	%Setting_Anchor.init_config_overlay(main, overlay, "anchors_preset", func(_value: int) -> void:
+	%Setting_Anchor.setting_connect_overlay(overlay, "anchors_preset", func(_value: int) -> void:
 		%Setting_Position.value = Vector2i.ZERO
 	)
-	%Setting_Position.init_config_overlay(main, overlay, "position_offset")
+	%Setting_Position.setting_connect_overlay(overlay, "position_offset")
 
 ##
 ## Called when this menu is closed
 ##
-func menu_close() -> void:
+func menu_hide() -> void:
 
 	visible = false
 
@@ -84,4 +84,4 @@ func _populate_overlay_properties() -> void:
 		setting.value = overlay_target.get(property)
 		setting.setting_name = prop.name.capitalize()
 		%ParamContainer.add_child(setting)
-		setting.init_config_overlay(main, overlay_target, property)
+		setting.setting_connect_overlay(overlay_target, property)

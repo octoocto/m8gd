@@ -218,7 +218,7 @@ func reposition_start() -> void:
 	rclick_pressed = true
 	main.cam_help.visible = true
 	if main.menu_scene.visible:
-		main.menu_camera.menu_open_as_info()
+		main.menu_camera.menu_show_small()
 	reposition_started.emit()
 
 func reposition_stop() -> void:
@@ -227,7 +227,7 @@ func reposition_stop() -> void:
 	main.cam_help.visible = false
 	set_current_transform_as_base()
 	if main.menu_scene.visible:
-		main.menu_camera.menu_close()
+		main.menu_camera.menu_hide()
 	reposition_stopped.emit()
 
 func _input(event: InputEvent) -> void:
@@ -264,7 +264,7 @@ func _input(event: InputEvent) -> void:
 	elif rclick_pressed:
 		reposition_stop()
 
-func set_transform_to_base() -> void:
+func reset_transform() -> void:
 	position = base_position
 	rotation = base_rotation
 	cam.rotation = Vector3.ZERO

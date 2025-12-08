@@ -1,4 +1,5 @@
 @tool
+class_name SettingVec2
 extends SettingBase
 
 
@@ -6,7 +7,7 @@ extends SettingBase
 	set(p_value):
 		value = p_value.clamp(min_value, max_value)
 		await _update()
-		force_update()
+		emit_changed()
 
 @export var min_value := Vector2.ZERO:
 	set(p_value):
@@ -89,11 +90,6 @@ func _update() -> void:
 	call_deferred("_update_format")
 
 
-func init(p_value: Variant, changed_fn: Callable) -> void:
-	assert(p_value is Vector2i)
-	super(p_value, changed_fn)
-
-
 func _update_format() -> void:
 	if is_inside_tree(): await get_tree().process_frame
 	%SpinBoxX.get_line_edit().text = "%.2f %s" % [value.x, suffix]
@@ -109,10 +105,10 @@ func _update_format() -> void:
 ## Changing this setting's value will write the value to the config,
 ## set the property in the current scene's camera.
 ##
-func init_config_camera_2(main: Main, property_x: String, property_y: String) -> void:
+func setting_connect_camera_2(property_x: String, property_y: String) -> void:
 	var config_property_x := main._get_propkey_camera(property_x)
 	var config_property_y := main._get_propkey_camera(property_y)
-	init_to_value(
+	setting_connect(
 		func() -> Variant:
 			var camera := main.get_scene_camera()
 			if camera:

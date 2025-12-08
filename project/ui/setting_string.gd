@@ -6,7 +6,7 @@ extends SettingBase
 	set(p_value):
 		value = p_value
 		await _update()
-		force_update()
+		emit_changed()
 
 
 func _ready() -> void:
@@ -34,8 +34,3 @@ func _update() -> void:
 
 	if not %LineEdit.has_focus():
 		%LineEdit.text = value
-
-
-func init(p_value: Variant, changed_fn: Callable) -> void:
-	assert(p_value is bool)
-	super(p_value, changed_fn)
