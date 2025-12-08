@@ -2,6 +2,8 @@
 .godot/
 
 /build/
+/.cache/
+compile_commands.json
 
 # library/object/executable files
 *.dll
