@@ -1,3 +1,4 @@
+@tool
 extends OverlayBase
 
 enum Type {PIXEL, BAR, LINE}
@@ -30,12 +31,11 @@ enum ColorStyle {SCOPE, METER}
 var highest_peak := 0.5
 var last_peaks := []
 
-
-func _ready() -> void:
+func _overlay_init() -> void:
 	last_peaks.resize(int(size.x * style_rows))
 	last_peaks.fill(0.0)
 
-func overlay_get_properties() -> Array[String]:
+func overlay_get_propertes() -> Array[String]:
 	return [
 		"analyzer_db_min",
 		"analyzer_freq_min",
@@ -65,6 +65,8 @@ func _colors_scope() -> Color:
 	return colors[9]
 
 func _process(_delta: float) -> void:
+	if Engine.is_editor_hint():
+		return
 	if visible and main.audio_is_spectrum_analyzer_enabled():
 		queue_redraw()
 

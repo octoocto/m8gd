@@ -93,8 +93,6 @@ func _ready() -> void:
 
 	get_window().min_size = Vector2i(640, 480)
 
-	var start_time := Time.get_ticks_msec()
-
 	Log.call_task(func() -> void:
 		device_manager.init(self)
 		m8_client.system_info.connect(on_m8_system_info)
@@ -102,12 +100,7 @@ func _ready() -> void:
 		m8_client.theme_changed.connect(on_m8_theme_changed)
 	, "init devices")
 
-	Log.call_task(func() -> void:
-		overlay_spectrum.init(self)
-		overlay_waveform.init(self)
-		overlay_display.init(self)
-		overlay_keys.init(self)
-	, "init overlays")
+	get_window().size_changed.connect(Events.window_modified.emit)
 
 	%Check_SplashDoNotShow.toggled.connect(func(toggle_mode: bool) -> void:
 		config.splash_show = !toggle_mode
@@ -116,7 +109,6 @@ func _ready() -> void:
 	%ButtonSplashClose.pressed.connect(func() -> void:
 		%SplashContainer.visible = false
 	)
-
 	%SplashContainer.visible = config.splash_show
 
 	instance = self
@@ -411,8 +403,8 @@ func init_overlays() -> void:
 	menu_overlay._init_params_for(overlay_spectrum)
 	menu_overlay._init_params_for(overlay_waveform)
 
-	if !get_window().size_changed.is_connected(_overlay_update_viewport_size):
-		get_window().size_changed.connect(_overlay_update_viewport_size)
+	if !Events.window_modified.is_connected(_overlay_update_viewport_size):
+		Events.window_modified.connect(_overlay_update_viewport_size)
 	_overlay_update_viewport_size()
 
 ##
@@ -596,6 +588,7 @@ func display_get_scale() -> float:
 
 func display_set_scale(scale: float) -> void:
 	get_window().content_scale_factor = scale
+	Events.window_modified.emit()
 
 ## Based on [get_auto_display_scale()] from the Godot editor source code.
 ## Only returns integer scale values.
@@ -797,15 +790,26 @@ func _load_scene_from_file_path(scene_path: String) -> M8Scene:
 
 	return scene
 
+@onready var overlay_container: CenterContainer = %OverlayContainer
+@onready var overlay_control: Control = %OverlayControl
+@onready var overlay_sub_viewport: SubViewport = %OverlaySubViewport
+@onready var overlay_sub_viewport_container: Control = %OverlaySubViewportContainer
+
 func _overlay_update_viewport_size() -> void:
+	var container_scale := overlay_integer_zoom / display_get_scale()
 	var window_size := get_window().get_size()
-	var viewport_size := Vector2i((window_size / float(overlay_integer_zoom)).ceil())
+	var viewport_size: Vector2i = window_size / overlay_integer_zoom
 
-	%OverlaySubViewport.set_size(viewport_size)
+	overlay_container.set_anchors_preset(Control.PRESET_FULL_RECT)
 
-	%OverlaySubViewportContainer.scale = Vector2(overlay_integer_zoom, overlay_integer_zoom)
+	overlay_control.custom_minimum_size = window_size * container_scale
+	overlay_control.reset_size()
 
-	%OverlayControl.custom_minimum_size = window_size * overlay_integer_zoom
+	overlay_sub_viewport_container.scale = Vector2(container_scale, container_scale)
+	overlay_sub_viewport_container.set_anchors_preset(Control.PRESET_TOP_LEFT)
 
-	%OverlayContainer.set_anchors_preset(Control.PRESET_FULL_RECT)
-	%OverlayContainer.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	overlay_sub_viewport.set_size(viewport_size)
+
+	await get_tree().process_frame
+	overlay_container.position = Vector2.ZERO
+	overlay_sub_viewport_container.position = Vector2.ZERO

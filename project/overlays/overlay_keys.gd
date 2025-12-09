@@ -1,5 +1,6 @@
 @tool
-class_name OverlayKeys extends OverlayBase
+class_name OverlayKeys
+extends OverlayBase
 
 const MAX_ITEMS := 10 + 3 # including sample items
 
@@ -45,24 +46,11 @@ const KEY_ITEM := preload("res://overlays/overlay_keys_item.tscn")
 @onready var current_item: OverlayKeysItem # last added item in the key overlay list
 @onready var current_keystate: int = -1 # bitfield of the pressed keys for the current item
 
-func _ready() -> void:
+func _overlay_init() -> void:
+
 	visibility_changed.connect(func() -> void:
 		if not visible: clear()
 	)
-
-func _process(_delta: float) -> void:
-	queue_redraw()
-	%ItemSample1.visible = draw_bounds
-	%ItemSample2.visible = draw_bounds
-	%ItemSample3.visible = draw_bounds
-
-func _draw() -> void:
-	if draw_bounds:
-		draw_rect(Rect2(position_offset, size), Color.WHITE, false)
-
-
-func init(p_main: Main) -> void:
-	main = p_main
 	main.m8_client.key_pressed.connect(func(key: int, pressed: bool) -> void:
 		if not pressed: return
 
@@ -81,8 +69,19 @@ func init(p_main: Main) -> void:
 		# add a new item
 		add_item()
 	)
-
 	_update()
+
+func _process(_delta: float) -> void:
+	if Engine.is_editor_hint():
+		return
+	queue_redraw()
+	%ItemSample1.visible = draw_bounds
+	%ItemSample2.visible = draw_bounds
+	%ItemSample3.visible = draw_bounds
+
+func _draw() -> void:
+	if draw_bounds:
+		draw_rect(Rect2(position_offset, size), Color.WHITE, false)
 
 func overlay_get_properties() -> Array[String]:
 	return [

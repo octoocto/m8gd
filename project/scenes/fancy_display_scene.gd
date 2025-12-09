@@ -78,14 +78,11 @@ func init(p_main: Main) -> void:
 	var texture := main.m8_client.get_display()
 	%DisplayTextureRect.texture = texture
 
-	get_window().size_changed.connect(func() -> void:
-		_update()
-	)
+	Events.window_modified.connect(_update)
 
 	main.m8_system_info_received.connect(func(_hw: String, _fw: String) -> void:
 		_update()
 	)
-
 	main.m8_theme_changed.connect(func(_colors: PackedColorArray, _complete: bool) -> void:
 		_update_background_color()
 	)

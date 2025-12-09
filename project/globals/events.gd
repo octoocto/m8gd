@@ -14,3 +14,7 @@ signal profile_loaded(profile_name: String)
 
 @warning_ignore("UNUSED_SIGNAL")
 signal setting_changed(setting: SettingBase, value: Variant)
+
+## Emitted when either the window size changed or the scale changed.
+@warning_ignore("UNUSED_SIGNAL")
+signal window_modified()

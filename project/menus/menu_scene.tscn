@@ -1,6 +1,7 @@
-[gd_scene load_steps=9 format=3 uid="uid://disepgw6epns6"]
+[gd_scene load_steps=10 format=3 uid="uid://disepgw6epns6"]
 
 [ext_resource type="PackedScene" uid="uid://dsgvm3dda1kjp" path="res://ui/label_header.tscn" id="1_2ypbp"]
+[ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://menus/theme/menu_theme.tres" id="1_ipe3s"]
 [ext_resource type="Script" uid="uid://xlpmpyscjauv" path="res://menus/menu_scene.gd" id="1_uybnw"]
 [ext_resource type="PackedScene" uid="uid://c5kj1uj0ohnmm" path="res://ui/setting_bool.tscn" id="2_uybnw"]
 [ext_resource type="Texture2D" uid="uid://58ird2h11kc6" path="res://assets/icon/Load.png" id="3_ipe3s"]
@@ -17,6 +18,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_ipe3s")
 script = ExtResource("1_uybnw")
 metadata/_tab_index = 0
 

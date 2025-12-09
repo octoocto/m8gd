@@ -1,3 +1,4 @@
+@tool
 extends OverlayBase
 
 enum Type {PIXEL, BAR, LINE}
@@ -32,8 +33,7 @@ var delta_left: float = 0.0
 
 var sample_rate: float
 
-
-func _ready() -> void:
+func _overlay_init() -> void:
 	peaks.resize(int(size.x * style_rows))
 	peaks.fill(0.0)
 	sample_rate = 1 / analyzer_sample_rate
@@ -60,6 +60,8 @@ func _colors() -> PackedColorArray:
 	return [colors[10], colors[11], colors[12]]
 
 func _process(delta: float) -> void:
+	if Engine.is_editor_hint():
+		return
 
 	waveform_size = int(size.x * style_rows)
 

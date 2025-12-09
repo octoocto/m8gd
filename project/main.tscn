@@ -63,9 +63,9 @@ frequency = 1.0
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_lsac7"]
 width = 2048
 height = 2048
-invert = true
-color_ramp = SubResource("Gradient_v10jr")
 noise = SubResource("FastNoiseLite_ieww8")
+color_ramp = SubResource("Gradient_v10jr")
+invert = true
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_dw8ip"]
 shader = ExtResource("7_5hn1q")
@@ -166,8 +166,8 @@ frequency = 1.0
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_m6tfj"]
 width = 4096
 height = 4096
-color_ramp = SubResource("Gradient_2ccln")
 noise = SubResource("FastNoiseLite_np6uh")
+color_ramp = SubResource("Gradient_2ccln")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_aaaol"]
 shader = ExtResource("7_5hn1q")
@@ -254,6 +254,8 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_right = 640.0
+offset_bottom = 480.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -419,7 +421,7 @@ layout_mode = 2
 
 [node name="LabelFPS" type="Label" parent="CanvasLayer/UI/MarginContainer/VBoxContainer/DebugLabels"]
 unique_name_in_owner = true
-layout_mode = 2
+layout_mode = 0
 offset_top = 4.0
 offset_right = 1.0
 offset_bottom = 27.0
@@ -430,7 +432,7 @@ label_settings = SubResource("LabelSettings_getpj")
 
 [node name="LabelPort" type="Label" parent="CanvasLayer/UI/MarginContainer/VBoxContainer/DebugLabels"]
 unique_name_in_owner = true
-layout_mode = 2
+layout_mode = 0
 offset_top = 32.0
 offset_right = 622.0
 offset_bottom = 55.0
@@ -441,7 +443,7 @@ vertical_alignment = 2
 
 [node name="LabelAudioDevice" type="Label" parent="CanvasLayer/UI/MarginContainer/VBoxContainer/DebugLabels"]
 unique_name_in_owner = true
-layout_mode = 2
+layout_mode = 0
 offset_top = 48.0
 offset_right = 622.0
 offset_bottom = 71.0
@@ -452,7 +454,7 @@ vertical_alignment = 2
 
 [node name="LabelHardware" type="Label" parent="CanvasLayer/UI/MarginContainer/VBoxContainer/DebugLabels"]
 unique_name_in_owner = true
-layout_mode = 2
+layout_mode = 0
 offset_top = 72.0
 offset_right = 622.0
 offset_bottom = 95.0
@@ -463,7 +465,7 @@ vertical_alignment = 2
 
 [node name="LabelFirmware" type="Label" parent="CanvasLayer/UI/MarginContainer/VBoxContainer/DebugLabels"]
 unique_name_in_owner = true
-layout_mode = 2
+layout_mode = 0
 offset_top = 88.0
 offset_right = 622.0
 offset_bottom = 111.0
@@ -475,7 +477,7 @@ vertical_alignment = 2
 [node name="LabelAudioPeak" type="Label" parent="CanvasLayer/UI/MarginContainer/VBoxContainer/DebugLabels"]
 unique_name_in_owner = true
 visible = false
-layout_mode = 2
+layout_mode = 0
 offset_top = 96.0
 offset_right = 622.0
 offset_bottom = 119.0
@@ -488,7 +490,7 @@ vertical_alignment = 2
 unique_name_in_owner = true
 visible = false
 modulate = Color(0.75, 0.75, 1, 1)
-layout_mode = 2
+layout_mode = 0
 offset_top = 112.0
 offset_right = 622.0
 offset_bottom = 135.0
@@ -501,7 +503,7 @@ vertical_alignment = 2
 unique_name_in_owner = true
 visible = false
 modulate = Color(1, 0.75, 0.75, 1)
-layout_mode = 2
+layout_mode = 0
 offset_top = 128.0
 offset_right = 622.0
 offset_bottom = 151.0
@@ -514,7 +516,7 @@ vertical_alignment = 2
 unique_name_in_owner = true
 visible = false
 modulate = Color(0.75, 1, 0.75, 1)
-layout_mode = 2
+layout_mode = 0
 offset_top = 152.0
 offset_right = 622.0
 offset_bottom = 175.0

@@ -68,7 +68,6 @@ current_tab = 0
 
 [node name="Scene" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer" instance=ExtResource("3_0k4wn")]
 layout_mode = 2
-theme = ExtResource("1_qr6r4")
 
 [node name="Overlays" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer" instance=ExtResource("4_j5v2v")]
 visible = false

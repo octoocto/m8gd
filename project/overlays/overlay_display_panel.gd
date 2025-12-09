@@ -1,5 +1,5 @@
+@tool
 extends OverlayBase
-
 
 @export_range(1, 4) var integer_scale: int = 1:
 	set(value):
@@ -27,11 +27,8 @@ extends OverlayBase
 		_update()
 
 
-func init(p_main: Main) -> void:
-	super(p_main)
-
+func _overlay_init() -> void:
 	%DisplayTextureRect.texture = main.m8_client.get_display()
-
 	main.m8_theme_changed.connect(func(_colors: PackedColorArray, _complete: bool) -> void:
 		_update()
 	)
