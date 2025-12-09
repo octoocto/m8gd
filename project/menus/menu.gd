@@ -2,6 +2,8 @@
 class_name MenuBase
 extends PanelContainer
 
+const THEME := preload("res://menus/theme/menu_theme.tres")
+
 var main: Main
 
 func _ready() -> void:
@@ -14,6 +16,7 @@ func _ready() -> void:
 
 	custom_minimum_size = Vector2i(320, 240)
 	anchors_preset = Control.PRESET_FULL_RECT
+	set_theme(THEME)
 
 	if not Engine.is_editor_hint():
 		Log.call_task(_menu_init, "init menu '%s'" % name)

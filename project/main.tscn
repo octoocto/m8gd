@@ -714,7 +714,6 @@ size_flags_vertical = 3
 
 [node name="MainMenuPanel" parent="CanvasLayer/UI" instance=ExtResource("7_k5oyo")]
 unique_name_in_owner = true
-visible = false
 z_index = 1
 layout_mode = 1
 

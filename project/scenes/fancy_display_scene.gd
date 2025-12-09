@@ -1,11 +1,11 @@
 extends M8Scene
 
-@export_range(1, 6) var integer_zoom: int = 0:
+@export_range(0, 6) var integer_scale: int = 0:
 	set(value):
-		integer_zoom = value
+		integer_scale = value
 		_update()
 
-@export_range(0, 6) var panel_integer_scale: int = 1:
+@export_range(1, 6) var panel_integer_scale: int = 1:
 	set(value):
 		panel_integer_scale = value
 		_update()
@@ -69,6 +69,8 @@ extends M8Scene
 		if is_inside_tree():
 			%BackgroundShader.material.set_shader_parameter("blur_amount", value)
 
+func _physics_process(_delta: float) -> void:
+	_update_integer_scale()
 
 func init(p_main: Main) -> void:
 	super(p_main)
@@ -93,7 +95,7 @@ func init(p_main: Main) -> void:
 
 func init_menu(menu: SceneMenu) -> void:
 
-	menu.add_auto("integer_zoom")
+	menu.add_auto("integer_scale")
 
 	menu.add_section("Panel")
 	menu.add_auto("panel_integer_scale")
@@ -132,17 +134,25 @@ func init_menu(menu: SceneMenu) -> void:
 func _update() -> void:
 	if not is_inside_tree(): return
 
-	var window_size := get_window().get_size()
-	var viewport_size := Vector2i((window_size / float(integer_zoom)).ceil())
-	%SubViewport.integer_size = viewport_size
-	%SubViewport.integer_scale = integer_zoom
-	%CenterContainer.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_update_integer_scale()
 
 	var display_size := main.m8_client.get_display().get_size()
+
 	if panel_integer_scale == 0: # auto
 		%DisplayTextureRect.custom_minimum_size = display_size * get_auto_display_integer_scale()
 	else:
 		%DisplayTextureRect.custom_minimum_size = display_size * panel_integer_scale
+
+func _update_integer_scale() -> void:
+
+	if integer_scale == 0:
+		integer_scale = get_auto_display_integer_scale()
+
+	var window_size := get_window().get_size()
+	var viewport_size := Vector2i((window_size / float(integer_scale)).ceil())
+	%CenterContainer.set_anchors_preset(Control.PRESET_FULL_RECT)
+	%SubViewport.integer_size = viewport_size
+	%SubViewport.integer_scale = integer_scale
 
 func _update_background_color() -> void:
 	var bg_color: Color = main.m8_get_theme_colors()[0]

@@ -599,6 +599,40 @@ func update_audio_analyzer() -> void:
 	%RectAudioLevel.size.x = (audio_level_raw) * 200
 	%RectAudioLevelAvg.position.x = (audio_level) * 200.0 + 88.0
 
+func display_get_scale() -> float:
+	return get_window().content_scale_factor
+
+func display_set_scale(scale: float) -> void:
+	get_window().content_scale_factor = scale
+
+## Based on [get_auto_display_scale()] from the Godot editor source code.
+## Only returns integer scale values.
+func display_get_auto_scale() -> float:
+	var dispname := DisplayServer.get_name()
+
+	if dispname == "Wayland":
+		var dispscale := DisplayServer.screen_get_scale(DisplayServer.SCREEN_OF_MAIN_WINDOW)
+		if DisplayServer.get_screen_count() == 1:
+			dispscale = DisplayServer.screen_get_max_scale()
+		return floor(dispscale)
+
+	if OS.get_name() == "macOS" or OS.get_name() == "Android":
+		return floor(DisplayServer.screen_get_max_scale())
+
+	var screen := DisplayServer.window_get_current_screen()
+
+	if DisplayServer.screen_get_size(screen) != Vector2i():
+		var screen_dpi := DisplayServer.screen_get_dpi(screen)
+		if OS.get_name() == "Windows":
+			return floor(screen_dpi / 96.0)
+
+		# guess scale based on DPI
+		var screen_min: int = min(DisplayServer.screen_get_size(screen).x, DisplayServer.screen_get_size(screen).y)
+		if screen_dpi >= 192 and screen_min >= 1400:
+			return 2.0
+
+	return 1.0
+
 func _print(text: String) -> void:
 	print_rich("[color=green]%s[/color]" % text)
 

@@ -1,6 +1,7 @@
 @tool
 extends MenuBase
 
+@onready var s_ui_scale: SettingNumber = %Setting_UIScale
 @onready var s_fullscreen: SettingBase = %Setting_Fullscreen
 @onready var s_window_borderless: SettingBase = %Setting_WindowBorderless
 @onready var s_always_on_top: SettingBase = %Setting_AlwaysOnTop
@@ -18,6 +19,21 @@ extends MenuBase
 
 func _menu_init() -> void:
 	var config := main.config
+
+	# UI
+	
+	s_ui_scale.setting_connect_global("ui_scale", func(value: float) -> void:
+		if value < 1.0:
+			value = main.display_get_auto_scale()
+			Log.ln("Auto UI scale detected: %f" % value)
+		main.display_set_scale(value)
+	)
+	s_ui_scale.set_format_function(func(value: float) -> String:
+		if value < 1.0:
+			return "Auto (%d%%)" % (int)(main.display_get_auto_scale() * 100)
+		else:
+			return "%d%%" % (int)(value * 100)
+	)
 
 	# Display
 

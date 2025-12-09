@@ -2,7 +2,6 @@
 class_name SettingNumber
 extends SettingBase
 
-
 var _is_int_type := false
 
 @export var setting_value_min_width := 40:
@@ -52,6 +51,8 @@ var _is_int_type := false
 		format_string = p_value
 		_update()
 
+var format_fn: Callable
+
 func _ready() -> void:
 	super()
 	%HSlider.value_changed.connect(func(p_value: float) -> void:
@@ -71,15 +72,31 @@ func _ready() -> void:
 	%LineEdit.text_submitted.connect(func(text: String) -> void:
 		%LineEdit.deselect()
 		%LineEdit.release_focus()
-		if _is_int_type and text.is_valid_int():
-			value = text.to_int()
-		elif text.is_valid_float():
-			value = text.to_float()
-		else:
-			_update()
+		_set_value_from_text(text)
 	)
 
 	_update()
+
+func set_format_function(fn: Callable) -> void:
+	format_fn = fn
+	_update()
+
+func _set_value_from_text(text: String) -> void:
+	if _is_int_type and text.is_valid_int():
+		value = text.to_int()
+	elif text.is_valid_float():
+		value = text.to_float()
+	else:
+		_update()
+
+func _update_text() -> void:
+
+	if format_fn:
+		%LineEdit.text = format_fn.call(%HSlider.value)
+		return
+
+	var eff_value: float = %HSlider.value * percent_factor if as_percent else %HSlider.value
+	%LineEdit.text = format_string % eff_value
 
 func _update() -> void:
 
@@ -104,8 +121,7 @@ func _update() -> void:
 	%LabelName.custom_minimum_size.x = setting_name_min_width
 	%HBoxContainer.set("theme_override_constants/separation", setting_name_indent)
 
-	var eff_value: float = %HSlider.value * percent_factor if as_percent else %HSlider.value
-	%LineEdit.text = format_string % eff_value
+	_update_text()
 	%LineEdit.custom_minimum_size.x = setting_value_min_width
 
 	if show_ticks and _is_int_type:

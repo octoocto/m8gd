@@ -66,7 +66,7 @@ func get_auto_display_integer_scale() -> int:
 	var intscale := 1
 	while ((intscale + 1) * texture.get_size().x <= window_size.x and (intscale + 1) * texture.get_size().y <= window_size.y):
 		intscale += 1
-	return intscale
+	return (int)(intscale / main.display_get_scale())
 
 func get_setting(setting: String) -> Variant:
 	return main.config.get_property_scene(setting)

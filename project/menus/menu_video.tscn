@@ -1,15 +1,21 @@
-[gd_scene load_steps=7 format=3 uid="uid://bpojkt73l3brw"]
+[gd_scene load_steps=8 format=3 uid="uid://bpojkt73l3brw"]
 
 [ext_resource type="PackedScene" uid="uid://dsgvm3dda1kjp" path="res://ui/label_header.tscn" id="1_0nw4r"]
 [ext_resource type="Script" uid="uid://d1xdu68kv6hkb" path="res://menus/menu_video.gd" id="1_8qcof"]
+[ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://menus/theme/menu_theme.tres" id="1_j5lkk"]
 [ext_resource type="PackedScene" uid="uid://c5kj1uj0ohnmm" path="res://ui/setting_bool.tscn" id="2_8qcof"]
 [ext_resource type="PackedScene" uid="uid://bgsxagi62acni" path="res://ui/setting_options.tscn" id="3_j5lkk"]
 [ext_resource type="PackedScene" uid="uid://bevoopcdq5dsh" path="res://ui/setting_vec2i.tscn" id="4_jvvms"]
 [ext_resource type="PackedScene" uid="uid://b1r8nehsgp111" path="res://ui/setting_number.tscn" id="5_ho738"]
 
 [node name="Video" type="PanelContainer"]
-offset_right = 360.0
-offset_bottom = 630.0
+custom_minimum_size = Vector2(320, 240)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_j5lkk")
 script = ExtResource("1_8qcof")
 metadata/_tab_index = 5
 
@@ -17,6 +23,21 @@ metadata/_tab_index = 5
 layout_mode = 2
 
 [node name="LabelHeader" parent="VBoxContainer" instance=ExtResource("1_0nw4r")]
+layout_mode = 2
+text = "UI"
+top_spacing = false
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Setting_UIScale" parent="VBoxContainer/VBoxContainer3" instance=ExtResource("5_ho738")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_value_min_width = 80
+max_value = 4.0
+setting_name = "UI Scale"
+
+[node name="LabelHeader3" parent="VBoxContainer" instance=ExtResource("1_0nw4r")]
 layout_mode = 2
 text = "Display"
 top_spacing = false
