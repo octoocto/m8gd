@@ -38,7 +38,7 @@ func _init_menu_scene() -> void:
 	_setup_as_button.call()
 
 	%Button_OpenSceneMenu.pressed.connect(func() -> void:
-		hide()
+		main.menu.menu_hide()
 		main.menu_scene.menu_show()
 	)
 
@@ -49,7 +49,7 @@ func _init_menu_scene() -> void:
 
 func _init_menu_camera() -> void:
 	%Button_SceneCameraMenu.pressed.connect(func() -> void:
-		hide()
+		main.menu.menu_hide()
 		main.menu_camera.menu_show()
 	)
 
