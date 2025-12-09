@@ -2,7 +2,7 @@
 class_name MenuBase
 extends PanelContainer
 
-const THEME := preload("res://menus/theme/menu_theme.tres")
+const THEME := preload("res://ui/theme/menu_theme.tres")
 
 var main: Main
 
@@ -33,5 +33,3 @@ func menu_hide() -> void:
 ## Setup any menu control nodes.
 func _menu_init() -> void:
 	assert(false, "_menu_init() not implemented in %s" % name)
-
-

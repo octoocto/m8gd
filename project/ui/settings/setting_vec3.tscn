@@ -1,14 +1,16 @@
-[gd_scene load_steps=2 format=3 uid="uid://d2wnq8ai2ykus"]
+[gd_scene load_steps=3 format=3 uid="uid://cr88nkt47umul"]
 
-[ext_resource type="Script" uid="uid://dlkrwb25egyq" path="res://ui/setting_vec2.gd" id="1_6vysa"]
+[ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_5h7am"]
+[ext_resource type="Script" uid="uid://cunmuvx6l0bqw" path="res://ui/settings/setting_vec3.gd" id="1_v816i"]
 
-[node name="SettingVec2" type="PanelContainer"]
+[node name="SettingVec3" type="PanelContainer"]
 offset_right = 132.0
 offset_bottom = 27.0
 size_flags_horizontal = 3
 size_flags_vertical = 4
+theme = ExtResource("1_5h7am")
 theme_type_variation = &"SettingBackground"
-script = ExtResource("1_6vysa")
+script = ExtResource("1_v816i")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
@@ -18,6 +20,7 @@ unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
+text = "t"
 
 [node name="PanelContainer" type="PanelContainer" parent="HBoxContainer"]
 layout_mode = 2
@@ -48,6 +51,19 @@ layout_mode = 2
 text = "y"
 
 [node name="SpinBoxY" type="SpinBox" parent="HBoxContainer/PanelContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"SettingControlVec2SpinBox"
+step = 0.01
+select_all_on_focus = true
+
+[node name="LabelZ" type="Label" parent="HBoxContainer/PanelContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "z"
+
+[node name="SpinBoxZ" type="SpinBox" parent="HBoxContainer/PanelContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3

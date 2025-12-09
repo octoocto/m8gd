@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://beyfg0ros1ixo"]
 
 [ext_resource type="PackedScene" uid="uid://dsgvm3dda1kjp" path="res://ui/label_header.tscn" id="1_6rqk2"]
-[ext_resource type="Script" uid="uid://v77vher52qtd" path="res://menus/menu_devices.gd" id="1_erdtv"]
+[ext_resource type="Script" uid="uid://v77vher52qtd" path="res://ui/menus/menu_devices.gd" id="1_erdtv"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4w3sk"]
 

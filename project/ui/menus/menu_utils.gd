@@ -1,12 +1,12 @@
 class_name MenuUtils extends Node
 
-const SETTING_NUMBER := preload("res://ui/setting_number.tscn")
-const SETTING_VEC2I := preload("res://ui/setting_vec2i.tscn")
-const SETTING_BOOL := preload("res://ui/setting_bool.tscn")
-const SETTING_OPTIONS := preload("res://ui/setting_options.tscn")
-const SETTING_STRING := preload("res://ui/setting_string.tscn")
-const SETTING_COLOR := preload("res://ui/setting_color.tscn")
-const SETTING_FILE := preload("res://ui/setting_file.tscn")
+const SETTING_NUMBER := preload("res://ui/settings/setting_number.tscn")
+const SETTING_VEC2I := preload("res://ui/settings/setting_vec2i.tscn")
+const SETTING_BOOL := preload("res://ui/settings/setting_bool.tscn")
+const SETTING_OPTIONS := preload("res://ui/settings/setting_options.tscn")
+const SETTING_STRING := preload("res://ui/settings/setting_string.tscn")
+const SETTING_COLOR := preload("res://ui/settings/setting_color.tscn")
+const SETTING_FILE := preload("res://ui/settings/setting_file.tscn")
 
 const LABEL_HEADER := preload("res://ui/label_header.tscn")
 

@@ -1,12 +1,12 @@
 [gd_scene load_steps=8 format=3 uid="uid://bpojkt73l3brw"]
 
 [ext_resource type="PackedScene" uid="uid://dsgvm3dda1kjp" path="res://ui/label_header.tscn" id="1_0nw4r"]
-[ext_resource type="Script" uid="uid://d1xdu68kv6hkb" path="res://menus/menu_video.gd" id="1_8qcof"]
-[ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://menus/theme/menu_theme.tres" id="1_j5lkk"]
-[ext_resource type="PackedScene" uid="uid://c5kj1uj0ohnmm" path="res://ui/setting_bool.tscn" id="2_8qcof"]
-[ext_resource type="PackedScene" uid="uid://bgsxagi62acni" path="res://ui/setting_options.tscn" id="3_j5lkk"]
-[ext_resource type="PackedScene" uid="uid://bevoopcdq5dsh" path="res://ui/setting_vec2i.tscn" id="4_jvvms"]
-[ext_resource type="PackedScene" uid="uid://b1r8nehsgp111" path="res://ui/setting_number.tscn" id="5_ho738"]
+[ext_resource type="Script" uid="uid://d1xdu68kv6hkb" path="res://ui/menus/menu_video.gd" id="1_8qcof"]
+[ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_j5lkk"]
+[ext_resource type="PackedScene" uid="uid://c5kj1uj0ohnmm" path="res://ui/settings/setting_bool.tscn" id="2_8qcof"]
+[ext_resource type="PackedScene" uid="uid://bgsxagi62acni" path="res://ui/settings/setting_options.tscn" id="3_j5lkk"]
+[ext_resource type="PackedScene" uid="uid://bevoopcdq5dsh" path="res://ui/settings/setting_vec2i.tscn" id="4_jvvms"]
+[ext_resource type="PackedScene" uid="uid://b1r8nehsgp111" path="res://ui/settings/setting_number.tscn" id="5_ho738"]
 
 [node name="Video" type="PanelContainer"]
 custom_minimum_size = Vector2(320, 240)

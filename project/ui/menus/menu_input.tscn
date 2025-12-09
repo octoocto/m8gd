@@ -1,8 +1,8 @@
 [gd_scene load_steps=7 format=3 uid="uid://c3lv6bqqi5wej"]
 
 [ext_resource type="PackedScene" uid="uid://dsgvm3dda1kjp" path="res://ui/label_header.tscn" id="1_aqk45"]
-[ext_resource type="Script" uid="uid://b8j8l0lr1k4w6" path="res://menus/menu_input.gd" id="1_vdots"]
-[ext_resource type="PackedScene" uid="uid://c5kj1uj0ohnmm" path="res://ui/setting_bool.tscn" id="3_1p8ay"]
+[ext_resource type="Script" uid="uid://b8j8l0lr1k4w6" path="res://ui/menus/menu_input.gd" id="1_vdots"]
+[ext_resource type="PackedScene" uid="uid://c5kj1uj0ohnmm" path="res://ui/settings/setting_bool.tscn" id="3_1p8ay"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_cher2"]
 font_size = 12
