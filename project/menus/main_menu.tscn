@@ -68,39 +68,45 @@ current_tab = 0
 
 [node name="Scene" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer" instance=ExtResource("3_0k4wn")]
 layout_mode = 2
+theme = ExtResource("1_qr6r4")
 
 [node name="Overlays" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer" instance=ExtResource("4_j5v2v")]
 visible = false
 layout_mode = 2
+theme = ExtResource("1_qr6r4")
 
 [node name="Filters" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer" instance=ExtResource("5_iotk1")]
 visible = false
 layout_mode = 2
+theme = ExtResource("1_qr6r4")
 
 [node name="DeviceMenu" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer" instance=ExtResource("6_w44g7")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+theme = ExtResource("1_qr6r4")
 
 [node name="InputMenu" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer" instance=ExtResource("7_cm266")]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(320, 240)
 layout_mode = 2
+theme = ExtResource("1_qr6r4")
 
 [node name="Video" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer" instance=ExtResource("8_g8g3n")]
 visible = false
-custom_minimum_size = Vector2(320, 240)
 layout_mode = 2
 
 [node name="Audio" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer" instance=ExtResource("9_0k4wn")]
 visible = false
 layout_mode = 2
+theme = ExtResource("1_qr6r4")
 
 [node name="Debug" parent="ScrollContainer/CenterContainer/VBoxContainer/TabContainer" instance=ExtResource("10_8u0te")]
 visible = false
 custom_minimum_size = Vector2(320, 240)
 layout_mode = 2
+theme = ExtResource("1_qr6r4")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/CenterContainer/VBoxContainer"]
 visible = false

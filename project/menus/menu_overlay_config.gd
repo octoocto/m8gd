@@ -81,7 +81,7 @@ func _init_params_for(overlay: OverlayBase) -> void:
 		var property: String = prop.name
 		var setting := MenuUtils.create_setting_from_property(prop)
 
-		setting.value = overlay_target.get(property)
+		setting.value = overlay.get(property)
 		setting.setting_name = prop.name.capitalize()
 		param_container.add_child(setting)
 		setting.setting_connect_overlay(overlay, property)

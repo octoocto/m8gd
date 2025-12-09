@@ -120,21 +120,13 @@ func _ready() -> void:
 	%SplashContainer.visible = config.splash_show
 
 	instance = self
-
 	Events.initialized.emit(self)
 
-	# Log.call_task(func() -> void:
-		# menu.init(self)
-		# menu_scene.init(self)
-		# menu_camera.init(self)
-		# menu_overlay.init(self)
-	# , "init menus")
-
 	device_manager.start_waiting_for_devices()
-
-	await get_tree().create_timer(1.0).timeout
-
 	_update_labels()
+
+	load_last_profile()
+
 
 func _process(delta: float) -> void:
 	device_manager._process(delta)
