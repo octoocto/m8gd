@@ -5,30 +5,26 @@ extends SettingBase
 @export_enum("Arrows", "Dropdown") var setting_type := 0:
 	set(value):
 		setting_type = value
-		_update()
+		_on_changed()
 
 @export var items: PackedStringArray
 
 @export var value := -1:
 	set(p_value):
 		value = clampi(p_value, 0, items.size() - 1) if items.size() else -1
-		await _update()
+		await _on_changed()
 		emit_changed()
 
 
-func _ready() -> void:
-	super()
+func _on_ready() -> void:
 	%ButtonLeft.pressed.connect(func() -> void: value -= 1)
 	%ButtonRight.pressed.connect(func() -> void: value += 1)
-	%OptionButton.item_selected.connect(func(p_value: int) -> void:
-		value = p_value
-	)
-	_update()
+	%OptionButton.item_selected.connect(func(p_value: int) -> void: value = p_value)
 
 
-func _update() -> void:
-
-	if not is_inside_tree(): await ready
+func _on_changed() -> void:
+	if not is_inside_tree():
+		await ready
 
 	modulate = Color.WHITE if enabled else Color.from_hsv(0, 0, 0.25)
 
@@ -46,7 +42,7 @@ func _update() -> void:
 	%OptionButton.visible = false
 
 	match setting_type:
-		0: # arrows
+		0:  # arrows
 			%ButtonLeft.visible = true
 			%ButtonLeft.disabled = !enabled or value <= 0
 
@@ -55,7 +51,7 @@ func _update() -> void:
 
 			%LabelValue.visible = true
 			%LabelValue.text = items[value] if items.size() > 0 else ""
-		1: # dropdown
+		1:  # dropdown
 			%OptionButton.visible = true
 			if items.size():
 				%OptionButton.clear()

@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://jvyexp7mquoa"]
+
+[ext_resource type="Script" uid="uid://bc0dk0lrmjegn" path="res://ui/settings/button.gd" id="1_6n1bi"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6n1bi"]
+
+[node name="Button" type="PanelContainer"]
+custom_minimum_size = Vector2(160, 0)
+offset_right = 160.0
+offset_bottom = 8.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_6n1bi")
+script = ExtResource("1_6n1bi")
+enabled = false
+
+[node name="Button" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+disabled = true

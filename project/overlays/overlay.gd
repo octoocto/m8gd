@@ -15,13 +15,14 @@ extends Control
 var main: Main
 
 func _ready() -> void:
-	if not Engine.is_editor_hint() and !Main.instance:
+	if Engine.is_editor_hint():
+		return
+	elif not Main.is_ready():
 		await Events.initialized
 
 	main = Main.instance
 
-	if not Engine.is_editor_hint():
-		Log.call_task(_overlay_init, "init overlay '%s'" % name)
+	Log.call_task(_overlay_init, "init overlay '%s'" % name)
 
 ## Return a list of properties that should be config settings.
 func overlay_get_properties() -> Array[String]:

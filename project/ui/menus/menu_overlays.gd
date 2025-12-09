@@ -9,10 +9,10 @@ extends MenuBase
 @onready var s_display_enable: SettingBase = %Setting_OverlayDisplay
 @onready var s_keys_enable: SettingBase = %Setting_OverlayKeys
 
-@onready var btn_spectrum_config: Button = %Button_OverlaySpectrumConfig
-@onready var btn_waveform_config: Button = %Button_OverlayWaveformConfig
-@onready var btn_display_config: Button = %Button_OverlayDisplayConfig
-@onready var btn_keys_config: Button = %Button_OverlayKeysConfig
+@onready var btn_spectrum_config: SettingButton = %Button_OverlaySpectrumConfig
+@onready var btn_waveform_config: SettingButton = %Button_OverlayWaveformConfig
+@onready var btn_display_config: SettingButton = %Button_OverlayDisplayConfig
+@onready var btn_keys_config: SettingButton = %Button_OverlayKeysConfig
 
 func _menu_init() -> void:
 	s_scale.setting_connect_profile("overlay_scale", func(value: int) -> void:
@@ -28,10 +28,10 @@ func _menu_init() -> void:
 	s_display_enable.setting_connect_overlay(main.overlay_display, "visible")
 	s_keys_enable.setting_connect_overlay(main.overlay_keys, "visible")
 
-	s_spectrum_enable.setting_add_child_readonly(btn_spectrum_config)
-	s_waveform_enable.setting_add_child_readonly(btn_waveform_config)
-	s_display_enable.setting_add_child_readonly(btn_display_config)
-	s_keys_enable.setting_add_child_readonly(btn_keys_config)
+	btn_spectrum_config.enable_if(s_spectrum_enable)
+	btn_waveform_config.enable_if(s_waveform_enable)
+	btn_display_config.enable_if(s_display_enable)
+	btn_keys_config.enable_if(s_keys_enable)
 
 	main.overlay_waveform.visibility_changed.connect(func() -> void:
 		s_waveform_enable.value = main.overlay_waveform.visible

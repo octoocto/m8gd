@@ -117,33 +117,35 @@ func init_menu(menu: SceneMenu) -> void:
 			load_custom_texture()
 	)
 
-	setting_surface_mode.setting_add_child_hidden(
-		setting_surface_tex, func(value: int) -> bool: return value == 3
-	)
+	setting_surface_tex.show_if(setting_surface_mode,
+		func(value: int) -> bool: return value == 3)
 
 	menu.add_auto("surface_color")
 
 	var setting_grid := menu.add_auto("surface_enable_grid")
-	setting_grid.setting_add_child_hidden(menu.add_auto("surface_grid_color"))
+	menu.add_auto("surface_grid_color").show_if(setting_grid)
 
 	menu.add_section("Decorations")
 
 	var setting_plant := menu.add_auto("enable_plant")
-	setting_plant.setting_add_child_hidden(menu.add_auto("plant_type"))
+	menu.add_auto("plant_type").show_if(setting_plant)
 
 	menu.add_auto("enable_grass")
 
 	menu.add_section("Lighting")
 
 	var setting_light_dir := menu.add_auto("enable_directional_light")
-	setting_light_dir.setting_add_child_hidden(menu.add_auto("directional_light_color", "• Light Color"))
-	setting_light_dir.setting_add_child_hidden(menu.add_auto("directional_light_angle", "• Light Angle"))
+	menu.add_auto("directional_light_color", "• Light Color").show_if(setting_light_dir)
+	menu.add_auto("directional_light_angle", "• Light Angle").show_if(setting_light_dir)
+
 	var setting_light_lamp := menu.add_auto("enable_lamp_light")
-	setting_light_lamp.setting_add_child_hidden(menu.add_auto("lamp_light_color", "• Light Color"))
+	menu.add_auto("lamp_light_color", "• Light Color").show_if(setting_light_lamp)
+
 	var setting_light_left := menu.add_auto("enable_left_light")
-	setting_light_left.setting_add_child_hidden(menu.add_auto("left_light_color", "• Light Color"))
+	menu.add_auto("left_light_color", "• Light Color").show_if(setting_light_left)
+
 	var setting_light_right := menu.add_auto("enable_right_light")
-	setting_light_right.setting_add_child_hidden(menu.add_auto("right_light_color", "• Light Color"))
+	menu.add_auto("right_light_color", "• Light Color").show_if(setting_light_right)
 
 
 func _physics_process(delta: float) -> void:

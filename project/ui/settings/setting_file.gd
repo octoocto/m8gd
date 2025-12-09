@@ -4,43 +4,43 @@ class_name SettingFile extends SettingBase
 @export var value := "":
 	set(p_value):
 		value = p_value
-		await _update()
+		await _on_changed()
 		emit_changed()
 
 @export var empty_text := "Open File...":
 	set(p_value):
 		empty_text = p_value
-		_update()
-		
+		_on_changed()
+
 @export var filters := "*.png, *.jpg, *.jpeg, *.hdr, *.ogv; Supported Filetypes":
 	set(p_value):
 		filters = p_value
-		_update()
+		_on_changed()
 
 @export var edit_alpha := true:
 	set(p_value):
 		edit_alpha = p_value
-		_update()
+		_on_changed()
 
 @export var show_html := true:
 	set(p_value):
 		show_html = p_value
-		_update()
+		_on_changed()
 
 @export var panel_style_value: StyleBox = null:
 	set(p_value):
 		panel_style_value = p_value
-		_update()
+		_on_changed()
 
 
-func _ready() -> void:
-	super()
-	_update()
+func _on_ready() -> void:
 	%Button.pressed.connect(open_file_dialog)
 	%FileDialog.file_selected.connect(on_file_selected)
 
+
 func on_file_selected(path: String) -> void:
 	value = path
+
 
 func open_file_dialog() -> void:
 	# wrap callable as this one will be automatically disconnected
@@ -51,8 +51,10 @@ func open_file_dialog() -> void:
 	# , CONNECT_ONE_SHOT)
 	%FileDialog.show()
 
-func _update() -> void:
-	if not is_inside_tree(): await ready
+
+func _on_changed() -> void:
+	if not is_inside_tree():
+		await ready
 
 	modulate = Color.WHITE if enabled else Color.from_hsv(0, 0, 0.25)
 

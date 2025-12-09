@@ -6,41 +6,43 @@ class_name SettingColor extends SettingBase
 @export var value := Color.WHITE:
 	set(p_value):
 		value = p_value
-		await _update()
+		await _on_changed()
 		emit_changed()
 
 @export var edit_alpha := true:
 	set(p_value):
 		edit_alpha = p_value
-		_update()
+		_on_changed()
 
 @export var show_html := true:
 	set(p_value):
 		show_html = p_value
-		_update()
+		_on_changed()
 
 @export var panel_style_value: StyleBox = null:
 	set(p_value):
 		panel_style_value = p_value
-		_update()
+		_on_changed()
 
 
-func _ready() -> void:
-	super()
-	%ColorPickerButton.color_changed.connect(func(p_value: Color) -> void:
-		value = p_value
-	)
+func _on_ready() -> void:
+	%ColorPickerButton.color_changed.connect(func(p_value: Color) -> void: value = p_value)
 	# reset to default handler
-	%ColorPickerButton.gui_input.connect(func(event: InputEvent) -> void:
-		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
-			%ColorPickerButton.accept_event()
-			value = reset_value
+	%ColorPickerButton.gui_input.connect(
+		func(event: InputEvent) -> void:
+			if (
+				event is InputEventMouseButton
+				and event.button_index == MOUSE_BUTTON_RIGHT
+				and event.pressed
+			):
+				%ColorPickerButton.accept_event()
+				value = reset_value
 	)
-	_update()
 
 
-func _update() -> void:
-	if not is_inside_tree(): await ready
+func _on_changed() -> void:
+	if not is_inside_tree():
+		await ready
 
 	modulate = Color.WHITE if enabled else Color.from_hsv(0, 0, 0.25)
 	%ColorPickerButton.disabled = !enabled

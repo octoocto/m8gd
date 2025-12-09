@@ -102,9 +102,9 @@ func init_menu(menu: SceneMenu) -> void:
 
 	menu.add_section("Audio Spectrum")
 	var setting_spectrum := menu.add_auto("enable_audio_spectrum")
-	setting_spectrum.setting_add_child_hidden(menu.add_auto("audio_spectrum_color"))
-	setting_spectrum.setting_add_child_hidden(menu.add_auto("audio_spectrum_width"))
-	setting_spectrum.setting_add_child_hidden(menu.add_auto("audio_spectrum_interlace"))
+	menu.add_auto("audio_spectrum_color").show_if(setting_spectrum)
+	menu.add_auto("audio_spectrum_width").show_if(setting_spectrum)
+	menu.add_auto("audio_spectrum_interlace").show_if(setting_spectrum)
 
 	menu.add_section("Jumbotron")
 	menu.add_option_custom("jumbotron_mode", 1, [
@@ -141,27 +141,26 @@ func init_menu(menu: SceneMenu) -> void:
 				%WorldEnvironment.environment.background_mode = Environment.BG_SKY
 	)
 
-	setting_bg_mode.setting_add_child_hidden(menu.add_auto("solid_background_color"),
+	menu.add_auto("solid_background_color").show_if(setting_bg_mode,
 		func(value: int) -> bool: return value == 0
 	)
 
-	setting_bg_mode.setting_add_child_hidden(
-		menu.add_file_custom("background_file", "", func(path: String) -> void:
-			var texture := load_media_to_texture_rect(path, %BGVideoStreamPlayer)
-			%BGTextureRect.texture = texture
-			%WorldEnvironment.environment.sky.sky_material.panorama = texture
-			),
+	menu.add_file_custom("background_file", "", func(path: String) -> void:
+		var texture := load_media_to_texture_rect(path, %BGVideoStreamPlayer)
+		%BGTextureRect.texture = texture
+		%WorldEnvironment.environment.sky.sky_material.panorama = texture
+	).show_if(setting_bg_mode,
 		func(value: int) -> bool: return value != 0
 	)
 
 	menu.add_section("Lighting")
 
 	var setting_light_lamp := menu.add_auto("enable_lamp_light")
-	setting_light_lamp.setting_add_child_hidden(menu.add_auto("lamp_light_color", "• Light Color"))
+	menu.add_auto("lamp_light_color", "• Light Color").show_if(setting_light_lamp)
 	var setting_light_left := menu.add_auto("enable_left_light")
-	setting_light_left.setting_add_child_hidden(menu.add_auto("left_light_color", "• Light Color"))
+	menu.add_auto("left_light_color", "• Light Color").show_if(setting_light_left)
 	var setting_light_right := menu.add_auto("enable_right_light")
-	setting_light_right.setting_add_child_hidden(menu.add_auto("right_light_color", "• Light Color"))
+	menu.add_auto("right_light_color", "• Light Color").show_if(setting_light_right)
 
 func _physics_process(delta: float) -> void:
 

@@ -2,34 +2,30 @@
 class_name SettingBool
 extends SettingBase
 
-
 @export var value := false:
 	set(p_value):
 		value = p_value
-		await _update()
+		await _on_changed()
 		emit_changed()
 
 @export var text_true := "On":
 	set(value):
 		text_true = value
-		_update()
+		_on_changed()
 
 @export var text_false := "Off":
 	set(value):
 		text_false = value
-		_update()
+		_on_changed()
 
 
-func _ready() -> void:
-	super()
-	%CheckButton.toggled.connect(func(p_value: bool) -> void:
-		value = p_value
-	)
-	_update()
+func _on_ready() -> void:
+	%CheckButton.toggled.connect(func(p_value: bool) -> void: value = p_value)
 
 
-func _update() -> void:
-	if not is_inside_tree(): await ready
+func _on_changed() -> void:
+	if not is_inside_tree():
+		await ready
 
 	modulate = Color.WHITE if enabled else Color.from_hsv(0, 0, 0.25)
 	%CheckButton.disabled = !enabled
