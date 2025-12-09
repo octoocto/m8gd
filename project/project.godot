@@ -13,7 +13,7 @@ config_version=5
 config/name="m8gd"
 run/main_scene="res://main.tscn"
 config/auto_accept_quit=false
-config/features=PackedStringArray("4.4")
+config/features=PackedStringArray("4.5")
 boot_splash/show_image=false
 config/icon="res://assets/icon/m8_emoji.png"
 
