@@ -10,7 +10,6 @@ const SETTING_FILE := preload("res://ui/settings/setting_file.tscn")
 
 const LABEL_HEADER := preload("res://ui/label_header.tscn")
 
-
 ##
 ## Automatically create a Setting from a property dictionary (from [get_property_list()]).
 ##

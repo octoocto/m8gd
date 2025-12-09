@@ -15,10 +15,8 @@ extends Control
 var main: Main
 
 func _ready() -> void:
-	if not Engine.is_editor_hint():
+	if not Engine.is_editor_hint() and !Main.instance:
 		await Events.initialized
-	else:
-		await get_tree().create_timer(0.1).timeout
 
 	main = Main.instance
 

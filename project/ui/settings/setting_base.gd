@@ -281,6 +281,8 @@ func setting_add_child_hidden(control: Control, check_fn: Variant = null) -> Set
 	setting_add_child(control, DisableMethod.HIDE, check_fn)
 	return self
 
+func setting_hide_if(cond_fn: Variant) -> void:
+	pass
 
 func setting_add_child(control: Control, mode: DisableMethod, check_fn: Variant = null) -> void:
 	assert(check_fn == null or check_fn is Callable)
