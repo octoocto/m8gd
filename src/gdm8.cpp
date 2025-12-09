@@ -546,6 +546,14 @@ void M8GD::sdl_audio_in_callback(void *userdata, uint8_t *stream, int len)
 		is_float = false;
 		break;
 	}
+	case AUDIO_S32SYS:
+	case AUDIO_S32MSB:
+	{
+		samples = (int32_t *)data_mix.data();
+		sample_count = len / sizeof(int32_t);
+		is_float = false;
+		break;
+	}
 	default:
 	{
 		return;
@@ -683,7 +691,7 @@ bool M8GD::sdl_audio_init(const uint16_t audio_buffer_size, String output_device
 
 	SDL_zero(want_out);
 	want_out.freq = 44100;
-	want_out.format = AUDIO_S16SYS;
+	want_out.format = AUDIO_S32SYS;
 	want_out.channels = 2;
 	want_out.samples = audio_buffer_size;
 
@@ -711,7 +719,7 @@ bool M8GD::sdl_audio_init(const uint16_t audio_buffer_size, String output_device
 
 	SDL_zero(want_in);
 	want_in.freq = 44100;
-	want_in.format = AUDIO_S16SYS;
+	want_in.format = AUDIO_S32SYS;
 	want_in.channels = 2;
 	want_in.samples = audio_buffer_size;
 	want_in.callback = sdl_audio_in_callback;
@@ -738,6 +746,7 @@ bool M8GD::sdl_audio_init(const uint16_t audio_buffer_size, String output_device
 	print("SDL: Audio input device format: %d Hz, %d channels", have_in.freq, have_in.channels);
 	print("SDL:     sample size: %d", have_in.samples);
 	print("SDL:     format: %s", sdl_audio_get_format_name());
+	print("SDL:     bits: %d", SDL_AUDIO_BITSIZE(have_in.format));
 
 	return true;
 }
