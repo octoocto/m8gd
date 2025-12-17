@@ -5,8 +5,7 @@ extends SettingBase
 @export var value := Vector2i.ZERO:
 	set(p_value):
 		value = p_value.clamp(min_value, max_value)
-		await _on_changed()
-		emit_changed()
+		emit_value_changed()
 
 @export var min_value := Vector2i.ZERO:
 	set(p_value):
@@ -21,22 +20,22 @@ extends SettingBase
 @export var show_updown_arrows := false:
 	set(p_value):
 		show_updown_arrows = p_value
-		_on_changed()
+		emit_ui_changed()
 
 @export var prefix_x := "x":
 	set(value):
 		prefix_x = value
-		_on_changed()
+		emit_ui_changed()
 
 @export var prefix_y := "y":
 	set(value):
 		prefix_y = value
-		_on_changed()
+		emit_ui_changed()
 
 @export var prefix_min_width := 0:
 	set(value):
 		prefix_min_width = value
-		_on_changed()
+		emit_ui_changed()
 
 
 func _on_ready() -> void:
@@ -60,7 +59,7 @@ func _on_changed() -> void:
 	%SpinBoxY.editable = enabled
 
 	%LabelName.visible = setting_name != ""
-	%LabelName.text = setting_name
+	%LabelName.text = _format_text(setting_name)
 	%LabelName.custom_minimum_size.x = setting_name_min_width
 
 	%SpinBoxX.theme_type_variation = "" if show_updown_arrows else "SettingControlVec2SpinBox"
@@ -74,7 +73,7 @@ func _on_changed() -> void:
 	%SpinBoxY.value = value.y
 
 	%LabelX.custom_minimum_size.x = prefix_min_width
-	%LabelX.text = prefix_x
+	%LabelX.text = _format_text(prefix_x)
 
 	%LabelY.custom_minimum_size.x = prefix_min_width
-	%LabelY.text = prefix_y
+	%LabelY.text = _format_text(prefix_y)

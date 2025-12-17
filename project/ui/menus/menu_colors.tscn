@@ -1,0 +1,328 @@
+[gd_scene load_steps=24 format=3 uid="uid://xgujtwkeeg3d"]
+
+[ext_resource type="Script" uid="uid://c706g6kqd2k2x" path="res://ui/menus/menu_colors.gd" id="1_47cbk"]
+[ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_vgf3v"]
+[ext_resource type="PackedScene" uid="uid://dsgvm3dda1kjp" path="res://ui/header.tscn" id="3_u1uey"]
+[ext_resource type="PackedScene" uid="uid://b62oydgjq232n" path="res://ui/settings/setting_color.tscn" id="4_2wjjm"]
+[ext_resource type="PackedScene" uid="uid://b1wsbkovx87xh" path="res://ui/label.tscn" id="5_u1uey"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u1uey"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 0.8)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.12549, 0.156863, 0.188235, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+anti_aliasing = false
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2wjjm"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qe20n"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0lq8p"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s4jk7"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1kvlt"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_y3x6y"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_u7xhr"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lbjvk"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hkhyw"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6y6h5"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_d3yoh"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pn84o"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ooq46"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5xjdj"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_c511c"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jbm5g"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2p6jd"]
+
+[node name="MenuColors" type="PanelContainer"]
+texture_filter = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1000.0
+offset_bottom = -821.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_vgf3v")
+theme_override_styles/panel = SubResource("StyleBoxFlat_u1uey")
+script = ExtResource("1_47cbk")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Header2" parent="VBoxContainer/HBoxContainer/VBoxContainer" instance=ExtResource("3_u1uey")]
+layout_mode = 2
+theme_type_variation = &""
+text = "Model: Body"
+top_spacing = false
+
+[node name="SBodyFront" parent="VBoxContainer/HBoxContainer/VBoxContainer" instance=ExtResource("4_2wjjm")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_2wjjm")
+value = Color(0.078431375, 0.078431375, 0.078431375, 1)
+setting_name = "Front"
+setting_name_min_width = 40
+label_alignment = 2
+label_separation = 7
+
+[node name="SBodyBack" parent="VBoxContainer/HBoxContainer/VBoxContainer" instance=ExtResource("4_2wjjm")]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_qe20n")
+setting_name = "Back"
+setting_name_min_width = 40
+label_alignment = 2
+label_separation = 7
+
+[node name="SBodyScrews" parent="VBoxContainer/HBoxContainer/VBoxContainer" instance=ExtResource("4_2wjjm")]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_0lq8p")
+setting_name = "Screws"
+setting_name_min_width = 40
+label_alignment = 2
+label_separation = 7
+
+[node name="SBodyBezel" parent="VBoxContainer/HBoxContainer/VBoxContainer" instance=ExtResource("4_2wjjm")]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_s4jk7")
+setting_name = "Bezel"
+setting_name_min_width = 40
+label_alignment = 2
+label_separation = 7
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 7
+
+[node name="Header3" parent="VBoxContainer/HBoxContainer/VBoxContainer" instance=ExtResource("3_u1uey")]
+layout_mode = 2
+theme_type_variation = &""
+text = "Key Highlights"
+
+[node name="SHighDir" parent="VBoxContainer/HBoxContainer/VBoxContainer" instance=ExtResource("4_2wjjm")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_1kvlt")
+setting_name = "Arrows"
+setting_name_min_width = 40
+label_alignment = 2
+label_separation = 7
+
+[node name="SHighOption" parent="VBoxContainer/HBoxContainer/VBoxContainer" instance=ExtResource("4_2wjjm")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_y3x6y")
+setting_name = "Option"
+setting_name_min_width = 40
+label_alignment = 2
+label_separation = 7
+
+[node name="SHighEdit" parent="VBoxContainer/HBoxContainer/VBoxContainer" instance=ExtResource("4_2wjjm")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_u7xhr")
+setting_name = "Edit"
+setting_name_min_width = 40
+label_alignment = 2
+label_separation = 7
+
+[node name="SHighShift" parent="VBoxContainer/HBoxContainer/VBoxContainer" instance=ExtResource("4_2wjjm")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_lbjvk")
+setting_name = "Shift"
+setting_name_min_width = 40
+label_alignment = 2
+label_separation = 7
+
+[node name="SHighPlay" parent="VBoxContainer/HBoxContainer/VBoxContainer" instance=ExtResource("4_2wjjm")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_hkhyw")
+setting_name = "Play"
+setting_name_min_width = 40
+label_alignment = 2
+label_separation = 7
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Header" parent="VBoxContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("3_u1uey")]
+layout_mode = 2
+theme_type_variation = &""
+text = "Model: Keycaps"
+top_spacing = false
+
+[node name="SKeyUp" parent="VBoxContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("4_2wjjm")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_6y6h5")
+value = Color(0.14901961, 0.14901961, 0.14901961, 1)
+setting_name = "Up"
+setting_name_min_width = 40
+label_alignment = 2
+label_separation = 7
+
+[node name="SKeyDown" parent="VBoxContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("4_2wjjm")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_d3yoh")
+value = Color(0.14901961, 0.14901961, 0.14901961, 1)
+setting_name = "Down"
+setting_name_min_width = 40
+label_alignment = 2
+label_separation = 7
+
+[node name="SKeyLeft" parent="VBoxContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("4_2wjjm")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_pn84o")
+value = Color(0.14901961, 0.14901961, 0.14901961, 1)
+setting_name = "Left"
+setting_name_min_width = 40
+label_alignment = 2
+label_separation = 7
+
+[node name="SKeyRight" parent="VBoxContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("4_2wjjm")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_ooq46")
+value = Color(0.14901961, 0.14901961, 0.14901961, 1)
+setting_name = "Right"
+setting_name_min_width = 40
+label_alignment = 2
+label_separation = 7
+
+[node name="SKeyOption" parent="VBoxContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("4_2wjjm")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_5xjdj")
+value = Color(0.14901961, 0.14901961, 0.14901961, 1)
+setting_name = "Option"
+setting_name_min_width = 40
+label_alignment = 2
+label_separation = 7
+
+[node name="SKeyEdit" parent="VBoxContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("4_2wjjm")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_c511c")
+value = Color(0.14901961, 0.14901961, 0.14901961, 1)
+setting_name = "Edit"
+setting_name_min_width = 40
+label_alignment = 2
+label_separation = 7
+
+[node name="SKeyShift" parent="VBoxContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("4_2wjjm")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_jbm5g")
+value = Color(0.14901961, 0.14901961, 0.14901961, 1)
+setting_name = "Shift"
+setting_name_min_width = 40
+label_alignment = 2
+label_separation = 7
+
+[node name="SKeyPlay" parent="VBoxContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("4_2wjjm")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_2p6jd")
+value = Color(0.14901961, 0.14901961, 0.14901961, 1)
+setting_name = "Play"
+setting_name_min_width = 40
+label_alignment = 2
+label_separation = 7
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" parent="VBoxContainer" instance=ExtResource("5_u1uey")]
+layout_mode = 2
+text = "HL colors will be shown 
+on the 3D model as well 
+as the key-related overlays"
+color_override = 2

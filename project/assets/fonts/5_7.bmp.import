@@ -1,0 +1,25 @@
+[remap]
+
+importer="font_data_image"
+type="FontFile"
+uid="uid://c06qbkkbro8a2"
+path="res://.godot/imported/5_7.bmp-3b4d84591fb2e43e6745f8253be5def5.fontdata"
+
+[deps]
+
+source_file="res://assets/fonts/5_7.bmp"
+dest_files=["res://.godot/imported/5_7.bmp-3b4d84591fb2e43e6745f8253be5def5.fontdata"]
+
+[params]
+
+character_ranges=PackedStringArray("0-127")
+kerning_pairs=PackedStringArray()
+columns=16
+rows=8
+image_margin=Rect2i(0, 0, 0, 0)
+character_margin=Rect2i(0, 0, 0, 0)
+ascent=0
+descent=0
+fallbacks=[]
+compress=true
+scaling_mode=1

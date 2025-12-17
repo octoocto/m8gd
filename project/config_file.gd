@@ -41,8 +41,9 @@ var version: int = 0
 @export var window_height := 720
 @export var always_on_top := false
 @export var ui_scale := 0.0
+@export var ui_text_case := 0  # 0 = normal, 1 = uppercase, 2 = lowercase
 @export var vsync := 1
-@export var fps_cap := 8 # see %Setting_Vsync for items
+@export var fps_cap := 8  # see %Setting_Vsync for items
 
 # graphical settings
 @export var msaa := 0
@@ -61,23 +62,28 @@ var version: int = 0
 @export var audio_to_aberration := 0.02
 
 # audio settings
-@export var audio_handler := 0 # 0 = Godot, 1 = SDL
+@export var audio_handler := 0  # 0 = Godot, 1 = SDL
 @export var volume := 0.8
 
 # misc settings
 @export var debug_info := false
 
 # contains key bindings
-@export var action_events := {} # Dictionary[String, Array]
+@export var action_events := {}  # Dictionary[String, Array]
 @export var virtual_keyboard_enabled := false
+
 
 static func _print(text: String) -> void:
 	print_rich("[color=aqua]config> %s[/color]" % text)
 
+
 ## Returns true if this script contains a default for the given setting.
 ##
 func assert_setting_exists(setting: String) -> void:
-	assert(get(setting) != null, "Setting %s does not exist, must define in config_file.gd" % setting)
+	assert(
+		get(setting) != null, "Setting %s does not exist, must define in config_file.gd" % setting
+	)
+
 
 func save() -> void:
 	var error := ResourceSaver.save(self, CONFIG_FILE_PATH)
@@ -85,6 +91,7 @@ func save() -> void:
 		_print("config saved")
 	else:
 		printerr("failed to save config: %s" % error_string(error))
+
 
 static func load() -> M8Config:
 	var config: M8Config = null
@@ -102,6 +109,7 @@ static func load() -> M8Config:
 	config.init_profile(DEFAULT_PROFILE)
 	return config
 
+
 ##
 ## Get the current scene path according to the current profile and
 ## the current scene in the profile.
@@ -116,6 +124,7 @@ func get_current_scene_path() -> String:
 	var scene_file_path: String = profiles[current_profile]["scene_file_path"]
 	assert(scene_file_path != null)
 	return scene_file_path
+
 
 ##
 ## Create a new profile.
@@ -136,16 +145,16 @@ func init_profile(profile_name: String, use_current_profile_settings := true) ->
 			profiles[profile_name] = profiles[current_profile].duplicate(true)
 		else:
 			profiles[profile_name] = {
-				"scene_file_path": scene_file_path,
-				"scene_properties": {},
-				"properties": {}
+				"scene_file_path": scene_file_path, "scene_properties": {}, "properties": {}
 			}
 		_print("init profile: %s" % profile_name)
 
+
 func list_profile_names() -> Array:
-	return profiles.keys().filter(func(profile_name: String) -> bool:
-		return profile_name != DEFAULT_PROFILE
+	return profiles.keys().filter(
+		func(profile_name: String) -> bool: return profile_name != DEFAULT_PROFILE
 	)
+
 
 ##
 ## Rename the current profile.
@@ -166,6 +175,7 @@ func rename_current_profile(new_profile_name: String) -> void:
 
 	_print("rename profile: %s -> %s" % [old_profile_name, new_profile_name])
 
+
 ##
 ## Create a new profile. A name will be generated.
 ##
@@ -185,6 +195,7 @@ func create_new_profile() -> String:
 	assert(false)
 	return ""
 
+
 ##
 ## Delete a profile.
 ##
@@ -193,6 +204,7 @@ func delete_profile(profile_name: String) -> void:
 	assert(profile_name != current_profile)
 	profiles.erase(profile_name)
 	_print("deleted profile: %s" % [profile_name])
+
 
 ##
 ## Set the current profile. The saved current scene path of the new profile
@@ -206,11 +218,13 @@ func use_profile(profile_name: String) -> void:
 	current_profile = profile_name
 	_print("USING profile: %s" % profile_name)
 
+
 func clear_scene_parameters(scene: M8Scene) -> void:
 	var profile: Dictionary = profiles[current_profile]
 	var scene_prop_dict: Dictionary = profile["scene_properties"]
 	scene_prop_dict.erase(scene.scene_file_path)
 	_print("CLEARED scene properties for path: %s" % scene.scene_file_path)
+
 
 ##
 ## Set the current scene for the current profile.
@@ -222,6 +236,7 @@ func use_scene(scene: M8Scene) -> void:
 	assert(scene != null)
 	profiles[current_profile]["scene_file_path"] = scene.scene_file_path
 	_print("USING scene file path: %s" % scene.scene_file_path)
+
 
 ##
 ## Get the scene properties dict for the current profile/scene.
@@ -237,11 +252,13 @@ func _get_scene_properties() -> Dictionary:
 
 	return scene_prop_dict[scene_file_path]
 
+
 ##
 ## Get the properties dict for the current profile.
 ##
 func _get_profile_properties() -> Dictionary:
 	return profiles[current_profile]["properties"]
+
 
 ##
 ## Get a scene property for the current profile and current scene.
@@ -259,6 +276,7 @@ func get_property_scene(propname: String, default: Variant = null) -> Variant:
 	# _print("GET scene prop: %s, value = %s" % [propname, scene_props[propname]])
 	return scene_props[propname]
 
+
 ##
 ## Set a scene property for the current profile and current scene.
 ##
@@ -267,6 +285,7 @@ func set_property_scene(propname: String, value: Variant) -> void:
 	if !scene_props.has(propname) or scene_props[propname] != value:
 		scene_props[propname] = value
 		_print("SET scene prop: %s = %s" % [propname, value])
+
 
 ##
 ## Get a property for the current profile.
@@ -282,15 +301,17 @@ func get_property(propname: String, default: Variant = null) -> Variant:
 	# _print("GET profile prop: %s, value = %s" % [propname, props[propname]])
 	return props[propname]
 
+
 ##
 ## Set a property for the current profile.
 ##
 func set_property(propname: String, value: Variant) -> void:
 	var props := _get_profile_properties()
 
-	if !props.has(propname) or props[propname] != value:
+	if !props.has(propname) or props[propname] != type_convert(value, typeof(props[propname])):
 		props[propname] = value
 		_print("SET profile prop: %s = %s" % [propname, value])
+
 
 ##
 ## Set a global config setting.
@@ -301,6 +322,7 @@ func set_property_global(property: String, value: Variant) -> void:
 		set(property, value)
 		_print("SET global prop: %s = %s" % [property, value])
 
+
 ##
 ## Get a global config setting.
 ##
@@ -310,6 +332,7 @@ func get_property_global(property: String) -> Variant:
 	# _print("GET global prop: %s, value = %s" % [property, value])
 	return value
 
+
 ##
 ## Set a profile's hotkey to an [InputEvent].
 ##
@@ -318,6 +341,7 @@ func set_profile_hotkey(profile_name: String, event: InputEvent) -> void:
 		profile_hotkeys[profile_name] = event
 		_print("set profile hotkey: %s -> %s" % [event.as_text(), profile_name])
 
+
 ##
 ## Returns a profile's hotkey ([InputEvent]). If the profile does not have a hotkey,
 ## returns [null].
@@ -325,27 +349,33 @@ func set_profile_hotkey(profile_name: String, event: InputEvent) -> void:
 func get_profile_hotkey(profile_name: String) -> Variant:
 	return profile_hotkeys.get(profile_name)
 
+
 func clear_profile_hotkey(profile_name: String) -> void:
 	profile_hotkeys.erase(profile_name)
 	_print("cleared profile hotkey for: %s" % profile_name)
+
 
 func set_overlay_hotkey(overlay_node_path: String, event: InputEvent) -> void:
 	if event:
 		overlay_hotkeys[overlay_node_path] = event
 		_print("set overlay hotkey: %s -> %s" % [event.as_text(), overlay_node_path])
 
+
 func get_overlay_hotkey(overlay_node_path: String) -> Variant:
 	return overlay_hotkeys.get(overlay_node_path)
+
 
 func clear_overlay_hotkey(overlay_node_path: String) -> void:
 	profile_hotkeys.erase(overlay_node_path)
 	_print("cleared overlay hotkey for: %s" % overlay_node_path)
+
 
 func find_profile_name_from_hotkey(event: InputEvent) -> Variant:
 	for key: String in profile_hotkeys.keys():
 		if event.is_match(profile_hotkeys[key]):
 			return key
 	return null
+
 
 func find_overlay_node_path_from_hotkey(event: InputEvent) -> Variant:
 	for key: String in overlay_hotkeys.keys():

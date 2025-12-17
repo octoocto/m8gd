@@ -1,29 +1,72 @@
-[gd_scene load_steps=8 format=3 uid="uid://bpojkt73l3brw"]
+[gd_scene load_steps=17 format=3 uid="uid://bpojkt73l3brw"]
 
-[ext_resource type="PackedScene" uid="uid://dsgvm3dda1kjp" path="res://ui/label_header.tscn" id="1_0nw4r"]
-[ext_resource type="Script" uid="uid://d1xdu68kv6hkb" path="res://ui/menus/menu_video.gd" id="1_8qcof"]
+[ext_resource type="PackedScene" uid="uid://dsgvm3dda1kjp" path="res://ui/header.tscn" id="1_0nw4r"]
+[ext_resource type="Script" uid="uid://dlg50jmen7ey3" path="res://ui/menus/menu_video.gd" id="1_8qcof"]
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_j5lkk"]
 [ext_resource type="PackedScene" uid="uid://c5kj1uj0ohnmm" path="res://ui/settings/setting_bool.tscn" id="2_8qcof"]
 [ext_resource type="PackedScene" uid="uid://bgsxagi62acni" path="res://ui/settings/setting_options.tscn" id="3_j5lkk"]
 [ext_resource type="PackedScene" uid="uid://bevoopcdq5dsh" path="res://ui/settings/setting_vec2i.tscn" id="4_jvvms"]
 [ext_resource type="PackedScene" uid="uid://b1r8nehsgp111" path="res://ui/settings/setting_number.tscn" id="5_ho738"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_02p3k"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 0.8)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.12549, 0.156863, 0.188235, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+anti_aliasing = false
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_yelf4"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ttcy5"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ks7ik"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_n6uti"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_b71wq"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4aktw"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5jwol"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8trh0"]
+
 [node name="Video" type="PanelContainer"]
-custom_minimum_size = Vector2(320, 240)
+texture_filter = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = -5.0
+offset_right = -1070.0
+offset_bottom = -758.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_j5lkk")
+theme_override_styles/panel = SubResource("StyleBoxFlat_02p3k")
 script = ExtResource("1_8qcof")
 metadata/_tab_index = 5
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="LabelHeader" parent="VBoxContainer" instance=ExtResource("1_0nw4r")]
 layout_mode = 2
+theme_type_variation = &""
 text = "UI"
 top_spacing = false
 
@@ -33,14 +76,23 @@ layout_mode = 2
 [node name="Setting_UIScale" parent="VBoxContainer/VBoxContainer3" instance=ExtResource("5_ho738")]
 unique_name_in_owner = true
 layout_mode = 2
-setting_value_min_width = 80
+setting_value_min_width = 24
 max_value = 4.0
+show_ticks = true
 setting_name = "UI Scale"
+
+[node name="STextCasing" parent="VBoxContainer/VBoxContainer3" instance=ExtResource("3_j5lkk")]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_yelf4")
+items = PackedStringArray("Normal", "Uppercase", "Lowercase")
+value = 0
+setting_name = "Text Casing"
 
 [node name="LabelHeader3" parent="VBoxContainer" instance=ExtResource("1_0nw4r")]
 layout_mode = 2
+theme_type_variation = &""
 text = "Display"
-top_spacing = false
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -54,25 +106,19 @@ setting_name = "Fullscreen"
 unique_name_in_owner = true
 layout_mode = 2
 setting_name = "Borderless Window"
-parent_setting = NodePath("../Setting_Fullscreen")
-parent_setting_invert = true
 
 [node name="Setting_AlwaysOnTop" parent="VBoxContainer/VBoxContainer2" instance=ExtResource("2_8qcof")]
 unique_name_in_owner = true
 layout_mode = 2
 setting_name = "Always on Top"
-parent_setting = NodePath("../Setting_Fullscreen")
-parent_setting_invert = true
 
 [node name="Setting_WindowSize" parent="VBoxContainer/VBoxContainer2" instance=ExtResource("3_j5lkk")]
 unique_name_in_owner = true
 layout_mode = 2
-setting_type = 1
+theme_override_styles/panel = SubResource("StyleBoxEmpty_ttcy5")
 items = PackedStringArray("640x480 (2x M01)", "960x720 (3x M01)", "1280x960 (4x M01)", "960x640 (2x M02)", "1440x960 (3x M02)", "1920x1280 (4x M02)", "Custom")
 value = 6
 setting_name = "Window Size"
-parent_setting = NodePath("../Setting_Fullscreen")
-parent_setting_invert = true
 
 [node name="Setting_CustomWindowSize" parent="VBoxContainer/VBoxContainer2" instance=ExtResource("4_jvvms")]
 unique_name_in_owner = true
@@ -81,12 +127,11 @@ value = Vector2i(640, 480)
 min_value = Vector2i(640, 480)
 max_value = Vector2i(3840, 2160)
 setting_name = "Custom Window Size"
-parent_setting = NodePath("../Setting_Fullscreen")
-parent_setting_invert = true
 
 [node name="Setting_VSync" parent="VBoxContainer/VBoxContainer2" instance=ExtResource("3_j5lkk")]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_ks7ik")
 items = PackedStringArray("Disabled", "Enabled", "Adaptive", "Mailbox")
 value = 1
 setting_name = "VSync"
@@ -94,12 +139,14 @@ setting_name = "VSync"
 [node name="Setting_FPSLimit" parent="VBoxContainer/VBoxContainer2" instance=ExtResource("3_j5lkk")]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_n6uti")
 items = PackedStringArray("30", "45", "60", "72", "90", "120", "144", "240", "Unlimited")
 value = 8
 setting_name = "FPS Limit"
 
 [node name="LabelHeader2" parent="VBoxContainer" instance=ExtResource("1_0nw4r")]
 layout_mode = 2
+theme_type_variation = &""
 text = "Graphics"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
@@ -108,6 +155,7 @@ layout_mode = 2
 [node name="Setting_MSAA" parent="VBoxContainer/VBoxContainer" instance=ExtResource("3_j5lkk")]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_b71wq")
 items = PackedStringArray("Disabled", "2x", "4x", "8x")
 value = 0
 setting_name = "MSAA"
@@ -120,6 +168,7 @@ setting_name = "TAA"
 [node name="Setting_UpscalingMethod" parent="VBoxContainer/VBoxContainer" instance=ExtResource("3_j5lkk")]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_4aktw")
 items = PackedStringArray("None (Bilinear)", "FSR 1.0", "FSR 2.2")
 value = 0
 setting_name = "Upscaling Method"
@@ -128,6 +177,7 @@ setting_name = "Upscaling Method"
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 1
+setting_value_min_width = 24
 min_value = 0.25
 max_value = 2.0
 step = 0.05
@@ -139,8 +189,8 @@ setting_name = "Render Scale"
 [node name="Setting_FSRSharpness" parent="VBoxContainer/VBoxContainer" instance=ExtResource("5_ho738")]
 unique_name_in_owner = true
 layout_mode = 2
+setting_value_min_width = 24
 max_value = 5.0
-value = 3.0
 show_ticks = true
 format_string = "%d"
 setting_name = "FSR Sharpness"
@@ -148,13 +198,15 @@ setting_name = "FSR Sharpness"
 [node name="Setting_DOFShape" parent="VBoxContainer/VBoxContainer" instance=ExtResource("3_j5lkk")]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_5jwol")
 items = PackedStringArray("Box", "Hexagon", "Circle")
 value = 1
-setting_name = "DOF Blur Bokeh Shape"
+setting_name = "DOF Bokeh Shape"
 
 [node name="Setting_DOFQuality" parent="VBoxContainer/VBoxContainer" instance=ExtResource("3_j5lkk")]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_8trh0")
 items = PackedStringArray("Very Low", "Low", "Medium", "High")
 value = 2
-setting_name = "DOF Blur Quality"
+setting_name = "DOF Quality"

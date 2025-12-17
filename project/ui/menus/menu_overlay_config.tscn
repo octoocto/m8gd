@@ -1,58 +1,77 @@
-[gd_scene load_steps=6 format=3 uid="uid://bebvc2datqp85"]
+[gd_scene load_steps=10 format=3 uid="uid://bebvc2datqp85"]
 
 [ext_resource type="Script" uid="uid://fidys4f757e6" path="res://ui/menus/menu_overlay_config.gd" id="1_biga6"]
-[ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_t3dyr"]
-[ext_resource type="PackedScene" uid="uid://dsgvm3dda1kjp" path="res://ui/label_header.tscn" id="3_40ori"]
+[ext_resource type="PackedScene" uid="uid://m4rgiakfy3m2" path="res://ui/menus/menu_frame.tscn" id="1_qowy2"]
+[ext_resource type="PackedScene" uid="uid://dsgvm3dda1kjp" path="res://ui/header.tscn" id="3_40ori"]
 [ext_resource type="PackedScene" uid="uid://bgsxagi62acni" path="res://ui/settings/setting_options.tscn" id="3_q4g74"]
 [ext_resource type="PackedScene" uid="uid://bevoopcdq5dsh" path="res://ui/settings/setting_vec2i.tscn" id="4_s6r0s"]
 
-[node name="MenuElement" type="PanelContainer"]
-custom_minimum_size = Vector2(320, 240)
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 0
-size_flags_vertical = 8
-theme = ExtResource("1_t3dyr")
-theme_type_variation = &"SubmenuPanelContainer"
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qowy2"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 0.8)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.12549, 0.156863, 0.188235, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0j0w0"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.12549, 0.156863, 0.188235, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w705f"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(1, 0.12549, 0.25098, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ypwpy"]
+
+[node name="MenuFrame" instance=ExtResource("1_qowy2")]
+theme_override_styles/panel = SubResource("StyleBoxFlat_qowy2")
 script = ExtResource("1_biga6")
+show_close_button = true
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-layout_mode = 2
-theme_override_constants/separation = 8
+[node name="ButtonClose" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" index="1"]
+theme_override_styles/panel = SubResource("StyleBoxFlat_0j0w0")
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
-custom_minimum_size = Vector2(320, 320)
-layout_mode = 2
-mouse_filter = 2
-horizontal_scroll_mode = 0
+[node name="ButtonExit" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" index="2"]
+theme_override_styles/panel = SubResource("StyleBoxFlat_w705f")
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/ScrollContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/ContentContainer" index="0"]
 layout_mode = 2
 
-[node name="LabelTarget" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("3_40ori")]
+[node name="Header" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="0" instance=ExtResource("3_40ori")]
+layout_mode = 2
+theme_type_variation = &""
+text = "Position / Size"
+
+[node name="Setting_Anchor" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="1" instance=ExtResource("3_q4g74")]
 unique_name_in_owner = true
 layout_mode = 2
-text = "OverlayAudioSpectrum"
-top_spacing = false
-
-[node name="Setting_Anchor" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("3_q4g74")]
-unique_name_in_owner = true
-layout_mode = 2
-setting_type = 1
+theme_override_styles/panel = SubResource("StyleBoxEmpty_ypwpy")
 items = PackedStringArray("Top Left", "Top Right", "Bottom Left", "Bottom Right", "Center Left", "Center Top", "Center Right", "Center Bottom", "Center")
 value = 0
 setting_name = "Anchor"
 setting_name_min_width = 50
 
-[node name="Setting_Position" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("4_s6r0s")]
+[node name="Setting_Position" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="2" instance=ExtResource("4_s6r0s")]
 unique_name_in_owner = true
 layout_mode = 2
 min_value = Vector2i(-3000, -3000)
@@ -62,7 +81,7 @@ prefix_min_width = 10
 setting_name = "Position"
 setting_name_min_width = 50
 
-[node name="Setting_Size" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer" instance=ExtResource("4_s6r0s")]
+[node name="Setting_Size" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="3" instance=ExtResource("4_s6r0s")]
 unique_name_in_owner = true
 layout_mode = 2
 min_value = Vector2i(-3000, -3000)
@@ -74,107 +93,11 @@ prefix_min_width = 10
 setting_name = "Size"
 setting_name_min_width = 50
 
-[node name="GridContainer" type="GridContainer" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer"]
-visible = false
+[node name="Header2" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="4" instance=ExtResource("3_40ori")]
 layout_mode = 2
-columns = 2
+theme_type_variation = &""
+text = "Parameters"
 
-[node name="Label" type="Label" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Anchor"
-
-[node name="Option_Anchor" type="OptionButton" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
+[node name="ParamContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="5"]
 unique_name_in_owner = true
 layout_mode = 2
-
-[node name="Label2" type="Label" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Position"
-
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/GridContainer/HBoxContainer"]
-custom_minimum_size = Vector2(16, 0)
-layout_mode = 2
-text = "X"
-horizontal_alignment = 1
-
-[node name="Spin_PosX" type="SpinBox" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/GridContainer/HBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-min_value = -3000.0
-max_value = 3000.0
-rounded = true
-allow_greater = true
-allow_lesser = true
-suffix = "px"
-
-[node name="Label2" type="Label" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/GridContainer/HBoxContainer"]
-custom_minimum_size = Vector2(16, 0)
-layout_mode = 2
-text = "Y"
-horizontal_alignment = 1
-
-[node name="Spin_PosY" type="SpinBox" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/GridContainer/HBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-min_value = -3000.0
-max_value = 3000.0
-rounded = true
-allow_greater = true
-allow_lesser = true
-suffix = "px"
-
-[node name="Label3" type="Label" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Size"
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/GridContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/GridContainer/HBoxContainer2"]
-custom_minimum_size = Vector2(16, 0)
-layout_mode = 2
-text = "W"
-horizontal_alignment = 1
-
-[node name="Spin_SizeW" type="SpinBox" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/GridContainer/HBoxContainer2"]
-unique_name_in_owner = true
-layout_mode = 2
-min_value = -3000.0
-max_value = 3000.0
-rounded = true
-allow_greater = true
-allow_lesser = true
-suffix = "px"
-
-[node name="Label2" type="Label" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/GridContainer/HBoxContainer2"]
-custom_minimum_size = Vector2(16, 0)
-layout_mode = 2
-text = "H"
-horizontal_alignment = 1
-
-[node name="Spin_SizeH" type="SpinBox" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer/GridContainer/HBoxContainer2"]
-unique_name_in_owner = true
-layout_mode = 2
-min_value = -3000.0
-max_value = 3000.0
-rounded = true
-allow_greater = true
-allow_lesser = true
-suffix = "px"
-
-[node name="ParamContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="ButtonFinish" type="Button" parent="VBoxContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 28)
-layout_mode = 2
-theme_type_variation = &"ButtonGreen"
-text = "Finish"

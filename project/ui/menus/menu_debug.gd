@@ -1,7 +1,7 @@
 @tool
 extends MenuBase
 
-func _menu_init() -> void:
+func _on_menu_init() -> void:
 	var config := main.config
 
 	# custom font loading

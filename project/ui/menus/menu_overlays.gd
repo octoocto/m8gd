@@ -9,18 +9,20 @@ extends MenuBase
 @onready var s_display_enable: SettingBase = %Setting_OverlayDisplay
 @onready var s_keys_enable: SettingBase = %Setting_OverlayKeys
 
-@onready var btn_spectrum_config: SettingButton = %Button_OverlaySpectrumConfig
-@onready var btn_waveform_config: SettingButton = %Button_OverlayWaveformConfig
-@onready var btn_display_config: SettingButton = %Button_OverlayDisplayConfig
-@onready var btn_keys_config: SettingButton = %Button_OverlayKeysConfig
+@onready var button_spectrum_config: UIButton = %Button_OverlaySpectrumConfig
+@onready var button_waveform_config: UIButton = %Button_OverlayWaveformConfig
+@onready var button_display_config: UIButton = %Button_OverlayDisplayConfig
+@onready var button_keys_config: UIButton = %Button_OverlayKeysConfig
 
-func _menu_init() -> void:
-	s_scale.setting_connect_profile("overlay_scale", func(value: int) -> void:
-		main.overlay_integer_zoom = value
+
+func _on_menu_init() -> void:
+	s_scale.setting_connect_profile(
+		"overlay_scale", func(value: int) -> void: main.overlay_integer_zoom = value
 	)
 
-	s_apply_filters.setting_connect_profile("overlay_apply_filters", func(value: bool) -> void:
-		main.get_node("%OverlayContainer").z_index = 0 if value else 1
+	s_apply_filters.setting_connect_profile(
+		"overlay_apply_filters",
+		func(value: bool) -> void: main.get_node("%OverlayContainer").z_index = 0 if value else 1
 	)
 
 	s_spectrum_enable.setting_connect_overlay(main.overlay_spectrum, "visible")
@@ -28,46 +30,51 @@ func _menu_init() -> void:
 	s_display_enable.setting_connect_overlay(main.overlay_display, "visible")
 	s_keys_enable.setting_connect_overlay(main.overlay_keys, "visible")
 
-	btn_spectrum_config.enable_if(s_spectrum_enable)
-	btn_waveform_config.enable_if(s_waveform_enable)
-	btn_display_config.enable_if(s_display_enable)
-	btn_keys_config.enable_if(s_keys_enable)
+	button_spectrum_config.enable_if(s_spectrum_enable)
+	button_waveform_config.enable_if(s_waveform_enable)
+	button_display_config.enable_if(s_display_enable)
+	button_keys_config.enable_if(s_keys_enable)
 
-	main.overlay_waveform.visibility_changed.connect(func() -> void:
-		s_waveform_enable.value = main.overlay_waveform.visible
+	main.overlay_waveform.visibility_changed.connect(
+		func() -> void: s_waveform_enable.value = main.overlay_waveform.visible
 	)
-	main.overlay_spectrum.visibility_changed.connect(func() -> void:
-		s_spectrum_enable.value = main.overlay_spectrum.visible
+	main.overlay_spectrum.visibility_changed.connect(
+		func() -> void: s_spectrum_enable.value = main.overlay_spectrum.visible
 	)
-	main.overlay_display.visibility_changed.connect(func() -> void:
-		s_display_enable.value = main.overlay_display.visible
+	main.overlay_display.visibility_changed.connect(
+		func() -> void: s_display_enable.value = main.overlay_display.visible
 	)
-	main.overlay_keys.visibility_changed.connect(func() -> void:
-		s_keys_enable.value = main.overlay_keys.visible
-	)
-
-	Events.profile_loaded.connect(func(_profile_name: String) -> void:
-		s_scale.reinit()
-		s_apply_filters.reinit()
-		s_spectrum_enable.reinit()
-		s_waveform_enable.reinit()
-		s_display_enable.reinit()
-		s_keys_enable.reinit()
+	main.overlay_keys.visibility_changed.connect(
+		func() -> void: s_keys_enable.value = main.overlay_keys.visible
 	)
 
-	btn_spectrum_config.pressed.connect(func() -> void:
-		main.menu.menu_hide()
-		main.menu_overlay.menu_show_for(main.overlay_spectrum)
+	Events.profile_loaded.connect(
+		func(_profile_name: String) -> void:
+			s_scale.reinit()
+			s_apply_filters.reinit()
+			s_spectrum_enable.reinit()
+			s_waveform_enable.reinit()
+			s_display_enable.reinit()
+			s_keys_enable.reinit()
 	)
-	btn_waveform_config.pressed.connect(func() -> void:
-		main.menu.menu_hide()
-		main.menu_overlay.menu_show_for(main.overlay_waveform)
+
+	button_spectrum_config.pressed.connect(
+		func() -> void:
+			main.menu.menu_hide()
+			main.menu_overlay.menu_show_for(main.overlay_spectrum)
 	)
-	btn_display_config.pressed.connect(func() -> void:
-		main.menu.menu_hide()
-		main.menu_overlay.menu_show_for(main.overlay_display)
+	button_waveform_config.pressed.connect(
+		func() -> void:
+			main.menu.menu_hide()
+			main.menu_overlay.menu_show_for(main.overlay_waveform)
 	)
-	btn_keys_config.pressed.connect(func() -> void:
-		main.menu.menu_hide()
-		main.menu_overlay.menu_open(main.overlay_keys)
+	button_display_config.pressed.connect(
+		func() -> void:
+			main.menu.menu_hide()
+			main.menu_overlay.menu_show_for(main.overlay_display)
+	)
+	button_keys_config.pressed.connect(
+		func() -> void:
+			main.menu.menu_hide()
+			main.menu_overlay.menu_show_for(main.overlay_keys)
 	)

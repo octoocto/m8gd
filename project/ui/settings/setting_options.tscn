@@ -1,8 +1,13 @@
 [gd_scene load_steps=11 format=3 uid="uid://bgsxagi62acni"]
 
-[ext_resource type="Script" uid="uid://haaof64iq0x" path="res://ui/settings/setting_options.gd" id="1_62opn"]
-[ext_resource type="Texture2D" uid="uid://berrl0h2qkkl1" path="res://assets/icon/Left.png" id="2_nt80f"]
-[ext_resource type="Texture2D" uid="uid://cy2a8jk77wcps" path="res://assets/icon/Right.png" id="3_b0e6p"]
+[ext_resource type="Script" uid="uid://f8yecfgsagqd" path="res://ui/settings/setting_options.gd" id="1_62opn"]
+[ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_wt44y"]
+[ext_resource type="PackedScene" uid="uid://b1wsbkovx87xh" path="res://ui/label.tscn" id="3_6ucju"]
+[ext_resource type="Texture2D" uid="uid://ljjq2k7k561i" path="res://assets/icon/arrow_left.png" id="4_leq1h"]
+[ext_resource type="PackedScene" uid="uid://dqm2w5ummvxsm" path="res://ui/option_button.tscn" id="4_wt44y"]
+[ext_resource type="Texture2D" uid="uid://b0ff3wgrdwadf" path="res://assets/icon/arrow_right.png" id="5_3ai42"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3ai42"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_o323t"]
 content_margin_left = 4.0
@@ -18,81 +23,64 @@ Button/styles/hover_pressed = SubResource("StyleBoxEmpty_o323t")
 Button/styles/normal = SubResource("StyleBoxEmpty_o323t")
 Button/styles/pressed = SubResource("StyleBoxEmpty_o323t")
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4o1pr"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fgopn"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_o8f60"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hvit7"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_m06sh"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_leq1h"]
 
 [node name="SettingOptions" type="PanelContainer"]
-offset_right = 132.0
-offset_bottom = 27.0
+texture_filter = 1
+offset_right = 13.0
+offset_bottom = 3.0
 size_flags_horizontal = 3
 size_flags_vertical = 4
-theme_type_variation = &"SettingBackground"
+theme = ExtResource("1_wt44y")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_3ai42")
 script = ExtResource("1_62opn")
+setting_type = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
+size_flags_vertical = 4
 
-[node name="LabelName" type="Label" parent="HBoxContainer"]
+[node name="LabelName" parent="HBoxContainer" instance=ExtResource("3_6ucju")]
 unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(160, 0)
+custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
-text = "tes"
 
-[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_type_variation = &"SettingControl"
-
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/PanelContainer"]
-layout_mode = 2
 size_flags_vertical = 4
 theme_override_constants/separation = 8
 
-[node name="ButtonLeft" type="Button" parent="HBoxContainer/PanelContainer/HBoxContainer"]
+[node name="ButtonLeft" type="Button" parent="HBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 size_flags_vertical = 4
 theme = SubResource("Theme_5snsi")
+theme_type_variation = &"ButtonLeft"
 disabled = true
-icon = ExtResource("2_nt80f")
-flat = true
+icon = ExtResource("4_leq1h")
 
-[node name="LabelValue" type="Label" parent="HBoxContainer/PanelContainer/HBoxContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(60, 0)
-layout_mode = 2
-size_flags_horizontal = 3
-horizontal_alignment = 1
-vertical_alignment = 1
-autowrap_mode = 1
-
-[node name="ButtonRight" type="Button" parent="HBoxContainer/PanelContainer/HBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 4
-theme = SubResource("Theme_5snsi")
-disabled = true
-icon = ExtResource("3_b0e6p")
-flat = true
-
-[node name="OptionButton" type="OptionButton" parent="HBoxContainer/PanelContainer/HBoxContainer"]
+[node name="LabelValue" parent="HBoxContainer/HBoxContainer" instance=ExtResource("3_6ucju")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
+horizontal_alignment = 1
+
+[node name="ButtonRight" type="Button" parent="HBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
 size_flags_vertical = 4
-theme_override_styles/focus = SubResource("StyleBoxEmpty_4o1pr")
-theme_override_styles/disabled = SubResource("StyleBoxEmpty_fgopn")
-theme_override_styles/hover = SubResource("StyleBoxEmpty_o8f60")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_hvit7")
-theme_override_styles/normal = SubResource("StyleBoxEmpty_m06sh")
-flat = true
-alignment = 1
+theme = SubResource("Theme_5snsi")
+theme_type_variation = &"ButtonRight"
+disabled = true
+icon = ExtResource("5_3ai42")
+
+[node name="OptionButton" parent="HBoxContainer/HBoxContainer" instance=ExtResource("4_wt44y")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_leq1h")

@@ -5,45 +5,44 @@ extends SettingBase
 @export var value := Vector3.ZERO:
 	set(p_value):
 		value = p_value.clamp(min_value, max_value)
-		await _on_changed()
-		emit_changed()
+		emit_value_changed()
 
 @export var min_value := Vector3.ZERO:
 	set(p_value):
 		min_value = p_value
 		value = value
-		_on_changed()
+		emit_ui_changed()
 
 @export var max_value := Vector3(100, 100, 100):
 	set(p_value):
 		max_value = p_value
 		value = value
-		_on_changed()
+		emit_ui_changed()
 
 @export var show_updown_arrows := false:
 	set(p_value):
 		show_updown_arrows = p_value
-		_on_changed()
+		emit_ui_changed()
 
 @export var prefix_x := "x":
 	set(value):
 		prefix_x = value
-		_on_changed()
+		emit_ui_changed()
 
 @export var prefix_y := "y":
 	set(value):
 		prefix_y = value
-		_on_changed()
+		emit_ui_changed()
 
 @export var prefix_z := "z":
 	set(value):
 		prefix_z = value
-		_on_changed()
+		emit_ui_changed()
 
 @export var suffix := "":
 	set(value):
 		suffix = value
-		_on_changed()
+		emit_ui_changed()
 
 
 func _on_ready() -> void:
@@ -78,7 +77,7 @@ func _on_changed() -> void:
 		%LabelName.visible = false
 	else:
 		%LabelName.visible = true
-		%LabelName.text = setting_name
+		%LabelName.text = _format_text(setting_name)
 
 	%LabelName.custom_minimum_size.x = setting_name_min_width
 

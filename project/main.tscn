@@ -1,4 +1,4 @@
-[gd_scene load_steps=43 format=3 uid="uid://b265ke8cr3dgr"]
+[gd_scene load_steps=45 format=3 uid="uid://b265ke8cr3dgr"]
 
 [ext_resource type="Script" uid="uid://d0olbd611iax7" path="res://main.gd" id="1_4g2n0"]
 [ext_resource type="Shader" uid="uid://ddeledy6hskpq" path="res://shaders/post_process.gdshader" id="1_tjung"]
@@ -13,7 +13,6 @@
 [ext_resource type="Shader" uid="uid://okxo3d88kn1h" path="res://shaders/screen_blur.gdshader" id="7_5hn1q"]
 [ext_resource type="PackedScene" uid="uid://d13t756slc8b0" path="res://ui/menus/main_menu.tscn" id="7_k5oyo"]
 [ext_resource type="PackedScene" uid="uid://ca2jqh2tc7jix" path="res://overlays/overlay_keys.tscn" id="8_dnyct"]
-[ext_resource type="PackedScene" uid="uid://geilakxinhul" path="res://ui/menus/menu_scene_camera.tscn" id="8_v4lip"]
 [ext_resource type="PackedScene" uid="uid://dv8crbibtrpck" path="res://ui/menus/menu_scene_config.tscn" id="9_bisyb"]
 [ext_resource type="FontFile" uid="uid://c2qpt2alp4ic3" path="res://assets/FSEX302.ttf" id="13_82xsv"]
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="13_e5i6c"]
@@ -21,39 +20,10 @@
 [ext_resource type="Script" uid="uid://dboaq4avw66tx" path="res://console.gd" id="14_getpj"]
 [ext_resource type="Texture2D" uid="uid://bmg26rkxtqtso" path="res://assets/icon/Close.png" id="14_p46wh"]
 [ext_resource type="PackedScene" uid="uid://bebvc2datqp85" path="res://ui/menus/menu_overlay_config.tscn" id="16_4bi6d"]
+[ext_resource type="PackedScene" uid="uid://cm2dn40rnose6" path="res://ui/menus/menu_scene_camera.tscn" id="16_getpj"]
+[ext_resource type="Script" path="res://ui/scalable.gd" id="18_d13ii"]
 
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_c3wmn"]
-
-[sub_resource type="StyleBoxLine" id="StyleBoxLine_l1801"]
-color = Color(1, 1, 1, 0.2)
-grow_begin = -8.0
-grow_end = -8.0
-thickness = 2
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hbdmc"]
-content_margin_left = 16.0
-content_margin_top = 16.0
-content_margin_right = 16.0
-content_margin_bottom = 16.0
-bg_color = Color(0, 0, 0, 0.5)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-
-[sub_resource type="Theme" id="Theme_gulif"]
-Button/font_sizes/font_size = 14
-CheckButton/colors/font_color = Color(1, 1, 1, 1)
-HSeparator/constants/separation = 16
-HSeparator/styles/separator = SubResource("StyleBoxLine_l1801")
-Label/font_sizes/font_size = 14
-MarginContainer/constants/margin_bottom = 16
-MarginContainer/constants/margin_left = 32
-MarginContainer/constants/margin_right = 32
-MarginContainer/constants/margin_top = 16
-PanelContainer/styles/panel = SubResource("StyleBoxFlat_hbdmc")
-console/base_type = &"RichTextLabel"
-console/fonts/normal_font = ExtResource("13_82xsv")
 
 [sub_resource type="Gradient" id="Gradient_v10jr"]
 
@@ -179,9 +149,6 @@ shader_parameter/noise_texture = SubResource("NoiseTexture2D_m6tfj")
 shader_parameter/noise_strength = 0.015
 shader_parameter/noise_speed = 1.0
 
-[sub_resource type="LabelSettings" id="LabelSettings_getpj"]
-font = ExtResource("13_82xsv")
-
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0a764"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xqpi0"]
@@ -196,6 +163,93 @@ corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 corner_detail = 4
 anti_aliasing_size = 0.5
+
+[sub_resource type="LabelSettings" id="LabelSettings_getpj"]
+font = ExtResource("13_82xsv")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ryguw"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 0.8)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.12549, 0.156863, 0.188235, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d13ii"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 0.8)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.12549, 0.156863, 0.188235, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1u8w0"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 0.8)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.12549, 0.156863, 0.188235, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0odxb"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 0.8)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.12549, 0.156863, 0.188235, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+anti_aliasing = false
 
 [node name="Main" type="Node"]
 script = ExtResource("1_4g2n0")
@@ -217,7 +271,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = SubResource("Theme_gulif")
+theme = ExtResource("13_e5i6c")
 
 [node name="BackBufferCopy" type="BackBufferCopy" parent="CanvasLayer/UI"]
 copy_mode = 2
@@ -402,7 +456,46 @@ grow_vertical = 2
 visible = false
 copy_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TextureButton" type="Button" parent="CanvasLayer/UI/HBoxContainer"]
+texture_filter = 1
+custom_minimum_size = Vector2(64, 63)
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/h_separation = 12
+icon = ExtResource("13_gepng")
+alignment = 0
+expand_icon = true
+
+[node name="HSeparator" type="VSeparator" parent="CanvasLayer/UI/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_0a764")
+
+[node name="TextureButton2" type="Button" parent="CanvasLayer/UI/HBoxContainer"]
+texture_filter = 1
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/h_separation = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_xqpi0")
+icon = ExtResource("14_p46wh")
+icon_alignment = 2
+expand_icon = true
+
+[node name="SplashContainer" type="CenterContainer" parent="CanvasLayer/UI"]
+unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -410,146 +503,81 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/MarginContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/UI/SplashContainer"]
+custom_minimum_size = Vector2(320, 240)
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_lbvov")
 
-[node name="DebugLabels" type="Control" parent="CanvasLayer/UI/MarginContainer/VBoxContainer"]
-unique_name_in_owner = true
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/SplashContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 64
+theme_override_constants/margin_top = 64
+theme_override_constants/margin_right = 64
+theme_override_constants/margin_bottom = 64
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Control" type="Control" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer"]
 visible = false
-custom_minimum_size = Vector2(0, 120)
+custom_minimum_size = Vector2(320, 240)
 layout_mode = 2
 
-[node name="LabelFPS" type="Label" parent="CanvasLayer/UI/MarginContainer/VBoxContainer/DebugLabels"]
-unique_name_in_owner = true
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer/Control"]
+modulate = Color(1, 0.890196, 0.831373, 1)
+texture_filter = 1
 layout_mode = 0
-offset_top = 4.0
-offset_right = 1.0
-offset_bottom = 27.0
-size_flags_horizontal = 0
-size_flags_vertical = 2
-text = "0"
-label_settings = SubResource("LabelSettings_getpj")
-
-[node name="LabelPort" type="Label" parent="CanvasLayer/UI/MarginContainer/VBoxContainer/DebugLabels"]
-unique_name_in_owner = true
-layout_mode = 0
-offset_top = 32.0
-offset_right = 622.0
-offset_bottom = 55.0
-size_flags_vertical = 10
-text = "serial port"
-label_settings = SubResource("LabelSettings_getpj")
-vertical_alignment = 2
-
-[node name="LabelAudioDevice" type="Label" parent="CanvasLayer/UI/MarginContainer/VBoxContainer/DebugLabels"]
-unique_name_in_owner = true
-layout_mode = 0
-offset_top = 48.0
-offset_right = 622.0
-offset_bottom = 71.0
-size_flags_vertical = 10
-text = "audio device"
-label_settings = SubResource("LabelSettings_getpj")
-vertical_alignment = 2
-
-[node name="LabelHardware" type="Label" parent="CanvasLayer/UI/MarginContainer/VBoxContainer/DebugLabels"]
-unique_name_in_owner = true
-layout_mode = 0
-offset_top = 72.0
-offset_right = 622.0
-offset_bottom = 95.0
-size_flags_vertical = 10
-text = "hardware"
-label_settings = SubResource("LabelSettings_getpj")
-vertical_alignment = 2
-
-[node name="LabelFirmware" type="Label" parent="CanvasLayer/UI/MarginContainer/VBoxContainer/DebugLabels"]
-unique_name_in_owner = true
-layout_mode = 0
-offset_top = 88.0
-offset_right = 622.0
+offset_left = -152.0
+offset_top = -4.0
+offset_right = 159.0
 offset_bottom = 111.0
-size_flags_vertical = 10
-text = "firmware"
-label_settings = SubResource("LabelSettings_getpj")
-vertical_alignment = 2
+scale = Vector2(2, 2)
 
-[node name="LabelAudioPeak" type="Label" parent="CanvasLayer/UI/MarginContainer/VBoxContainer/DebugLabels"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 0
-offset_top = 96.0
-offset_right = 622.0
-offset_bottom = 119.0
-size_flags_vertical = 10
-text = "0.0 dB"
-label_settings = SubResource("LabelSettings_getpj")
-vertical_alignment = 2
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+bbcode_enabled = true
+text = "[center][font size=72]m8gd[/font]
 
-[node name="LabelAudioPeakAvg" type="Label" parent="CanvasLayer/UI/MarginContainer/VBoxContainer/DebugLabels"]
-unique_name_in_owner = true
-visible = false
-modulate = Color(0.75, 0.75, 1, 1)
-layout_mode = 0
-offset_top = 112.0
-offset_right = 622.0
-offset_bottom = 135.0
-size_flags_vertical = 10
-text = "0.0 dB"
-label_settings = SubResource("LabelSettings_getpj")
-vertical_alignment = 2
+[table=2]
+[cell][left]Escape[/left][/cell] [cell][left]Open menu[/left][/cell]
+[cell][left]Mouse LClick    [/left][/cell] [cell][left]Camera zoom[/left][/cell]
+[cell][left]Mouse Move[/left][/cell] [cell][left]Camera pan[/left][/cell]
+[/table]
+[/center]
+"
+fit_content = true
 
-[node name="LabelAudioPeakMax" type="Label" parent="CanvasLayer/UI/MarginContainer/VBoxContainer/DebugLabels"]
-unique_name_in_owner = true
-visible = false
-modulate = Color(1, 0.75, 0.75, 1)
-layout_mode = 0
-offset_top = 128.0
-offset_right = 622.0
-offset_bottom = 151.0
-size_flags_vertical = 10
-text = "0.0 dB"
-label_settings = SubResource("LabelSettings_getpj")
-vertical_alignment = 2
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
 
-[node name="LabelAudioLevel" type="Label" parent="CanvasLayer/UI/MarginContainer/VBoxContainer/DebugLabels"]
-unique_name_in_owner = true
-visible = false
-modulate = Color(0.75, 1, 0.75, 1)
-layout_mode = 0
-offset_top = 152.0
-offset_right = 622.0
-offset_bottom = 175.0
-size_flags_vertical = 10
-text = "0.0 dB"
-label_settings = SubResource("LabelSettings_getpj")
-vertical_alignment = 2
+[node name="Label" type="Label" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Do not show next time"
 
-[node name="RectAudioLevel" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/VBoxContainer/DebugLabels"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 0
-offset_left = 88.0
-offset_top = 156.0
-offset_right = 96.0
-offset_bottom = 172.0
-color = Color(0.5, 1, 0.5, 1)
-
-[node name="RectAudioLevelAvg" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/VBoxContainer/DebugLabels"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 0
-offset_left = 88.0
-offset_top = 156.0
-offset_right = 96.0
-offset_bottom = 172.0
-
-[node name="LabelConsole" type="RichTextLabel" parent="CanvasLayer/UI/MarginContainer/VBoxContainer"]
+[node name="Check_SplashDoNotShow" type="CheckButton" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"console"
-fit_content = true
-script = ExtResource("14_getpj")
+
+[node name="ButtonSplashClose" type="Button" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Dismiss"
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("13_e5i6c")
+theme_override_constants/margin_left = 0
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 0
+theme_override_constants/margin_bottom = 0
 
 [node name="GridContainer" type="GridContainer" parent="CanvasLayer/UI/MarginContainer"]
 layout_mode = 2
@@ -585,23 +613,9 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 8
 
-[node name="SceneCameraMenu" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3" instance=ExtResource("8_v4lip")]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-
-[node name="SceneMenu" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3" instance=ExtResource("9_bisyb")]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-
-[node name="MenuOverlay" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3" instance=ExtResource("16_4bi6d")]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-
 [node name="LabelStatus" type="Label" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 
 [node name="CameraStatus" type="RichTextLabel" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3"]
@@ -718,125 +732,217 @@ layout_mode = 2
 color = Color(1, 1, 1, 0)
 
 [node name="VBoxContainer4" type="VBoxContainer" parent="CanvasLayer/UI/MarginContainer/GridContainer"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="MainMenuPanel" parent="CanvasLayer/UI" instance=ExtResource("7_k5oyo")]
+[node name="ScalableContainer" type="Container" parent="CanvasLayer"]
+anchors_preset = -1
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(2, 2)
+theme = ExtResource("13_e5i6c")
+script = ExtResource("18_d13ii")
+content_scale = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/ScalableContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/ScalableContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="DebugLabels" type="Control" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer2"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+
+[node name="LabelFPS" type="Label" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 4.0
+offset_right = 1.0
+offset_bottom = 27.0
+size_flags_horizontal = 0
+size_flags_vertical = 2
+text = "0"
+label_settings = SubResource("LabelSettings_getpj")
+
+[node name="LabelPort" type="Label" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 32.0
+offset_right = 622.0
+offset_bottom = 55.0
+size_flags_vertical = 10
+text = "serial port"
+label_settings = SubResource("LabelSettings_getpj")
+vertical_alignment = 2
+
+[node name="LabelAudioDevice" type="Label" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 48.0
+offset_right = 622.0
+offset_bottom = 71.0
+size_flags_vertical = 10
+text = "audio device"
+label_settings = SubResource("LabelSettings_getpj")
+vertical_alignment = 2
+
+[node name="LabelHardware" type="Label" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 72.0
+offset_right = 622.0
+offset_bottom = 95.0
+size_flags_vertical = 10
+text = "hardware"
+label_settings = SubResource("LabelSettings_getpj")
+vertical_alignment = 2
+
+[node name="LabelFirmware" type="Label" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 88.0
+offset_right = 622.0
+offset_bottom = 111.0
+size_flags_vertical = 10
+text = "firmware"
+label_settings = SubResource("LabelSettings_getpj")
+vertical_alignment = 2
+
+[node name="LabelAudioPeak" type="Label" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_top = 96.0
+offset_right = 622.0
+offset_bottom = 119.0
+size_flags_vertical = 10
+text = "0.0 dB"
+label_settings = SubResource("LabelSettings_getpj")
+vertical_alignment = 2
+
+[node name="LabelAudioPeakAvg" type="Label" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+unique_name_in_owner = true
+visible = false
+modulate = Color(0.75, 0.75, 1, 1)
+layout_mode = 0
+offset_top = 112.0
+offset_right = 622.0
+offset_bottom = 135.0
+size_flags_vertical = 10
+text = "0.0 dB"
+label_settings = SubResource("LabelSettings_getpj")
+vertical_alignment = 2
+
+[node name="LabelAudioPeakMax" type="Label" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+unique_name_in_owner = true
+visible = false
+modulate = Color(1, 0.75, 0.75, 1)
+layout_mode = 0
+offset_top = 128.0
+offset_right = 622.0
+offset_bottom = 151.0
+size_flags_vertical = 10
+text = "0.0 dB"
+label_settings = SubResource("LabelSettings_getpj")
+vertical_alignment = 2
+
+[node name="LabelAudioLevel" type="Label" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+unique_name_in_owner = true
+visible = false
+modulate = Color(0.75, 1, 0.75, 1)
+layout_mode = 0
+offset_top = 152.0
+offset_right = 622.0
+offset_bottom = 175.0
+size_flags_vertical = 10
+text = "0.0 dB"
+label_settings = SubResource("LabelSettings_getpj")
+vertical_alignment = 2
+
+[node name="RectAudioLevel" type="ColorRect" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 88.0
+offset_top = 156.0
+offset_right = 96.0
+offset_bottom = 172.0
+color = Color(0.5, 1, 0.5, 1)
+
+[node name="RectAudioLevelAvg" type="ColorRect" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 88.0
+offset_top = 156.0
+offset_right = 96.0
+offset_bottom = 172.0
+
+[node name="LabelConsole" type="RichTextLabel" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer2"]
+unique_name_in_owner = true
+texture_filter = 1
+layout_mode = 2
+fit_content = true
+script = ExtResource("14_getpj")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/ScalableContainer/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+mouse_filter = 2
+
+[node name="SceneCameraMenu" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer" instance=ExtResource("16_getpj")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+theme_override_styles/panel = SubResource("StyleBoxFlat_ryguw")
+
+[node name="SceneConfigMenu" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer" instance=ExtResource("9_bisyb")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+theme_override_styles/panel = SubResource("StyleBoxFlat_d13ii")
+
+[node name="MenuOverlay" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer" instance=ExtResource("16_4bi6d")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+theme_override_styles/panel = SubResource("StyleBoxFlat_1u8w0")
+
+[node name="MainMenuContainer" type="ScrollContainer" parent="CanvasLayer/ScalableContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/ScalableContainer/MainMenuContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="MainMenuPanel" parent="CanvasLayer/ScalableContainer/MainMenuContainer/CenterContainer" instance=ExtResource("7_k5oyo")]
 unique_name_in_owner = true
 visible = false
 z_index = 1
-layout_mode = 1
-
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI"]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
-[node name="TextureButton" type="Button" parent="CanvasLayer/UI/HBoxContainer"]
-texture_filter = 1
-custom_minimum_size = Vector2(64, 63)
 layout_mode = 2
+size_flags_horizontal = 0
 size_flags_vertical = 0
-theme_override_constants/h_separation = 12
-icon = ExtResource("13_gepng")
-alignment = 0
-expand_icon = true
-
-[node name="HSeparator" type="VSeparator" parent="CanvasLayer/UI/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-mouse_filter = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_0a764")
-
-[node name="TextureButton2" type="Button" parent="CanvasLayer/UI/HBoxContainer"]
-texture_filter = 1
-custom_minimum_size = Vector2(64, 64)
-layout_mode = 2
-size_flags_vertical = 0
-theme_override_constants/h_separation = 12
-theme_override_styles/normal = SubResource("StyleBoxFlat_xqpi0")
-icon = ExtResource("14_p46wh")
-icon_alignment = 2
-expand_icon = true
-
-[node name="SplashContainer" type="CenterContainer" parent="CanvasLayer/UI"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/UI/SplashContainer"]
-custom_minimum_size = Vector2(320, 240)
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_lbvov")
-
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/SplashContainer/PanelContainer"]
-layout_mode = 2
-theme_override_constants/margin_left = 64
-theme_override_constants/margin_top = 64
-theme_override_constants/margin_right = 64
-theme_override_constants/margin_bottom = 64
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer"]
-layout_mode = 2
-size_flags_vertical = 4
-
-[node name="Control" type="Control" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer"]
-visible = false
-custom_minimum_size = Vector2(320, 240)
-layout_mode = 2
-
-[node name="TextureRect" type="TextureRect" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer/Control"]
-modulate = Color(1, 0.890196, 0.831373, 1)
-texture_filter = 1
-layout_mode = 0
-offset_left = -152.0
-offset_top = -4.0
-offset_right = 159.0
-offset_bottom = 111.0
-scale = Vector2(2, 2)
-
-[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(320, 0)
-layout_mode = 2
-bbcode_enabled = true
-text = "[center][font size=72]m8gd[/font]
-
-[table=2]
-[cell][left]Escape[/left][/cell] [cell][left]Open menu[/left][/cell]
-[cell][left]Mouse LClick    [/left][/cell] [cell][left]Camera zoom[/left][/cell]
-[cell][left]Mouse Move[/left][/cell] [cell][left]Camera pan[/left][/cell]
-[/table]
-[/center]
-"
-fit_content = true
-
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Do not show next time"
-
-[node name="Check_SplashDoNotShow" type="CheckButton" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="ButtonSplashClose" type="Button" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Dismiss"
+theme_override_styles/panel = SubResource("StyleBoxFlat_0odxb")
 
 [node name="M8GD" type="M8GD" parent="."]
 unique_name_in_owner = true

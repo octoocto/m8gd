@@ -5,40 +5,39 @@ extends SettingBase
 @export var value := Vector2.ZERO:
 	set(p_value):
 		value = p_value.clamp(min_value, max_value)
-		await _on_changed()
-		emit_changed()
+		emit_value_changed()
 
 @export var min_value := Vector2.ZERO:
 	set(p_value):
 		min_value = p_value
 		value = value
-		_on_changed()
+		emit_ui_changed()
 
 @export var max_value := Vector2(100, 100):
 	set(p_value):
 		max_value = p_value
 		value = value
-		_on_changed()
+		emit_ui_changed()
 
 @export var show_updown_arrows := false:
 	set(p_value):
 		show_updown_arrows = p_value
-		_on_changed()
+		emit_ui_changed()
 
 @export var prefix_x := "x":
 	set(value):
 		prefix_x = value
-		_on_changed()
+		emit_ui_changed()
 
 @export var prefix_y := "y":
 	set(value):
 		prefix_y = value
-		_on_changed()
+		emit_ui_changed()
 
 @export var suffix := "":
 	set(value):
 		suffix = value
-		_on_changed()
+		emit_ui_changed()
 
 
 func _on_ready() -> void:
@@ -58,12 +57,16 @@ func _on_changed() -> void:
 	if not is_inside_tree():
 		await ready
 
+	%SpinBoxX.get_line_edit().caret_blink = true
+	%SpinBoxX.get_line_edit().add_theme_color_override("selection_color", _pal("input_selection"))
+	%SpinBoxX.get_line_edit().add_theme_color_override("caret_color", _pal("input_caret"))
+
 	modulate = Color.WHITE if enabled else Color.from_hsv(0, 0, 0.25)
 	%SpinBoxX.editable = enabled
 	%SpinBoxY.editable = enabled
 
 	%LabelName.visible = setting_name != ""
-	%LabelName.text = setting_name
+	%LabelName.text = _format_text(setting_name)
 	%LabelName.custom_minimum_size.x = setting_name_min_width
 
 	%SpinBoxX.theme_type_variation = "" if show_updown_arrows else "SettingControlVec2SpinBox"

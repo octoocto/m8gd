@@ -4,12 +4,12 @@
 [ext_resource type="Script" uid="uid://c7061wpajhuc4" path="res://ui/settings/setting_string.gd" id="2_jwi12"]
 
 [node name="SettingString" type="PanelContainer"]
-offset_right = 132.0
-offset_bottom = 27.0
+texture_filter = 1
+offset_right = 22.0
+offset_bottom = 11.0
 size_flags_horizontal = 3
 size_flags_vertical = 4
 theme = ExtResource("1_7udu3")
-theme_type_variation = &"SettingBackground"
 script = ExtResource("2_jwi12")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
@@ -38,3 +38,4 @@ theme_type_variation = &"SettingControl"
 [node name="LineEdit" type="LineEdit" parent="HBoxContainer/PanelContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+placeholder_text = "----------------"

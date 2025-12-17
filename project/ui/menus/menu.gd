@@ -1,35 +1,65 @@
 @tool
-class_name MenuBase
-extends PanelContainer
+@abstract class_name MenuBase
+extends UIBase
 
-const THEME := preload("res://ui/theme/menu_theme.tres")
+const ICON_LOAD := preload("res://assets/icon/icon_folder.png")
+const ICON_WARNING := preload("res://assets/icon/StatusWarning.png")
+
+@export var is_inner_menu: bool = false:
+	set(value):
+		is_inner_menu = value
+		_generate_styleboxes()
+		emit_ui_changed()
 
 var main: Main
 
+var _menu_stylebox: StyleBox
+
+
 func _ready() -> void:
 	if not Engine.is_editor_hint():
-		await Events.initialized
-	else:
-		await get_tree().create_timer(0.1).timeout
-	
-	main = Main.instance
+		if not Main.is_ready():
+			await Events.initialized
+		self.main = Main.instance
 
-	custom_minimum_size = Vector2i(320, 240)
-	anchors_preset = Control.PRESET_FULL_RECT
-	set_theme(THEME)
+	super()
 
-	if not Engine.is_editor_hint():
-		Log.call_task(_menu_init, "init menu '%s'" % name)
+
+## Setup any menu control nodes.
+@abstract func _on_menu_init() -> void
+
 
 func get_tab_title() -> String:
 	return name
 
+
 func menu_show() -> void:
+	_on_changed()
 	show()
+
 
 func menu_hide() -> void:
 	hide()
 
-## Setup any menu control nodes.
-func _menu_init() -> void:
-	assert(false, "_menu_init() not implemented in %s" % name)
+
+func _on_ready() -> void:
+	_generate_styleboxes()
+	if not Engine.is_editor_hint():
+		Log.call_task(_on_menu_init, "init menu '%s'" % name)
+
+
+func _on_changed() -> void:
+	pass
+
+
+func _generate_styleboxes() -> void:
+	_watch_notifications = false
+
+	remove_theme_stylebox_override("panel")
+	if is_inner_menu:
+		_menu_stylebox = get_theme_stylebox("panel_inner", "MenuBase").duplicate()
+	else:
+		_menu_stylebox = get_theme_stylebox("panel_normal", "MenuBase").duplicate()
+	add_theme_stylebox_override("panel", _menu_stylebox)
+
+	_watch_notifications = true
