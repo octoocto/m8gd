@@ -1,0 +1,14 @@
+[gd_resource type="StyleBoxTexture" load_steps=2 format=3 uid="uid://c21o4cguy3ohp"]
+
+[ext_resource type="Texture2D" uid="uid://c8lf01vl0yo3a" path="res://assets/icon/cursor.png" id="1_1pbsj"]
+
+[resource]
+texture = ExtResource("1_1pbsj")
+texture_margin_left = 3.0
+texture_margin_top = 3.0
+texture_margin_right = 3.0
+texture_margin_bottom = 3.0
+expand_margin_left = 3.0
+expand_margin_top = 3.0
+expand_margin_right = 3.0
+expand_margin_bottom = 3.0

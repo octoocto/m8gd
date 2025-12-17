@@ -5,34 +5,40 @@ extends SettingBase
 @export_enum("Arrows", "Dropdown") var setting_type := 0:
 	set(value):
 		setting_type = value
-		_on_changed()
+		emit_ui_changed()
 
 @export var items: PackedStringArray
 
 @export var value := -1:
 	set(p_value):
 		value = clampi(p_value, 0, items.size() - 1) if items.size() else -1
-		await _on_changed()
-		emit_changed()
+		emit_value_changed()
+
+@onready var option_button: UIOptionButton = %OptionButton
 
 
 func _on_ready() -> void:
 	%ButtonLeft.pressed.connect(func() -> void: value -= 1)
 	%ButtonRight.pressed.connect(func() -> void: value += 1)
-	%OptionButton.item_selected.connect(func(p_value: int) -> void: value = p_value)
+
+	option_button.item_selected.connect(func(p_value: int) -> void: value = p_value)
+	option_button.get_popup().canvas_item_default_texture_filter = (
+		Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_NEAREST
+	)
+
+	add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+	reset_size()
 
 
 func _on_changed() -> void:
-	if not is_inside_tree():
-		await ready
-
 	modulate = Color.WHITE if enabled else Color.from_hsv(0, 0, 0.25)
 
-	if setting_name == "":
-		%LabelName.visible = false
-	else:
-		%LabelName.visible = true
+	%LabelName.visible = setting_name != ""
+
+	if ignore_text_format:
 		%LabelName.text = setting_name
+	else:
+		%LabelName.text = _format_text(setting_name)
 
 	%LabelName.custom_minimum_size.x = setting_name_min_width
 
@@ -50,11 +56,11 @@ func _on_changed() -> void:
 			%ButtonRight.disabled = !enabled or value >= items.size() - 1
 
 			%LabelValue.visible = true
-			%LabelValue.text = items[value] if items.size() > 0 else ""
+			%LabelValue.text = _format_text(items[value]) if items.size() > 0 else ""
 		1:  # dropdown
-			%OptionButton.visible = true
+			option_button.visible = true
 			if items.size():
-				%OptionButton.clear()
+				option_button.clear()
 				for item: String in items:
-					%OptionButton.add_item(item)
-				%OptionButton.selected = value
+					option_button.add_item(_format_text(item))
+				option_button.selected = value

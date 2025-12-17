@@ -1,0 +1,7 @@
+[gd_resource type="FontVariation" load_steps=2 format=3 uid="uid://deobribrfuevk"]
+
+[ext_resource type="FontFile" uid="uid://c06qbkkbro8a2" path="res://assets/fonts/5_7.bmp" id="1_4xsbx"]
+
+[resource]
+base_font = ExtResource("1_4xsbx")
+spacing_glyph = 1

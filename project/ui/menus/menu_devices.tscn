@@ -1,9 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://beyfg0ros1ixo"]
+[gd_scene load_steps=12 format=3 uid="uid://beyfg0ros1ixo"]
 
-[ext_resource type="PackedScene" uid="uid://dsgvm3dda1kjp" path="res://ui/label_header.tscn" id="1_6rqk2"]
+[ext_resource type="PackedScene" uid="uid://dsgvm3dda1kjp" path="res://ui/header.tscn" id="1_6rqk2"]
 [ext_resource type="Script" uid="uid://v77vher52qtd" path="res://ui/menus/menu_devices.gd" id="1_erdtv"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4w3sk"]
+[ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_mmv4q"]
+[ext_resource type="PackedScene" uid="uid://cm3h6xr6v7ewi" path="res://ui/label2.tscn" id="4_xa3pg"]
+[ext_resource type="PackedScene" uid="uid://c5kj1uj0ohnmm" path="res://ui/settings/setting_bool.tscn" id="5_m1tae"]
+[ext_resource type="PackedScene" uid="uid://jvyexp7mquoa" path="res://ui/button.tscn" id="6_st2xs"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_06k14"]
 
@@ -14,46 +16,38 @@ colors = PackedColorArray(0, 0.95, 1, 1, 0.0833333, 1, 0, 1, 1, 1, 0, 1, 1, 0.03
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_55vtn"]
 gradient = SubResource("Gradient_t416v")
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m1tae"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.12549, 0.156863, 0.188235, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_st2xs"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.12549, 0.156863, 0.188235, 1)
+
 [node name="Devices" type="PanelContainer"]
-custom_minimum_size = Vector2(320, 240)
+texture_filter = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_mmv4q")
+theme_type_variation = &"MenuBase"
 script = ExtResource("1_erdtv")
 metadata/_tab_index = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="LabelHeader" parent="VBoxContainer" instance=ExtResource("1_6rqk2")]
+[node name="Header" parent="VBoxContainer" instance=ExtResource("1_6rqk2")]
 layout_mode = 2
 text = "Serial Devices"
-top_spacing = false
-
-[node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
-layout_mode = 2
-columns = 3
-
-[node name="Label" type="Label" parent="VBoxContainer/GridContainer"]
-custom_minimum_size = Vector2(90, 0)
-layout_mode = 2
-text = "Status"
-
-[node name="VSeparator" type="VSeparator" parent="VBoxContainer/GridContainer"]
-layout_mode = 2
-theme_override_constants/separation = 1
-theme_override_styles/separator = SubResource("StyleBoxEmpty_4w3sk")
-
-[node name="SerialPortStatus" type="Button" parent="VBoxContainer/GridContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-disabled = true
-text = "Not connected"
-alignment = 0
-text_overrun_behavior = 3
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -68,27 +62,6 @@ size_flags_vertical = 3
 [node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_06k14")
-
-[node name="CheckBoxShowAllSerialPorts" type="CheckBox" parent="VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Show all serial devices"
-
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-layout_mode = 2
-
-[node name="ButtonRefreshSerialPorts" type="Button" parent="VBoxContainer/HBoxContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 0)
-layout_mode = 2
-text = "Refresh List"
-
-[node name="ButtonConnectSerialPort" type="Button" parent="VBoxContainer/HBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-disabled = true
-text = "Connect"
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -128,29 +101,6 @@ value = -45.31
 nine_patch_stretch = true
 texture_progress = SubResource("GradientTexture1D_55vtn")
 
-[node name="GridContainer2" type="GridContainer" parent="VBoxContainer"]
-layout_mode = 2
-columns = 3
-
-[node name="Label" type="Label" parent="VBoxContainer/GridContainer2"]
-custom_minimum_size = Vector2(90, 0)
-layout_mode = 2
-text = "Status"
-
-[node name="VSeparator" type="VSeparator" parent="VBoxContainer/GridContainer2"]
-layout_mode = 2
-theme_override_constants/separation = 1
-theme_override_styles/separator = SubResource("StyleBoxEmpty_4w3sk")
-
-[node name="AudioDeviceStatus" type="Button" parent="VBoxContainer/GridContainer2"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-disabled = true
-text = "Not connected"
-alignment = 0
-text_overrun_behavior = 3
-
 [node name="ScrollContainer2" type="ScrollContainer" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -167,10 +117,58 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_06k14")
 
 [node name="CheckBoxShowAllAudioDevices" type="CheckBox" parent="VBoxContainer"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 text = "Show all audio devices"
 
+[node name="LabelSerialStatus" parent="VBoxContainer" instance=ExtResource("4_xa3pg")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+min_width_left = 60
+text_left = "Serial"
+
+[node name="LabelAudioStatus" parent="VBoxContainer" instance=ExtResource("4_xa3pg")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+min_width_left = 60
+text_left = "Audio"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="ButtonRefresh" parent="VBoxContainer/HBoxContainer" instance=ExtResource("6_st2xs")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_m1tae")
+text = "Refresh"
+
+[node name="ButtonConnect" parent="VBoxContainer/HBoxContainer" instance=ExtResource("6_st2xs")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_st2xs")
+text = "Connect"
+
+[node name="ButtonRefreshSerialPorts" type="Button" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Refresh List"
+
+[node name="ButtonConnectSerialPort" type="Button" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+text = "Connect"
+
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+visible = false
 layout_mode = 2
 
 [node name="ButtonRefreshAudioDevices" type="Button" parent="VBoxContainer/HBoxContainer2"]
@@ -185,3 +183,9 @@ layout_mode = 2
 size_flags_horizontal = 3
 disabled = true
 text = "Connect"
+
+[node name="SShowAllDevices" parent="VBoxContainer" instance=ExtResource("5_m1tae")]
+unique_name_in_owner = true
+layout_mode = 2
+setting_name = "Show all devices"
+hint_text = "Shows devices not detected as M8"

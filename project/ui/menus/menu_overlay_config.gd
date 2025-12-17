@@ -1,6 +1,6 @@
 @tool
 class_name OverlayConfigMenu
-extends MenuBase
+extends MenuFrameBase
 
 @onready var s_position: SettingVec2i = %Setting_Position
 @onready var s_anchor: SettingOptions = %Setting_Anchor
@@ -8,29 +8,36 @@ extends MenuBase
 
 @onready var param_container: VBoxContainer = %ParamContainer
 
-@onready var button_finish: Button = %ButtonFinish
+# @onready var button_finish: Button = %ButtonFinish
 
 ## The overlay element currently being edited.
 var overlay_target: Control
+
 
 func _disconnect_all(sig: Signal) -> void:
 	for conn: Dictionary in sig.get_connections():
 		sig.disconnect(conn.callable)
 
-func _menu_init() -> void:
-	button_finish.pressed.connect(func() -> void:
-		menu_hide()
-		main.menu.menu_show()
-	)
+
+func _on_menu_init() -> void:
+# 	button_finish.pressed.connect(
+# 		func() -> void:
+# 			menu_hide()
+# 			main.menu.menu_show()
+# 	)
+	super()
+
 
 func menu_show() -> void:
 	assert(false, "cannot open menu without an overlay target")
+
 
 func menu_hide() -> void:
 	hide()
 	if overlay_target:
 		overlay_target.draw_bounds = false
 		overlay_target = null
+
 
 ##
 ## Called when this menu is opened to edit the given overlay.
@@ -40,10 +47,12 @@ func menu_show_for(overlay: OverlayBase) -> void:
 
 	overlay_target = overlay
 	overlay_target.draw_bounds = true
+	title = "Overlay > %s" % overlay_target.name
 
 	_init_params_for(overlay_target)
 
-	show()
+	super.menu_show()
+
 
 ##
 ## Automatically add an overlay's additional properties as UI controls to
@@ -51,23 +60,22 @@ func menu_show_for(overlay: OverlayBase) -> void:
 ## The list of properties to add is taken from [overlay.overlay_get_properties()].
 ##
 func _init_params_for(overlay: OverlayBase) -> void:
-
 	# these params are always present
 
 	s_position.uninit()
 	s_anchor.uninit()
 	s_size.uninit()
 
-	s_size.setting_connect_overlay(overlay, "size", func(_value: Vector2) -> void:
-		s_anchor.emit_changed()
+	s_size.setting_connect_overlay(
+		overlay, "size", func(_value: Vector2) -> void: s_anchor.emit_value_changed()
 	)
-	s_anchor.setting_connect_overlay(overlay, "anchors_preset", func(_value: int) -> void:
-		s_position.value = Vector2i.ZERO
+	s_anchor.setting_connect_overlay(
+		overlay, "anchors_preset", func(_value: int) -> void: s_position.value = Vector2i.ZERO
 	)
 	s_position.setting_connect_overlay(overlay, "position_offset")
 
 	# load any additional params
-	
+
 	for child in param_container.get_children():
 		param_container.remove_child(child)
 		child.queue_free()
@@ -76,7 +84,8 @@ func _init_params_for(overlay: OverlayBase) -> void:
 	var propinfo: Array[Dictionary] = overlay.get_property_list()
 
 	for prop in propinfo:
-		if prop.name not in props: continue
+		if prop.name not in props:
+			continue
 
 		var property: String = prop.name
 		var setting := MenuUtils.create_setting_from_property(prop)
@@ -86,4 +95,9 @@ func _init_params_for(overlay: OverlayBase) -> void:
 		param_container.add_child(setting)
 		setting.setting_connect_overlay(overlay, property)
 
-	Log.ln("initialized %d overlay param(s) for: %s" % [param_container.get_child_count(), overlay.name])
+	Log.ln(
+		(
+			"initialized %d overlay param(s) for: %s"
+			% [param_container.get_child_count(), overlay.name]
+		)
+	)

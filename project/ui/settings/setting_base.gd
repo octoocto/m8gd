@@ -1,6 +1,7 @@
-@abstract
-class_name SettingBase
-extends PanelContainer
+@abstract class_name SettingBase
+extends UIBase
+
+var STYLEBOX_FOCUS := preload("res://ui/theme/stylebox_focus.tres")
 
 signal value_changed(value: Variant)
 
@@ -14,31 +15,39 @@ const CONFIG_KEY_CAMERA = "camera.%s"
 const CONFIG_KEY_SHADER = "filter.%s.shader.%s"
 const CONFIG_KEY_SCENE_CUSTOM = "custom.%s"
 
-@export var enabled := true:
-	set(value):
-		enabled = value
-		_on_changed()
-
 @export var setting_name := "":
 	set(value):
 		setting_name = value
-		_on_changed()
+		emit_ui_changed()
 
-@export var setting_name_min_width := 160:
+@export var setting_name_min_width := LEFT_WIDTH:
 	set(value):
 		setting_name_min_width = value
-		_on_changed()
+		emit_ui_changed()
 
 @export var setting_name_indent := 0:
 	set(value):
 		setting_name_indent = max(0, value)
-		_on_changed()
+		emit_ui_changed()
 
-# @export_node_path("SettingBase") var parent_setting := NodePath("")
+@export var label_alignment := HORIZONTAL_ALIGNMENT_LEFT:
+	set(value):
+		label_alignment = value
+		emit_ui_changed()
 
-# @export var parent_setting_mode := DisableMethod.DISABLE
-#
-# @export var parent_setting_invert := false
+@export var label_separation := 0:
+	set(value):
+		label_separation = value
+		emit_ui_changed()
+
+@export var ignore_text_format := false:
+	set(p_value):
+		ignore_text_format = p_value
+		emit_ui_changed()
+
+var main: Main
+
+var config: M8Config
 
 ## If true, one of the [connect] methods has been called.
 var _is_initialized := false
@@ -49,44 +58,29 @@ var _value_changed_signal_enabled := true
 ## Set to a Callable that gets the initial value of [value].
 var _value_read_fn: Callable
 
-## A Callable that maps the parent setting's value to a bool,
-## which decides whether to disable/hide this setting.
-# var _parent_value_check_fn: Callable
-
-var main: Main
-
-var config: M8Config
-
 
 func _ready() -> void:
-
-	if Engine.is_editor_hint():
-		return
-	elif not Main.is_ready():
-		await Events.initialized
-
-	self.main = Main.instance
-	self.config = main.config
-
 	assert(get("value") != null, "SettingBase subclass %s must have a 'value' property" % name)
 
-	_on_ready()
-	_on_changed()
+	if not Engine.is_editor_hint():
+		if not Main.is_ready():
+			await Events.initialized
+		self.main = Main.instance
+		self.config = main.config
 
-
-@abstract func _on_ready() -> void
-
-## Called when the value changes or when other properties change.
-@abstract func _on_changed() -> void
+	super()
 
 func set_value_no_signal(value: Variant) -> void:
 	_value_changed_signal_enabled = false
 	set("value",value)
 	_value_changed_signal_enabled = true
 
-func emit_changed() -> void:
+func emit_value_changed() -> void:
+	emit_ui_changed()
 	if _value_changed_signal_enabled:
 		value_changed.emit(get("value"))
+	# else:
+	# 	print("%s: value_changed signal suppressed" % name)
 
 ##
 ## Re-initialize this setting to an initial value and emits [value_changed].
@@ -121,8 +115,8 @@ func setting_connect(value_read_fn: Variant, value_changed_fn: Callable) -> void
 	assert(!_is_initialized, "This setting has already been initialized: %s" % name)
 	assert(self.main != null or self.config != null, "Tried to initialize setting, but main has not finished initializing")
 	assert(self.config != null, "Tried to initialize setting, but config is not loaded")
-	assert(value_changed_fn is Callable or value_changed_fn == null)
-	assert("value" in self)
+	assert(value_changed_fn is Callable and value_changed_fn.is_valid(), "value_changed_fn must be a valid Callable")
+	assert("value" in self, "SettingBase subclass %s must have a 'value' property" % name)
 
 	if value_read_fn is Callable:
 		_value_read_fn = value_read_fn
@@ -261,25 +255,6 @@ func init_config_shader(shader_node_path: NodePath, shader_parameter: String) ->
 			Events.setting_changed.emit(self, value)
 	)
 
-func show_if(setting: SettingBase, cond_fn: Callable = Callable()) -> void:
-	var callback := func(value: Variant) -> void:
-		if cond_fn.is_valid():
-			visible = cond_fn.call()
-		else:
-			visible = bool(value)
-
-	setting.value_changed.connect(callback)
-	callback.call(setting.value)
-
-func enable_if(setting: SettingBase, cond_fn: Callable = Callable()) -> void:
-	var callback := func(value: Variant) -> void:
-		if cond_fn.is_valid():
-			enabled = cond_fn.call()
-		else:
-			enabled = bool(value)
-
-	setting.value_changed.connect(callback)
-	callback.call(setting.value)
 
 func _clear_signals() -> void:
 	for conn: Dictionary in value_changed.get_connections():

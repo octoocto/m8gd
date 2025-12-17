@@ -9,7 +9,7 @@ func init(p_main: Main) -> void:
 ## Called by the scene menu when it is first opened.
 ## Add settings to the menu here.
 ##
-func init_menu(_menu: SceneMenu) -> void:
+func init_menu(_menu: SceneConfigMenu) -> void:
 	pass
 
 ##

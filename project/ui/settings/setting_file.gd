@@ -4,33 +4,32 @@ class_name SettingFile extends SettingBase
 @export var value := "":
 	set(p_value):
 		value = p_value
-		await _on_changed()
-		emit_changed()
+		emit_value_changed()
 
 @export var empty_text := "Open File...":
 	set(p_value):
 		empty_text = p_value
-		_on_changed()
+		emit_ui_changed()
 
 @export var filters := "*.png, *.jpg, *.jpeg, *.hdr, *.ogv; Supported Filetypes":
 	set(p_value):
 		filters = p_value
-		_on_changed()
+		emit_ui_changed()
 
 @export var edit_alpha := true:
 	set(p_value):
 		edit_alpha = p_value
-		_on_changed()
+		emit_ui_changed()
 
 @export var show_html := true:
 	set(p_value):
 		show_html = p_value
-		_on_changed()
+		emit_ui_changed()
 
 @export var panel_style_value: StyleBox = null:
 	set(p_value):
 		panel_style_value = p_value
-		_on_changed()
+		emit_ui_changed()
 
 
 func _on_ready() -> void:
@@ -62,7 +61,7 @@ func _on_changed() -> void:
 		%LabelName.visible = false
 		%HBoxContainer.visible = false
 	else:
-		%LabelName.text = setting_name
+		%LabelName.text = _format_text(setting_name)
 		%LabelName.visible = true
 		%HBoxContainer.visible = true
 

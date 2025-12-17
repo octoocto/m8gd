@@ -2,7 +2,7 @@
 extends MenuBase
 
 
-func _menu_init() -> void:
+func _on_menu_init() -> void:
 	%Setting_ShaderVHS.setting_connect_profile(
 		"shader_vhs",
 		func(value: bool) -> void:

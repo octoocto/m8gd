@@ -90,7 +90,7 @@ func init(p_main: Main) -> void:
 	_update()
 	_update_background_color()
 
-func init_menu(menu: SceneMenu) -> void:
+func init_menu(menu: SceneConfigMenu) -> void:
 
 	menu.add_auto("integer_scale")
 

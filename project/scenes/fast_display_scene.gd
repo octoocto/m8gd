@@ -10,7 +10,7 @@ func init(p_main: Main) -> void:
 	# %TextureRect.texture = _display.m8_display_texture
 	%TextureRect.texture = main.m8_client.get_display()
 
-func init_menu(menu: SceneMenu) -> void:
+func init_menu(menu: SceneConfigMenu) -> void:
 	menu.add_auto("integer_scale")
 
 func _process(_delta: float) -> void:

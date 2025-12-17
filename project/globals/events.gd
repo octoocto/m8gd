@@ -4,7 +4,7 @@ extends Node
 signal initialized(main: Main)
 
 @warning_ignore("UNUSED_SIGNAL")
-signal deinitialized()
+signal deinitialized
 
 @warning_ignore("UNUSED_SIGNAL")
 signal scene_loaded(scene_path: String, scene: M8Scene)
@@ -17,4 +17,16 @@ signal setting_changed(setting: SettingBase, value: Variant)
 
 ## Emitted when either the window size changed or the scale changed.
 @warning_ignore("UNUSED_SIGNAL")
-signal window_modified()
+signal window_modified
+
+@warning_ignore("UNUSED_SIGNAL")
+signal serial_device_connected
+
+@warning_ignore("UNUSED_SIGNAL")
+signal audio_device_connected
+
+@warning_ignore("UNUSED_SIGNAL")
+signal gui_mouse_entered(ui_element: UIBase)
+
+@warning_ignore("UNUSED_SIGNAL")
+signal gui_mouse_exited(ui_element: UIBase)

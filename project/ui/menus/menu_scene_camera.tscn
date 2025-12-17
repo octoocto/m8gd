@@ -1,45 +1,83 @@
-[gd_scene load_steps=6 format=3 uid="uid://geilakxinhul"]
+[gd_scene load_steps=10 format=3 uid="uid://cm2dn40rnose6"]
 
-[ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_2xsvu"]
+[ext_resource type="PackedScene" uid="uid://m4rgiakfy3m2" path="res://ui/menus/menu_frame.tscn" id="1_1rmaj"]
 [ext_resource type="Script" uid="uid://dqpc5hj803f5y" path="res://ui/menus/menu_scene_camera.gd" id="1_hvork"]
-[ext_resource type="PackedScene" uid="uid://cr88nkt47umul" path="res://ui/settings/setting_vec3.tscn" id="3_nfeie"]
-[ext_resource type="PackedScene" uid="uid://d2wnq8ai2ykus" path="res://ui/settings/setting_vec2.tscn" id="4_tmlck"]
-[ext_resource type="PackedScene" uid="uid://b1r8nehsgp111" path="res://ui/settings/setting_number.tscn" id="5_fqmu6"]
+[ext_resource type="PackedScene" uid="uid://b1wsbkovx87xh" path="res://ui/label.tscn" id="2_8buq4"]
+[ext_resource type="PackedScene" uid="uid://cr88nkt47umul" path="res://ui/settings/setting_vec3.tscn" id="3_ojeen"]
+[ext_resource type="PackedScene" uid="uid://d2wnq8ai2ykus" path="res://ui/settings/setting_vec2.tscn" id="4_yma3h"]
+[ext_resource type="PackedScene" uid="uid://b1r8nehsgp111" path="res://ui/settings/setting_number.tscn" id="5_e5j8b"]
 
-[node name="SceneCameraMenu" type="PanelContainer"]
-custom_minimum_size = Vector2(320, 240)
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 0
-size_flags_vertical = 8
-theme = ExtResource("1_2xsvu")
-theme_type_variation = &"SubmenuPanelContainer"
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y82ww"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.12549, 0.156863, 0.188235, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xrfir"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.12549, 0.156863, 0.188235, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0acor"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(1, 0.12549, 0.25098, 1)
+
+[node name="MenuFrame" instance=ExtResource("1_1rmaj")]
+offset_bottom = 120.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_y82ww")
 script = ExtResource("1_hvork")
+title = "Scene Camera"
+show_close_button = true
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="Header" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" index="0"]
+text = "SCENE CAMERA"
+
+[node name="ButtonClose" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" index="1"]
+visible = true
+theme_override_styles/panel = SubResource("StyleBoxFlat_xrfir")
+
+[node name="ButtonExit" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" index="2"]
+theme_override_styles/panel = SubResource("StyleBoxFlat_0acor")
+
+[node name="ScrollContainer" parent="VBoxContainer" index="1"]
+custom_minimum_size = Vector2(320, 88)
+size_flags_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/ContentContainer" index="0"]
 layout_mode = 2
 
-[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer"]
-layout_mode = 2
-theme_override_colors/default_color = Color(1, 1, 1, 0.75)
-theme_override_constants/line_separation = 8
-bbcode_enabled = true
-text = "[center][i]Hold RIGHT CLICK to enable WASD/Mouse controls[/i][/center]"
-fit_content = true
-
-[node name="Setting_Position" parent="VBoxContainer" instance=ExtResource("3_nfeie")]
+[node name="Setting_Position" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="0" instance=ExtResource("3_ojeen")]
 unique_name_in_owner = true
+texture_filter = 1
 layout_mode = 2
+theme_type_variation = &""
 min_value = Vector3(-100, -100, -100)
 show_updown_arrows = true
 suffix = "m"
 setting_name = "Position"
 setting_name_min_width = 50
 
-[node name="Setting_Angle" parent="VBoxContainer" instance=ExtResource("4_tmlck")]
+[node name="Setting_Angle" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="1" instance=ExtResource("4_yma3h")]
 unique_name_in_owner = true
 layout_mode = 2
 value = Vector2(3.35276e-07, 3.35276e-07)
@@ -52,7 +90,7 @@ suffix = "deg"
 setting_name = "Angle"
 setting_name_min_width = 50
 
-[node name="Setting_Focus" parent="VBoxContainer" instance=ExtResource("4_tmlck")]
+[node name="Setting_Focus" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="2" instance=ExtResource("4_yma3h")]
 unique_name_in_owner = true
 layout_mode = 2
 value = Vector2(9.31323e-09, 4.65661e-10)
@@ -64,7 +102,7 @@ suffix = "m"
 setting_name = "Focus"
 setting_name_min_width = 50
 
-[node name="Setting_Blur" parent="VBoxContainer" instance=ExtResource("5_fqmu6")]
+[node name="Setting_Blur" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="3" instance=ExtResource("5_e5j8b")]
 unique_name_in_owner = true
 layout_mode = 2
 max_value = 4.0
@@ -72,8 +110,20 @@ step = 0.01
 setting_name = "Blur"
 setting_name_min_width = 50
 
-[node name="Button_Finish" type="Button" parent="VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="4"]
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="Label" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="5" instance=ExtResource("2_8buq4")]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &""
+text = "Hold RIGHT CLICK to enable WASD/Mouse"
+color_override = 2
+
+[node name="Button_Finish" type="Button" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="6"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 theme_type_variation = &"ButtonGreen"
 text = "Finish"

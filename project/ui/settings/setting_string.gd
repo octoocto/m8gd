@@ -1,11 +1,11 @@
 @tool
+class_name SettingString
 extends SettingBase
 
 @export var value := "":
 	set(p_value):
 		value = p_value
-		await _on_changed()
-		emit_changed()
+		emit_value_changed()
 
 
 func _on_ready() -> void:
@@ -23,7 +23,7 @@ func _on_changed() -> void:
 		%LabelName.visible = false
 	else:
 		%LabelName.visible = true
-		%LabelName.text = setting_name
+		%LabelName.text = _format_text(setting_name)
 
 	%LabelName.custom_minimum_size.x = setting_name_min_width
 	%HBoxContainer.set("theme_override_constants/separation", setting_name_indent)

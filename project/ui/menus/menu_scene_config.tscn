@@ -1,43 +1,59 @@
-[gd_scene load_steps=3 format=3 uid="uid://dv8crbibtrpck"]
+[gd_scene load_steps=6 format=3 uid="uid://dv8crbibtrpck"]
 
-[ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_pbwtn"]
+[ext_resource type="PackedScene" uid="uid://m4rgiakfy3m2" path="res://ui/menus/menu_frame.tscn" id="1_wthso"]
 [ext_resource type="Script" uid="uid://xgm5cwsm8r77" path="res://ui/menus/menu_scene_config.gd" id="1_x6k17"]
 
-[node name="SceneMenu" type="PanelContainer"]
-custom_minimum_size = Vector2(320, 240)
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 0
-size_flags_vertical = 8
-theme = ExtResource("1_pbwtn")
-theme_type_variation = &"SubmenuPanelContainer"
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_icp2e"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.12549, 0.156863, 0.188235, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wrh5w"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.12549, 0.156863, 0.188235, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3fwrx"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(1, 0.12549, 0.25098, 1)
+
+[node name="MenuFrame" instance=ExtResource("1_wthso")]
+theme_override_styles/panel = SubResource("StyleBoxFlat_icp2e")
 script = ExtResource("1_x6k17")
+title = "Scene Parameters"
+show_close_button = true
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-layout_mode = 2
-theme_override_constants/separation = 8
+[node name="Header" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" index="0"]
+text = "SCENE PARAMETERS"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
-custom_minimum_size = Vector2(320, 320)
-layout_mode = 2
-mouse_filter = 2
-horizontal_scroll_mode = 0
+[node name="ButtonClose" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" index="1"]
+visible = true
+theme_override_styles/panel = SubResource("StyleBoxFlat_wrh5w")
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/ScrollContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
+[node name="ButtonExit" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" index="2"]
+theme_override_styles/panel = SubResource("StyleBoxFlat_3fwrx")
 
-[node name="SceneParamsContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/MarginContainer"]
+[node name="SceneParamsContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/ContentContainer" index="0"]
 unique_name_in_owner = true
 layout_mode = 2
-
-[node name="ButtonFinish" type="Button" parent="VBoxContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 28)
-layout_mode = 2
-theme_type_variation = &"ButtonGreen"
-text = "Finish"

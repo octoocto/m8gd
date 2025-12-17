@@ -73,8 +73,8 @@ var _window_drag_initial_pos := Vector2.ZERO
 @onready var overlay_display: OverlayBase = %OverlayDisplayPanel
 
 @onready var menu: MainMenu = %MainMenuPanel
-@onready var menu_scene: SceneMenu = %SceneMenu
-@onready var menu_camera: PanelContainer = %SceneCameraMenu
+@onready var menu_scene: SceneConfigMenu = %SceneConfigMenu
+@onready var menu_camera: SceneCameraMenu = %SceneCameraMenu
 @onready var menu_overlay: OverlayConfigMenu = %MenuOverlay
 
 @onready var cam_status: RichTextLabel = %CameraStatus
@@ -106,12 +106,11 @@ func _ready() -> void:
 
 	get_window().size_changed.connect(Events.window_modified.emit)
 
-	%Check_SplashDoNotShow.toggled.connect(
-		func(toggle_mode: bool) -> void: config.splash_show = !toggle_mode
-	)
-
-	%ButtonSplashClose.pressed.connect(func() -> void: %SplashContainer.visible = false)
-	%SplashContainer.visible = config.splash_show
+	# %Check_SplashDoNotShow.toggled.connect(
+	# 	func(toggle_mode: bool) -> void: config.splash_show = !toggle_mode
+	# )
+	# %ButtonSplashClose.pressed.connect(func() -> void: %SplashContainer.visible = false)
+	# %SplashContainer.visible = config.splash_show
 
 	instance = self
 	Events.initialized.emit(self)
@@ -207,9 +206,9 @@ func _input(event: InputEvent) -> void:
 
 			# menu on/off toggle
 			if is_menu_open():
-				menu_hide()
+				main_menu_hide()
 			else:
-				menu_open()
+				main_menu_show()
 
 	if _handle_input_keys(event):
 		return
@@ -252,15 +251,15 @@ func is_any_menu_open() -> bool:
 	return menu.visible or menu_scene.visible or menu_camera.visible or menu_overlay.visible
 
 
-func menu_open() -> void:
+func main_menu_show() -> void:
 	menu_camera.menu_hide()
-	menu_scene.visible = false
+	menu_scene.menu_hide()
 	menu_overlay.menu_hide()
-	menu.visible = true
+	menu.menu_show()
 
 
-func menu_hide() -> void:
-	menu.visible = false
+func main_menu_hide() -> void:
+	menu.menu_hide()
 
 
 ##
@@ -268,7 +267,7 @@ func menu_hide() -> void:
 ## The scene's formatted name is stored in the export variable [m8_scene_name].
 ##
 func get_scene_name(scene_path: String) -> String:
-	return scene_path.get_file().get_basename().capitalize().trim_suffix("Scene")
+	return scene_path.get_file().get_basename().capitalize().trim_suffix("Scene").strip_edges()
 
 
 ##
@@ -665,7 +664,7 @@ func display_get_scale() -> float:
 
 
 func display_set_scale(scale: float) -> void:
-	get_window().content_scale_factor = scale
+	get_window().content_scale_factor = min(scale, display_get_max_scale())
 	Events.window_modified.emit()
 
 
@@ -698,6 +697,12 @@ func display_get_auto_scale() -> float:
 			return 2.0
 
 	return 1.0
+
+
+func display_get_max_scale() -> float:
+	var horizontal_scale: float = floor(get_window().size.x / 640.0)
+	var vertical_scale: float = floor(get_window().size.y / 480.0)
+	return min(horizontal_scale, vertical_scale)
 
 
 func _print(text: String) -> void:

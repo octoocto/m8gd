@@ -8,7 +8,8 @@ const SETTING_STRING := preload("res://ui/settings/setting_string.tscn")
 const SETTING_COLOR := preload("res://ui/settings/setting_color.tscn")
 const SETTING_FILE := preload("res://ui/settings/setting_file.tscn")
 
-const LABEL_HEADER := preload("res://ui/label_header.tscn")
+const HEADER := preload("res://ui/header.tscn")
+
 
 ##
 ## Automatically create a Setting from a property dictionary (from [get_property_list()]).
@@ -22,7 +23,7 @@ static func create_setting_from_property(prop: Dictionary) -> SettingBase:
 
 	# print("creating setting: found prop %s, hint = %s, hint_string = %s" % [prop.name, prop.hint, prop.hint_string])
 	match hint:
-		PropertyHint.PROPERTY_HINT_NONE: # prop only has a type
+		PropertyHint.PROPERTY_HINT_NONE:  # prop only has a type
 			match type:
 				TYPE_VECTOR2I:
 					setting = SETTING_VEC2I.instantiate()
@@ -41,34 +42,51 @@ static func create_setting_from_property(prop: Dictionary) -> SettingBase:
 				TYPE_COLOR:
 					setting = SETTING_COLOR.instantiate()
 				var x:
-					assert(false, "Unrecognized property type when populating menu: name=%s, hint=%s, hint_string=%s, %s" % [property, hint, x, prop])
+					assert(
+						false,
+						(
+							"Unrecognized property type when populating menu: name=%s, hint=%s, hint_string=%s, %s"
+							% [property, hint, x, prop]
+						)
+					)
 
-		PropertyHint.PROPERTY_HINT_RANGE: # prop using @export_range
+		PropertyHint.PROPERTY_HINT_RANGE:  # prop using @export_range
 			var split := hint_string.split(",")
 			setting = SETTING_NUMBER.instantiate()
 			setting.min_value = split[0].to_float()
 			setting.max_value = split[1].to_float()
-			if split.size() == 3: setting.step = split[2].to_float()
-			if is_equal_approx(setting.step, 1): setting.format_string = "%d"
+			if split.size() == 3:
+				setting.step = split[2].to_float()
+			if is_equal_approx(setting.step, 1):
+				setting.format_string = "%d"
 
-		PropertyHint.PROPERTY_HINT_ENUM: # prop is an enum
+		PropertyHint.PROPERTY_HINT_ENUM:  # prop is an enum
 			setting = SETTING_OPTIONS.instantiate()
 			for s in hint_string.split(","):
 				setting.items.append(s.split(":")[0])
 			setting.setting_type = 1
-		
+
 		var x:
-			assert(false, "Unrecognized property hint when populating menu: name=%s, hint=%s, hint_string=%s, %s" % [property, hint, x, prop])
+			assert(
+				false,
+				(
+					"Unrecognized property hint when populating menu: name=%s, hint=%s, hint_string=%s, %s"
+					% [property, hint, x, prop]
+				)
+			)
 
 	return setting
+
 
 static func create_setting_options() -> SettingBase:
 	return SETTING_OPTIONS.instantiate()
 
+
 static func create_setting_file() -> SettingFile:
 	return SETTING_FILE.instantiate()
 
+
 static func create_header(text: String) -> Control:
-	var label := LABEL_HEADER.instantiate()
+	var label := HEADER.instantiate()
 	label.text = text
 	return label

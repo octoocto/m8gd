@@ -5,18 +5,17 @@ extends SettingBase
 @export var value := false:
 	set(p_value):
 		value = p_value
-		await _on_changed()
-		emit_changed()
+		emit_value_changed()
 
 @export var text_true := "On":
 	set(value):
 		text_true = value
-		_on_changed()
+		emit_ui_changed()
 
 @export var text_false := "Off":
 	set(value):
 		text_false = value
-		_on_changed()
+		emit_ui_changed()
 
 
 func _on_ready() -> void:
@@ -34,10 +33,10 @@ func _on_changed() -> void:
 		%LabelName.visible = false
 	else:
 		%LabelName.visible = true
-		%LabelName.text = setting_name
+		%LabelName.text = _format_text(setting_name)
 
 	%LabelName.custom_minimum_size.x = setting_name_min_width
 	%HBoxContainer.set("theme_override_constants/separation", setting_name_indent)
 
 	%CheckButton.set_pressed_no_signal(value)
-	%LabelValue.text = text_true if value else text_false
+	%LabelValue.text = _format_text(text_true if value else text_false)

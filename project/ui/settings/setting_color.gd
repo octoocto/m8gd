@@ -1,34 +1,40 @@
 @tool
 class_name SettingColor extends SettingBase
 
-@onready var reset_value: Color = value
-
 @export var value := Color.WHITE:
 	set(p_value):
 		value = p_value
-		await _on_changed()
-		emit_changed()
+		emit_value_changed()
 
 @export var edit_alpha := true:
 	set(p_value):
 		edit_alpha = p_value
-		_on_changed()
+		emit_ui_changed()
 
 @export var show_html := true:
 	set(p_value):
 		show_html = p_value
-		_on_changed()
+		emit_ui_changed()
 
-@export var panel_style_value: StyleBox = null:
+@export var button_min_size := Vector2():
 	set(p_value):
-		panel_style_value = p_value
-		_on_changed()
+		button_min_size = p_value
+		emit_ui_changed()
+
+@onready var reset_value: Color = value
+
+@onready var button: ColorPickerButton = %ColorPickerButton
+
+@onready var picker: ColorPicker = button.get_picker()
+
+@onready var spacer_l: Control = %SpacerLeft
+@onready var spacer_r: Control = %SpacerRight
 
 
 func _on_ready() -> void:
-	%ColorPickerButton.color_changed.connect(func(p_value: Color) -> void: value = p_value)
+	button.color_changed.connect(func(p_value: Color) -> void: value = p_value)
 	# reset to default handler
-	%ColorPickerButton.gui_input.connect(
+	button.gui_input.connect(
 		func(event: InputEvent) -> void:
 			if (
 				event is InputEventMouseButton
@@ -39,32 +45,48 @@ func _on_ready() -> void:
 				value = reset_value
 	)
 
+	add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+	%PanelContainer.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+	reset_size()
+
+	picker.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+
 
 func _on_changed() -> void:
-	if not is_inside_tree():
-		await ready
-
 	modulate = Color.WHITE if enabled else Color.from_hsv(0, 0, 0.25)
-	%ColorPickerButton.disabled = !enabled
-	%ColorPickerButton.edit_alpha = edit_alpha
+	button.disabled = !enabled
+	button.edit_alpha = edit_alpha
+	button.custom_minimum_size = button_min_size
+
+	if button_min_size == Vector2():
+		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	else:
+		button.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 
 	if setting_name == "":
 		%LabelName.visible = false
 		%HBoxContainer.visible = false
 	else:
-		%LabelName.text = setting_name
+		%LabelName.text = _format_text(setting_name)
 		%LabelName.visible = true
 		%HBoxContainer.visible = true
 
-	%PanelContainer.set("theme_override_styles/panel", panel_style_value)
+	spacer_r.visible = label_separation > 0
+	spacer_r.custom_minimum_size.x = label_separation
 
+	# %PanelContainer.set("theme_override_styles/panel", panel_style_value)
+
+	%LabelName.horizontal_alignment = label_alignment
 	%LabelName.custom_minimum_size.x = setting_name_min_width
+	%LabelName.color_override = _pal("text")
+
 	%HBoxContainer.set("theme_override_constants/separation", setting_name_indent)
 
-	%ColorPickerButton.color = value
-	%LabelValue.text = "#%s" % value.to_html(false).to_upper()
+	button.color = value
+	%LabelValue.text = "%s" % value.to_html(false).to_upper()
 	%LabelValue.visible = show_html
+	%LabelValue.color_override = _pal("text_value")
 
 
 func get_color_picker() -> ColorPicker:
-	return %ColorPickerButton.get_picker()
+	return picker

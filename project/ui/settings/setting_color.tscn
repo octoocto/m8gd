@@ -1,15 +1,21 @@
-[gd_scene load_steps=3 format=3 uid="uid://b62oydgjq232n"]
+[gd_scene load_steps=6 format=3 uid="uid://b62oydgjq232n"]
 
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_2hx14"]
-[ext_resource type="Script" uid="uid://bsnchhhsgn3yl" path="res://ui/settings/setting_color.gd" id="2_wkti7"]
+[ext_resource type="Script" uid="uid://c6wn6oi51pxa2" path="res://ui/settings/setting_color.gd" id="2_wkti7"]
+[ext_resource type="PackedScene" uid="uid://b1wsbkovx87xh" path="res://ui/label.tscn" id="3_ubd56"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ubd56"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_a41tq"]
 
 [node name="SettingColor" type="PanelContainer"]
-offset_right = 132.0
-offset_bottom = 27.0
+texture_filter = 1
+offset_right = 38.0
+offset_bottom = 7.0
 size_flags_horizontal = 3
 size_flags_vertical = 4
 theme = ExtResource("1_2hx14")
-theme_type_variation = &"SettingBackground"
+theme_override_styles/panel = SubResource("StyleBoxEmpty_ubd56")
 script = ExtResource("2_wkti7")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
@@ -21,35 +27,40 @@ visible = false
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="Control" type="Control" parent="HBoxContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="LabelName" type="Label" parent="HBoxContainer/HBoxContainer"]
+[node name="SpacerLeft" type="Control" parent="HBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
-text = "s"
+
+[node name="LabelName" parent="HBoxContainer/HBoxContainer" instance=ExtResource("3_ubd56")]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "TEST"
+color_override = Color(0.564706, 0.690196, 0.721569, 1)
+
+[node name="SpacerRight" type="Control" parent="HBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_type_variation = &"SettingControl"
+size_flags_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_a41tq")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/PanelContainer"]
 layout_mode = 2
-theme_override_constants/separation = 8
+size_flags_vertical = 4
 
-[node name="LabelValue" type="Label" parent="HBoxContainer/PanelContainer/HBoxContainer"]
+[node name="LabelValue" parent="HBoxContainer/PanelContainer/HBoxContainer" instance=ExtResource("3_ubd56")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(30, 0)
 layout_mode = 2
-size_flags_horizontal = 3
-text = "#FFFFFF"
-horizontal_alignment = 2
-vertical_alignment = 1
-autowrap_mode = 1
+text = "FFFFFF"
+color_override = Color(1, 1, 1, 1)
 
 [node name="ColorPickerButton" type="ColorPickerButton" parent="HBoxContainer/PanelContainer/HBoxContainer"]
 unique_name_in_owner = true

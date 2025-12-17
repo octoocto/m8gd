@@ -1,105 +1,70 @@
 [gd_scene load_steps=9 format=3 uid="uid://b1r8nehsgp111"]
 
-[ext_resource type="Script" uid="uid://l5swq166jqtv" path="res://ui/settings/setting_number.gd" id="1_j8a44"]
+[ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_dl3x7"]
+[ext_resource type="Script" uid="uid://by8nuaed0yw7n" path="res://ui/settings/setting_number.gd" id="1_j8a44"]
+[ext_resource type="PackedScene" uid="uid://b1wsbkovx87xh" path="res://ui/label.tscn" id="3_nk3kn"]
 
-[sub_resource type="Gradient" id="Gradient_ho1ui"]
-offsets = PackedFloat32Array(0)
-colors = PackedColorArray(1, 1, 1, 0.5)
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_nk3kn"]
 
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_eluto"]
-gradient = SubResource("Gradient_ho1ui")
-width = 2
-height = 8
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l78lm"]
+bg_color = Color(0, 0, 0, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bobr6"]
-content_margin_top = 2.0
-content_margin_bottom = 5.0
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_s1vjd"]
+grow_begin = 0.0
+grow_end = 0.0
+thickness = 7
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g7ixi"]
+bg_color = Color(0.564706, 0.690196, 0.721569, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ejlfe"]
 bg_color = Color(1, 1, 1, 1)
-border_width_left = 5
-border_width_top = 2
-border_width_right = 5
-border_width_bottom = 1
-border_color = Color(1, 1, 1, 0)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_csbp2"]
-content_margin_top = 2.0
-content_margin_bottom = 5.0
-bg_color = Color(1, 1, 1, 0.25)
-border_width_left = 5
-border_width_top = 2
-border_width_right = 5
-border_width_bottom = 1
-border_color = Color(1, 1, 1, 0)
-corner_radius_top_left = 1
-corner_radius_top_right = 1
-corner_radius_bottom_right = 1
-corner_radius_bottom_left = 1
-anti_aliasing = false
-
-[sub_resource type="Theme" id="Theme_86xd2"]
-HSlider/constants/center_grabber = 0
-HSlider/icons/tick = SubResource("GradientTexture2D_eluto")
-HSlider/styles/grabber_area = SubResource("StyleBoxFlat_bobr6")
-HSlider/styles/grabber_area_highlight = SubResource("StyleBoxFlat_bobr6")
-HSlider/styles/slider = SubResource("StyleBoxFlat_csbp2")
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ch326"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4mt0q"]
 
 [node name="SettingNumber" type="PanelContainer"]
-offset_right = 74.0
-offset_bottom = 27.0
+texture_filter = 1
+offset_right = 82.0
+offset_bottom = 7.0
 size_flags_horizontal = 3
-size_flags_vertical = 0
-theme_type_variation = &"SettingBackground"
+size_flags_vertical = 4
+theme = ExtResource("1_dl3x7")
 script = ExtResource("1_j8a44")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
+size_flags_vertical = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_constants/separation = 0
-
-[node name="Control" type="Control" parent="HBoxContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="LabelName" type="Label" parent="HBoxContainer/HBoxContainer"]
+[node name="Label" parent="HBoxContainer" instance=ExtResource("3_nk3kn")]
 unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(160, 0)
+custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
-text = "test"
-
-[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_type_variation = &"SettingControl"
-
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/PanelContainer"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="HSlider" type="HSlider" parent="HBoxContainer/PanelContainer/HBoxContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(40, 0)
-layout_mode = 2
-size_flags_horizontal = 3
 size_flags_vertical = 4
-theme = SubResource("Theme_86xd2")
-ticks_on_borders = true
+theme_type_variation = &""
+theme_override_styles/panel = SubResource("StyleBoxEmpty_nk3kn")
+no_padding = true
+text = "TEST"
 
-[node name="LineEdit" type="LineEdit" parent="HBoxContainer/PanelContainer/HBoxContainer"]
+[node name="LineEdit" type="LineEdit" parent="HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
+theme_override_colors/caret_color = Color(1, 1, 1, 1)
+theme_override_colors/selection_color = Color(0.282353, 0.313726, 0.376471, 1)
 theme_override_constants/minimum_character_width = 0
-theme_override_styles/read_only = SubResource("StyleBoxEmpty_ch326")
-theme_override_styles/normal = SubResource("StyleBoxEmpty_4mt0q")
+theme_override_styles/normal = SubResource("StyleBoxFlat_l78lm")
 text = "0.00"
-flat = true
+alignment = 2
 select_all_on_focus = true
+caret_blink = true
+
+[node name="HSlider" type="HSlider" parent="HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/slider = SubResource("StyleBoxLine_s1vjd")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_g7ixi")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_ejlfe")
