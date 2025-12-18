@@ -72,6 +72,8 @@ var _window_drag_initial_pos := Vector2.ZERO
 @onready var overlay_waveform: OverlayBase = %OverlayAudioWaveform
 @onready var overlay_display: OverlayBase = %OverlayDisplayPanel
 
+@onready var shaders: ShaderContainer = %ShaderContainer
+
 @onready var menu: MainMenu = %MainMenuPanel
 @onready var menu_scene: SceneConfigMenu = %SceneConfigMenu
 @onready var menu_camera: SceneCameraMenu = %SceneCameraMenu
@@ -137,18 +139,10 @@ func _process(delta: float) -> void:
 func _physics_process(delta: float) -> void:
 	update_audio_analyzer()
 
-	var modulate_color := m8_client.get_theme_colors()[0]
+	# var modulate_color := m8_client.get_theme_colors()[0]
 	# modulate_color.v = 1.0
-	%BGShader.material.set_shader_parameter("tint_color", modulate_color)
+	# %BGShader.material.set_shader_parameter("tint_color", modulate_color)
 
-	# do shader parameter responses to audio
-
-	%CRTShader3.material.set_shader_parameter(
-		"aberration", audio_level * visualizer_aberration_amount
-	)
-	%CRTShader3.material.set_shader_parameter(
-		"brightness", 1.0 + (audio_level * visualizer_brightness_amount)
-	)
 	# %BGShader.material.set_shader_parameter("brightness", 1.0 + (audio_level * visualizer_brightness_amount))
 
 	# fade out status message
@@ -412,22 +406,6 @@ func delete_profile(profile_name: String) -> void:
 	if profile_name == get_current_profile_name():
 		load_default_profile()
 	config.delete_profile(profile_name)
-
-
-func _get_propkey_overlay(overlay: Control, property: String) -> String:
-	return "overlay.%s.%s" % [overlay.name, property]
-
-
-func _get_propkey_camera(property: String) -> String:
-	return "camera.%s" % property
-
-
-func _get_propkey_filter(filter: ColorRect, property: String) -> String:
-	return "filter.%s.%s" % [filter.name, property]
-
-
-func _get_propkey_filter_shader(filter: ColorRect, property: String) -> String:
-	return "filter.%s.shader.%s" % [filter.name, property]
 
 
 ##

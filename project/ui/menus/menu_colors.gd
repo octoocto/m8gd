@@ -84,7 +84,7 @@ func _on_menu_init() -> void:
 	Events.profile_loaded.connect(
 		func(_profile_name: String) -> void:
 			for setting: SettingColor in all_settings:
-				setting.reinit()
+				setting.reload()
 	)
 
 	Events.scene_loaded.connect(

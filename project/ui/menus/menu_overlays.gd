@@ -50,12 +50,12 @@ func _on_menu_init() -> void:
 
 	Events.profile_loaded.connect(
 		func(_profile_name: String) -> void:
-			s_scale.reinit()
-			s_apply_filters.reinit()
-			s_spectrum_enable.reinit()
-			s_waveform_enable.reinit()
-			s_display_enable.reinit()
-			s_keys_enable.reinit()
+			s_scale.reload()
+			s_apply_filters.reload()
+			s_spectrum_enable.reload()
+			s_waveform_enable.reload()
+			s_display_enable.reload()
+			s_keys_enable.reload()
 	)
 
 	button_spectrum_config.pressed.connect(

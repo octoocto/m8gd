@@ -91,10 +91,10 @@ func _init_menu_camera() -> void:
 			%Setting_MouseCamera.enabled = true
 			%Setting_HumanCamera.enabled = true
 
-			%Setting_MouseCamera.reinit()
-			%Setting_HumanCamera.reinit()
-			%Setting_HumanCameraStrength.reinit()
-			%Setting_HumanCameraFrequency.reinit()
+			%Setting_MouseCamera.reload()
+			%Setting_HumanCamera.reload()
+			%Setting_HumanCameraStrength.reload()
+			%Setting_HumanCameraFrequency.reload()
 	)
 
 
@@ -141,10 +141,10 @@ func _init_menu_model() -> void:
 			%Setting_ModelScreenEmission.enabled = enabled
 
 			if enabled:
-				%Setting_ModelType.reinit()
-				%Setting_ModelHighlightOpacity.reinit()
-				%Setting_ModelScreenFilter.reinit()
-				%Setting_ModelScreenEmission.reinit()
+				%Setting_ModelType.reload()
+				%Setting_ModelHighlightOpacity.reload()
+				%Setting_ModelScreenFilter.reload()
+				%Setting_ModelScreenEmission.reload()
 	)
 
 

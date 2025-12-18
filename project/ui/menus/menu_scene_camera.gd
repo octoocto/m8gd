@@ -42,15 +42,15 @@ func _on_menu_init() -> void:
 
 ##
 ## Called when a scene has been loaded.
-## This will reinit setting values from the config.
+## This will reload setting values from the config.
 ##
 func on_scene_loaded() -> void:
 	var camera := main.get_scene_camera()
 	if camera:
-		s_position.reinit()
-		s_angle.reinit()
-		s_focus.reinit()
-		s_blur.reinit()
+		s_position.reload()
+		s_angle.reload()
+		s_focus.reload()
+		s_blur.reload()
 		camera.set_current_transform_as_base()
 		# print("camera menu: reinited")
 
