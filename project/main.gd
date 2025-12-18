@@ -88,6 +88,14 @@ static func is_ready() -> bool:
 	return instance != null
 
 
+static func get_instance() -> Main:
+	if not Engine.is_editor_hint():
+		if not Main.is_ready():
+			await Events.initialized
+		return instance
+	return instance
+
+
 func _ready() -> void:
 	m8_client.load_font(M8GD.M8_FONT_01_SMALL, FONT_01_SMALL)
 	m8_client.load_font(M8GD.M8_FONT_01_BIG, FONT_01_BIG)

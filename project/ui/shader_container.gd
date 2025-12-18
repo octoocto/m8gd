@@ -13,10 +13,7 @@ var main: Main
 
 
 func _ready() -> void:
-	if not Main.is_ready():
-		await Events.initialized
-
-	main = Main.instance
+	self.main = await Main.get_instance()
 
 
 func _physics_process(_delta: float) -> void:

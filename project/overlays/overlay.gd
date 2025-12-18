@@ -14,22 +14,20 @@ extends Control
 
 var main: Main
 
+
 func _ready() -> void:
-	if Engine.is_editor_hint():
-		return
-	elif not Main.is_ready():
-		await Events.initialized
-
-	main = Main.instance
-
+	self.main = await Main.get_instance()
 	Log.call_task(_overlay_init, "init overlay '%s'" % name)
+
 
 ## Return a list of properties that should be config settings.
 func overlay_get_properties() -> Array[String]:
 	return []
 
+
 func _overlay_init() -> void:
 	assert(false, "_overlay_init() not implemented in %s" % name)
+
 
 func _update() -> void:
 	pass

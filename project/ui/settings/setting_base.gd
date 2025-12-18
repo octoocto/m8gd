@@ -64,9 +64,7 @@ func _ready() -> void:
 	assert(get("value") != null, "SettingBase subclass %s must have a 'value' property" % name)
 
 	if not Engine.is_editor_hint():
-		if not Main.is_ready():
-			await Events.initialized
-		self.main = Main.instance
+		self.main = await Main.get_instance()
 		self.config = main.config
 
 	super()

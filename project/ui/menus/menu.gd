@@ -17,11 +17,7 @@ var _menu_stylebox: StyleBox
 
 
 func _ready() -> void:
-	if not Engine.is_editor_hint():
-		if not Main.is_ready():
-			await Events.initialized
-		self.main = Main.instance
-
+	self.main = await Main.get_instance()
 	super()
 
 
