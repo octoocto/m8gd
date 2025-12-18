@@ -103,8 +103,8 @@ func _update_format() -> void:
 ## set the property in the current scene's camera.
 ##
 func setting_connect_camera_2(property_x: String, property_y: String) -> void:
-	var config_property_x := main._get_propkey_camera(property_x)
-	var config_property_y := main._get_propkey_camera(property_y)
+	var config_property_x := _get_propkey_camera(property_x)
+	var config_property_y := _get_propkey_camera(property_y)
 	setting_connect(
 		func() -> Variant:
 			var camera := main.get_scene_camera()

@@ -56,6 +56,7 @@ var _is_initialized := false
 var _value_changed_signal_enabled := true
 
 ## Set to a Callable that gets the initial value of [value].
+## This callable should try to read a value from the config file first, or return a default value.
 var _value_read_fn: Callable
 
 
@@ -87,7 +88,7 @@ func emit_value_changed() -> void:
 ## This is useful when a profile or scene has just been loaded, and
 ## the initial value could be different.
 ##
-func reinit(emit_value_changed := true) -> void:
+func reload(emit_value_changed := true) -> void:
 	assert(_is_initialized and _value_read_fn, "This setting has not been initialized yet: %s" % name)
 	if emit_value_changed:
 		set("value", _value_read_fn.call())
@@ -189,7 +190,7 @@ func setting_connect_scene(property: String, value_changed_fn := Callable()) -> 
 ## set the property in [overlay], and call [value_changed_fn] if defined.
 ##
 func setting_connect_overlay(overlay: Control, property: String, value_changed_fn := Callable()) -> void:
-	var config_property := main._get_propkey_overlay(overlay, property)
+	var config_property := _get_propkey_overlay(overlay, property)
 	setting_connect(
 		func() -> Variant: return main.config.get_property(config_property, overlay.get(property)),
 		func(value: Variant) -> void:
@@ -213,7 +214,7 @@ func setting_connect_overlay(overlay: Control, property: String, value_changed_f
 func setting_connect_camera(property: String, value_changed_fn: Variant = null, value_init_fn: Variant = null) -> void:
 	assert(value_changed_fn is Callable or value_changed_fn == null)
 	assert(value_init_fn is Callable or value_init_fn == null)
-	var config_property := main._get_propkey_camera(property)
+	var config_property := _get_propkey_camera(property)
 	setting_connect(
 		func() -> Variant:
 			var init_value: Variant
@@ -244,13 +245,14 @@ func setting_connect_camera(property: String, value_changed_fn: Variant = null, 
 ## This setting's value will default to its current value of the property in [overlay].
 ##
 func init_config_shader(shader_node_path: NodePath, shader_parameter: String) -> void:
-	assert(main.has_node(shader_node_path))
-	var shader_node: ColorRect = main.get_node(shader_node_path)
-	var config_property := main._get_propkey_filter_shader(shader_node, shader_parameter)
+	assert(main.shaders.has_node(shader_node_path))
+	var shader_node: ColorRect = main.shaders.get_node(shader_node_path)
+	assert(shader_node)
+	var config_property := _get_propkey_filter_shader(shader_node, shader_parameter)
 	setting_connect(
-		func() -> Variant: return main.config.get_property(config_property, main.get_filter_shader_parameter(shader_node_path, shader_parameter)),
+		func() -> Variant: return main.config.get_property(config_property, main.shaders.get_shader_parameter(shader_node_path, shader_parameter)),
 		func(value: Variant) -> void:
-			main.set_filter_shader_parameter(shader_node_path, shader_parameter, value)
+			main.shaders.set_shader_parameter(shader_node_path, shader_parameter, value)
 			main.config.set_property(config_property, value)
 			Events.setting_changed.emit(self, value)
 	)
@@ -259,3 +261,12 @@ func init_config_shader(shader_node_path: NodePath, shader_parameter: String) ->
 func _clear_signals() -> void:
 	for conn: Dictionary in value_changed.get_connections():
 		value_changed.disconnect(conn.callable)
+
+func _get_propkey_overlay(overlay: Control, property: String) -> String:
+	return CONFIG_KEY_OVERLAY % [overlay.name, property]
+
+func _get_propkey_camera(property: String) -> String:
+	return CONFIG_KEY_CAMERA % property
+
+func _get_propkey_filter_shader(filter: ColorRect, property: String) -> String:
+	return CONFIG_KEY_SHADER % [filter.name, property]
