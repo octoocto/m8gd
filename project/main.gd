@@ -505,7 +505,7 @@ func on_m8_system_info(hardware: String, firmware: String) -> void:
 ## Called when the M8 has been disconnected.
 func on_m8_device_disconnect() -> void:
 	_update_labels()
-	m8_disconnected.emit()
+	device_manager.disconnect_serial_device()
 
 
 func on_m8_theme_changed(colors: PackedColorArray, complete: bool) -> void:

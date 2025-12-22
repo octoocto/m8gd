@@ -99,7 +99,8 @@ namespace libm8
 		TX_ENABLE_DISPLAY = 'E', // no args
 		TX_RESET_DISPLAY = 'R',	 // no args
 		TX_DISCONNECT = 'D',	 // no args
-		TX_THEME_COLOR = 'S'	 // [1]: index [234]: rgb
+		TX_THEME_COLOR = 'S',	 // [1]: index [234]: rgb
+		TX_PING = 'X',	 		 // no args
 	};
 
 	enum SLIPSpecialBytes
@@ -128,7 +129,7 @@ namespace libm8
 		// connect() errors
 		ERR_DEVICE_NOT_FOUND = 10,
 		// general errors
-		ERR_NOT_CONNECTED = 11,
+		ERR_DEVICE_DISCONNECTED = 11,
 	};
 
 	/// @brief Check if a serial port is an M8 device.
@@ -200,13 +201,13 @@ namespace libm8
 			if (is_connected())
 			{
 				send_disable_display();
-				on_disconnect();
 				sp_close(m8_port);
 				sp_free_port(m8_port);
 				m8_port = nullptr;
 				cmd_size = 0;	// also reset cmd_buffer
 				zero_reads = 0; // also reset zero_reads counter
-								// print("disconnected");
+				print("disconnected");
+				on_disconnect();
 			}
 			return OK;
 		}
@@ -226,6 +227,11 @@ namespace libm8
 			return send_command({TX_THEME_COLOR, index, r, g, b}, 5);
 		}
 
+		Error send_ping()
+		{
+			return send_command({TX_PING}, 1);
+		}
+
 		/// @brief Connect to an M8 device.
 		/// @param port_name The name of the serial port to connect to.
 		/// @param force Whether to force the connection even if the port is not an M8.
@@ -234,8 +240,10 @@ namespace libm8
 
 		bool is_connected()
 		{
-			return m8_port != nullptr;
+			return m8_port != NULL;
 		}
+
+		bool check_connected();
 
 		Error read();
 
@@ -245,8 +253,8 @@ namespace libm8
 		/// @param size the size of the array
 		Error send_command(const uint8_t (&data)[], size_t size)
 		{
-			if (m8_port == nullptr)
-				return ERR_NOT_CONNECTED;
+			if (!is_connected())
+				return ERR_DEVICE_DISCONNECTED;
 
 			sp_return result = sp_blocking_write(m8_port, data, size, 10);
 			return sp_to_m8(result);

@@ -24,7 +24,7 @@ char *libm8::get_serial_port_description(const char *port_name)
 	struct sp_port *port;
 	sp_get_port_by_name(port_name, &port);
 	if (port == nullptr)
-		return "";
+		return (char*)"";
 
 	char *description = sp_get_port_description(port);
 	sp_free_port(port);
@@ -57,6 +57,31 @@ libm8::FontParameters libm8::get_font_params(uint8_t model, uint8_t font)
 	}
 	printerr("unable to find correct font parameters! (model=%d, font=%d)", model, font);
 	return FONT_01_SMALL;
+}
+
+bool libm8::Client::check_connected()
+{
+	struct sp_port **port_list;
+	bool found = false;
+
+	const enum sp_return result = sp_list_ports(&port_list);
+	if (result != SP_OK) {
+		printerr("libserialport: failed to list ports");
+		return false;
+	}
+
+	for (int i = 0; port_list[i] != NULL; i++)
+	{
+		struct sp_port *port = port_list[i];
+		if (is_m8_serial_port(port)) {
+			const char *current_port_name = sp_get_port_name(port);
+			const char *connected_port_name = sp_get_port_name(m8_port);
+			found = strcmp(current_port_name, connected_port_name) == 0;
+		}
+	}
+	sp_free_port_list(port_list);
+
+	return found;
 }
 
 libm8::Error libm8::Client::connect(godot::String target_port_name, bool force)
@@ -131,7 +156,7 @@ libm8::Error libm8::Client::connect(godot::String target_port_name, bool force)
 libm8::Error libm8::Client::read()
 {
 	if (!is_connected())
-		return libm8::ERR_NOT_CONNECTED;
+		return libm8::ERR_DEVICE_DISCONNECTED;
 
 	int bytes_read;
 	static bool is_slip_escaped = false;
@@ -194,13 +219,25 @@ libm8::Error libm8::Client::read()
 				}
 			}
 		}
-		else if (bytes_read == 0)
+		else
 		{
 			zero_reads++;
 			if (zero_reads >= max_zero_reads)
 			{
-				print("zero_reads = %d, disconnecting...", zero_reads);
-				disconnect();
+				if (check_connected())
+				{
+					if (send_ping() != libm8::OK) {
+						printerr("ping failed, disconnecting...");
+						disconnect();
+						break;
+					}
+					zero_reads = 0;
+				}
+				else {
+					printerr("zero_reads = %d, disconnecting...", zero_reads);
+					disconnect();
+					break;
+				}
 			}
 		}
 	} while (bytes_read > 0);

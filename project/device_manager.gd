@@ -101,7 +101,6 @@ func disconnect_serial_device() -> void:
 
 	main.m8_client.disconnect()
 	current_serial_device = ""
-	main.m8_disconnected.emit()
 
 	main.print_to_screen("disconnected serial device")
 	main.menu.menu_devices.set_status_serialport("Not connected (Disconnected)")
