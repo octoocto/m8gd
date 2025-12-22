@@ -169,7 +169,8 @@ void fragment() {
 
 	if (is_reflection(uv) && border(uv) == 0.0) {
 		vec3 reflect_color = COLOR.rgb * reflection_amount;
-		COLOR.rgb = 1.0 - (1.0 - reflect_color) * (1.0 - bezel_color);
+		//COLOR.rgb = 1.0 - (1.0 - reflect_color) * (1.0 - bezel_color); // screen blend mode
+		COLOR.rgb = max(reflect_color, bezel_color);
 		COLOR.rgb += (textureLod(noise_texture, uv, 8.0).rgb - 0.5) * bezel_noise_amount;
 		COLOR.rgb *= border_shadow;
 	} else {

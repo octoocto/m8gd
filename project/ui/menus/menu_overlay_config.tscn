@@ -49,6 +49,7 @@ script = ExtResource("1_biga6")
 show_close_button = true
 
 [node name="ButtonClose" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" index="1"]
+visible = true
 theme_override_styles/panel = SubResource("StyleBoxFlat_0j0w0")
 
 [node name="ButtonExit" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" index="2"]
