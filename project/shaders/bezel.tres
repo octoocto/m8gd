@@ -1,6 +1,6 @@
 [gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://bmojmguoea6kr"]
 
-[ext_resource type="Shader" uid="uid://dbaeboj4ux7gc" path="res://shaders/bezel.gdshader" id="1_puvrl"]
+[ext_resource type="Shader" path="res://shaders/bezel.gdshader" id="1_puvrl"]
 [ext_resource type="Texture2D" uid="uid://7y0rs0v6d4nk" path="res://assets/noise.png" id="2_hko2k"]
 
 [resource]
