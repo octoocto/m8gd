@@ -7,9 +7,14 @@
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_nk3kn"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l78lm"]
-bg_color = Color(0, 0, 0, 1)
+bg_color = Color(1, 1, 1, 0)
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_s1vjd"]
+color = Color(1, 1, 1, 0)
 grow_begin = 0.0
 grow_end = 0.0
 thickness = 7
@@ -36,10 +41,9 @@ size_flags_vertical = 0
 [node name="Label" parent="HBoxContainer" instance=ExtResource("3_nk3kn")]
 unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(120, 0)
+custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 size_flags_vertical = 4
-theme_type_variation = &""
 theme_override_styles/panel = SubResource("StyleBoxEmpty_nk3kn")
 no_padding = true
 text = "TEST"
@@ -65,6 +69,7 @@ custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+mouse_force_pass_scroll_events = false
 theme_override_styles/slider = SubResource("StyleBoxLine_s1vjd")
 theme_override_styles/grabber_area = SubResource("StyleBoxFlat_g7ixi")
 theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_ejlfe")

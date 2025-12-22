@@ -58,7 +58,7 @@ content_margin_right = 2.0
 content_margin_bottom = 2.0
 bg_color = Color(1, 0.12549, 0.25098, 1)
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rsjqv"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xv1rc"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_f72sp"]
 
@@ -312,7 +312,7 @@ theme_override_constants/separation = 3
 [node name="LabelCurrentScene" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" instance=ExtResource("5_cn7hl")]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_rsjqv")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_xv1rc")
 no_padding = true
 text_left = "Current Scene"
 align_right_text_to_right = true
@@ -521,7 +521,6 @@ metadata/_tab_index = 4
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_type_variation = &""
 theme_override_styles/panel = SubResource("StyleBoxEmpty_fpotr")
 is_inner_menu = true
 metadata/_tab_index = 5
