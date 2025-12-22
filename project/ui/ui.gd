@@ -4,7 +4,7 @@ extends PanelContainer
 const THEME := preload("res://ui/theme/menu_theme.tres")
 const PALETTE := preload("res://ui/theme/palette.tres")
 
-const LEFT_WIDTH := 120
+const LEFT_WIDTH := 160
 
 @export var enabled := true:
 	set(value):

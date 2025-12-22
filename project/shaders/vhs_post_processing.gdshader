@@ -1,3 +1,7 @@
+// VHS with wiggle
+// by cyanone
+// https://godotshaders.com/shader/vhs/
+
 shader_type canvas_item;
 
 group_uniforms Wiggle;

@@ -17,7 +17,8 @@ var main: Main
 
 func _ready() -> void:
 	self.main = await Main.get_instance()
-	Log.call_task(_overlay_init, "init overlay '%s'" % name)
+	if self.main:
+		Log.call_task(_overlay_init, "init overlay '%s'" % name)
 
 
 ## Return a list of properties that should be config settings.

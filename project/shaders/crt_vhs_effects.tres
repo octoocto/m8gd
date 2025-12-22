@@ -1,0 +1,61 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://m1s2m3es51td"]
+
+[ext_resource type="Shader" uid="uid://ckc6wa65csdbm" path="res://shaders/crt_vhs_effects.gdshader" id="1_cyfke"]
+[ext_resource type="Texture2D" uid="uid://7y0rs0v6d4nk" path="res://assets/noise.png" id="2_3neq1"]
+
+[resource]
+shader = ExtResource("1_cyfke")
+shader_parameter/noise_tex = ExtResource("2_3neq1")
+shader_parameter/edge_pinning = false
+shader_parameter/edge_pin_power = 2.0
+shader_parameter/roll = false
+shader_parameter/roll_speed = 1.6
+shader_parameter/roll_size = 2.0
+shader_parameter/roll_variation = 0.919
+shader_parameter/distort_intensity = 0.005
+shader_parameter/breathing_strength = 0.02
+shader_parameter/breathing_softness = 1.0
+shader_parameter/breathing_bias = 0.0
+shader_parameter/vhs_crease_smear = 0.2
+shader_parameter/vhs_crease_intensity = 0.2
+shader_parameter/vhs_crease_jitter = 0.1
+shader_parameter/vhs_crease_speed = 0.5
+shader_parameter/vhs_crease_discolor_amt = 1.0
+shader_parameter/vhs_bottom_thickness = 0.025
+shader_parameter/vhs_bottom_jitter_px = 6.0
+shader_parameter/vhs_mtap_strength = 0.0
+shader_parameter/vhs_chroma_twist = 0.0
+shader_parameter/vhs_tap_spread_px = 1.0
+shader_parameter/_vhs_samples = 3
+shader_parameter/sparkle_intensity = 0.0
+shader_parameter/optics_compensation_r = 0.0
+shader_parameter/optics_compensation_g = 0.0
+shader_parameter/optics_compensation_b = 0.0
+shader_parameter/aberration = 0.0
+shader_parameter/discolor = true
+shader_parameter/saturation = 0.0
+shader_parameter/contrast = 1.0
+shader_parameter/static_noise_intensity = 0.02
+shader_parameter/curve = 0.0
+shader_parameter/aspect = 0.563
+shader_parameter/sharpness = 1.0
+shader_parameter/color_offset = 0.0
+shader_parameter/min_scanline_thickness = 0.5
+shader_parameter/wobble_strength = 0.20000000298023
+shader_parameter/virtual_scanlines = 240.0
+shader_parameter/mask_type = 4
+shader_parameter/mask_brightness = 0.999999977648
+shader_parameter/scanline_brightness = 1.0
+shader_parameter/vignette_intensity = 0.4
+shader_parameter/vignette_opacity = 0.999999977648
+shader_parameter/dead_cells_on = false
+shader_parameter/dead_seed = 1.0
+shader_parameter/dead_cell_px = 30.0
+shader_parameter/dead_radius_px = 1.0
+shader_parameter/dead_strength = 1.0
+shader_parameter/hot_cells_on = false
+shader_parameter/hot_seed = 1.0
+shader_parameter/hot_cell_px = 50.0
+shader_parameter/hot_radius_px = 1.0
+shader_parameter/hot_intensity = 0.615
+shader_parameter/hot_flicker = 0.8

@@ -49,6 +49,10 @@ var main: Main
 
 var config: M8Config
 
+var is_initialized: bool:
+	get():
+		return _is_initialized
+
 ## If true, one of the [connect] methods has been called.
 var _is_initialized := false
 
@@ -240,17 +244,16 @@ func setting_connect_camera(property: String, value_changed_fn: Variant = null, 
 	)
 
 ##
+## Connect this setting to a shader uniform.
 ## This setting's value will default to its current value of the property in [overlay].
 ##
-func init_config_shader(shader_node_path: NodePath, shader_parameter: String) -> void:
-	assert(main.shaders.has_node(shader_node_path))
-	var shader_node: ColorRect = main.shaders.get_node(shader_node_path)
-	assert(shader_node)
-	var config_property := _get_propkey_filter_shader(shader_node, shader_parameter)
+func conf_shader_parameter(shader_rect: ShaderRect, parameter: String) -> void:
+	assert(shader_rect)
+	var config_property := _get_propkey_filter_shader(shader_rect, parameter)
 	setting_connect(
-		func() -> Variant: return main.config.get_property(config_property, main.shaders.get_shader_parameter(shader_node_path, shader_parameter)),
+		func() -> Variant: return main.config.get_property(config_property, main.shaders.get_shader_parameter(shader_rect, parameter)),
 		func(value: Variant) -> void:
-			main.shaders.set_shader_parameter(shader_node_path, shader_parameter, value)
+			main.shaders.set_shader_parameter(shader_rect, parameter, value)
 			main.config.set_property(config_property, value)
 			Events.setting_changed.emit(self, value)
 	)

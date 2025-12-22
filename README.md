@@ -218,7 +218,10 @@ This project has been tested to work on [Godot 4.3-stable](https://godotengine.o
 - [M8 Tracker 3D Model](https://sketchfab.com/3d-models/dirtywave-m8-tracker-05ba530f902e4474b0e01ae2750eec3c) by David Junghanns
 - [Prototype Textures](https://kenney-assets.itch.io/prototype-textures) by Kenney
 - [Succulent plants model](https://sketchfab.com/3d-models/succulent-plants-ea9a2df2a598410f9f63ba9380795f92) by uniko
-- [VHS Post Processing](https://godotshaders.com/shader/vhs-post-processing/) shader by LazarusOverlook
 - [VHS with wiggle](https://godotshaders.com/shader/vhs/) shader by cyanone
-- [CRT Shader with realistic blurring](https://godotshaders.com/shader/crt-shader-with-realistic-blurring/) shader by Ahopness
-- [VHS and CRT monitor effect](godotshaders.com/shader/VHS-and-CRT-monitor-effect) shader by pend00
+<!-- - [CRT Shader with realistic blurring](https://godotshaders.com/shader/crt-shader-with-realistic-blurring/) shader by Ahopness -->
+<!-- - [VHS and CRT monitor effect](godotshaders.com/shader/VHS-and-CRT-monitor-effect) shader by pend00 -->
+- [CRT + VHS Effects (Compatability Mode Safe)](https://godotshaders.com/shader/crt-vhs-effects-compatibility-mode-safe/) shader by doffu
+  - [VHS Post Processing](https://godotshaders.com/shader/vhs-post-processing/) shader by LazarusOverlook
+  - [CRT with Luminance Preservation](https://godotshaders.com/shader/crt-with-luminance-preservation/) shader by Harrison Allen
+  - [Realistic CRT Shader](https://godotshaders.com/shader/realistic-crt-shader/) shader by c64cosmin

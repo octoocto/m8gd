@@ -17,3 +17,12 @@ func _ready() -> void:
 	back_buffer_copy.set_owner(self)
 
 	set_anchors_and_offsets_preset(PRESET_FULL_RECT)
+
+
+func get_uniform_list() -> Array:
+	if not shader_material:
+		return []
+	# return shader_material.shader.get_shader_uniform_list().filter(
+	# 	func(d: Dictionary) -> bool: return d.hint_string != ""
+	# )
+	return shader_material.shader.get_shader_uniform_list()

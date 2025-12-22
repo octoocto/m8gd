@@ -1,0 +1,27 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://bmojmguoea6kr"]
+
+[ext_resource type="Shader" uid="uid://dbaeboj4ux7gc" path="res://shaders/bezel.gdshader" id="1_puvrl"]
+[ext_resource type="Texture2D" uid="uid://7y0rs0v6d4nk" path="res://assets/noise.png" id="2_hko2k"]
+
+[resource]
+shader = ExtResource("1_puvrl")
+shader_parameter/noise_texture = ExtResource("2_hko2k")
+shader_parameter/zoom_amount = 1.0
+shader_parameter/curvature_amount = 1.03
+shader_parameter/_curvature_type = 1
+shader_parameter/curvature_aspect = 1.0
+shader_parameter/border_alpha = 1.0
+shader_parameter/reflection_blur = 2.0
+shader_parameter/reflection_amount = 1.0
+shader_parameter/reflection_contrast = 1.0
+shader_parameter/reflection_brightness = 1.0
+shader_parameter/reflection_seamless_margin = 0.1
+shader_parameter/bezel_color = Color(0, 0, 0, 1)
+shader_parameter/bezel_lighting_amount = 0.01999999955296
+shader_parameter/bezel_lighting_angle = 0.0
+shader_parameter/bezel_noise_amount = 0.01
+shader_parameter/border_shadow_range = 5.0
+shader_parameter/border_shadow_ramp = 0.01
+shader_parameter/vignette_ramp = 1.0
+shader_parameter/vignette_intensity = 1.0
+shader_parameter/vignette_opacity = 0.01

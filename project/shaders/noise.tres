@@ -1,0 +1,20 @@
+[gd_resource type="ShaderMaterial" load_steps=5 format=3 uid="uid://btuib5jp88iyw"]
+
+[ext_resource type="Shader" uid="uid://cou0xf7r66qe1" path="res://shaders/noise.gdshader" id="1_6du4b"]
+
+[sub_resource type="Gradient" id="Gradient_2pcn5"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_cy2mg"]
+frequency = 1.0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_m6tfj"]
+width = 4096
+height = 4096
+noise = SubResource("FastNoiseLite_cy2mg")
+color_ramp = SubResource("Gradient_2pcn5")
+
+[resource]
+shader = ExtResource("1_6du4b")
+shader_parameter/noise_texture = SubResource("NoiseTexture2D_m6tfj")
+shader_parameter/noise_strength = 0.04
+shader_parameter/noise_speed = 1.0

@@ -1,10 +1,9 @@
-[gd_scene load_steps=31 format=3 uid="uid://b265ke8cr3dgr"]
+[gd_scene load_steps=26 format=3 uid="uid://b265ke8cr3dgr"]
 
 [ext_resource type="Script" uid="uid://d0olbd611iax7" path="res://main.gd" id="1_4g2n0"]
 [ext_resource type="PackedScene" uid="uid://263mog4cxgwr" path="res://overlays/overlay_audio_spectrum.tscn" id="2_tbmna"]
 [ext_resource type="PackedScene" uid="uid://bkmg6tijdna2y" path="res://overlays/overlay_display_panel.tscn" id="4_nrhlm"]
 [ext_resource type="PackedScene" uid="uid://dq6heks88e2ip" path="res://overlays/overlay_audio_waveform.tscn" id="5_p87tv"]
-[ext_resource type="Shader" uid="uid://okxo3d88kn1h" path="res://shaders/screen_blur.gdshader" id="7_5hn1q"]
 [ext_resource type="PackedScene" uid="uid://d13t756slc8b0" path="res://ui/menus/main_menu.tscn" id="7_k5oyo"]
 [ext_resource type="PackedScene" uid="uid://ca2jqh2tc7jix" path="res://overlays/overlay_keys.tscn" id="8_dnyct"]
 [ext_resource type="PackedScene" uid="uid://cbhidmd8p855r" path="res://ui/shader_container.tscn" id="8_yaehf"]
@@ -19,28 +18,6 @@
 [ext_resource type="Script" path="res://ui/scalable.gd" id="18_d13ii"]
 
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_c3wmn"]
-
-[sub_resource type="Gradient" id="Gradient_v10jr"]
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_ieww8"]
-frequency = 1.0
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_lsac7"]
-width = 2048
-height = 2048
-noise = SubResource("FastNoiseLite_ieww8")
-color_ramp = SubResource("Gradient_v10jr")
-invert = true
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_dw8ip"]
-shader = ExtResource("7_5hn1q")
-shader_parameter/blur_amount = 0.0
-shader_parameter/tint_color = Color(1, 1, 1, 1)
-shader_parameter/tint_amount = 0.0
-shader_parameter/brightness = 1.2
-shader_parameter/noise_texture = SubResource("NoiseTexture2D_lsac7")
-shader_parameter/noise_strength = 0.0
-shader_parameter/noise_speed = 1.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0a764"]
 
@@ -59,6 +36,27 @@ anti_aliasing_size = 0.5
 
 [sub_resource type="LabelSettings" id="LabelSettings_getpj"]
 font = ExtResource("13_82xsv")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2cqfq"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 0.8)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.12549, 0.156863, 0.188235, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+anti_aliasing = false
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yaehf"]
 content_margin_left = 0.0
@@ -123,27 +121,6 @@ expand_margin_right = 1.0
 expand_margin_bottom = 1.0
 anti_aliasing = false
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_82xsv"]
-content_margin_left = 0.0
-content_margin_top = 0.0
-content_margin_right = 0.0
-content_margin_bottom = 0.0
-bg_color = Color(0, 0, 0, 0.8)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.12549, 0.156863, 0.188235, 1)
-corner_radius_top_left = 1
-corner_radius_top_right = 1
-corner_radius_bottom_right = 1
-corner_radius_bottom_left = 1
-expand_margin_left = 1.0
-expand_margin_top = 1.0
-expand_margin_right = 1.0
-expand_margin_bottom = 1.0
-anti_aliasing = false
-
 [node name="Main" type="Node"]
 script = ExtResource("1_4g2n0")
 
@@ -165,21 +142,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("13_e5i6c")
-
-[node name="BackBufferCopy" type="BackBufferCopy" parent="CanvasLayer/UI"]
-visible = false
-copy_mode = 2
-
-[node name="BGShader" type="ColorRect" parent="CanvasLayer/UI"]
-unique_name_in_owner = true
-visible = false
-material = SubResource("ShaderMaterial_dw8ip")
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 
 [node name="OverlayContainer" type="CenterContainer" parent="CanvasLayer/UI"]
 unique_name_in_owner = true
@@ -260,11 +222,6 @@ grow_vertical = 0
 size_flags_horizontal = 8
 size_flags_vertical = 10
 position_offset = Vector2i(-30, -100)
-
-[node name="BackBufferCopy2" type="BackBufferCopy" parent="CanvasLayer/UI"]
-visible = false
-position = Vector2(-24, -160)
-copy_mode = 2
 
 [node name="ShaderContainer" parent="CanvasLayer/UI" instance=ExtResource("8_yaehf")]
 unique_name_in_owner = true
@@ -719,7 +676,7 @@ visible = false
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
-theme_override_styles/panel = SubResource("StyleBoxFlat_yaehf")
+theme_override_styles/panel = SubResource("StyleBoxFlat_2cqfq")
 
 [node name="SceneConfigMenu" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer" instance=ExtResource("9_bisyb")]
 unique_name_in_owner = true
@@ -727,7 +684,7 @@ visible = false
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
-theme_override_styles/panel = SubResource("StyleBoxFlat_074og")
+theme_override_styles/panel = SubResource("StyleBoxFlat_yaehf")
 
 [node name="MenuOverlay" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer" instance=ExtResource("16_4bi6d")]
 unique_name_in_owner = true
@@ -735,7 +692,7 @@ visible = false
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
-theme_override_styles/panel = SubResource("StyleBoxFlat_cegan")
+theme_override_styles/panel = SubResource("StyleBoxFlat_074og")
 
 [node name="MainMenuContainer" type="ScrollContainer" parent="CanvasLayer/ScalableContainer"]
 layout_mode = 2
@@ -756,7 +713,7 @@ z_index = 1
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_82xsv")
+theme_override_styles/panel = SubResource("StyleBoxFlat_cegan")
 
 [node name="M8GD" type="M8GD" parent="."]
 unique_name_in_owner = true

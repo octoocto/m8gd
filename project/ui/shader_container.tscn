@@ -1,116 +1,11 @@
-[gd_scene load_steps=19 format=3 uid="uid://cbhidmd8p855r"]
+[gd_scene load_steps=7 format=3 uid="uid://cbhidmd8p855r"]
 
 [ext_resource type="Script" uid="uid://dieothx7vqs3u" path="res://ui/shader_container.gd" id="1_wkkq6"]
+[ext_resource type="Material" uid="uid://bqync8akns45c" path="res://shaders/vhs_post_processing.tres" id="2_351vg"]
 [ext_resource type="Script" uid="uid://dlk4lcv1bs1f4" path="res://ui/shader_rect.gd" id="2_elf6w"]
-[ext_resource type="Shader" uid="uid://ckswjnsuddnrt" path="res://shaders/vhs2.gdshader" id="2_u8vuk"]
-[ext_resource type="Shader" uid="uid://i526eiqcypjg" path="res://shaders/vhs.gdshader" id="3_elf6w"]
-[ext_resource type="Texture2D" uid="uid://7y0rs0v6d4nk" path="res://assets/noise.png" id="4_orrwf"]
-[ext_resource type="Shader" uid="uid://6tp4l6soye54" path="res://shaders/vhs3.gdshader" id="5_7ebwg"]
-[ext_resource type="Shader" uid="uid://ddeledy6hskpq" path="res://shaders/post_process.gdshader" id="6_gl8iy"]
-[ext_resource type="Shader" uid="uid://uqrhgh7cj8gu" path="res://shaders/crt.gdshader" id="7_ukupx"]
-[ext_resource type="Shader" uid="uid://okxo3d88kn1h" path="res://shaders/screen_blur.gdshader" id="8_jqubv"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_wkkq6"]
-shader = ExtResource("2_u8vuk")
-shader_parameter/wiggle = 0.03
-shader_parameter/wiggle_speed = 25.0
-shader_parameter/smear = 1.0
-shader_parameter/blur_samples = 15
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_0idq4"]
-shader = ExtResource("3_elf6w")
-shader_parameter/vhs_resolution = Vector2(960, 720)
-shader_parameter/samples = 2
-shader_parameter/crease_noise = 1.0
-shader_parameter/crease_opacity = 0.5
-shader_parameter/filter_intensity = 0.0
-shader_parameter/tape_crease_smear = 0.2
-shader_parameter/tape_crease_intensity = 0.0
-shader_parameter/tape_crease_jitter = 0.1
-shader_parameter/tape_crease_speed = 0.5
-shader_parameter/tape_crease_discoloration = 0.0
-shader_parameter/bottom_border_thickness = 6.0
-shader_parameter/bottom_border_jitter = 24.0
-shader_parameter/noise_intensity = 0.0
-shader_parameter/noise_texture = ExtResource("4_orrwf")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_5du23"]
-shader = ExtResource("5_7ebwg")
-shader_parameter/res = Vector2(960, 720)
-shader_parameter/mask_type = 0
-shader_parameter/bloom_type = 0
-shader_parameter/hardScan = -4.0
-shader_parameter/hardPix = -2.0
-shader_parameter/hardBloomScan = -2.0
-shader_parameter/hardBloomPix = -1.5
-shader_parameter/bloomAmount = 16.0
-shader_parameter/warp = Vector2(500, 500)
-shader_parameter/maskDark = 1.0
-shader_parameter/maskLight = 2.0
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_gfqpc"]
-shader = ExtResource("6_gl8iy")
-shader_parameter/effect = -1.0
-shader_parameter/effect_scale = 1.0
-shader_parameter/crop = 1.0
-shader_parameter/warp_amount = -0.885
-shader_parameter/warp_aspect = 1.0
-shader_parameter/border_alpha = -1.145
-shader_parameter/ca_amount = 0.0
-shader_parameter/mirror_blur = 0.5
-shader_parameter/reflection_amount = 0.39
-shader_parameter/mirror_overlay = Color(1, 1, 1, 0.215686)
-shader_parameter/border_color = Color(0.06, 0.06, 0.06, 1)
-shader_parameter/border_shadow_range = 6.42
-shader_parameter/border_shadow_ramp = 0.485
-shader_parameter/vignette_ramp = 0.16
-shader_parameter/vignette_range = 1.045
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_4xdhc"]
-shader = ExtResource("7_ukupx")
-shader_parameter/overlay = false
-shader_parameter/scanlines_opacity = 0.0
-shader_parameter/scanlines_width = 0.25
-shader_parameter/grille_opacity = 0.0
-shader_parameter/resolution = Vector2(640, 480)
-shader_parameter/pixelate = false
-shader_parameter/roll = false
-shader_parameter/roll_speed = 8.0
-shader_parameter/roll_size = 15.0
-shader_parameter/roll_variation = 1.8
-shader_parameter/distort_intensity = 0.05
-shader_parameter/noise_opacity = 0.0
-shader_parameter/noise_speed = 5.0
-shader_parameter/static_noise_intensity = 0.0
-shader_parameter/aberration = 0.03
-shader_parameter/brightness = 1.0
-shader_parameter/discolor = false
-shader_parameter/warp_amount = 0.5
-shader_parameter/clip_warp = false
-shader_parameter/vignette_intensity = 0.4
-shader_parameter/vignette_opacity = 0.5
-shader_parameter/vignette_noise = 0.1
-
-[sub_resource type="Gradient" id="Gradient_2pcn5"]
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_cy2mg"]
-frequency = 1.0
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_m6tfj"]
-width = 4096
-height = 4096
-noise = SubResource("FastNoiseLite_cy2mg")
-color_ramp = SubResource("Gradient_2pcn5")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_w57ct"]
-shader = ExtResource("8_jqubv")
-shader_parameter/blur_amount = 0.0
-shader_parameter/tint_color = Color(1, 1, 1, 1)
-shader_parameter/tint_amount = 0.0
-shader_parameter/brightness = 1.0
-shader_parameter/noise_texture = SubResource("NoiseTexture2D_m6tfj")
-shader_parameter/noise_strength = 0.015
-shader_parameter/noise_speed = 1.0
+[ext_resource type="Material" uid="uid://m1s2m3es51td" path="res://shaders/crt_vhs_effects.tres" id="4_351vg"]
+[ext_resource type="Material" uid="uid://bmojmguoea6kr" path="res://shaders/bezel.tres" id="5_m2yhb"]
+[ext_resource type="Material" uid="uid://btuib5jp88iyw" path="res://shaders/noise.tres" id="6_351vg"]
 
 [node name="ShaderContainer" type="Container"]
 anchors_preset = 15
@@ -120,51 +15,34 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_wkkq6")
 
-[node name="VHSShader1" type="ColorRect" parent="."]
+[node name="VHSShader" type="ColorRect" parent="."]
 unique_name_in_owner = true
 visible = false
-material = SubResource("ShaderMaterial_wkkq6")
+material = ExtResource("2_351vg")
 layout_mode = 2
 script = ExtResource("2_elf6w")
-shader_material = SubResource("ShaderMaterial_wkkq6")
+shader_material = ExtResource("2_351vg")
 
-[node name="VHSShader2" type="ColorRect" parent="."]
+[node name="RetroShader" type="ColorRect" parent="."]
 unique_name_in_owner = true
 visible = false
-material = SubResource("ShaderMaterial_0idq4")
+material = ExtResource("4_351vg")
 layout_mode = 2
 script = ExtResource("2_elf6w")
-shader_material = SubResource("ShaderMaterial_0idq4")
+shader_material = ExtResource("4_351vg")
 
-[node name="CRTShader1" type="ColorRect" parent="."]
+[node name="BezelShader" type="ColorRect" parent="."]
 unique_name_in_owner = true
 visible = false
-material = SubResource("ShaderMaterial_5du23")
-layout_mode = 2
-script = ExtResource("2_elf6w")
-shader_material = SubResource("ShaderMaterial_5du23")
-
-[node name="CRTShader2" type="ColorRect" parent="."]
-unique_name_in_owner = true
-visible = false
-material = SubResource("ShaderMaterial_gfqpc")
+material = ExtResource("5_m2yhb")
 custom_minimum_size = Vector2(1280, 960)
 layout_mode = 2
 script = ExtResource("2_elf6w")
-shader_material = SubResource("ShaderMaterial_gfqpc")
-
-[node name="CRTShader3" type="ColorRect" parent="."]
-unique_name_in_owner = true
-visible = false
-material = SubResource("ShaderMaterial_4xdhc")
-layout_mode = 2
-script = ExtResource("2_elf6w")
-shader_material = SubResource("ShaderMaterial_4xdhc")
+shader_material = ExtResource("5_m2yhb")
 
 [node name="NoiseShader" type="ColorRect" parent="."]
 unique_name_in_owner = true
-visible = false
-material = SubResource("ShaderMaterial_w57ct")
+material = ExtResource("6_351vg")
 layout_mode = 2
 script = ExtResource("2_elf6w")
-shader_material = SubResource("ShaderMaterial_w57ct")
+shader_material = ExtResource("6_351vg")

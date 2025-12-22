@@ -1,192 +1,46 @@
-[gd_scene load_steps=5 format=3 uid="uid://b42ev167pgdvl"]
+[gd_scene load_steps=4 format=3 uid="uid://b42ev167pgdvl"]
 
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_nw4ou"]
 [ext_resource type="Script" uid="uid://babs6t3jjkoq2" path="res://ui/menus/menu_shaders.gd" id="1_q0qgx"]
-[ext_resource type="PackedScene" uid="uid://c5kj1uj0ohnmm" path="res://ui/settings/setting_bool.tscn" id="1_rla85"]
-[ext_resource type="PackedScene" uid="uid://b1r8nehsgp111" path="res://ui/settings/setting_number.tscn" id="2_q0qgx"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nn34v"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 0.8)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.12549, 0.156863, 0.188235, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+anti_aliasing = false
 
 [node name="Filters" type="PanelContainer"]
 texture_filter = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_right = -1037.0
+offset_bottom = -903.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 0
 theme = ExtResource("1_nw4ou")
-theme_type_variation = &"MenuBase"
+theme_override_styles/panel = SubResource("StyleBoxFlat_nn34v")
 script = ExtResource("1_q0qgx")
 metadata/_tab_index = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-
-[node name="Setting_ShaderVHS" parent="VBoxContainer" instance=ExtResource("1_rla85")]
-unique_name_in_owner = true
-layout_mode = 2
-setting_name = "VHS Shader"
-setting_name_min_width = 160
-
-[node name="Setting_ShaderVHSSmear" parent="VBoxContainer" instance=ExtResource("2_q0qgx")]
-unique_name_in_owner = true
-modulate = Color(0.25, 0.25, 0.25, 1)
-layout_mode = 2
-setting_value_min_width = 25
-max_value = 2.0
-step = 0.02
-as_percent = true
-percent_factor = 50.0
-format_string = "%d%%"
-setting_name = "Smear Amount"
-setting_name_min_width = 140
-setting_name_indent = 7
-enabled = false
-
-[node name="Setting_ShaderVHSWiggle" parent="VBoxContainer" instance=ExtResource("2_q0qgx")]
-unique_name_in_owner = true
-modulate = Color(0.25, 0.25, 0.25, 1)
-layout_mode = 2
-setting_value_min_width = 25
-max_value = 0.2
-step = 0.002
-as_percent = true
-percent_factor = 500.0
-format_string = "%d%%"
-setting_name = "Wiggle Amount"
-setting_name_min_width = 140
-setting_name_indent = 7
-enabled = false
-
-[node name="Setting_ShaderVHSNoise" parent="VBoxContainer" instance=ExtResource("2_q0qgx")]
-unique_name_in_owner = true
-modulate = Color(0.25, 0.25, 0.25, 1)
-layout_mode = 2
-setting_value_min_width = 25
-max_value = 2.0
-step = 0.02
-as_percent = true
-percent_factor = 50.0
-format_string = "%d%%"
-setting_name = "Noise Crease Amount"
-setting_name_min_width = 140
-setting_name_indent = 7
-enabled = false
-
-[node name="Setting_ShaderVHSTape" parent="VBoxContainer" instance=ExtResource("2_q0qgx")]
-unique_name_in_owner = true
-modulate = Color(0.25, 0.25, 0.25, 1)
-layout_mode = 2
-setting_value_min_width = 25
-max_value = 1.0
-step = 0.01
-as_percent = true
-format_string = "%d%%"
-setting_name = "Tape Crease Amount"
-setting_name_min_width = 140
-setting_name_indent = 7
-enabled = false
-
-[node name="Setting_ShaderCRT" parent="VBoxContainer" instance=ExtResource("1_rla85")]
-unique_name_in_owner = true
-layout_mode = 2
-setting_name = "CRT Shader"
-setting_name_min_width = 160
-
-[node name="Setting_ShaderCRTScanLines" parent="VBoxContainer" instance=ExtResource("1_rla85")]
-unique_name_in_owner = true
-modulate = Color(0.25, 0.25, 0.25, 1)
-layout_mode = 2
-value = true
-setting_name = "Scan Lines"
-setting_name_min_width = 160
-setting_name_indent = 32
-enabled = false
-
-[node name="Setting_ShaderCRTReverseCurvature" parent="VBoxContainer" instance=ExtResource("1_rla85")]
-unique_name_in_owner = true
-modulate = Color(0.25, 0.25, 0.25, 1)
-layout_mode = 2
-setting_name = "Reverse Curvature"
-setting_name_min_width = 160
-setting_name_indent = 32
-enabled = false
-
-[node name="Setting_ShaderCRTCurvature" parent="VBoxContainer" instance=ExtResource("2_q0qgx")]
-unique_name_in_owner = true
-modulate = Color(0.25, 0.25, 0.25, 1)
-layout_mode = 2
-setting_value_min_width = 25
-max_value = 1.0
-step = 0.01
-as_percent = true
-format_string = "%d%%"
-setting_name = "Curvature Amount"
-setting_name_min_width = 140
-setting_name_indent = 7
-enabled = false
-
-[node name="Setting_ShaderCRTVignette" parent="VBoxContainer" instance=ExtResource("2_q0qgx")]
-unique_name_in_owner = true
-modulate = Color(0.25, 0.25, 0.25, 1)
-layout_mode = 2
-setting_value_min_width = 25
-max_value = 1.0
-step = 0.01
-as_percent = true
-format_string = "%d%%"
-setting_name = "Vignette Amount"
-setting_name_min_width = 140
-setting_name_indent = 7
-enabled = false
-
-[node name="Setting_ShaderCRTAudioB" parent="VBoxContainer" instance=ExtResource("2_q0qgx")]
-unique_name_in_owner = true
-modulate = Color(0.25, 0.25, 0.25, 1)
-layout_mode = 2
-setting_value_min_width = 25
-max_value = 1.0
-step = 0.01
-as_percent = true
-format_string = "%d%%"
-setting_name = "Audio to Brightness"
-setting_name_min_width = 140
-setting_name_indent = 7
-enabled = false
-
-[node name="Setting_ShaderCRTAudioCA" parent="VBoxContainer" instance=ExtResource("2_q0qgx")]
-unique_name_in_owner = true
-modulate = Color(0.25, 0.25, 0.25, 1)
-layout_mode = 2
-setting_value_min_width = 25
-max_value = 0.1
-step = 0.001
-as_percent = true
-percent_factor = 1000.0
-format_string = "%d%%"
-setting_name = "Audio to C. Abberation"
-setting_name_min_width = 140
-setting_name_indent = 7
-enabled = false
-
-[node name="Setting_ShaderNoise" parent="VBoxContainer" instance=ExtResource("1_rla85")]
-unique_name_in_owner = true
-layout_mode = 2
-setting_name = "Noise"
-setting_name_min_width = 160
-
-[node name="Setting_ShaderNoiseStrength" parent="VBoxContainer" instance=ExtResource("2_q0qgx")]
-unique_name_in_owner = true
-modulate = Color(0.25, 0.25, 0.25, 1)
-layout_mode = 2
-setting_value_min_width = 25
-max_value = 0.1
-step = 0.001
-as_percent = true
-percent_factor = 1000.0
-format_string = "%d%%"
-setting_name = "Noise Strength"
-setting_name_min_width = 140
-setting_name_indent = 7
-enabled = false
