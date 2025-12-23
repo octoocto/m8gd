@@ -67,9 +67,11 @@ var _value_read_fn: Callable
 func _ready() -> void:
 	assert(get("value") != null, "SettingBase subclass %s must have a 'value' property" % name)
 
-	if not Engine.is_editor_hint():
-		self.main = await Main.get_instance()
+	self.main = await Main.get_instance()
+	if is_instance_valid(self.main):
 		self.config = main.config
+
+	Log.ln("SettingBase '%s' ready" % name)
 
 	super()
 
@@ -116,8 +118,8 @@ func uninit() -> void:
 ##
 func setting_connect(value_read_fn: Variant, value_changed_fn: Callable) -> void:
 	assert(!_is_initialized, "This setting has already been initialized: %s" % name)
-	assert(self.main != null or self.config != null, "Tried to initialize setting, but main has not finished initializing")
-	assert(self.config != null, "Tried to initialize setting, but config is not loaded")
+	assert(is_instance_valid(self.main), "Tried to initialize setting, but main has not finished initializing")
+	assert(is_instance_valid(self.config), "Tried to initialize setting, but config is not loaded")
 	assert(value_changed_fn is Callable and value_changed_fn.is_valid(), "value_changed_fn must be a valid Callable")
 	assert("value" in self, "SettingBase subclass %s must have a 'value' property" % name)
 
@@ -192,12 +194,10 @@ func setting_connect_scene(property: String, value_changed_fn := Callable()) -> 
 ## set the property in [overlay], and call [value_changed_fn] if defined.
 ##
 func setting_connect_overlay(overlay: Control, property: String, value_changed_fn := Callable()) -> void:
-	var config_property := _get_propkey_overlay(overlay, property)
 	setting_connect(
-		func() -> Variant: return main.config.get_property(config_property, overlay.get(property)),
+		func() -> Variant: return config.config_overlay_get(overlay, property),
 		func(value: Variant) -> void:
-			overlay.set(property, value)
-			main.config.set_property(config_property, overlay.get(property))
+			config.config_overlay_set(overlay, property, value)
 			if value_changed_fn.is_valid(): value_changed_fn.call(value)
 			Events.setting_changed.emit(self, value)
 	)

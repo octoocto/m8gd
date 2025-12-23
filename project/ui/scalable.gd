@@ -1,5 +1,9 @@
 @tool
+class_name ScalableContainer
 extends Container
+## A container that scales its children.
+##
+## All children will be fit to the full size of the container (similar to FULL_RECT) after scaling.
 
 @export var content_scale := 1:
 	set(value):

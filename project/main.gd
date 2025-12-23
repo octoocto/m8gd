@@ -2,7 +2,11 @@ class_name Main extends Node
 
 signal m8_system_info_received(hardware: String, firmware: String)
 signal m8_theme_changed(colors: PackedColorArray, complete: bool)
+
+@warning_ignore("UNUSED_SIGNAL")
 signal m8_connected
+
+@warning_ignore("UNUSED_SIGNAL")
 signal m8_disconnected
 
 const DEVICE_SCAN_INTERVAL: float = 5.0
@@ -26,12 +30,6 @@ static var instance: Main = null
 @export var visualizer_brightness_amount := 0.1
 @export var visualizer_frequency_min := 0
 @export var visualizer_frequency_max := 400
-
-@export var overlay_integer_zoom: int = 1:
-	set(value):
-		overlay_integer_zoom = value
-		if is_inside_tree():
-			_overlay_update_viewport_size()
 
 var m8_virtual_keyboard_enabled := false
 var m8_virtual_keyboard_notes := []
@@ -66,12 +64,7 @@ var _window_drag_initial_pos := Vector2.ZERO
 @onready var scene_root: Node = %SceneRoot
 @onready var current_scene: M8Scene = null
 
-# overlays
-@onready var overlay_keys: OverlayKeys = %KeyOverlay
-@onready var overlay_spectrum: OverlayBase = %OverlayAudioSpectrum
-@onready var overlay_waveform: OverlayBase = %OverlayAudioWaveform
-@onready var overlay_display: OverlayBase = %OverlayDisplayPanel
-
+@onready var overlays: OverlayContainer = %OverlayContainer
 @onready var shaders: ShaderContainer = %ShaderContainer
 
 @onready var menu: MainMenu = %MainMenuPanel
@@ -88,10 +81,13 @@ static func is_ready() -> bool:
 	return instance != null
 
 
-static func get_instance() -> Main:
+static func get_instance(high_priority := false) -> Main:
 	if not Engine.is_editor_hint():
 		if not Main.is_ready():
-			await Events.initialized
+			if high_priority:
+				await Events.preinitialized
+			else:
+				await Events.initialized
 		return instance
 	return instance
 
@@ -110,7 +106,8 @@ func _ready() -> void:
 			device_manager.init(self)
 			m8_client.system_info.connect(on_m8_system_info)
 			m8_client.disconnected.connect(on_m8_device_disconnect)
-			m8_client.theme_changed.connect(on_m8_theme_changed),
+			m8_client.theme_changed.connect(on_m8_theme_changed)
+			m8_client.key_pressed.connect(Events.device_key_pressed.emit),
 		"init devices"
 	)
 
@@ -123,7 +120,8 @@ func _ready() -> void:
 	# %SplashContainer.visible = config.splash_show
 
 	instance = self
-	Events.initialized.emit(self)
+	Log.call_task(Events.preinitialized.emit.bind(self), "emit preinitialized signal")
+	Log.call_task(Events.initialized.emit.bind(self), "emit initialized signal")
 
 	device_manager.start_waiting_for_devices()
 	_update_labels()
@@ -372,7 +370,8 @@ func load_profile(profile_name: String) -> bool:
 			assert(scene_path != null)
 
 			load_scene(scene_path)
-			init_overlays()
+			m8_client.set_display_background_alpha(0)
+			overlays.reload_overlays()
 
 			Events.profile_loaded.emit(profile_name)
 
@@ -414,25 +413,6 @@ func delete_profile(profile_name: String) -> void:
 	if profile_name == get_current_profile_name():
 		load_default_profile()
 	config.delete_profile(profile_name)
-
-
-##
-## Initializes or re-initializes the state of the overlays.
-## The overlays' states will be loaded from the config.
-##
-func init_overlays() -> void:
-	m8_client.set_display_background_alpha(0)
-
-	# here we use a method from the Overlay Menu to init the overlay properties,
-	# even though we're not showing the menu here
-	menu_overlay._init_params_for(overlay_display)
-	menu_overlay._init_params_for(overlay_keys)
-	menu_overlay._init_params_for(overlay_spectrum)
-	menu_overlay._init_params_for(overlay_waveform)
-
-	if !Events.window_modified.is_connected(_overlay_update_viewport_size):
-		Events.window_modified.connect(_overlay_update_viewport_size)
-	_overlay_update_viewport_size()
 
 
 ##
@@ -876,29 +856,3 @@ func _load_scene_from_file_path(scene_path: String) -> M8Scene:
 	assert(scene != null and scene is M8Scene)
 
 	return scene
-
-
-@onready var overlay_container: CenterContainer = %OverlayContainer
-@onready var overlay_control: Control = %OverlayControl
-@onready var overlay_sub_viewport: SubViewport = %OverlaySubViewport
-@onready var overlay_sub_viewport_container: Control = %OverlaySubViewportContainer
-
-
-func _overlay_update_viewport_size() -> void:
-	var container_scale := overlay_integer_zoom / display_get_scale()
-	var window_size := get_window().get_size()
-	var viewport_size: Vector2i = window_size / overlay_integer_zoom
-
-	overlay_container.set_anchors_preset(Control.PRESET_FULL_RECT)
-
-	overlay_control.custom_minimum_size = window_size * container_scale
-	overlay_control.reset_size()
-
-	overlay_sub_viewport_container.scale = Vector2(container_scale, container_scale)
-	overlay_sub_viewport_container.set_anchors_preset(Control.PRESET_TOP_LEFT)
-
-	overlay_sub_viewport.set_size(viewport_size)
-
-	await get_tree().process_frame
-	overlay_container.position = Vector2.ZERO
-	overlay_sub_viewport_container.position = Vector2.ZERO

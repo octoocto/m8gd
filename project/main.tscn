@@ -1,11 +1,8 @@
-[gd_scene load_steps=24 format=3 uid="uid://b265ke8cr3dgr"]
+[gd_scene load_steps=21 format=3 uid="uid://b265ke8cr3dgr"]
 
 [ext_resource type="Script" uid="uid://d0olbd611iax7" path="res://main.gd" id="1_4g2n0"]
-[ext_resource type="PackedScene" uid="uid://263mog4cxgwr" path="res://overlays/overlay_audio_spectrum.tscn" id="2_tbmna"]
-[ext_resource type="PackedScene" uid="uid://bkmg6tijdna2y" path="res://overlays/overlay_display_panel.tscn" id="4_nrhlm"]
-[ext_resource type="PackedScene" uid="uid://dq6heks88e2ip" path="res://overlays/overlay_audio_waveform.tscn" id="5_p87tv"]
+[ext_resource type="PackedScene" uid="uid://bunbsbcuarpxe" path="res://ui/overlay_container.tscn" id="3_dg77c"]
 [ext_resource type="PackedScene" uid="uid://d13t756slc8b0" path="res://ui/menus/main_menu.tscn" id="7_k5oyo"]
-[ext_resource type="PackedScene" uid="uid://ca2jqh2tc7jix" path="res://overlays/overlay_keys.tscn" id="8_dnyct"]
 [ext_resource type="PackedScene" uid="uid://cbhidmd8p855r" path="res://ui/shader_container.tscn" id="8_yaehf"]
 [ext_resource type="PackedScene" uid="uid://dv8crbibtrpck" path="res://ui/menus/menu_scene_config.tscn" id="9_bisyb"]
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="13_e5i6c"]
@@ -14,7 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://bmg26rkxtqtso" path="res://assets/icon/Close.png" id="14_p46wh"]
 [ext_resource type="PackedScene" uid="uid://bebvc2datqp85" path="res://ui/menus/menu_overlay_config.tscn" id="16_4bi6d"]
 [ext_resource type="PackedScene" uid="uid://cm2dn40rnose6" path="res://ui/menus/menu_scene_camera.tscn" id="16_getpj"]
-[ext_resource type="Script" path="res://ui/scalable.gd" id="18_d13ii"]
+[ext_resource type="Script" uid="uid://crbrf1okvuwkx" path="res://ui/scalable.gd" id="18_d13ii"]
 
 [sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_c3wmn"]
 
@@ -33,70 +30,70 @@ corner_radius_bottom_left = 8
 corner_detail = 4
 anti_aliasing_size = 0.5
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dg77c"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 0.8)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.12549, 0.156863, 0.188235, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ycdy4"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 0.8)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.12549, 0.156863, 0.188235, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w48qg"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 0.8)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.12549, 0.156863, 0.188235, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+anti_aliasing = false
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vivmo"]
-content_margin_left = 0.0
-content_margin_top = 0.0
-content_margin_right = 0.0
-content_margin_bottom = 0.0
-bg_color = Color(0, 0, 0, 0.8)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.12549, 0.156863, 0.188235, 1)
-corner_radius_top_left = 1
-corner_radius_top_right = 1
-corner_radius_bottom_right = 1
-corner_radius_bottom_left = 1
-expand_margin_left = 1.0
-expand_margin_top = 1.0
-expand_margin_right = 1.0
-expand_margin_bottom = 1.0
-anti_aliasing = false
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2cqfq"]
-content_margin_left = 0.0
-content_margin_top = 0.0
-content_margin_right = 0.0
-content_margin_bottom = 0.0
-bg_color = Color(0, 0, 0, 0.8)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.12549, 0.156863, 0.188235, 1)
-corner_radius_top_left = 1
-corner_radius_top_right = 1
-corner_radius_bottom_right = 1
-corner_radius_bottom_left = 1
-expand_margin_left = 1.0
-expand_margin_top = 1.0
-expand_margin_right = 1.0
-expand_margin_bottom = 1.0
-anti_aliasing = false
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yaehf"]
-content_margin_left = 0.0
-content_margin_top = 0.0
-content_margin_right = 0.0
-content_margin_bottom = 0.0
-bg_color = Color(0, 0, 0, 0.8)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.12549, 0.156863, 0.188235, 1)
-corner_radius_top_left = 1
-corner_radius_top_right = 1
-corner_radius_bottom_right = 1
-corner_radius_bottom_left = 1
-expand_margin_left = 1.0
-expand_margin_top = 1.0
-expand_margin_right = 1.0
-expand_margin_bottom = 1.0
-anti_aliasing = false
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_074og"]
 content_margin_left = 0.0
 content_margin_top = 0.0
 content_margin_right = 0.0
@@ -139,85 +136,12 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("13_e5i6c")
 
-[node name="OverlayContainer" type="CenterContainer" parent="CanvasLayer/UI"]
+[node name="OverlayContainer" parent="CanvasLayer/UI" instance=ExtResource("3_dg77c")]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 2
-size_flags_vertical = 2
-
-[node name="OverlayControl" type="Control" parent="CanvasLayer/UI/OverlayContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="OverlaySubViewportContainer" type="SubViewportContainer" parent="CanvasLayer/UI/OverlayContainer/OverlayControl"]
-unique_name_in_owner = true
-texture_filter = 1
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_right = 640.0
-offset_bottom = 480.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="OverlaySubViewport" type="SubViewport" parent="CanvasLayer/UI/OverlayContainer/OverlayControl/OverlaySubViewportContainer"]
-unique_name_in_owner = true
-disable_3d = true
-transparent_bg = true
-handle_input_locally = false
-snap_2d_transforms_to_pixel = true
-snap_2d_vertices_to_pixel = true
-canvas_item_default_texture_filter = 0
-size = Vector2i(640, 480)
-render_target_update_mode = 4
-
-[node name="OverlayAudioSpectrum" parent="CanvasLayer/UI/OverlayContainer/OverlayControl/OverlaySubViewportContainer/OverlaySubViewport" instance=ExtResource("2_tbmna")]
-unique_name_in_owner = true
-visible = false
+layout_mode = 0
 anchors_preset = 0
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 160.0
-offset_bottom = 160.0
 grow_horizontal = 1
 grow_vertical = 1
-
-[node name="OverlayDisplayPanel" parent="CanvasLayer/UI/OverlayContainer/OverlayControl/OverlaySubViewportContainer/OverlaySubViewport" instance=ExtResource("4_nrhlm")]
-unique_name_in_owner = true
-visible = false
-
-[node name="OverlayAudioWaveform" parent="CanvasLayer/UI/OverlayContainer/OverlayControl/OverlaySubViewportContainer/OverlaySubViewport" instance=ExtResource("5_p87tv")]
-unique_name_in_owner = true
-visible = false
-offset_bottom = 32.0
-
-[node name="KeyOverlay" parent="CanvasLayer/UI/OverlayContainer/OverlayControl/OverlaySubViewportContainer/OverlaySubViewport" instance=ExtResource("8_dnyct")]
-unique_name_in_owner = true
-visible = false
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -240.0
-offset_top = -240.0
-offset_right = 0.0
-offset_bottom = 0.0
-grow_horizontal = 0
-grow_vertical = 0
-size_flags_horizontal = 8
-size_flags_vertical = 10
-position_offset = Vector2i(-30, -100)
 
 [node name="ShaderContainer" parent="CanvasLayer/UI" instance=ExtResource("8_yaehf")]
 unique_name_in_owner = true
@@ -341,10 +265,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("13_e5i6c")
-theme_override_constants/margin_left = 0
-theme_override_constants/margin_top = 0
-theme_override_constants/margin_right = 0
-theme_override_constants/margin_bottom = 0
+theme_type_variation = &"ZeroMarginContainer"
 
 [node name="GridContainer" type="GridContainer" parent="CanvasLayer/UI/MarginContainer"]
 layout_mode = 2
@@ -383,6 +304,7 @@ size_flags_vertical = 8
 [node name="LabelStatus" type="Label" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3"]
 unique_name_in_owner = true
 visible = false
+modulate = Color(1, 1, 1, -0.0066658477)
 layout_mode = 2
 
 [node name="CameraStatus" type="RichTextLabel" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3"]
@@ -406,97 +328,85 @@ theme_override_constants/separation = 0
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
-color = Color(1, 1, 1, 0)
+color = Color(0, 0, 0, 1)
 
 [node name="Color_Palette2" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
-color = Color(1, 1, 1, 0)
 
 [node name="Color_Palette3" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
-color = Color(1, 1, 1, 0)
 
 [node name="Color_Palette4" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
-color = Color(1, 1, 1, 0)
 
 [node name="Color_Palette5" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
-color = Color(1, 1, 1, 0)
 
 [node name="Color_Palette6" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
-color = Color(1, 1, 1, 0)
 
 [node name="Color_Palette7" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
-color = Color(1, 1, 1, 0)
 
 [node name="Color_Palette8" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
-color = Color(1, 1, 1, 0)
 
 [node name="Color_Palette9" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
-color = Color(1, 1, 1, 0)
 
 [node name="Color_Palette10" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
-color = Color(1, 1, 1, 0)
 
 [node name="Color_Palette11" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
-color = Color(1, 1, 1, 0)
 
 [node name="Color_Palette12" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
-color = Color(1, 1, 1, 0)
 
 [node name="Color_Palette13" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
-color = Color(1, 1, 1, 0)
 
 [node name="Color_Palette14" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
-color = Color(1, 1, 1, 0)
+color = Color(0, 0, 0, 0)
 
 [node name="Color_Palette15" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
-color = Color(1, 1, 1, 0)
+color = Color(0, 0, 0, 0)
 
 [node name="Color_Palette16" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
-color = Color(1, 1, 1, 0)
+color = Color(0, 0, 0, 0)
 
 [node name="VBoxContainer4" type="VBoxContainer" parent="CanvasLayer/UI/MarginContainer/GridContainer"]
 visible = false
@@ -504,7 +414,8 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="ScalableContainer" type="Container" parent="CanvasLayer"]
+[node name="MenuContainer" type="Container" parent="CanvasLayer/UI"]
+layout_mode = 1
 anchors_preset = -1
 anchor_right = 0.5
 anchor_bottom = 0.5
@@ -514,23 +425,24 @@ scale = Vector2(2, 2)
 theme = ExtResource("13_e5i6c")
 script = ExtResource("18_d13ii")
 content_scale = 2
+metadata/_custom_type_script = "uid://cqeodrynubkp8"
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/ScalableContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/MenuContainer"]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/ScalableContainer/MarginContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/UI/MenuContainer/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 3
 
-[node name="DebugLabels" type="Control" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer2"]
+[node name="DebugLabels" type="Control" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2"]
 unique_name_in_owner = true
 visible = false
 texture_filter = 1
 custom_minimum_size = Vector2(0, 120)
 layout_mode = 2
 
-[node name="LabelFPS" type="Label" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+[node name="LabelFPS" type="Label" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels"]
 unique_name_in_owner = true
 layout_mode = 0
 offset_top = 4.0
@@ -538,9 +450,9 @@ offset_right = 1.0
 offset_bottom = 27.0
 size_flags_horizontal = 0
 size_flags_vertical = 2
-text = "0"
+text = "145"
 
-[node name="LabelPort" type="Label" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+[node name="LabelPort" type="Label" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels"]
 unique_name_in_owner = true
 layout_mode = 0
 offset_top = 32.0
@@ -550,7 +462,7 @@ size_flags_vertical = 10
 text = "serial port"
 vertical_alignment = 2
 
-[node name="LabelAudioDevice" type="Label" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+[node name="LabelAudioDevice" type="Label" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels"]
 unique_name_in_owner = true
 layout_mode = 0
 offset_top = 48.0
@@ -560,7 +472,7 @@ size_flags_vertical = 10
 text = "audio device"
 vertical_alignment = 2
 
-[node name="LabelHardware" type="Label" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+[node name="LabelHardware" type="Label" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels"]
 unique_name_in_owner = true
 layout_mode = 0
 offset_top = 72.0
@@ -570,7 +482,7 @@ size_flags_vertical = 10
 text = "hardware"
 vertical_alignment = 2
 
-[node name="LabelFirmware" type="Label" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+[node name="LabelFirmware" type="Label" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels"]
 unique_name_in_owner = true
 layout_mode = 0
 offset_top = 88.0
@@ -580,7 +492,7 @@ size_flags_vertical = 10
 text = "firmware"
 vertical_alignment = 2
 
-[node name="LabelAudioPeak" type="Label" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+[node name="LabelAudioPeak" type="Label" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
@@ -591,7 +503,7 @@ size_flags_vertical = 10
 text = "0.0 dB"
 vertical_alignment = 2
 
-[node name="LabelAudioPeakAvg" type="Label" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+[node name="LabelAudioPeakAvg" type="Label" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels"]
 unique_name_in_owner = true
 visible = false
 modulate = Color(0.75, 0.75, 1, 1)
@@ -603,7 +515,7 @@ size_flags_vertical = 10
 text = "0.0 dB"
 vertical_alignment = 2
 
-[node name="LabelAudioPeakMax" type="Label" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+[node name="LabelAudioPeakMax" type="Label" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels"]
 unique_name_in_owner = true
 visible = false
 modulate = Color(1, 0.75, 0.75, 1)
@@ -615,7 +527,7 @@ size_flags_vertical = 10
 text = "0.0 dB"
 vertical_alignment = 2
 
-[node name="LabelAudioLevel" type="Label" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+[node name="LabelAudioLevel" type="Label" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels"]
 unique_name_in_owner = true
 visible = false
 modulate = Color(0.75, 1, 0.75, 1)
@@ -627,7 +539,7 @@ size_flags_vertical = 10
 text = "0.0 dB"
 vertical_alignment = 2
 
-[node name="RectAudioLevel" type="ColorRect" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+[node name="RectAudioLevel" type="ColorRect" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
@@ -637,7 +549,7 @@ offset_right = 96.0
 offset_bottom = 172.0
 color = Color(0.5, 1, 0.5, 1)
 
-[node name="RectAudioLevelAvg" type="ColorRect" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+[node name="RectAudioLevelAvg" type="ColorRect" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
@@ -646,62 +558,62 @@ offset_top = 156.0
 offset_right = 96.0
 offset_bottom = 172.0
 
-[node name="LabelConsole" type="RichTextLabel" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer2"]
+[node name="LabelConsole" type="RichTextLabel" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2"]
 unique_name_in_owner = true
 texture_filter = 1
 layout_mode = 2
 fit_content = true
 script = ExtResource("14_getpj")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/ScalableContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/MenuContainer/MarginContainer"]
 layout_mode = 2
 size_flags_vertical = 8
 mouse_filter = 2
 
-[node name="SceneCameraMenu" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer" instance=ExtResource("16_getpj")]
+[node name="SceneCameraMenu" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer" instance=ExtResource("16_getpj")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
-theme_override_styles/panel = SubResource("StyleBoxFlat_vivmo")
+theme_override_styles/panel = SubResource("StyleBoxFlat_dg77c")
 
-[node name="SceneConfigMenu" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer" instance=ExtResource("9_bisyb")]
+[node name="SceneConfigMenu" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer" instance=ExtResource("9_bisyb")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
-theme_override_styles/panel = SubResource("StyleBoxFlat_2cqfq")
+theme_override_styles/panel = SubResource("StyleBoxFlat_ycdy4")
 
-[node name="MenuOverlay" parent="CanvasLayer/ScalableContainer/MarginContainer/VBoxContainer" instance=ExtResource("16_4bi6d")]
+[node name="MenuOverlay" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer" instance=ExtResource("16_4bi6d")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
-theme_override_styles/panel = SubResource("StyleBoxFlat_yaehf")
+theme_override_styles/panel = SubResource("StyleBoxFlat_w48qg")
 
-[node name="MainMenuContainer" type="ScrollContainer" parent="CanvasLayer/ScalableContainer"]
+[node name="MainMenuContainer" type="ScrollContainer" parent="CanvasLayer/UI/MenuContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/ScalableContainer/MainMenuContainer"]
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/UI/MenuContainer/MainMenuContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="MainMenuPanel" parent="CanvasLayer/ScalableContainer/MainMenuContainer/CenterContainer" instance=ExtResource("7_k5oyo")]
+[node name="MainMenuPanel" parent="CanvasLayer/UI/MenuContainer/MainMenuContainer/CenterContainer" instance=ExtResource("7_k5oyo")]
 unique_name_in_owner = true
 visible = false
 z_index = 1
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_074og")
+theme_override_styles/panel = SubResource("StyleBoxFlat_vivmo")
 
 [node name="M8GD" type="M8GD" parent="."]
 unique_name_in_owner = true

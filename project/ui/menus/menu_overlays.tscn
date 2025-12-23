@@ -1,10 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://b8sdswwu5dtu5"]
+[gd_scene load_steps=6 format=3 uid="uid://b8sdswwu5dtu5"]
 
 [ext_resource type="PackedScene" uid="uid://b1r8nehsgp111" path="res://ui/settings/setting_number.tscn" id="1_f030a"]
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_mcmtq"]
-[ext_resource type="Script" uid="uid://b6dhtjg3kwm7f" path="res://ui/menus/menu_overlays.gd" id="1_ta51e"]
+[ext_resource type="Script" uid="uid://bkb47um8cpspl" path="res://ui/menus/menu_overlays.gd" id="1_ta51e"]
 [ext_resource type="PackedScene" uid="uid://c5kj1uj0ohnmm" path="res://ui/settings/setting_bool.tscn" id="2_ta51e"]
-[ext_resource type="PackedScene" uid="uid://jvyexp7mquoa" path="res://ui/button.tscn" id="5_2be1l"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mcmtq"]
 content_margin_left = 0.0
@@ -27,54 +26,10 @@ expand_margin_right = 1.0
 expand_margin_bottom = 1.0
 anti_aliasing = false
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2be1l"]
-content_margin_left = 0.0
-content_margin_top = 0.0
-content_margin_right = 0.0
-content_margin_bottom = 0.0
-bg_color = Color(1, 1, 1, 0)
-expand_margin_left = 2.0
-expand_margin_top = 2.0
-expand_margin_right = 2.0
-expand_margin_bottom = 2.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l8ly8"]
-content_margin_left = 0.0
-content_margin_top = 0.0
-content_margin_right = 0.0
-content_margin_bottom = 0.0
-bg_color = Color(1, 1, 1, 0)
-expand_margin_left = 2.0
-expand_margin_top = 2.0
-expand_margin_right = 2.0
-expand_margin_bottom = 2.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3ioj5"]
-content_margin_left = 0.0
-content_margin_top = 0.0
-content_margin_right = 0.0
-content_margin_bottom = 0.0
-bg_color = Color(1, 1, 1, 0)
-expand_margin_left = 2.0
-expand_margin_top = 2.0
-expand_margin_right = 2.0
-expand_margin_bottom = 2.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ov0dx"]
-content_margin_left = 0.0
-content_margin_top = 0.0
-content_margin_right = 0.0
-content_margin_bottom = 0.0
-bg_color = Color(1, 1, 1, 0)
-expand_margin_left = 2.0
-expand_margin_top = 2.0
-expand_margin_right = 2.0
-expand_margin_bottom = 2.0
-
 [node name="Overlays" type="PanelContainer"]
 texture_filter = 1
-offset_right = 333.0
-offset_bottom = 64.0
+offset_right = 244.0
+offset_bottom = 27.0
 theme = ExtResource("1_mcmtq")
 theme_override_styles/panel = SubResource("StyleBoxFlat_mcmtq")
 script = ExtResource("1_ta51e")
@@ -97,75 +52,12 @@ setting_name = "Integer Scale"
 unique_name_in_owner = true
 layout_mode = 2
 value = true
-setting_name = "Apply Filters"
+setting_name = "Show Above Shaders"
 
 [node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
 layout_mode = 2
 
 [node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 columns = 2
-
-[node name="Setting_OverlaySpectrum" parent="VBoxContainer/GridContainer" instance=ExtResource("2_ta51e")]
-unique_name_in_owner = true
-layout_mode = 2
-setting_name = "Audio Spectrum"
-
-[node name="Button_OverlaySpectrumConfig" parent="VBoxContainer/GridContainer" instance=ExtResource("5_2be1l")]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_2be1l")
-color_bg_hover = 1
-color_bg_pressed = 0
-color_bg_disabled = 0
-text = "Configure..."
-inline = true
-
-[node name="Setting_OverlayWaveform" parent="VBoxContainer/GridContainer" instance=ExtResource("2_ta51e")]
-unique_name_in_owner = true
-layout_mode = 2
-setting_name = "Audio Waveform"
-
-[node name="Button_OverlayWaveformConfig" parent="VBoxContainer/GridContainer" instance=ExtResource("5_2be1l")]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_l8ly8")
-color_bg_hover = 1
-color_bg_pressed = 0
-color_bg_disabled = 0
-text = "Configure..."
-inline = true
-
-[node name="Setting_OverlayDisplay" parent="VBoxContainer/GridContainer" instance=ExtResource("2_ta51e")]
-unique_name_in_owner = true
-layout_mode = 2
-setting_name = "Screen Display"
-
-[node name="Button_OverlayDisplayConfig" parent="VBoxContainer/GridContainer" instance=ExtResource("5_2be1l")]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_3ioj5")
-color_bg_hover = 1
-color_bg_pressed = 0
-color_bg_disabled = 0
-text = "Configure..."
-inline = true
-
-[node name="Setting_OverlayKeys" parent="VBoxContainer/GridContainer" instance=ExtResource("2_ta51e")]
-unique_name_in_owner = true
-layout_mode = 2
-setting_name = "Key Display"
-
-[node name="Button_OverlayKeysConfig" parent="VBoxContainer/GridContainer" instance=ExtResource("5_2be1l")]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_ov0dx")
-color_bg_hover = 1
-color_bg_pressed = 0
-color_bg_disabled = 0
-text = "Configure..."
-inline = true

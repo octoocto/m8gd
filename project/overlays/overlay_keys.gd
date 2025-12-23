@@ -1,87 +1,114 @@
 @tool
-class_name OverlayKeys
+class_name OverlayKeycast
 extends OverlayBase
 
-const MAX_ITEMS := 10 + 3 # including sample items
+const MAX_ITEMS := 10 + 3  # including sample items
 
 const KEY_ITEM := preload("res://overlays/overlay_keys_item.tscn")
 
 @export_category("Style: Background")
 
 @export var style_background_enabled := true:
-	set(value): style_background_enabled = value; _update()
+	set(value):
+		style_background_enabled = value
+		_update()
 @export var style_corner_radius := 4:
-	set(value): style_corner_radius = value; _update()
+	set(value):
+		style_corner_radius = value
+		_update()
 @export var style_border_width_bottom := 2:
-	set(value): style_border_width_bottom = value; _update()
+	set(value):
+		style_border_width_bottom = value
+		_update()
 @export var style_padding := Vector2i(8, -1):
-	set(value): style_padding = value; _update()
+	set(value):
+		style_padding = value
+		_update()
 
 @export_category("Style: Font")
 
 @export var style_font_family := "":
-	set(value): style_font_family = value; _update()
+	set(value):
+		style_font_family = value
+		_update()
 @export_range(100, 800) var style_font_weight := 400:
-	set(value): style_font_weight = value; _update()
+	set(value):
+		style_font_weight = value
+		_update()
 @export var style_font_size := 16:
-	set(value): style_font_size = value; _update()
+	set(value):
+		style_font_size = value
+		_update()
 
 @export_category("Style: Colors")
 
-@export var color_directional := Color.WHITE:
-	set(value): color_directional = value; _update()
-@export var color_shift := Color.WHITE:
-	set(value): color_shift = value; _update()
-@export var color_play := Color.WHITE:
-	set(value): color_play = value; _update()
-@export var color_option := Color.WHITE:
-	set(value): color_option = value; _update()
-@export var color_edit := Color.WHITE:
-	set(value): color_edit = value; _update()
+@export var _color_directional := Color.WHITE:
+	set(value):
+		_color_directional = value
+		_update()
+@export var _color_shift := Color.WHITE:
+	set(value):
+		_color_shift = value
+		_update()
+@export var _color_play := Color.WHITE:
+	set(value):
+		_color_play = value
+		_update()
+@export var _color_option := Color.WHITE:
+	set(value):
+		_color_option = value
+		_update()
+@export var _color_edit := Color.WHITE:
+	set(value):
+		_color_edit = value
+		_update()
 
-@onready var anim_tween: Tween # tween for scroll animation
+@onready var anim_tween: Tween  # tween for scroll animation
 
-@onready var current_fade_tween: Tween # tween for scroll animation
+@onready var current_fade_tween: Tween  # tween for scroll animation
 
-@onready var current_item: OverlayKeysItem # last added item in the key overlay list
-@onready var current_keystate: int = -1 # bitfield of the pressed keys for the current item
+@onready var current_item: OverlayKeysItem  # last added item in the key overlay list
+@onready var current_keystate: int = -1  # bitfield of the pressed keys for the current item
+
 
 func _overlay_init() -> void:
-
-	visibility_changed.connect(func() -> void:
-		if not visible: clear()
+	visibility_changed.connect(
+		func() -> void:
+			if not visible:
+				clear()
 	)
-	main.m8_client.key_pressed.connect(func(key: int, pressed: bool) -> void:
-		if not pressed: return
-
-		if is_instance_valid(current_item):
-			if main.m8_client.get_key_state() == current_keystate:
-				inc_current_item()
+	main.m8_client.key_pressed.connect(
+		func(key: int, pressed: bool) -> void:
+			if not pressed:
 				return
-			elif key in [M8GD.M8_KEY_UP, M8GD.M8_KEY_DOWN, M8GD.M8_KEY_LEFT, M8GD.M8_KEY_RIGHT]:
-				if (main.m8_is_key_pressed(M8GD.M8_KEY_SHIFT) and
-					current_item.pressed_times == 1 and
-					current_item.keys_pressed == 1
-				):
-					update_current_item()
-					return
 
-		# add a new item
-		add_item()
+			if is_instance_valid(current_item):
+				if main.m8_client.get_key_state() == current_keystate:
+					inc_current_item()
+					return
+				elif key in [M8GD.M8_KEY_UP, M8GD.M8_KEY_DOWN, M8GD.M8_KEY_LEFT, M8GD.M8_KEY_RIGHT]:
+					if (
+						main.m8_is_key_pressed(M8GD.M8_KEY_SHIFT)
+						and current_item.pressed_times == 1
+						and current_item.keys_pressed == 1
+					):
+						update_current_item()
+						return
+
+			# add a new item
+			add_item()
 	)
 	_update()
 
-func _process(_delta: float) -> void:
+
+func _process(delta: float) -> void:
+	super(delta)
 	if Engine.is_editor_hint():
 		return
-	queue_redraw()
-	%ItemSample1.visible = draw_bounds
-	%ItemSample2.visible = draw_bounds
-	%ItemSample3.visible = draw_bounds
+	%ItemSample1.visible = _draw_bounds
+	%ItemSample2.visible = _draw_bounds
+	%ItemSample3.visible = _draw_bounds
 
-func _draw() -> void:
-	if draw_bounds:
-		draw_rect(Rect2(position_offset, size), Color.WHITE, false)
 
 func overlay_get_properties() -> Array[String]:
 	return [
@@ -94,6 +121,7 @@ func overlay_get_properties() -> Array[String]:
 		"style_font_size",
 	]
 
+
 ##
 ## Delete all items.
 ##
@@ -102,6 +130,7 @@ func clear() -> void:
 		if child != %ItemSample1 and child != %ItemSample2 and child != %ItemSample3:
 			%VBoxContainer.remove_child(child)
 			child.queue_free()
+
 
 ##
 ## Add a new item to the key overlay list. Sets the current item to the added item.
@@ -131,15 +160,19 @@ func add_item() -> void:
 
 	_restart_fade_tween()
 
+
 func _restart_fade_tween() -> void:
-	if current_fade_tween: current_fade_tween.kill()
+	if current_fade_tween:
+		current_fade_tween.kill()
 	current_fade_tween = create_tween()
 	current_fade_tween.tween_property(current_item, "modulate:a", 1, 0.0).set_ease(Tween.EASE_IN)
 	current_fade_tween.tween_property(current_item, "modulate:a", 0, 10.0).set_ease(Tween.EASE_IN)
-	current_fade_tween.tween_callback(func() -> void:
-		if is_instance_valid(current_item):
-			current_item.queue_free()
+	current_fade_tween.tween_callback(
+		func() -> void:
+			if is_instance_valid(current_item):
+				current_item.queue_free()
 	)
+
 
 ##
 ## Update the current item in the key overlay list.
@@ -147,7 +180,7 @@ func _restart_fade_tween() -> void:
 func update_current_item() -> void:
 	if not is_inside_tree() or not is_instance_valid(current_item):
 		return
-		
+
 	current_keystate = main.m8_client.get_key_state()
 	update_item(current_item)
 	current_item.pressed_u = main.m8_is_key_pressed(M8GD.M8_KEY_UP)
@@ -159,6 +192,7 @@ func update_current_item() -> void:
 	current_item.pressed_s = main.m8_is_key_pressed(M8GD.M8_KEY_SHIFT)
 	current_item.pressed_p = main.m8_is_key_pressed(M8GD.M8_KEY_PLAY)
 	_restart_fade_tween()
+
 
 func update_item(item: OverlayKeysItem) -> void:
 	if not is_inside_tree() or not is_instance_valid(item):
@@ -179,24 +213,28 @@ func update_item(item: OverlayKeysItem) -> void:
 	item.style_font_weight = style_font_weight
 	item.style_font_size = style_font_size
 
+
 ##
 ## Increment the displayed number of times the item was pressed for the current item.
 ##
 func inc_current_item() -> void:
-	if !is_inside_tree() or !is_instance_valid(current_item): return
+	if !is_inside_tree() or !is_instance_valid(current_item):
+		return
 	current_item.pressed_times += 1
 	update_current_item()
 
 
 func _update_colors() -> void:
-	color_directional = color_directional
-	color_shift = color_shift
-	color_play = color_play
-	color_option = color_option
-	color_edit = color_edit
+	_color_directional = _color_directional
+	_color_shift = _color_shift
+	_color_play = _color_play
+	_color_option = _color_option
+	_color_edit = _color_edit
+
 
 func _update() -> void:
-	if not is_inside_tree(): return
+	if not is_inside_tree():
+		return
 
 	%ControlOffset.size = size
 	%ControlOffset.position = position_offset

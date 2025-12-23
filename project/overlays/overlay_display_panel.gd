@@ -29,20 +29,15 @@ extends OverlayBase
 
 func _overlay_init() -> void:
 	%DisplayTextureRect.texture = main.m8_client.get_display()
-	main.m8_theme_changed.connect(func(_colors: PackedColorArray, _complete: bool) -> void:
-		_update()
+	main.m8_theme_changed.connect(
+		func(_colors: PackedColorArray, _complete: bool) -> void: _update()
 	)
+
 
 func overlay_get_properties() -> Array[String]:
 	return ["integer_scale", "opacity", "padding", "corner_radius"]
 
-func _process(_delta: float) -> void:
-	queue_redraw()
 
-func _draw() -> void:
-	if draw_bounds:
-		draw_rect(Rect2(position_offset, size), Color.WHITE, false)
-		
 func _update() -> void:
 	if is_inside_tree():
 		# update position
@@ -71,4 +66,4 @@ func _update() -> void:
 		%DisplayPanel.size = Vector2.ZERO
 		size = %DisplayPanel.size
 
-		anchors_preset = anchors_preset # needed for correct anchor to be used
+		anchors_preset = anchors_preset  # needed for correct anchor to be used

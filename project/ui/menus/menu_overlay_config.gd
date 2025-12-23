@@ -35,7 +35,7 @@ func menu_show() -> void:
 func menu_hide() -> void:
 	hide()
 	if overlay_target:
-		overlay_target.draw_bounds = false
+		overlay_target._draw_bounds = false
 		overlay_target = null
 
 
@@ -46,7 +46,7 @@ func menu_show_for(overlay: OverlayBase) -> void:
 	assert(!visible, "tried to open menu when menu is already open")
 
 	overlay_target = overlay
-	overlay_target.draw_bounds = true
+	overlay_target._draw_bounds = true
 	title = "Overlay > %s" % overlay_target.name
 
 	_init_params_for(overlay_target)
@@ -80,13 +80,19 @@ func _init_params_for(overlay: OverlayBase) -> void:
 		param_container.remove_child(child)
 		child.queue_free()
 
-	var props: Array[String] = overlay.overlay_get_properties()
-	var propinfo: Array[Dictionary] = overlay.get_property_list()
+	var proplist: Array[Dictionary] = overlay.get_property_list().filter(
+		func(prop: Dictionary) -> bool:
+			return (
+				prop.usage & PROPERTY_USAGE_STORAGE
+				and prop.usage & PROPERTY_USAGE_EDITOR
+				and prop.usage & PROPERTY_USAGE_SCRIPT_VARIABLE
+				and not prop.name.begins_with("_")
+			)
+	)
 
-	for prop in propinfo:
-		if prop.name not in props:
-			continue
+	print("overlay properties: %s" % [proplist])
 
+	for prop: Dictionary in proplist:
 		var property: String = prop.name
 		var setting := MenuUtils.create_setting_from_property(prop)
 

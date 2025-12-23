@@ -4,10 +4,10 @@ extends MenuBase
 @onready var s_highlights: Array = [
 	# [<setting>, <config property>, <overlay property>, <key name>]
 	[%SHighDir, "hl_color_directional"],
-	[%SHighOption, "hl_color_option", "color_option", "Option"],
-	[%SHighEdit, "hl_color_edit", "color_edit", "Edit"],
-	[%SHighShift, "hl_color_shift", "color_shift", "Shift"],
-	[%SHighPlay, "hl_color_play", "color_play", "Play"],
+	[%SHighOption, "hl_color_option", "_color_option", "Option"],
+	[%SHighEdit, "hl_color_edit", "_color_edit", "Edit"],
+	[%SHighShift, "hl_color_shift", "_color_shift", "Shift"],
+	[%SHighPlay, "hl_color_play", "_color_play", "Play"],
 ]
 
 @onready var s_keycaps: Array = [
@@ -28,6 +28,8 @@ extends MenuBase
 
 
 func _on_menu_init() -> void:
+	var overlay_keycast: OverlayKeycast = main.overlays.keycast
+
 	for arr: Array in s_keycaps:
 		var setting: SettingColor = arr[0]
 		var conf_property: String = arr[1]
@@ -46,7 +48,7 @@ func _on_menu_init() -> void:
 				conf_property,
 				func(value: Color) -> void:
 					_model_set_dir_key_highlight_color(value)
-					main.overlay_keys.color_directional = value
+					overlay_keycast._color_directional = value
 			)
 			continue
 
@@ -57,7 +59,7 @@ func _on_menu_init() -> void:
 			conf_property,
 			func(value: Color) -> void:
 				_model_set_key_highlight_color(key_name, value)
-				main.overlay_keys.set(overlay_prop, value)
+				overlay_keycast.set(overlay_prop, value)
 		)
 
 	for arr: Array in s_body:
@@ -89,9 +91,11 @@ func _on_menu_init() -> void:
 
 	Events.scene_loaded.connect(
 		func(_scene_path: String, scene: M8Scene) -> void:
-			var enabled := scene.has_3d_camera()
-			for setting: SettingColor in all_settings:
-				setting.enabled = enabled
+			var is_3d_scene := scene.has_3d_camera()
+			for arr: Array in s_keycaps:
+				arr[0].enabled = is_3d_scene
+			for arr: Array in s_body:
+				arr[0].enabled = is_3d_scene
 	)
 
 

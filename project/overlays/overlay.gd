@@ -1,16 +1,20 @@
 @tool
-class_name OverlayBase
+@abstract class_name OverlayBase
 extends Control
 
-@export var position_offset := Vector2i.ZERO:
+@export var _position_offset := Vector2i.ZERO:
 	set(value):
-		position_offset = value
+		_position_offset = value
 		_update()
 
-@export var draw_bounds := false:
+@export var _draw_bounds := false:
 	set(value):
-		draw_bounds = value
+		_draw_bounds = value
 		_update()
+
+var position_offset: Vector2i:
+	get:
+		return _position_offset
 
 var main: Main
 
@@ -21,14 +25,40 @@ func _ready() -> void:
 		Log.call_task(_overlay_init, "init overlay '%s'" % name)
 
 
+func _process(_delta: float) -> void:
+	if visible:
+		queue_redraw()
+
+
 ## Return a list of properties that should be config settings.
 func overlay_get_properties() -> Array[String]:
 	return []
 
 
-func _overlay_init() -> void:
-	assert(false, "_overlay_init() not implemented in %s" % name)
+func reload() -> void:
+	if not is_instance_valid(main):
+		return
+
+	var config := main.config
+
+	size = config.config_overlay_get(self, "size", size)
+	anchors_preset = config.config_overlay_get(self, "anchors_preset", anchors_preset)
+	position_offset = config.config_overlay_get(self, "position_offset", position_offset)
+
+	for prop_name in overlay_get_properties():
+		var prop_value: Variant = config.config_overlay_get(self, prop_name, get(prop_name))
+		set(prop_name, prop_value)
+
+	Log.ln("reloaded overlay from config: %s" % name)
+
+
+@abstract func _overlay_init() -> void
 
 
 func _update() -> void:
 	pass
+
+
+func _draw() -> void:
+	if _draw_bounds:
+		draw_rect(Rect2(_position_offset, size), Color.WHITE, false)

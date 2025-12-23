@@ -7,6 +7,11 @@ const DEFAULT_COLOR_KEYCAP := Color.BLACK
 const DEFAULT_COLOR_BODY := Color.BLACK
 const DEFAULT_PROFILE := "__default__"
 
+const CONFIG_KEY_OVERLAY = "overlay.%s.%s"
+const CONFIG_KEY_CAMERA = "camera.%s"
+const CONFIG_KEY_SHADER = "filter.%s.shader.%s"
+const CONFIG_KEY_SCENE_CUSTOM = "custom.%s"
+
 var version: int = 0
 
 # general settings
@@ -382,3 +387,21 @@ func find_overlay_node_path_from_hotkey(event: InputEvent) -> Variant:
 		if event.is_match(overlay_hotkeys[key]):
 			return key
 	return null
+
+
+func _get_propkey_overlay(overlay: Control, property: String) -> String:
+	return CONFIG_KEY_OVERLAY % [overlay.name, property]
+
+
+func config_overlay_get(overlay: Control, property: String, default: Variant = null) -> Variant:
+	var config_property := _get_propkey_overlay(overlay, property)
+	if default == null:
+		default = overlay.get(property)
+	print("config_overlay_get: %s, default=%s" % [config_property, default])
+	return get_property(config_property, default)
+
+
+func config_overlay_set(overlay: Control, property: String, value: Variant) -> void:
+	var config_property := _get_propkey_overlay(overlay, property)
+	overlay.set(property, value)
+	set_property(config_property, value)

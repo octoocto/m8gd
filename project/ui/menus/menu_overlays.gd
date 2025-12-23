@@ -4,77 +4,48 @@ extends MenuBase
 @onready var s_scale: SettingBase = %Setting_OverlayScale
 @onready var s_apply_filters: SettingBase = %Setting_OverlayFilters
 
-@onready var s_spectrum_enable: SettingBase = %Setting_OverlaySpectrum
-@onready var s_waveform_enable: SettingBase = %Setting_OverlayWaveform
-@onready var s_display_enable: SettingBase = %Setting_OverlayDisplay
-@onready var s_keys_enable: SettingBase = %Setting_OverlayKeys
-
-@onready var button_spectrum_config: UIButton = %Button_OverlaySpectrumConfig
-@onready var button_waveform_config: UIButton = %Button_OverlayWaveformConfig
-@onready var button_display_config: UIButton = %Button_OverlayDisplayConfig
-@onready var button_keys_config: UIButton = %Button_OverlayKeysConfig
+@onready var _grid: GridContainer = %GridContainer
 
 
 func _on_menu_init() -> void:
+	var overlays: OverlayContainer = main.overlays
+
 	s_scale.setting_connect_profile(
-		"overlay_scale", func(value: int) -> void: main.overlay_integer_zoom = value
+		"overlay_scale", func(value: int) -> void: overlays.content_scale = value
 	)
 
 	s_apply_filters.setting_connect_profile(
-		"overlay_apply_filters",
-		func(value: bool) -> void: main.get_node("%OverlayContainer").z_index = 0 if value else 1
+		"overlay_above_shaders", func(value: bool) -> void: overlays.z_index = 1 if value else 0
 	)
 
-	s_spectrum_enable.setting_connect_overlay(main.overlay_spectrum, "visible")
-	s_waveform_enable.setting_connect_overlay(main.overlay_waveform, "visible")
-	s_display_enable.setting_connect_overlay(main.overlay_display, "visible")
-	s_keys_enable.setting_connect_overlay(main.overlay_keys, "visible")
+	for overlay: OverlayBase in overlays.get_overlays():
+		var s_enable: SettingBase = MenuUtils.SETTING_BOOL.instantiate()
+		var button_open_config: UIButton = MenuUtils.UI_BUTTON.instantiate()
 
-	button_spectrum_config.enable_if(s_spectrum_enable)
-	button_waveform_config.enable_if(s_waveform_enable)
-	button_display_config.enable_if(s_display_enable)
-	button_keys_config.enable_if(s_keys_enable)
+		_grid.add_child(s_enable)
+		_grid.add_child(button_open_config)
 
-	main.overlay_waveform.visibility_changed.connect(
-		func() -> void: s_waveform_enable.value = main.overlay_waveform.visible
-	)
-	main.overlay_spectrum.visibility_changed.connect(
-		func() -> void: s_spectrum_enable.value = main.overlay_spectrum.visible
-	)
-	main.overlay_display.visibility_changed.connect(
-		func() -> void: s_display_enable.value = main.overlay_display.visible
-	)
-	main.overlay_keys.visibility_changed.connect(
-		func() -> void: s_keys_enable.value = main.overlay_keys.visible
-	)
+		s_enable.setting_name = overlay.name.trim_prefix("Overlay").capitalize()
+		s_enable.setting_name_min_width = 120
+		s_enable.setting_connect_overlay(overlay, "visible")
+
+		button_open_config.text = "Configure..."
+		button_open_config.enable_if(s_enable)
+		button_open_config.pressed.connect(
+			func() -> void:
+				main.menu.menu_hide()
+				main.menu_overlay.menu_show_for(overlay)
+		)
+
+		overlay.visibility_changed.connect(func() -> void: s_enable.value = overlay.visible)
+
+	Log.ln("added %d overlay settings" % overlays.get_overlays().size())
 
 	Events.profile_loaded.connect(
 		func(_profile_name: String) -> void:
 			s_scale.reload()
 			s_apply_filters.reload()
-			s_spectrum_enable.reload()
-			s_waveform_enable.reload()
-			s_display_enable.reload()
-			s_keys_enable.reload()
-	)
-
-	button_spectrum_config.pressed.connect(
-		func() -> void:
-			main.menu.menu_hide()
-			main.menu_overlay.menu_show_for(main.overlay_spectrum)
-	)
-	button_waveform_config.pressed.connect(
-		func() -> void:
-			main.menu.menu_hide()
-			main.menu_overlay.menu_show_for(main.overlay_waveform)
-	)
-	button_display_config.pressed.connect(
-		func() -> void:
-			main.menu.menu_hide()
-			main.menu_overlay.menu_show_for(main.overlay_display)
-	)
-	button_keys_config.pressed.connect(
-		func() -> void:
-			main.menu.menu_hide()
-			main.menu_overlay.menu_show_for(main.overlay_keys)
+			for s in _grid.get_children():
+				if s is SettingBase:
+					s.reload()
 	)

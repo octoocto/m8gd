@@ -34,6 +34,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_wkkq6")
+metadata/_custom_type_script = "uid://dieothx7vqs3u"
 
 [node name="VHSShader" type="ColorRect" parent="."]
 visible = false
@@ -41,6 +42,7 @@ material = ExtResource("2_351vg")
 layout_mode = 2
 script = ExtResource("2_elf6w")
 shader_material = ExtResource("2_351vg")
+metadata/_custom_type_script = "uid://dlk4lcv1bs1f4"
 
 [node name="RetroShader" type="ColorRect" parent="."]
 visible = false
@@ -48,6 +50,7 @@ material = ExtResource("4_351vg")
 layout_mode = 2
 script = ExtResource("2_elf6w")
 shader_material = ExtResource("4_351vg")
+metadata/_custom_type_script = "uid://dlk4lcv1bs1f4"
 
 [node name="BezelShader" type="ColorRect" parent="."]
 visible = false
@@ -56,6 +59,7 @@ custom_minimum_size = Vector2(1280, 960)
 layout_mode = 2
 script = ExtResource("2_elf6w")
 shader_material = ExtResource("5_m2yhb")
+metadata/_custom_type_script = "uid://dlk4lcv1bs1f4"
 
 [node name="PostProcessShader" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_u8vuk")

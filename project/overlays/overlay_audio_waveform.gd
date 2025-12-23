@@ -1,7 +1,7 @@
 @tool
 extends OverlayBase
 
-enum Type {PIXEL, BAR, LINE}
+enum Type { PIXEL, BAR, LINE }
 
 @export var type: Type = Type.BAR
 
@@ -33,10 +33,12 @@ var delta_left: float = 0.0
 
 var sample_rate: float
 
+
 func _overlay_init() -> void:
 	peaks.resize(int(size.x * style_rows))
 	peaks.fill(0.0)
 	sample_rate = 1 / analyzer_sample_rate
+
 
 func overlay_get_properties() -> Array[String]:
 	return [
@@ -55,11 +57,14 @@ func overlay_get_properties() -> Array[String]:
 		"style_line_width",
 	]
 
+
 func _colors() -> PackedColorArray:
 	var colors := main.m8_get_theme_colors()
 	return [colors[10], colors[11], colors[12]]
 
+
 func _process(delta: float) -> void:
+	super(delta)
 	if Engine.is_editor_hint():
 		return
 
@@ -72,16 +77,19 @@ func _process(delta: float) -> void:
 
 		if visible:
 			var peak_raw := main.audio_get_peak_volume()
-			var peak: float = clamp((((peak_raw.x + peak_raw.y) / 2.0) + analyzer_min_db) / analyzer_min_db, 0.0, 1.0)
+			var peak: float = clamp(
+				(((peak_raw.x + peak_raw.y) / 2.0) + analyzer_min_db) / analyzer_min_db, 0.0, 1.0
+			)
 			peaks.push_front(peak)
 
 	while peaks.size() > waveform_size:
 		peaks.pop_back()
 
-	queue_redraw()
 
 func _draw() -> void:
-	if !main.audio_is_spectrum_analyzer_enabled(): return
+	super()
+	if !main.audio_is_spectrum_analyzer_enabled():
+		return
 
 	var magnitudes := peaks.duplicate()
 
@@ -96,9 +104,9 @@ func _draw() -> void:
 	if style_mirror:
 		var mirrored := magnitudes.duplicate()
 		mirrored.reverse()
-		if magnitudes.size() % 2 == 0: # even elements
+		if magnitudes.size() % 2 == 0:  # even elements
 			magnitudes.append_array(mirrored)
-		else: # odd elements
+		else:  # odd elements
 			magnitudes.append_array(mirrored.slice(1))
 
 	var row_spacing: float = floor(size.y / float(style_rows))
@@ -111,10 +119,18 @@ func _draw() -> void:
 		if m < analyzer_high_cutoff:
 			color = lerp(_colors()[0], _colors()[1], m / analyzer_high_cutoff)
 		else:
-			color = lerp(_colors()[1], _colors()[2], (m - analyzer_high_cutoff) / analyzer_high_cutoff)
+			color = lerp(
+				_colors()[1], _colors()[2], (m - analyzer_high_cutoff) / analyzer_high_cutoff
+			)
 		color.a = lerp(1.0, m, style_peak_to_alpha_amount)
 
-		var offset := Vector2(floor(i / float(size.x)) * -int(size.x), floor(i / float(size.x)) * row_spacing + row_spacing) + Vector2(position_offset)
+		var offset := (
+			Vector2(
+				floor(i / float(size.x)) * -int(size.x),
+				floor(i / float(size.x)) * row_spacing + row_spacing
+			)
+			+ Vector2(position_offset)
+		)
 
 		if type == Type.PIXEL:
 			var point := Vector2(i, clamp(-magnitudes[i] * row_spacing, -row_spacing, 0.0))
@@ -148,13 +164,21 @@ func _draw() -> void:
 			if style_line_interlace:
 				match i % 4:
 					0:
-						points.append(Vector2(i, (-1.0 - magnitudes[i]) * row_spacing * 0.5) + offset)
+						points.append(
+							Vector2(i, (-1.0 - magnitudes[i]) * row_spacing * 0.5) + offset
+						)
 					1:
-						points.append(Vector2(i, (-2.0 - magnitudes[i]) * row_spacing * 0.25) + offset)
+						points.append(
+							Vector2(i, (-2.0 - magnitudes[i]) * row_spacing * 0.25) + offset
+						)
 					2:
-						points.append(Vector2(i, (-1.0 + magnitudes[i]) * row_spacing * 0.5) + offset)
+						points.append(
+							Vector2(i, (-1.0 + magnitudes[i]) * row_spacing * 0.5) + offset
+						)
 					3:
-						points.append(Vector2(i, (-2.0 + magnitudes[i]) * row_spacing * 0.25) + offset)
+						points.append(
+							Vector2(i, (-2.0 + magnitudes[i]) * row_spacing * 0.25) + offset
+						)
 				colors.append(color)
 			else:
 				points.append(Vector2(i, -magnitudes[i] * row_spacing) + offset)
@@ -165,24 +189,22 @@ func _draw() -> void:
 				points.clear()
 				colors.clear()
 		# Type.CIRCLE:
-			# add mirrored points to polygon
-			# var mirrored_points := polygon_points.map(func(vec: Vector2) -> Vector2:
-			# 	return vec.reflect(Vector2.UP)
-			# )
-			# mirrored_points.reverse()
-			# mirrored_points.pop_back()
-			# mirrored_points.pop_front()
-			# polygon_points.append_array(mirrored_points)
+		# add mirrored points to polygon
+		# var mirrored_points := polygon_points.map(func(vec: Vector2) -> Vector2:
+		# 	return vec.reflect(Vector2.UP)
+		# )
+		# mirrored_points.reverse()
+		# mirrored_points.pop_back()
+		# mirrored_points.pop_front()
+		# polygon_points.append_array(mirrored_points)
 
-			# draw_colored_polygon(polygon_points, Color.WHITE)
-			# draw_polyline(polygon_points, Color.WHITE, 4, true)
+		# draw_colored_polygon(polygon_points, Color.WHITE)
+		# draw_polyline(polygon_points, Color.WHITE, 4, true)
 
-	if draw_bounds:
-		draw_rect(Rect2(position_offset, size), Color.WHITE, false)
 
 func logrange(a: float, b: float, step: float) -> Array:
-	var pow_a := log(a) / log(10) # convert to 10^a form
-	var pow_b := log(b) / log(10) # convert to 10^b form
+	var pow_a := log(a) / log(10)  # convert to 10^a form
+	var pow_b := log(b) / log(10)  # convert to 10^b form
 	var d := (pow_b - pow_a) / float(step)
 
 	var logspace := []

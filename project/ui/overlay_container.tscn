@@ -1,0 +1,55 @@
+[gd_scene load_steps=6 format=3 uid="uid://bunbsbcuarpxe"]
+
+[ext_resource type="Script" uid="uid://cacd31v627pqr" path="res://ui/overlay_container.gd" id="1_c86kl"]
+[ext_resource type="PackedScene" uid="uid://263mog4cxgwr" path="res://overlays/overlay_audio_spectrum.tscn" id="2_p0qqa"]
+[ext_resource type="PackedScene" uid="uid://bkmg6tijdna2y" path="res://overlays/overlay_display_panel.tscn" id="3_uuwvl"]
+[ext_resource type="PackedScene" uid="uid://dq6heks88e2ip" path="res://overlays/overlay_audio_waveform.tscn" id="4_cat8f"]
+[ext_resource type="PackedScene" uid="uid://ca2jqh2tc7jix" path="res://overlays/overlay_keys.tscn" id="5_kpk2b"]
+
+[node name="OverlayContainer" type="Container"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_c86kl")
+metadata/_custom_type_script = "uid://cacd31v627pqr"
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 2
+
+[node name="OverlayAudioSpectrum" parent="Control" instance=ExtResource("2_p0qqa")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 1
+grow_vertical = 1
+size_flags_horizontal = 0
+
+[node name="OverlayDisplayPanel" parent="Control" instance=ExtResource("3_uuwvl")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+opacity = 2.0
+
+[node name="OverlayAudioWaveform" parent="Control" instance=ExtResource("4_cat8f")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+
+[node name="OverlayKeycast" parent="Control" instance=ExtResource("5_kpk2b")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+size_flags_horizontal = 8
+size_flags_vertical = 10
+position_offset = Vector2i(-30, -100)

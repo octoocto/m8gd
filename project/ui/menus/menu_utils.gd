@@ -8,6 +8,8 @@ const SETTING_STRING := preload("res://ui/settings/setting_string.tscn")
 const SETTING_COLOR := preload("res://ui/settings/setting_color.tscn")
 const SETTING_FILE := preload("res://ui/settings/setting_file.tscn")
 
+const UI_BUTTON := preload("res://ui/button.tscn")
+
 const HEADER := preload("res://ui/header.tscn")
 
 
