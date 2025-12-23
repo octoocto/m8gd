@@ -7,7 +7,7 @@ func ln(message: String, index: int = 1) -> void:
 	if stack.size() > index:
 		var source: String = stack[index].source.trim_prefix("res://")
 		var line: int = stack[index].line
-		print_rich("[color=aqua][%s:%d][/color] [color=white]%s[/color]" % [source, line, message])
+		print_rich("[color=white][%s:%d][/color] %s" % [source, line, message])
 	else:
 		print(message)
 
@@ -17,11 +17,11 @@ func call_task(fn: Callable, task_name: String = "") -> Variant:
 	if task_name == "":
 		task_name = "%s()" % fn.get_method()
 	var time := Time.get_ticks_msec()
-	ln('[color=green]starting task "%s"[/color]' % [task_name], 2)
+	ln('[color=aqua]VV starting task "%s" VV[/color]' % [task_name], 2)
 	var ret: Variant = fn.call()
 	ln(
 		(
-			'[color=green]finished task "%s" in %.3fs[/color]'
+			'[color=aqua]^^ finished task "%s" in %.3fs ^^[/color]'
 			% [task_name, (Time.get_ticks_msec() - time) / 1000.0]
 		),
 		2

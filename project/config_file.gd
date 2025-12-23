@@ -78,8 +78,8 @@ var version: int = 0
 @export var virtual_keyboard_enabled := false
 
 
-static func _print(text: String) -> void:
-	print_rich("[color=aqua]config> %s[/color]" % text)
+static func _print(message: String) -> void:
+	Log.ln("[color=green]%s[/color]" % message)
 
 
 ## Returns true if this script contains a default for the given setting.

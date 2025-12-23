@@ -681,10 +681,6 @@ func display_get_max_scale() -> float:
 	return min(horizontal_scale, vertical_scale)
 
 
-func _print(text: String) -> void:
-	print_rich("[color=green]%s[/color]" % text)
-
-
 func _handle_input_keys(event: InputEvent) -> bool:
 	if is_any_menu_open():
 		return false
