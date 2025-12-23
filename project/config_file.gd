@@ -313,7 +313,11 @@ func get_property(propname: String, default: Variant = null) -> Variant:
 func set_property(propname: String, value: Variant) -> void:
 	var props := _get_profile_properties()
 
-	if !props.has(propname) or props[propname] != type_convert(value, typeof(props[propname])):
+	if (
+		!props.has(propname)
+		or props[propname] != type_convert(value, typeof(props[propname]))
+		or props[propname] == null
+	):
 		props[propname] = value
 		_print("SET profile prop: %s = %s" % [propname, value])
 		Events.config_profile_property_changed.emit(current_profile, propname, value)

@@ -11,7 +11,7 @@ domain_warp_enabled = true
 [resource]
 width = 1024
 height = 1024
+noise = SubResource("FastNoiseLite_axpvc")
+color_ramp = SubResource("Gradient_mneab")
 as_normal_map = true
 bump_strength = 4.0
-color_ramp = SubResource("Gradient_mneab")
-noise = SubResource("FastNoiseLite_axpvc")
