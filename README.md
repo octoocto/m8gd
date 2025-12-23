@@ -1,5 +1,5 @@
 
-![screenshot](screenshot.png)
+![screenshot](screenshot2.png)
 
 <center>
 <h1>
@@ -202,13 +202,19 @@ $ xattr -dr com.apple.quarantine "m8gd.app"
 
 Please read [this guide](https://docs.godotengine.org/en/stable/tutorials/export/running_on_macos.html#app-is-signed-including-ad-hoc-signatures-but-not-notarized) from the Godot docs for more info on this workaround.
 
+# Screenshots
+
+![screenshot1](1.png)
+![screenshot2](2.png)
+![screenshot3](3.png)
+
 # Editing
 
 A debug binary of the gdextension `libm8gd` is required to open this project in the Godot editor.
 
 Please follow the build instructions in [Building](#building) (run `python build.py --dev` to compile a debug gdextension) or use a precompiled library from the latest release if available, placed in `project/addons/libm8gd/bin`.
 
-This project has been tested to work on [Godot 4.3-stable](https://godotengine.org/download/archive/4.3-stable/).
+This project has been tested to work on [Godot 4.5-stable](https://godotengine.org/download/archive/4.5-stable/).
 
 # Credits
 
@@ -219,9 +225,10 @@ This project has been tested to work on [Godot 4.3-stable](https://godotengine.o
 - [Prototype Textures](https://kenney-assets.itch.io/prototype-textures) by Kenney
 - [Succulent plants model](https://sketchfab.com/3d-models/succulent-plants-ea9a2df2a598410f9f63ba9380795f92) by uniko
 - [VHS with wiggle](https://godotshaders.com/shader/vhs/) shader by cyanone
-<!-- - [CRT Shader with realistic blurring](https://godotshaders.com/shader/crt-shader-with-realistic-blurring/) shader by Ahopness -->
-<!-- - [VHS and CRT monitor effect](godotshaders.com/shader/VHS-and-CRT-monitor-effect) shader by pend00 -->
 - [CRT + VHS Effects (Compatability Mode Safe)](https://godotshaders.com/shader/crt-vhs-effects-compatibility-mode-safe/) shader by doffu
   - [VHS Post Processing](https://godotshaders.com/shader/vhs-post-processing/) shader by LazarusOverlook
   - [CRT with Luminance Preservation](https://godotshaders.com/shader/crt-with-luminance-preservation/) shader by Harrison Allen
   - [Realistic CRT Shader](https://godotshaders.com/shader/realistic-crt-shader/) shader by c64cosmin
+
+<!-- - [CRT Shader with realistic blurring](https://godotshaders.com/shader/crt-shader-with-realistic-blurring/) shader by Ahopness -->
+<!-- - [VHS and CRT monitor effect](godotshaders.com/shader/VHS-and-CRT-monitor-effect) shader by pend00 -->
