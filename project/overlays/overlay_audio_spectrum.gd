@@ -37,28 +37,6 @@ func _overlay_init() -> void:
 	last_peaks.fill(0.0)
 
 
-func overlay_get_propertes() -> Array[String]:
-	return [
-		"analyzer_db_min",
-		"analyzer_freq_min",
-		"analyzer_freq_max",
-		"analyzer_smoothing",
-		"type",
-		"style_rows",
-		"style_mirror",
-		"style_reverse",
-		"style_peak_to_alpha_amount",
-		"style_bar_centered",
-		"style_bar_interlace",
-		"style_line_interlace",
-		"style_line_antialiased",
-		"style_line_width",
-		"style_magnitude_multiplier",
-		"style_color_style",
-		"style_color_high_cutoff"
-	]
-
-
 func _colors_meter() -> PackedColorArray:
 	var colors := main.m8_get_theme_colors()
 	return [colors[10], colors[11], colors[12]]

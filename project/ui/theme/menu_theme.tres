@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=45 format=3 uid="uid://c8lf57q2f23tp"]
+[gd_resource type="Theme" load_steps=46 format=3 uid="uid://c8lf57q2f23tp"]
 
 [ext_resource type="FontFile" uid="uid://c06qbkkbro8a2" path="res://assets/fonts/5_7.bmp" id="1_5wdbc"]
 [ext_resource type="StyleBox" uid="uid://c21o4cguy3ohp" path="res://ui/theme/stylebox_focus.tres" id="1_vtev8"]
@@ -49,6 +49,15 @@ bg_color = Color(0.282353, 0.313726, 0.376471, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o8pqj"]
 bg_color = Color(0.564706, 0.690196, 0.721569, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_17qiq"]
+bg_color = Color(1, 1, 1, 1)
+border_width_bottom = 2
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+anti_aliasing = false
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0tovt"]
 
@@ -183,6 +192,8 @@ ItemList/styles/hovered_selected_focus = SubResource("StyleBoxFlat_qvl5m")
 ItemList/styles/panel = SubResource("StyleBoxFlat_hmo5o")
 ItemList/styles/selected = SubResource("StyleBoxFlat_tt51d")
 ItemList/styles/selected_focus = SubResource("StyleBoxFlat_o8pqj")
+Key2D/base_type = &"Panel"
+Key2D/styles/panel = SubResource("StyleBoxFlat_17qiq")
 Label/colors/font_color = Color(1, 1, 1, 1)
 Label/styles/focus = ExtResource("1_vtev8")
 LabelHeader/base_type = &"Label"

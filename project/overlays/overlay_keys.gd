@@ -40,29 +40,6 @@ const KEY_ITEM := preload("res://overlays/overlay_keys_item.tscn")
 		style_font_size = value
 		_update()
 
-@export_category("Style: Colors")
-
-@export var _color_directional := Color.WHITE:
-	set(value):
-		_color_directional = value
-		_update()
-@export var _color_shift := Color.WHITE:
-	set(value):
-		_color_shift = value
-		_update()
-@export var _color_play := Color.WHITE:
-	set(value):
-		_color_play = value
-		_update()
-@export var _color_option := Color.WHITE:
-	set(value):
-		_color_option = value
-		_update()
-@export var _color_edit := Color.WHITE:
-	set(value):
-		_color_edit = value
-		_update()
-
 @onready var anim_tween: Tween  # tween for scroll animation
 
 @onready var current_fade_tween: Tween  # tween for scroll animation
@@ -77,8 +54,8 @@ func _overlay_init() -> void:
 			if not visible:
 				clear()
 	)
-	main.m8_client.key_pressed.connect(
-		func(key: int, pressed: bool) -> void:
+	Events.device_key_pressed.connect(
+		func(key: M8GD.M8Key, pressed: bool) -> void:
 			if not pressed:
 				return
 
@@ -98,6 +75,11 @@ func _overlay_init() -> void:
 			# add a new item
 			add_item()
 	)
+	Events.config_profile_property_changed.connect(
+		func(_profile_name: String, property: String, _value: Variant) -> void:
+			if property.begins_with(main.config.KEY_COLOR_HIGHLIGHT_PREFIX):
+				_update()
+	)
 	_update()
 
 
@@ -108,18 +90,6 @@ func _process(delta: float) -> void:
 	%ItemSample1.visible = _draw_bounds
 	%ItemSample2.visible = _draw_bounds
 	%ItemSample3.visible = _draw_bounds
-
-
-func overlay_get_properties() -> Array[String]:
-	return [
-		"style_background_enabled",
-		"style_corner_radius",
-		"style_border_width_bottom",
-		"style_padding",
-		"style_font_family",
-		"style_font_weight",
-		"style_font_size",
-	]
 
 
 ##
@@ -203,11 +173,11 @@ func update_item(item: OverlayKeysItem) -> void:
 	item.style_border_width_bottom = style_border_width_bottom
 	item.style_padding = style_padding
 
-	item.color_d = main.config.get_property(&"hl_color_directional", Color.WHITE)
-	item.color_o = main.config.get_property(&"hl_color_option", Color.WHITE)
-	item.color_e = main.config.get_property(&"hl_color_edit", Color.WHITE)
-	item.color_s = main.config.get_property(&"hl_color_shift", Color.WHITE)
-	item.color_p = main.config.get_property(&"hl_color_play", Color.WHITE)
+	item.color_d = main.config.get_color_highlight(main.config.KEY_COLOR_HIGHLIGHT_DIR)
+	item.color_o = main.config.get_color_highlight(main.config.KEY_COLOR_HIGHLIGHT_OPTION)
+	item.color_e = main.config.get_color_highlight(main.config.KEY_COLOR_HIGHLIGHT_EDIT)
+	item.color_s = main.config.get_color_highlight(main.config.KEY_COLOR_HIGHLIGHT_SHIFT)
+	item.color_p = main.config.get_color_highlight(main.config.KEY_COLOR_HIGHLIGHT_PLAY)
 
 	item.style_font_family = style_font_family
 	item.style_font_weight = style_font_weight
@@ -222,14 +192,6 @@ func inc_current_item() -> void:
 		return
 	current_item.pressed_times += 1
 	update_current_item()
-
-
-func _update_colors() -> void:
-	_color_directional = _color_directional
-	_color_shift = _color_shift
-	_color_play = _color_play
-	_color_option = _color_option
-	_color_edit = _color_edit
 
 
 func _update() -> void:

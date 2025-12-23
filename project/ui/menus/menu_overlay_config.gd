@@ -57,7 +57,7 @@ func menu_show_for(overlay: OverlayBase) -> void:
 ##
 ## Automatically add an overlay's additional properties as UI controls to
 ## this menu.
-## The list of properties to add is taken from [overlay.overlay_get_properties()].
+## The list of properties to add is taken from [overlay.get_overlay_property_names()].
 ##
 func _init_params_for(overlay: OverlayBase) -> void:
 	# these params are always present
@@ -72,7 +72,7 @@ func _init_params_for(overlay: OverlayBase) -> void:
 	s_anchor.setting_connect_overlay(
 		overlay, "anchors_preset", func(_value: int) -> void: s_position.value = Vector2i.ZERO
 	)
-	s_position.setting_connect_overlay(overlay, "position_offset")
+	s_position.setting_connect_overlay(overlay, "_position_offset")
 
 	# load any additional params
 
@@ -89,8 +89,6 @@ func _init_params_for(overlay: OverlayBase) -> void:
 				and not prop.name.begins_with("_")
 			)
 	)
-
-	print("overlay properties: %s" % [proplist])
 
 	for prop: Dictionary in proplist:
 		var property: String = prop.name

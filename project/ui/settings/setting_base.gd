@@ -71,8 +71,6 @@ func _ready() -> void:
 	if is_instance_valid(self.main):
 		self.config = main.config
 
-	Log.ln("SettingBase '%s' ready" % name)
-
 	super()
 
 func set_value_no_signal(value: Variant) -> void:

@@ -40,24 +40,6 @@ func _overlay_init() -> void:
 	sample_rate = 1 / analyzer_sample_rate
 
 
-func overlay_get_properties() -> Array[String]:
-	return [
-		"analyzer_min_db",
-		"analyzer_sample_rate",
-		"analyzer_high_cutoff",
-		"type",
-		"style_rows",
-		"style_mirror",
-		"style_reverse",
-		"style_peak_to_alpha_amount",
-		"style_bar_centered",
-		"style_bar_interlace",
-		"style_line_interlace",
-		"style_line_antialiased",
-		"style_line_width",
-	]
-
-
 func _colors() -> PackedColorArray:
 	var colors := main.m8_get_theme_colors()
 	return [colors[10], colors[11], colors[12]]

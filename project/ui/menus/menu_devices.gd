@@ -104,8 +104,6 @@ func _on_changed() -> void:
 	if not dm:
 		return
 
-	print("Device menu changed")
-
 	var selected_serial_ports := list_serial_ports.get_selected_items()
 	var selected_audio_devices := list_audio_devices.get_selected_items()
 
@@ -142,9 +140,6 @@ func _on_changed() -> void:
 	else:
 		button_connect.text = "Connect"
 		connect_action = ConnectAction.CONNECT
-
-	print("selected serial port: %s" % selected_serial_port)
-	print("selected audio device: %s" % selected_audio_device)
 
 	for i in range(list_serial_ports.item_count):
 		var serial_device: String = list_serial_ports.get_item_metadata(i)

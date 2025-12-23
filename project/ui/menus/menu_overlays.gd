@@ -45,7 +45,4 @@ func _on_menu_init() -> void:
 		func(_profile_name: String) -> void:
 			s_scale.reload()
 			s_apply_filters.reload()
-			for s in _grid.get_children():
-				if s is SettingBase:
-					s.reload()
 	)

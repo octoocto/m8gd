@@ -20,13 +20,6 @@ func _ready() -> void:
 	if not is_instance_valid(main):
 		return
 
-	reload_overlays()
-
-
-func reload_overlays() -> void:
-	for overlay: OverlayBase in _overlays:
-		overlay.reload()
-
 
 func get_overlays() -> Array[OverlayBase]:
 	return _overlays

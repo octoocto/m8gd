@@ -316,6 +316,7 @@ func set_property(propname: String, value: Variant) -> void:
 	if !props.has(propname) or props[propname] != type_convert(value, typeof(props[propname])):
 		props[propname] = value
 		_print("SET profile prop: %s = %s" % [propname, value])
+		Events.config_profile_property_changed.emit(current_profile, propname, value)
 
 
 ##
@@ -397,7 +398,6 @@ func config_overlay_get(overlay: Control, property: String, default: Variant = n
 	var config_property := _get_propkey_overlay(overlay, property)
 	if default == null:
 		default = overlay.get(property)
-	print("config_overlay_get: %s, default=%s" % [config_property, default])
 	return get_property(config_property, default)
 
 
@@ -405,3 +405,27 @@ func config_overlay_set(overlay: Control, property: String, value: Variant) -> v
 	var config_property := _get_propkey_overlay(overlay, property)
 	overlay.set(property, value)
 	set_property(config_property, value)
+
+
+const KEY_COLOR_HIGHLIGHT_PREFIX: StringName = "hl_color_"
+const KEY_COLOR_HIGHLIGHT_DIR: StringName = KEY_COLOR_HIGHLIGHT_PREFIX + "directional"
+const KEY_COLOR_HIGHLIGHT_SHIFT: StringName = KEY_COLOR_HIGHLIGHT_PREFIX + "shift"
+const KEY_COLOR_HIGHLIGHT_PLAY: StringName = KEY_COLOR_HIGHLIGHT_PREFIX + "play"
+const KEY_COLOR_HIGHLIGHT_OPTION: StringName = KEY_COLOR_HIGHLIGHT_PREFIX + "option"
+const KEY_COLOR_HIGHLIGHT_EDIT: StringName = KEY_COLOR_HIGHLIGHT_PREFIX + "edit"
+
+
+func get_color_highlight(key: String) -> Color:
+	assert(
+		(
+			key
+			in [
+				KEY_COLOR_HIGHLIGHT_DIR,
+				KEY_COLOR_HIGHLIGHT_SHIFT,
+				KEY_COLOR_HIGHLIGHT_PLAY,
+				KEY_COLOR_HIGHLIGHT_OPTION,
+				KEY_COLOR_HIGHLIGHT_EDIT,
+			]
+		)
+	)
+	return get_property(key, Color.WHITE)

@@ -24,6 +24,17 @@ const M8_ACTIONS := [
 	"key_up", "key_down", "key_left", "key_right", "key_shift", "key_play", "key_option", "key_edit"
 ]
 
+const M8_KEYS: Array[M8GD.M8Key] = [
+	M8GD.M8_KEY_UP,
+	M8GD.M8_KEY_DOWN,
+	M8GD.M8_KEY_LEFT,
+	M8GD.M8_KEY_RIGHT,
+	M8GD.M8_KEY_SHIFT,
+	M8GD.M8_KEY_PLAY,
+	M8GD.M8_KEY_OPTION,
+	M8GD.M8_KEY_EDIT
+]
+
 static var instance: Main = null
 
 @export var visualizer_aberration_amount := 1.0
@@ -371,7 +382,6 @@ func load_profile(profile_name: String) -> bool:
 
 			load_scene(scene_path)
 			m8_client.set_display_background_alpha(0)
-			overlays.reload_overlays()
 
 			Events.profile_loaded.emit(profile_name)
 

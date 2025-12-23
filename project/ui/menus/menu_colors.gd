@@ -4,10 +4,10 @@ extends MenuBase
 @onready var s_highlights: Array = [
 	# [<setting>, <config property>, <overlay property>, <key name>]
 	[%SHighDir, "hl_color_directional"],
-	[%SHighOption, "hl_color_option", "_color_option", "Option"],
-	[%SHighEdit, "hl_color_edit", "_color_edit", "Edit"],
-	[%SHighShift, "hl_color_shift", "_color_shift", "Shift"],
-	[%SHighPlay, "hl_color_play", "_color_play", "Play"],
+	[%SHighOption, "hl_color_option", "Option"],
+	[%SHighEdit, "hl_color_edit", "Edit"],
+	[%SHighShift, "hl_color_shift", "Shift"],
+	[%SHighPlay, "hl_color_play", "Play"],
 ]
 
 @onready var s_keycaps: Array = [
@@ -28,8 +28,6 @@ extends MenuBase
 
 
 func _on_menu_init() -> void:
-	var overlay_keycast: OverlayKeycast = main.overlays.keycast
-
 	for arr: Array in s_keycaps:
 		var setting: SettingColor = arr[0]
 		var conf_property: String = arr[1]
@@ -45,21 +43,15 @@ func _on_menu_init() -> void:
 
 		if arr.size() == 2:  # directional color
 			setting.setting_connect_profile(
-				conf_property,
-				func(value: Color) -> void:
-					_model_set_dir_key_highlight_color(value)
-					overlay_keycast._color_directional = value
+				conf_property, func(value: Color) -> void: _model_set_dir_key_highlight_color(value)
 			)
 			continue
 
-		var overlay_prop: String = arr[2]
-		var key_name: String = arr[3]
+		var key_name: String = arr[2]
 
 		setting.setting_connect_profile(
 			conf_property,
-			func(value: Color) -> void:
-				_model_set_key_highlight_color(key_name, value)
-				overlay_keycast.set(overlay_prop, value)
+			func(value: Color) -> void: _model_set_key_highlight_color(key_name, value)
 		)
 
 	for arr: Array in s_body:

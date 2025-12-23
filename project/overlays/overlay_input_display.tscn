@@ -1,0 +1,111 @@
+[gd_scene load_steps=4 format=3 uid="uid://bx26oqvasqfha"]
+
+[ext_resource type="Script" uid="uid://dakylm0gd3i3q" path="res://overlays/overlay_input.gd" id="1_a4iwt"]
+[ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_kxkeb"]
+[ext_resource type="Script" uid="uid://c1bdn3740c7n8" path="res://ui/aspect_ratio_control.gd" id="3_x53l1"]
+
+[node name="OverlayInputDisplay" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 160.0
+offset_bottom = 128.0
+theme = ExtResource("1_kxkeb")
+script = ExtResource("1_a4iwt")
+metadata/_custom_type_script = "uid://bvcsxyui7l318"
+
+[node name="Control" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_x53l1")
+ratio = 1.25
+
+[node name="RectUp" type="Panel" parent="Control"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.25
+anchor_top = 0.0625
+anchor_right = 0.45
+anchor_bottom = 0.3125
+theme_type_variation = &"Key2D"
+metadata/_edit_use_anchors_ = true
+
+[node name="RectDown" type="Panel" parent="Control"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.25
+anchor_top = 0.375
+anchor_right = 0.45
+anchor_bottom = 0.625
+theme_type_variation = &"Key2D"
+metadata/_edit_use_anchors_ = true
+
+[node name="RectLeft" type="Panel" parent="Control"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.37500003
+anchor_right = 0.2
+anchor_bottom = 0.625
+theme_type_variation = &"Key2D"
+metadata/_edit_use_anchors_ = true
+
+[node name="RectRight" type="Panel" parent="Control"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.37500003
+anchor_right = 0.7
+anchor_bottom = 0.625
+theme_type_variation = &"Key2D"
+metadata/_edit_use_anchors_ = true
+
+[node name="RectOption" type="Panel" parent="Control"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.55
+anchor_right = 0.74960005
+anchor_bottom = 0.25
+offset_right = 0.06399536
+theme_type_variation = &"Key2D"
+metadata/_edit_use_anchors_ = true
+
+[node name="RectEdit" type="Panel" parent="Control"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.8
+anchor_right = 1.0
+anchor_bottom = 0.25
+theme_type_variation = &"Key2D"
+metadata/_edit_use_anchors_ = true
+
+[node name="RectShift" type="Panel" parent="Control"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.25
+anchor_top = 0.75000006
+anchor_right = 0.45000002
+anchor_bottom = 1.0
+theme_type_variation = &"Key2D"
+metadata/_edit_use_anchors_ = true
+
+[node name="RectPlay" type="Panel" parent="Control"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.75000006
+anchor_right = 0.70000005
+anchor_bottom = 1.0
+theme_type_variation = &"Key2D"
+metadata/_edit_use_anchors_ = true

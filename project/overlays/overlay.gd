@@ -24,15 +24,34 @@ func _ready() -> void:
 	if self.main:
 		Log.call_task(_overlay_init, "init overlay '%s'" % name)
 
+	Events.profile_loaded.connect(func(_profile_name: String) -> void: reload())
+	reload()
+
 
 func _process(_delta: float) -> void:
 	if visible:
 		queue_redraw()
 
 
+func get_overlay_property_list() -> Array[Dictionary]:
+	return get_property_list().filter(
+		func(prop: Dictionary) -> bool:
+			return (
+				prop.usage & PROPERTY_USAGE_STORAGE
+				and prop.usage & PROPERTY_USAGE_EDITOR
+				and prop.usage & PROPERTY_USAGE_SCRIPT_VARIABLE
+				and not prop.name.begins_with("_")
+			)
+	)
+
+
 ## Return a list of properties that should be config settings.
-func overlay_get_properties() -> Array[String]:
-	return []
+func get_overlay_property_names() -> Array[String]:
+	var array: Array[String] = []
+	array.assign(
+		get_overlay_property_list().map(func(prop: Dictionary) -> String: return prop.name)
+	)
+	return array
 
 
 func reload() -> void:
@@ -43,11 +62,13 @@ func reload() -> void:
 
 	size = config.config_overlay_get(self, "size", size)
 	anchors_preset = config.config_overlay_get(self, "anchors_preset", anchors_preset)
-	position_offset = config.config_overlay_get(self, "position_offset", position_offset)
+	_position_offset = config.config_overlay_get(self, "_position_offset", _position_offset)
 
-	for prop_name in overlay_get_properties():
+	for prop_name in get_overlay_property_names():
 		var prop_value: Variant = config.config_overlay_get(self, prop_name, get(prop_name))
 		set(prop_name, prop_value)
+
+	_update()
 
 	Log.ln("reloaded overlay from config: %s" % name)
 

@@ -34,10 +34,6 @@ func _overlay_init() -> void:
 	)
 
 
-func overlay_get_properties() -> Array[String]:
-	return ["integer_scale", "opacity", "padding", "corner_radius"]
-
-
 func _update() -> void:
 	if is_inside_tree():
 		# update position
