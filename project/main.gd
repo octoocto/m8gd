@@ -603,7 +603,17 @@ func display_get_scale() -> float:
 
 
 func display_set_scale(scale: float) -> void:
-	get_window().content_scale_factor = min(scale, display_get_max_scale())
+	if scale < 1.0:
+		scale = min(display_get_auto_scale(), display_get_max_scale())
+		Log.ln("Auto UI scale detected: %.2f" % scale)
+	else:
+		scale = min(scale, display_get_max_scale())
+
+	Log.ln("UI scale set to: %.2f" % scale)
+
+	var menu_container: ScalableContainer = %MenuContainer
+	# get_window().content_scale_factor = scale
+	menu_container.content_scale = floori(scale * 2)
 	Events.window_modified.emit()
 
 

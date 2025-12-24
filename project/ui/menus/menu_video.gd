@@ -26,18 +26,8 @@ func _on_menu_init() -> void:
 
 	# UI
 
-	var func_update_ui_scale := func() -> void:
-		var display_scale: float = s_ui_scale.value
-		if display_scale < 1.0:
-			display_scale = min(main.display_get_auto_scale(), main.display_get_max_scale())
-			Log.ln("Auto UI scale detected: %f" % display_scale)
-		else:
-			display_scale = min(display_scale, main.display_get_max_scale())
-			Log.ln("UI scale set to: %f" % display_scale)
-		main.display_set_scale(display_scale)
-
-	s_ui_scale.setting_connect_global("ui_scale", func(_value: float) -> void:
-		func_update_ui_scale.call()
+	s_ui_scale.setting_connect_global("ui_scale", func(value: float) -> void:
+		main.display_set_scale(value)
 	)
 	s_ui_scale.set_format_function(func(value: float) -> String:
 		if value < 1.0:
@@ -46,7 +36,9 @@ func _on_menu_init() -> void:
 		else:
 			return "%d%%" % (int)(value * 100)
 	)
-	viewport.size_changed.connect(func_update_ui_scale)
+	viewport.size_changed.connect(func() -> void:
+		main.display_set_scale(s_ui_scale.value)
+	)
 
 	s_text_casing.setting_connect_global(
 		"ui_text_case", func(value: int) -> void: THEME.set_constant("text_case", "UIBase", value)

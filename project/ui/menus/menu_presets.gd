@@ -83,6 +83,11 @@ func _on_menu_init() -> void:
 	)
 	button_cancel_loader.pressed.connect(func() -> void: _show_config())
 	button_print.pressed.connect(func() -> void: print(config.current_preset.encode_to_text()))
+	visibility_changed.connect(
+		func(v: bool) -> void:
+			if v:
+				_show_config()
+	)
 
 
 func _on_changed() -> void:
@@ -95,11 +100,6 @@ func _on_changed() -> void:
 	button_delete.enabled = config.current_preset_exists()
 
 	main.menu.menu_input.refresh_hotkeys_presets()
-
-
-func menu_show() -> void:
-	super()
-	_show_config()
 
 
 func _show_config() -> void:

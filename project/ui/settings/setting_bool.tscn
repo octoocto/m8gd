@@ -26,29 +26,24 @@ size_flags_horizontal = 3
 size_flags_vertical = 4
 theme = ExtResource("1_b6avg")
 script = ExtResource("1_0smb8")
+setting_name = "test"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer"]
+[node name="LabelName" parent="HBoxContainer" instance=ExtResource("3_ejw1u")]
 unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 4
-theme_override_constants/separation = 0
-
-[node name="LabelName" parent="HBoxContainer/HBoxContainer" instance=ExtResource("3_ejw1u")]
-unique_name_in_owner = true
-visible = false
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxEmpty_ejw1u")
 no_padding = true
 text = "test"
 
 [node name="PanelContainer" type="PanelContainer" parent="HBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 10
 size_flags_vertical = 4
 theme_type_variation = &"SettingControl"
 
