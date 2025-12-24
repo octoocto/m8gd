@@ -1,16 +1,19 @@
 [gd_scene load_steps=3 format=3 uid="uid://cm3h6xr6v7ewi"]
 
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_y8xyu"]
-[ext_resource type="Script" uid="uid://ccbi0my1b00u4" path="res://ui/label2.gd" id="2_y8xyu"]
+[ext_resource type="Script" path="res://ui/label2.gd" id="2_y8xyu"]
 
 [node name="Label" type="PanelContainer"]
 texture_filter = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 11.0
+offset_right = -1119.0
+offset_bottom = 7.0
 grow_horizontal = 2
 theme = ExtResource("1_y8xyu")
 script = ExtResource("2_y8xyu")
+enabled = true
+hint_text = ""
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 unique_name_in_owner = true
@@ -19,7 +22,7 @@ theme_override_constants/separation = 0
 
 [node name="LabelLeft" type="Label" parent="HBoxContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 0)
+custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.564706, 0.690196, 0.721569, 1)
 

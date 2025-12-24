@@ -37,15 +37,21 @@ extends SettingBase
 		prefix_min_width = value
 		emit_ui_changed()
 
+@onready var spin_box_x: SpinBox = %SpinBoxX
+@onready var spin_box_y: SpinBox = %SpinBoxY
+@onready var label_name: UILabel = %LabelName
+@onready var label_x: UILabel = %LabelX
+@onready var label_y: UILabel = %LabelY
+
 
 func _on_ready() -> void:
-	%SpinBoxX.get_line_edit().theme_type_variation = "SettingControlVec2LineEdit"
-	%SpinBoxY.get_line_edit().theme_type_variation = "SettingControlVec2LineEdit"
+	spin_box_x.get_line_edit().theme_type_variation = "SettingControlVec2LineEdit"
+	spin_box_y.get_line_edit().theme_type_variation = "SettingControlVec2LineEdit"
 
-	%SpinBoxX.value_changed.connect(
+	spin_box_x.value_changed.connect(
 		func(p_value: float) -> void: value = Vector2i(int(p_value), value.y)
 	)
-	%SpinBoxY.value_changed.connect(
+	spin_box_y.value_changed.connect(
 		func(p_value: float) -> void: value = Vector2i(value.x, int(p_value))
 	)
 
@@ -55,25 +61,25 @@ func _on_changed() -> void:
 		await ready
 
 	modulate = Color.WHITE if enabled else Color.from_hsv(0, 0, 0.25)
-	%SpinBoxX.editable = enabled
-	%SpinBoxY.editable = enabled
+	spin_box_x.editable = enabled
+	spin_box_y.editable = enabled
 
-	%LabelName.visible = setting_name != ""
-	%LabelName.text = _format_text(setting_name)
-	%LabelName.custom_minimum_size.x = setting_name_min_width
+	label_name.visible = setting_name != ""
+	label_name.text = _format_text(setting_name)
+	label_name.custom_minimum_size.x = setting_name_min_width
 
-	%SpinBoxX.theme_type_variation = "" if show_updown_arrows else "SettingControlVec2SpinBox"
-	%SpinBoxX.min_value = min_value.x
-	%SpinBoxX.max_value = max_value.x
-	%SpinBoxX.value = value.x
+	spin_box_x.theme_type_variation = "" if show_updown_arrows else "SettingControlVec2SpinBox"
+	spin_box_x.min_value = min_value.x
+	spin_box_x.max_value = max_value.x
+	spin_box_x.value = value.x
 
-	%SpinBoxY.theme_type_variation = "" if show_updown_arrows else "SettingControlVec2SpinBox"
-	%SpinBoxY.min_value = min_value.y
-	%SpinBoxY.max_value = max_value.y
-	%SpinBoxY.value = value.y
+	spin_box_y.theme_type_variation = "" if show_updown_arrows else "SettingControlVec2SpinBox"
+	spin_box_y.min_value = min_value.y
+	spin_box_y.max_value = max_value.y
+	spin_box_y.value = value.y
 
-	%LabelX.custom_minimum_size.x = prefix_min_width
-	%LabelX.text = _format_text(prefix_x)
+	label_x.custom_minimum_size.x = prefix_min_width
+	label_x.text = _format_text(prefix_x)
 
-	%LabelY.custom_minimum_size.x = prefix_min_width
-	%LabelY.text = _format_text(prefix_y)
+	label_y.custom_minimum_size.x = prefix_min_width
+	label_y.text = _format_text(prefix_y)

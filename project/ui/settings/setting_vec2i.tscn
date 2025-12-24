@@ -1,12 +1,12 @@
 [gd_scene load_steps=4 format=3 uid="uid://bevoopcdq5dsh"]
 
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_0vr4u"]
-[ext_resource type="Script" uid="uid://d28tou0wfook5" path="res://ui/settings/setting_vec2i.gd" id="1_uglar"]
+[ext_resource type="Script" uid="uid://b5roa8aoyuy4" path="res://ui/settings/setting_vec2i.gd" id="1_uglar"]
 [ext_resource type="PackedScene" uid="uid://b1wsbkovx87xh" path="res://ui/label.tscn" id="3_t5bl5"]
 
 [node name="SettingVec2i" type="PanelContainer"]
 texture_filter = 1
-offset_right = 78.0
+offset_right = 90.0
 offset_bottom = 7.0
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -20,9 +20,8 @@ size_flags_vertical = 4
 [node name="LabelName" parent="HBoxContainer" instance=ExtResource("3_t5bl5")]
 unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(120, 0)
+custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
-theme_type_variation = &""
 
 [node name="PanelContainer" type="PanelContainer" parent="HBoxContainer"]
 layout_mode = 2
@@ -38,8 +37,7 @@ theme_override_constants/separation = 8
 [node name="LabelX" parent="HBoxContainer/PanelContainer/HBoxContainer" instance=ExtResource("3_t5bl5")]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &""
-text = "X"
+text = "x"
 
 [node name="SpinBoxX" type="SpinBox" parent="HBoxContainer/PanelContainer/HBoxContainer"]
 unique_name_in_owner = true
@@ -52,8 +50,7 @@ select_all_on_focus = true
 [node name="LabelY" parent="HBoxContainer/PanelContainer/HBoxContainer" instance=ExtResource("3_t5bl5")]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &""
-text = "Y"
+text = "y"
 
 [node name="SpinBoxY" type="SpinBox" parent="HBoxContainer/PanelContainer/HBoxContainer"]
 unique_name_in_owner = true

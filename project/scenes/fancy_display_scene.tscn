@@ -14,9 +14,9 @@ frequency = 1.0
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_uag16"]
 width = 2048
 height = 2048
-invert = true
-color_ramp = SubResource("Gradient_gskhf")
 noise = SubResource("FastNoiseLite_ee18n")
+color_ramp = SubResource("Gradient_gskhf")
+invert = true
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rqrn1"]
 shader = ExtResource("2_rpd8y")
@@ -36,9 +36,9 @@ frequency = 1.0
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_5dadj"]
 width = 2048
 height = 2048
-invert = true
-color_ramp = SubResource("Gradient_2ccln")
 noise = SubResource("FastNoiseLite_np6uh")
+color_ramp = SubResource("Gradient_2ccln")
+invert = true
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y1b4h"]
 shader = ExtResource("4_y8ora")

@@ -6,14 +6,14 @@ extends MenuBase
 @onready var s_fullscreen: SettingBase = %Setting_Fullscreen
 @onready var s_window_borderless: SettingBase = %Setting_WindowBorderless
 @onready var s_always_on_top: SettingBase = %Setting_AlwaysOnTop
-@onready var s_window_size: SettingBase = %Setting_WindowSize
-@onready var s_custom_window_size: SettingBase = %Setting_CustomWindowSize
+@onready var s_window_size: SettingOptions = %Setting_WindowSize
+@onready var s_custom_window_size: SettingVec2i = %Setting_CustomWindowSize
 @onready var s_vsync: SettingBase = %Setting_VSync
 @onready var s_fps_limit: SettingBase = %Setting_FPSLimit
 @onready var s_dof_shape: SettingBase = %Setting_DOFShape
 @onready var s_dof_quality: SettingBase = %Setting_DOFQuality
 @onready var s_msaa: SettingBase = %Setting_MSAA
-@onready var s_taa: SettingBase = %Setting_TAA
+@onready var s_taa: SettingBool = %Setting_TAA
 @onready var s_upscaling_method: SettingBase = %Setting_UpscalingMethod
 @onready var s_render_scale: SettingBase = %Setting_RenderScale
 @onready var s_fsr_sharpness: SettingBase = %Setting_FSRSharpness
@@ -101,8 +101,8 @@ func _on_menu_init() -> void:
 		init_window_size,
 		func(value: Vector2i) -> void:
 			window.size = value
-			config.set_property_global("window_width", value.x)
-			config.set_property_global("window_height", value.y)
+			config.set_global_value("window_width", value.x)
+			config.set_global_value("window_height", value.y)
 	)
 
 	window.size_changed.connect(

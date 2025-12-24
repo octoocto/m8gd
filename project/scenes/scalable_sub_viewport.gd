@@ -1,4 +1,5 @@
 @tool
+class_name ScalableSubViewport
 extends SubViewport
 
 @export_range(0, 10) var integer_scale := 0:
@@ -16,3 +17,4 @@ extends SubViewport
 		integer_size = value
 		size_2d_override = integer_size
 		integer_scale = integer_scale
+

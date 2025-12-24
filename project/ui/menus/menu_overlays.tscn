@@ -2,10 +2,10 @@
 
 [ext_resource type="PackedScene" uid="uid://b1r8nehsgp111" path="res://ui/settings/setting_number.tscn" id="1_f030a"]
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_mcmtq"]
-[ext_resource type="Script" uid="uid://bkb47um8cpspl" path="res://ui/menus/menu_overlays.gd" id="1_ta51e"]
+[ext_resource type="Script" uid="uid://cvh5527qq0g8f" path="res://ui/menus/menu_overlays.gd" id="1_ta51e"]
 [ext_resource type="PackedScene" uid="uid://c5kj1uj0ohnmm" path="res://ui/settings/setting_bool.tscn" id="2_ta51e"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mcmtq"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1evne"]
 content_margin_left = 0.0
 content_margin_top = 0.0
 content_margin_right = 0.0
@@ -31,7 +31,7 @@ texture_filter = 1
 offset_right = 244.0
 offset_bottom = 27.0
 theme = ExtResource("1_mcmtq")
-theme_override_styles/panel = SubResource("StyleBoxFlat_mcmtq")
+theme_override_styles/panel = SubResource("StyleBoxFlat_1evne")
 script = ExtResource("1_ta51e")
 metadata/_tab_index = 1
 
@@ -43,6 +43,7 @@ unique_name_in_owner = true
 layout_mode = 2
 min_value = 1.0
 max_value = 4.0
+step = 1.0
 value = 1.0
 show_ticks = true
 format_string = "%dx"

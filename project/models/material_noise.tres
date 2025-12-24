@@ -10,6 +10,6 @@ frequency = 0.8
 [resource]
 width = 2048
 height = 2048
-normalize = false
-color_ramp = SubResource("Gradient_lge21")
 noise = SubResource("FastNoiseLite_jvwfx")
+color_ramp = SubResource("Gradient_lge21")
+normalize = false

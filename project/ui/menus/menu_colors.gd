@@ -33,7 +33,7 @@ func _on_menu_init() -> void:
 		var conf_property: String = arr[1]
 		var key_name: String = arr[2]
 
-		setting.setting_connect_profile(
+		setting.setting_connect_colors(
 			conf_property, func(value: Color) -> void: _model_set_keycap_color(key_name, value)
 		)
 
@@ -42,14 +42,14 @@ func _on_menu_init() -> void:
 		var conf_property: String = arr[1]
 
 		if arr.size() == 2:  # directional color
-			setting.setting_connect_profile(
+			setting.setting_connect_colors(
 				conf_property, func(value: Color) -> void: _model_set_dir_key_highlight_color(value)
 			)
 			continue
 
 		var key_name: String = arr[2]
 
-		setting.setting_connect_profile(
+		setting.setting_connect_colors(
 			conf_property,
 			func(value: Color) -> void: _model_set_key_highlight_color(key_name, value)
 		)
@@ -59,7 +59,7 @@ func _on_menu_init() -> void:
 		var conf_property: String = arr[1]
 		var part_name: String = arr[2]
 
-		setting.setting_connect_profile(
+		setting.setting_connect_colors(
 			conf_property, func(value: Color) -> void: _model_set_part_color(part_name, value)
 		)
 
@@ -75,7 +75,7 @@ func _on_menu_init() -> void:
 					s.get_color_picker().erase_preset(color)
 		)
 
-	Events.profile_loaded.connect(
+	Events.preset_loaded.connect(
 		func(_profile_name: String) -> void:
 			for setting: SettingColor in all_settings:
 				setting.reload()

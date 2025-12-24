@@ -6,6 +6,11 @@ extends MenuBase
 @onready var button_open_camera_config: UIButton = %ButtonOpenCameraConfig
 @onready var label_current_scene: UILabel2 = %LabelCurrentScene
 
+@onready var s_model_type: SettingOptions = %Setting_ModelType
+@onready var s_model_hl_opacity: SettingNumber = %Setting_ModelHighlightOpacity
+@onready var s_model_screen_filter: SettingOptions = %Setting_ModelScreenFilter
+@onready var s_model_screen_emission: SettingNumber = %Setting_ModelScreenEmission
+
 
 func _on_menu_init() -> void:
 	_init_menu_scene()
@@ -37,7 +42,7 @@ func _init_menu_scene() -> void:
 	option_load_scene.item_selected.connect(
 		func(idx: int) -> void:
 			if idx != -1:
-				main.load_scene(option_load_scene.get_item_metadata(idx))
+				main.load_scene(option_load_scene.get_item_metadata(idx) as String)
 			_setup_as_button.call()
 	)
 	_setup_as_button.call()
@@ -55,6 +60,12 @@ func _init_menu_scene() -> void:
 	)
 
 
+@onready var s_mouse_camera: SettingBool = %Setting_MouseCamera
+@onready var s_human_camera: SettingBool = %Setting_HumanCamera
+@onready var s_human_camera_strength: SettingNumber = %Setting_HumanCameraStrength
+@onready var s_human_camera_frequency: SettingNumber = %Setting_HumanCameraFrequency
+
+
 func _init_menu_camera() -> void:
 	button_open_camera_config.pressed.connect(
 		func() -> void:
@@ -62,7 +73,7 @@ func _init_menu_camera() -> void:
 			main.menu_camera.menu_show()
 	)
 
-	%Setting_MouseCamera.setting_connect_camera(
+	s_mouse_camera.setting_connect_camera(
 		"mouse_controlled_pan_zoom",
 		func(value: bool) -> void:
 			main.current_scene.get_3d_camera().mouse_controlled_pan_zoom = value
@@ -70,38 +81,38 @@ func _init_menu_camera() -> void:
 				main.current_scene.get_3d_camera().reset_transform()
 	)
 
-	%Setting_HumanCamera.setting_connect_camera(
+	s_human_camera.setting_connect_camera(
 		"humanized_movement",
 		func(value: bool) -> void: main.current_scene.get_3d_camera().humanized_movement = value
 	)
-	%Setting_HumanCameraStrength.setting_connect_camera("humanize_amount")
-	%Setting_HumanCameraStrength.enable_if(%Setting_HumanCamera)
-	%Setting_HumanCameraFrequency.setting_connect_camera("humanize_freq")
-	%Setting_HumanCameraFrequency.enable_if(%Setting_HumanCamera)
+	s_human_camera_strength.setting_connect_camera("humanize_amount")
+	s_human_camera_strength.enable_if(s_human_camera)
+	s_human_camera_frequency.setting_connect_camera("humanize_freq")
+	s_human_camera_frequency.enable_if(s_human_camera)
 
 	Events.scene_loaded.connect(
 		func(_scene_path: String, scene: M8Scene) -> void:
 			if !scene.has_3d_camera():
 				button_open_camera_config.enabled = false
-				%Setting_MouseCamera.enabled = false
-				%Setting_HumanCamera.enabled = false
+				s_mouse_camera.enabled = false
+				s_human_camera.enabled = false
 				return
 
 			button_open_camera_config.enabled = true
-			%Setting_MouseCamera.enabled = true
-			%Setting_HumanCamera.enabled = true
+			s_mouse_camera.enabled = true
+			s_human_camera.enabled = true
 
-			%Setting_MouseCamera.reload()
-			%Setting_HumanCamera.reload()
-			%Setting_HumanCameraStrength.reload()
-			%Setting_HumanCameraFrequency.reload()
+			s_mouse_camera.reload()
+			s_human_camera.reload()
+			s_human_camera_strength.reload()
+			s_human_camera_frequency.reload()
 	)
 
 
 func _init_menu_model() -> void:
 	# Model settings
 
-	%Setting_ModelType.setting_connect_profile(
+	s_model_type.setting_connect_model(
 		"model_type",
 		func(value: int) -> void:
 			if not _model():
@@ -112,39 +123,41 @@ func _init_menu_model() -> void:
 			elif value == 2:
 				_model().model = 1
 	)
-	%Setting_ModelHighlightOpacity.setting_connect_profile(
+	s_model_hl_opacity.setting_connect_model(
 		"model_hl_opacity",
 		func(value: float) -> void:
 			if _model():
 				_model().highlight_opacity = value
 	)
-	%Setting_ModelScreenFilter.setting_connect_profile(
+	s_model_screen_filter.setting_connect_model(
 		"model_screen_linear_filter",
 		func(value: int) -> void:
 			if _model():
 				_model().set_screen_filter(true if value == 1 else false)
 	)
-	%Setting_ModelScreenEmission.setting_connect_profile(
+	s_model_screen_emission.setting_connect_model(
 		"model_screen_emission",
 		func(value: float) -> void:
 			if _model():
 				_model().set_screen_emission(value)
 	)
 
+	Events.preset_loaded.connect(
+		func(_profile_name: String) -> void:
+			s_model_type.reload()
+			s_model_hl_opacity.reload()
+			s_model_screen_filter.reload()
+			s_model_screen_emission.reload()
+	)
+
 	Events.scene_loaded.connect(
 		func(_scene_path: String, scene: M8Scene) -> void:
-			var enabled := scene.has_3d_camera()
+			var is_3d_scene := scene.has_3d_camera()
 
-			%Setting_ModelType.enabled = enabled
-			%Setting_ModelHighlightOpacity.enabled = enabled
-			%Setting_ModelScreenFilter.enabled = enabled
-			%Setting_ModelScreenEmission.enabled = enabled
-
-			if enabled:
-				%Setting_ModelType.reload()
-				%Setting_ModelHighlightOpacity.reload()
-				%Setting_ModelScreenFilter.reload()
-				%Setting_ModelScreenEmission.reload()
+			s_model_type.enabled = is_3d_scene
+			s_model_hl_opacity.enabled = is_3d_scene
+			s_model_screen_filter.enabled = is_3d_scene
+			s_model_screen_emission.enabled = is_3d_scene
 	)
 
 

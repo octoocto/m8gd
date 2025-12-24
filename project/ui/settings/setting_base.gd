@@ -10,11 +10,6 @@ enum DisableMethod {
 	HIDE,    # hide subsettings that have been disabled
 }
 
-const CONFIG_KEY_OVERLAY = "overlay.%s.%s"
-const CONFIG_KEY_CAMERA = "camera.%s"
-const CONFIG_KEY_SHADER = "filter.%s.shader.%s"
-const CONFIG_KEY_SCENE_CUSTOM = "custom.%s"
-
 @export var setting_name := "":
 	set(value):
 		setting_name = value
@@ -45,6 +40,8 @@ const CONFIG_KEY_SCENE_CUSTOM = "custom.%s"
 		ignore_text_format = p_value
 		emit_ui_changed()
 
+var _default_value: Variant
+
 var main: Main
 
 var config: M8Config
@@ -63,15 +60,21 @@ var _value_changed_signal_enabled := true
 ## This callable should try to read a value from the config file first, or return a default value.
 var _value_read_fn: Callable
 
-
 func _ready() -> void:
 	assert(get("value") != null, "SettingBase subclass %s must have a 'value' property" % name)
+	_default_value = get("value")
 
 	self.main = await Main.get_instance()
 	if is_instance_valid(self.main):
 		self.config = main.config
 
 	super()
+
+func get_value() -> Variant:
+	return get("value")
+
+func set_value(value: Variant) -> void:
+	set("value", value)
 
 func set_value_no_signal(value: Variant) -> void:
 	_value_changed_signal_enabled = false
@@ -90,9 +93,9 @@ func emit_value_changed() -> void:
 ## This is useful when a profile or scene has just been loaded, and
 ## the initial value could be different.
 ##
-func reload(emit_value_changed := true) -> void:
+func reload(emit_value_changed_signal := true) -> void:
 	assert(_is_initialized and _value_read_fn, "This setting has not been initialized yet: %s" % name)
-	if emit_value_changed:
+	if emit_value_changed_signal:
 		set("value", _value_read_fn.call())
 	else:
 		set_value_no_signal(_value_read_fn.call())
@@ -142,9 +145,11 @@ func setting_connect(value_read_fn: Variant, value_changed_fn: Callable) -> void
 ##
 func setting_connect_global(property: String, value_changed_fn := Callable()) -> void:
 	setting_connect(
-		func() -> Variant: return main.config.get_property_global(property),
+		# on read
+		func() -> Variant: return main.config.get_global_value(property),
+		# on write
 		func(value: Variant) -> void:
-			main.config.set_property_global(property, value)
+			main.config.set_global_value(property, value)
 			if value_changed_fn.is_valid(): value_changed_fn.call(value)
 			Events.setting_changed.emit(self, value)
 	)
@@ -152,14 +157,30 @@ func setting_connect_global(property: String, value_changed_fn := Callable()) ->
 ##
 ## This setting's value will default to its current value in the inspector.
 ##
-func setting_connect_profile(property: String, value_changed_fn := Callable()) -> void:
+func setting_connect_profile(section: String, key: String, value_changed_fn := Callable()) -> void:
 	setting_connect(
-		func() -> Variant: return main.config.get_property(property, get("value")),
+		# on read
+		func() -> Variant:
+			return main.config.get_value(section, key, _default_value),
+
+		# on write
 		func(value: Variant) -> void:
-			main.config.set_property(property, value)
+			main.config.set_value(section, key, value)
 			if value_changed_fn.is_valid(): value_changed_fn.call(value)
 			Events.setting_changed.emit(self, value)
 	)
+
+func setting_connect_overlay_global(key: String, value_changed_fn := Callable()) -> void:
+	setting_connect_profile(config.SECTION_OVERLAY, key, value_changed_fn)
+
+func setting_connect_shader_global(key: String, value_changed_fn := Callable()) -> void:
+	setting_connect_profile(config.SECTION_SHADER, key, value_changed_fn)
+
+func setting_connect_colors(key: String, value_changed_fn := Callable()) -> void:
+	setting_connect_profile(config.SECTION_COLORS, key, value_changed_fn)
+
+func setting_connect_model(key: String, value_changed_fn := Callable()) -> void:
+	setting_connect_profile(config.SECTION_MODEL, key, value_changed_fn)
 
 ##
 ## Initialize this setting to a scene property.
@@ -169,15 +190,19 @@ func setting_connect_profile(property: String, value_changed_fn := Callable()) -
 ##
 func setting_connect_scene(property: String, value_changed_fn := Callable()) -> void:
 	setting_connect(
+		# on read
 		func() -> Variant:
-			if property in main.current_scene:
-				return main.config.get_property_scene(property, main.current_scene.get(property))
+			var scene := main.current_scene
+			if property in scene:
+				return config.get_value_scene(scene, property, scene.get(property))
 			else:
-				return main.config.get_property_scene(property, get("value")),
+				return config.get_value_scene(scene, property, get("value")),
+		# on write
 		func(value: Variant) -> void:
-			if property in main.current_scene:
-				main.current_scene.set(property, value)
-			main.config.set_property_scene(property, value)
+			var scene := main.current_scene
+			if property in scene:
+				scene.set(property, value)
+			config.set_value_scene(scene, property, value)
 			if value_changed_fn.is_valid(): value_changed_fn.call(value)
 			Events.setting_changed.emit(self, value)
 	)
@@ -193,9 +218,12 @@ func setting_connect_scene(property: String, value_changed_fn := Callable()) -> 
 ##
 func setting_connect_overlay(overlay: Control, property: String, value_changed_fn := Callable()) -> void:
 	setting_connect(
-		func() -> Variant: return config.config_overlay_get(overlay, property),
+		# on read
+		func() -> Variant: return config.get_value_overlay(overlay, property, overlay.get(property)),
+
+		# on write
 		func(value: Variant) -> void:
-			config.config_overlay_set(overlay, property, value)
+			config.set_value_overlay(overlay, property, value)
 			if value_changed_fn.is_valid(): value_changed_fn.call(value)
 			Events.setting_changed.emit(self, value)
 	)
@@ -212,30 +240,28 @@ func setting_connect_overlay(overlay: Control, property: String, value_changed_f
 ## call [value_changed_fn] if defined.
 ##
 func setting_connect_camera(property: String, value_changed_fn: Variant = null, value_init_fn: Variant = null) -> void:
-	assert(value_changed_fn is Callable or value_changed_fn == null)
-	assert(value_init_fn is Callable or value_init_fn == null)
-	var config_property := _get_propkey_camera(property)
 	setting_connect(
+		# on read
 		func() -> Variant:
+			var scene := main.current_scene
 			var init_value: Variant
 			if main.get_scene_camera():
 				var default: Variant
-				if value_init_fn:
-					default = value_init_fn.call()
-					# print("%s: reading value from value_init_fn() = %s" % [name, default])
+				if value_init_fn is Callable and (value_init_fn as Callable).is_valid():
+					default = (value_init_fn as Callable).call()
 				else:
 					default = main.get_scene_camera().get(property)
-					# print("%s: reading value from camera = %s" % [name, default])
-				init_value = main.config.get_property_scene(config_property, default)
+				init_value = config.get_value_scene(scene, property, default)
 			else:
 				init_value = null
-			# print("%s: initialized value to %s" % [name, init_value])
 			return init_value,
+		# on write
 		func(value: Variant) -> void:
+			var scene := main.current_scene
 			if main.get_scene_camera():
-				main.config.set_property_scene(config_property, value)
-				if value_changed_fn:
-					value_changed_fn.call(value)
+				config.set_value_scene(scene, property, value)
+				if value_changed_fn is Callable and (value_changed_fn as Callable).is_valid():
+					(value_changed_fn as Callable).call(value)
 				else:
 					main.get_scene_camera().set(property, value)
 				Events.setting_changed.emit(self, value)
@@ -247,25 +273,28 @@ func setting_connect_camera(property: String, value_changed_fn: Variant = null, 
 ##
 func conf_shader_parameter(shader_rect: ShaderRect, parameter: String) -> void:
 	assert(shader_rect)
-	var config_property := _get_propkey_filter_shader(shader_rect, parameter)
 	setting_connect(
-		func() -> Variant: return main.config.get_property(config_property, main.shaders.get_shader_parameter(shader_rect, parameter)),
+		# on read
+		func() -> Variant:
+			var default: Variant = shader_rect.get_uniform_value(parameter)
+			return main.config.get_value_shader(shader_rect, parameter, default),
+		# on write
 		func(value: Variant) -> void:
 			main.shaders.set_shader_parameter(shader_rect, parameter, value)
-			main.config.set_property(config_property, value)
+			main.config.set_value_shader(shader_rect, parameter, value)
 			Events.setting_changed.emit(self, value)
 	)
+
+func validate_string(value: String) -> String:
+	# var regex := RegEx.new()
+	# regex.compile("__+")
+	value = value.strip_edges()
+	value = value.validate_filename()
+	# value = value.to_snake_case()
+	# value = regex.sub(value, "_", true)
+	return value
 
 
 func _clear_signals() -> void:
 	for conn: Dictionary in value_changed.get_connections():
-		value_changed.disconnect(conn.callable)
-
-func _get_propkey_overlay(overlay: Control, property: String) -> String:
-	return CONFIG_KEY_OVERLAY % [overlay.name, property]
-
-func _get_propkey_camera(property: String) -> String:
-	return CONFIG_KEY_CAMERA % property
-
-func _get_propkey_filter_shader(filter: ColorRect, property: String) -> String:
-	return CONFIG_KEY_SHADER % [filter.name, property]
+		value_changed.disconnect(conn.callable as Callable)

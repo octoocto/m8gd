@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://b42ev167pgdvl"]
 
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_nw4ou"]
-[ext_resource type="Script" uid="uid://babs6t3jjkoq2" path="res://ui/menus/menu_shaders.gd" id="1_q0qgx"]
+[ext_resource type="Script" uid="uid://4ojjsrt63c0i" path="res://ui/menus/menu_shaders.gd" id="1_q0qgx"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nn34v"]
 content_margin_left = 0.0
@@ -29,8 +29,8 @@ texture_filter = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = -1037.0
-offset_bottom = -903.0
+offset_right = -1280.0
+offset_bottom = -960.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 0

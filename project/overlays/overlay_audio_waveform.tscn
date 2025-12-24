@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://dq6heks88e2ip"]
 
-[ext_resource type="Script" uid="uid://cg5u1enpf42y5" path="res://overlays/overlay_audio_waveform.gd" id="1_es30f"]
+[ext_resource type="Script" uid="uid://b2sy0e85hdd10" path="res://overlays/overlay_audio_waveform.gd" id="1_es30f"]
 [ext_resource type="Shader" uid="uid://b0bkdr4vq66r3" path="res://overlays/audio_spectrum.gdshader" id="1_xvcfl"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_opvfq"]

@@ -17,9 +17,13 @@ extends SettingBase
 		text_false = value
 		emit_ui_changed()
 
+@onready var check_button: CheckButton = %CheckButton
+@onready var label_name: UILabel = %LabelName
+@onready var label_value: UILabel = %LabelValue
+
 
 func _on_ready() -> void:
-	%CheckButton.toggled.connect(func(p_value: bool) -> void: value = p_value)
+	check_button.toggled.connect(func(p_value: bool) -> void: value = p_value)
 
 
 func _on_changed() -> void:
@@ -27,16 +31,16 @@ func _on_changed() -> void:
 		await ready
 
 	modulate = Color.WHITE if enabled else Color.from_hsv(0, 0, 0.25)
-	%CheckButton.disabled = !enabled
+	check_button.disabled = !enabled
 
 	if setting_name == "":
-		%LabelName.visible = false
+		label_name.visible = false
 	else:
-		%LabelName.visible = true
-		%LabelName.text = _format_text(setting_name)
+		label_name.visible = true
+		label_name.text = _format_text(setting_name)
 
-	%LabelName.custom_minimum_size.x = setting_name_min_width
-	%HBoxContainer.set("theme_override_constants/separation", setting_name_indent)
+	label_name.custom_minimum_size.x = setting_name_min_width
+	# %HBoxContainer.set("theme_override_constants/separation", setting_name_indent)
 
-	%CheckButton.set_pressed_no_signal(value)
-	%LabelValue.text = _format_text(text_true if value else text_false)
+	check_button.set_pressed_no_signal(value)
+	label_value.text = _format_text(text_true if value else text_false)

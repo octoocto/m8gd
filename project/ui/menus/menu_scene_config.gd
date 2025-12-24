@@ -45,13 +45,14 @@ func add_auto(property: String, setting_name: String = "") -> SettingBase:
 	var property_list := scene.get_property_list()
 
 	for prop: Dictionary in property_list:
-		if prop.name != property:
+		var prop_name: String = prop.name
+		if prop_name != property:
 			continue
 
 		var setting := MenuUtils.create_setting_from_property(prop)
 
-		setting.setting_name = prop.name.capitalize() if setting_name == "" else setting_name
-		setting.value = scene.get(property)
+		setting.setting_name = prop_name.capitalize() if setting_name == "" else setting_name
+		setting.set_value(scene.get(property))
 
 		params_container.add_child(setting)
 		setting.setting_connect_scene(property)
@@ -60,14 +61,6 @@ func add_auto(property: String, setting_name: String = "") -> SettingBase:
 
 	assert(false, "Unable to create setting, property not found: %s" % property)
 	return null
-
-
-##
-## Scan and add control nodes for all export variables in the given scene.
-##
-func add_auto_all() -> void:
-	for prop: Dictionary in main.current_scene.get_export_vars():
-		add_auto(prop.name)
 
 
 ##

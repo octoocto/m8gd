@@ -61,10 +61,10 @@ signal pressed
 
 @onready var panel_focus: Panel = %PanelFocus
 
-@onready var stylebox_normal: StyleBox
-@onready var stylebox_hover: StyleBox
-@onready var stylebox_pressed: StyleBox
-@onready var stylebox_disabled: StyleBox
+@onready var stylebox_normal: StyleBoxFlat
+@onready var stylebox_hover: StyleBoxFlat
+@onready var stylebox_pressed: StyleBoxFlat
+@onready var stylebox_disabled: StyleBoxFlat
 
 var mouse_down: bool = false
 
@@ -93,7 +93,7 @@ func _on_ready() -> void:
 						emit_ui_changed()
 						return
 
-					if mouse_down and is_mouse_inside():
+					if enabled and mouse_down and is_mouse_inside():
 						pressed.emit()
 
 					mouse_down = false

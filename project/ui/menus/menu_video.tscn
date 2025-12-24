@@ -50,14 +50,17 @@ texture_filter = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = -21.0
 offset_top = -5.0
-offset_right = -1070.0
+offset_right = -1049.0
 offset_bottom = -758.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_j5lkk")
 theme_override_styles/panel = SubResource("StyleBoxFlat_02p3k")
 script = ExtResource("1_8qcof")
+enabled = true
+hint_text = ""
 metadata/_tab_index = 5
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
@@ -69,6 +72,8 @@ layout_mode = 2
 theme_type_variation = &""
 text = "UI"
 top_spacing = false
+enabled = true
+hint_text = ""
 
 [node name="VBoxContainer3" type="VBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -78,6 +83,7 @@ unique_name_in_owner = true
 layout_mode = 2
 setting_value_min_width = 24
 max_value = 4.0
+step = 1.0
 show_ticks = true
 setting_name = "UI Scale"
 
@@ -88,11 +94,20 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_yelf4")
 items = PackedStringArray("Normal", "Uppercase", "Lowercase")
 value = 0
 setting_name = "Text Casing"
+setting_name_min_width = 160
+setting_name_indent = 0
+label_alignment = 0
+label_separation = 0
+ignore_text_format = false
+enabled = true
+hint_text = ""
 
 [node name="LabelHeader3" parent="VBoxContainer" instance=ExtResource("1_0nw4r")]
 layout_mode = 2
 theme_type_variation = &""
 text = "Display"
+enabled = true
+hint_text = ""
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -119,6 +134,13 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_ttcy5")
 items = PackedStringArray("640x480 (2x M01)", "960x720 (3x M01)", "1280x960 (4x M01)", "960x640 (2x M02)", "1440x960 (3x M02)", "1920x1280 (4x M02)", "Custom")
 value = 6
 setting_name = "Window Size"
+setting_name_min_width = 160
+setting_name_indent = 0
+label_alignment = 0
+label_separation = 0
+ignore_text_format = false
+enabled = true
+hint_text = ""
 
 [node name="Setting_CustomWindowSize" parent="VBoxContainer/VBoxContainer2" instance=ExtResource("4_jvvms")]
 unique_name_in_owner = true
@@ -135,6 +157,13 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_ks7ik")
 items = PackedStringArray("Disabled", "Enabled", "Adaptive", "Mailbox")
 value = 1
 setting_name = "VSync"
+setting_name_min_width = 160
+setting_name_indent = 0
+label_alignment = 0
+label_separation = 0
+ignore_text_format = false
+enabled = true
+hint_text = ""
 
 [node name="Setting_FPSLimit" parent="VBoxContainer/VBoxContainer2" instance=ExtResource("3_j5lkk")]
 unique_name_in_owner = true
@@ -143,11 +172,20 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_n6uti")
 items = PackedStringArray("30", "45", "60", "72", "90", "120", "144", "240", "Unlimited")
 value = 8
 setting_name = "FPS Limit"
+setting_name_min_width = 160
+setting_name_indent = 0
+label_alignment = 0
+label_separation = 0
+ignore_text_format = false
+enabled = true
+hint_text = ""
 
 [node name="LabelHeader2" parent="VBoxContainer" instance=ExtResource("1_0nw4r")]
 layout_mode = 2
 theme_type_variation = &""
 text = "Graphics"
+enabled = true
+hint_text = ""
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -159,6 +197,13 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_b71wq")
 items = PackedStringArray("Disabled", "2x", "4x", "8x")
 value = 0
 setting_name = "MSAA"
+setting_name_min_width = 160
+setting_name_indent = 0
+label_alignment = 0
+label_separation = 0
+ignore_text_format = false
+enabled = true
+hint_text = ""
 
 [node name="Setting_TAA" parent="VBoxContainer/VBoxContainer" instance=ExtResource("2_8qcof")]
 unique_name_in_owner = true
@@ -172,6 +217,13 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_4aktw")
 items = PackedStringArray("None (Bilinear)", "FSR 1.0", "FSR 2.2")
 value = 0
 setting_name = "Upscaling Method"
+setting_name_min_width = 160
+setting_name_indent = 0
+label_alignment = 0
+label_separation = 0
+ignore_text_format = false
+enabled = true
+hint_text = ""
 
 [node name="Setting_RenderScale" parent="VBoxContainer/VBoxContainer" instance=ExtResource("5_ho738")]
 unique_name_in_owner = true
@@ -202,6 +254,13 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_5jwol")
 items = PackedStringArray("Box", "Hexagon", "Circle")
 value = 1
 setting_name = "DOF Bokeh Shape"
+setting_name_min_width = 160
+setting_name_indent = 0
+label_alignment = 0
+label_separation = 0
+ignore_text_format = false
+enabled = true
+hint_text = ""
 
 [node name="Setting_DOFQuality" parent="VBoxContainer/VBoxContainer" instance=ExtResource("3_j5lkk")]
 unique_name_in_owner = true
@@ -210,3 +269,10 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_8trh0")
 items = PackedStringArray("Very Low", "Low", "Medium", "High")
 value = 2
 setting_name = "DOF Quality"
+setting_name_min_width = 160
+setting_name_indent = 0
+label_alignment = 0
+label_separation = 0
+ignore_text_format = false
+enabled = true
+hint_text = ""

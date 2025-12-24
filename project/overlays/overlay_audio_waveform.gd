@@ -25,7 +25,7 @@ enum Type { PIXEL, BAR, LINE }
 @export var style_line_antialiased := false
 @export var style_line_width := 1.0
 
-var peaks := []
+var peaks: Array[float] = []
 
 var waveform_size: int = 0
 
@@ -73,7 +73,7 @@ func _draw() -> void:
 	if !main.audio_is_spectrum_analyzer_enabled():
 		return
 
-	var magnitudes := peaks.duplicate()
+	var magnitudes: Array[float] = peaks.duplicate()
 
 	if style_mirror:
 		for i in range(magnitudes.size()):
@@ -108,14 +108,14 @@ func _draw() -> void:
 
 		var offset := (
 			Vector2(
-				floor(i / float(size.x)) * -int(size.x),
-				floor(i / float(size.x)) * row_spacing + row_spacing
+				floorf(i / float(size.x)) * -int(size.x),
+				floorf(i / float(size.x)) * row_spacing + row_spacing
 			)
 			+ Vector2(position_offset)
 		)
 
 		if type == Type.PIXEL:
-			var point := Vector2(i, clamp(-magnitudes[i] * row_spacing, -row_spacing, 0.0))
+			var point := Vector2(i, clampf(-magnitudes[i] * row_spacing, -row_spacing, 0.0))
 			draw_primitive([point + offset], [color], [Vector2.ZERO])
 
 		if type == Type.BAR:

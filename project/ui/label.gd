@@ -28,7 +28,7 @@ extends UIBase
 		horizontal_alignment = value
 		emit_ui_changed()
 
-@onready var label: Label = $Label
+@onready var label: Label = %_Label
 
 
 func _on_changed() -> void:

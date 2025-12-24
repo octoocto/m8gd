@@ -10,7 +10,6 @@ signal reposition_started
 # Emitted when the camera has stopped repositioning (right-click unpressed).
 signal reposition_stopped
 
-
 @export var mouse_controlled_pan_zoom := true
 
 @export var humanized_movement := true
@@ -38,30 +37,31 @@ signal reposition_stopped
 	set(value):
 		dof_focus_distance = value
 		if is_inside_tree():
-			%Camera3D.attributes.dof_blur_far_distance = value + dof_focus_width
-			%Camera3D.attributes.dof_blur_near_distance = value - dof_focus_width
+			attributes.dof_blur_far_distance = value + dof_focus_width
+			attributes.dof_blur_near_distance = value - dof_focus_width
 
 @export_range(-0.5, 100, 0.1) var dof_focus_width := 1.5:
 	set(value):
 		dof_focus_width = value
 		if is_inside_tree():
-			%Camera3D.attributes.dof_blur_far_distance = dof_focus_distance + value
-			%Camera3D.attributes.dof_blur_near_distance = dof_focus_distance - value
+			attributes.dof_blur_far_distance = dof_focus_distance + value
+			attributes.dof_blur_near_distance = dof_focus_distance - value
 
 @export_range(0.0, 1.0, 0.01) var dof_blur_amount := 0.18:
 	set(value):
 		dof_blur_amount = value
 		if is_inside_tree():
-			%Camera3D.attributes.dof_blur_amount = value
+			attributes.dof_blur_amount = value
 
 @export var arm_length := 0.0:
 	set(value):
 		arm_length = value
 		if is_inside_tree():
-			%Camera3D.position.z = arm_length
+			cam.position.z = arm_length
 
 @onready var main: Main
 @onready var cam: Camera3D = %Camera3D
+@onready var attributes: CameraAttributesPractical = cam.attributes
 
 @onready var base_rotation := rotation
 @onready var base_position := position
@@ -75,44 +75,57 @@ var rclick_pressed := false
 # (any direction held down)
 var ticks_repositioning := 0
 
+
 func is_between(x: float, a: float, b: float) -> bool:
 	return a < x and x < b
+
 
 func is_mouse_position_in_window(mouse_position: Vector2) -> bool:
 	return is_between(mouse_position.x, -1.0, 1.0) and is_between(mouse_position.y, -1.0, 1.0)
 
+
 func vdeg_to_rad(v: Vector2) -> Vector2:
 	return Vector2(deg_to_rad(v.x), deg_to_rad(v.y))
+
 
 func _ready() -> void:
 	noise.noise_type = FastNoiseLite.TYPE_PERLIN
 
+
 func init(p_main: Main) -> void:
 	main = p_main
 
-func update(delta: float) -> void:
 
+func update(delta: float) -> void:
 	if main.menu_camera.visible or main.menu_scene.visible:
 		update_reposition(delta)
 	elif !main.is_any_menu_open():
 		update_humanized_movement(delta)
 		update_mouse_movement(delta)
 
-func update_humanized_movement(delta: float) -> void:
 
-	if !humanized_movement: return
+func update_humanized_movement(delta: float) -> void:
+	if !humanized_movement:
+		return
 
 	noise.frequency = humanize_freq
-	position = base_position + Vector3(
-		noise.get_noise_2d(noise_u, 0.0),
-		noise.get_noise_2d(noise_u, 0.3),
-		noise.get_noise_2d(noise_u, 0.6),
-	) * humanize_amount
+	position = (
+		base_position
+		+ (
+			Vector3(
+				noise.get_noise_2d(noise_u, 0.0),
+				noise.get_noise_2d(noise_u, 0.3),
+				noise.get_noise_2d(noise_u, 0.6),
+			)
+			* humanize_amount
+		)
+	)
 	noise_u += delta
 
-func update_mouse_movement(_delta: float) -> void:
 
-	if !mouse_controlled_pan_zoom: return
+func update_mouse_movement(_delta: float) -> void:
+	if !mouse_controlled_pan_zoom:
+		return
 
 	var mouse_position := _mouse_position()
 	var mouse_clicked := Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)
@@ -126,12 +139,12 @@ func update_mouse_movement(_delta: float) -> void:
 	cam.fov = lerp(cam.fov, target_fov, fov_smoothing)
 	dof_focus_width = lerp(dof_focus_width, target_dof, 0.1)
 
+
 ##
 ## Get the mouse position in the window in the range (-1, -1) to (1, 1),
 ## where (0, 0) is the center of the window.
 ##
 func _mouse_position() -> Vector2:
-
 	# get mouse position as vector between (0, 0) and (1, 1)
 	var mouse_position := get_viewport().get_mouse_position() / Vector2(get_window().size)
 
@@ -144,29 +157,22 @@ func _mouse_position() -> Vector2:
 	else:
 		return mouse_position
 
-func _new_cam_rotation(mouse_position: Vector2, mouse_clicked: bool) -> Vector3:
 
+func _new_cam_rotation(mouse_position: Vector2, mouse_clicked: bool) -> Vector3:
 	var pan_range := (
-		vdeg_to_rad(cam_pan_range_zoomin)
-		if mouse_clicked
-		else vdeg_to_rad(cam_pan_range_zoomout)
+		vdeg_to_rad(cam_pan_range_zoomin) if mouse_clicked else vdeg_to_rad(cam_pan_range_zoomout)
 	)
 
-	var target_rotation := (
-		Vector3(
-			- mouse_position.y * pan_range.y,
-			- mouse_position.x * pan_range.x,
-			0)
+	var target_rotation := Vector3(
+		-mouse_position.y * pan_range.y, -mouse_position.x * pan_range.x, 0
 	)
 
 	return lerp(cam.rotation, target_rotation, 0.1)
 
-func _new_rotation(mouse_position: Vector2, mouse_clicked: bool) -> Vector3:
 
+func _new_rotation(mouse_position: Vector2, mouse_clicked: bool) -> Vector3:
 	var pan_range := (
-		vdeg_to_rad(pan_range_zoomin)
-		if mouse_clicked
-		else vdeg_to_rad(pan_range_zoomout)
+		vdeg_to_rad(pan_range_zoomin) if mouse_clicked else vdeg_to_rad(pan_range_zoomout)
 	)
 
 	var pan_smoothing := (
@@ -176,16 +182,13 @@ func _new_rotation(mouse_position: Vector2, mouse_clicked: bool) -> Vector3:
 	)
 
 	var target_rotation := (
-		base_rotation + Vector3(
-			- mouse_position.y * pan_range.y,
-			- mouse_position.x * pan_range.x,
-			0)
+		base_rotation + Vector3(-mouse_position.y * pan_range.y, -mouse_position.x * pan_range.x, 0)
 	)
 
 	return lerp(rotation, target_rotation, pan_smoothing)
 
-func update_reposition(delta: float) -> void:
 
+func update_reposition(delta: float) -> void:
 	if (main.menu_camera.visible or main.menu_scene.visible) and rclick_pressed:
 		var input_dir := Vector3.ZERO
 
@@ -207,11 +210,12 @@ func update_reposition(delta: float) -> void:
 		else:
 			ticks_repositioning += 1
 
-		var acceleration: float = ease(min(ticks_repositioning / 20.0, 1.0), 0.5)
+		var acceleration: float = ease(min(ticks_repositioning / 20.0, 1.0) as float, 0.5)
 
 		global_position += input_dir * delta * acceleration * 10
 
 		camera_updated.emit()
+
 
 func reposition_start() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -220,6 +224,7 @@ func reposition_start() -> void:
 	if main.menu_scene.visible:
 		main.menu_camera.menu_show_small()
 	reposition_started.emit()
+
 
 func reposition_stop() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -230,24 +235,29 @@ func reposition_stop() -> void:
 		main.menu_camera.menu_hide()
 	reposition_stopped.emit()
 
-func _input(event: InputEvent) -> void:
 
+func _input(e: InputEvent) -> void:
 	if main.menu_camera.visible or main.menu_scene.visible:
-		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
-			if event.pressed:
+		if (
+			e is InputEventMouseButton
+			and (e as InputEventMouseButton).button_index == MOUSE_BUTTON_RIGHT
+		):
+			if (e as InputEventMouseButton).pressed:
 				reposition_start()
 			else:
 				reposition_stop()
 
 		if rclick_pressed:
-			if event is InputEventMouseMotion:
+			if e is InputEventMouseMotion:
+				var event := e as InputEventMouseMotion
 				rotation.y -= event.relative.x * 0.001
 				rotation.x -= event.relative.y * 0.001
 
 			const FOCUS_W_ADJUST_AMOUNT := 0.1
 			const FOCUS_L_ADJUST_AMOUNT := 0.25
-		
-			if event is InputEventMouseButton and event.pressed:
+
+			if e is InputEventMouseButton and (e as InputEventMouseButton).pressed:
+				var event := e as InputEventMouseButton
 				if Input.is_key_pressed(KEY_SHIFT):
 					if event.button_index == MOUSE_BUTTON_WHEEL_UP:
 						dof_focus_width += FOCUS_W_ADJUST_AMOUNT
@@ -264,11 +274,13 @@ func _input(event: InputEvent) -> void:
 	elif rclick_pressed:
 		reposition_stop()
 
+
 func reset_transform() -> void:
 	position = base_position
 	rotation = base_rotation
 	cam.rotation = Vector3.ZERO
 	cam.fov = fov_zoomout
+
 
 func set_current_transform_as_base() -> void:
 	base_position = position

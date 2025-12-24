@@ -43,9 +43,9 @@ func _process(delta: float) -> void:
 		next_device_scan -= delta
 
 
-func init(main: Main) -> void:
-	self.main = main
-	self.audio_monitor = main.audio_monitor
+func init(p_main: Main) -> void:
+	self.main = p_main
+	self.audio_monitor = p_main.audio_monitor
 
 
 func start_waiting_for_devices() -> void:
@@ -96,7 +96,7 @@ func connect_serial_device(port: String = "", force: bool = false) -> void:
 
 
 func disconnect_serial_device() -> void:
-	if not is_serial_device_connected():
+	if not is_serial_device_connected() or not main.m8_client.is_connected():
 		return
 
 	main.m8_client.disconnect()

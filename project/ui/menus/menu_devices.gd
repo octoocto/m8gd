@@ -1,4 +1,5 @@
 @tool
+class_name MenuDevices
 extends MenuBase
 
 enum ConnectAction { CONNECT, DISCONNECT, RECONNECT }
@@ -11,6 +12,8 @@ enum ConnectAction { CONNECT, DISCONNECT, RECONNECT }
 @onready var button_connect: UIButton = %ButtonConnect
 
 @onready var s_show_all_devices: SettingBool = %SShowAllDevices
+@onready var bar_audio_level_l: TextureProgressBar = %Bar_AudioLevelL
+@onready var bar_audio_level_r: TextureProgressBar = %Bar_AudioLevelR
 
 var dm: DeviceManager
 
@@ -83,8 +86,8 @@ func _on_menu_init() -> void:
 		func() -> void:
 			if main and main.is_menu_open():
 				var volume := main.audio_get_peak_volume()
-				%Bar_AudioLevelL.value = max(-1000, volume.x)
-				%Bar_AudioLevelR.value = max(-1000, volume.y)
+				bar_audio_level_l.value = max(-1000, volume.x)
+				bar_audio_level_r.value = max(-1000, volume.y)
 	)
 
 	# auto refresh list
@@ -157,11 +160,11 @@ func _on_changed() -> void:
 
 
 func set_status_serialport(text: String) -> void:
-	%LabelSerialStatus.text = text
+	label_serial_status.text = text
 
 
 func set_status_audiodevice(text: String) -> void:
-	%LabelAudioStatus.text = text
+	label_audio_status.text = text
 
 
 func refresh_device_list() -> void:

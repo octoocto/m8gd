@@ -30,7 +30,7 @@ const REBIND_COOLDOWN := 100  # ms until can rebind again
 @onready var button_reset_binds: UIButton = %ButtonResetBinds
 
 @onready var profile_hotkey_template: HBoxContainer = %ProfileHotkeyTemplate
-@onready var profile_hotkeys_container: VBoxContainer = %ProfileHotkeysContainer
+@onready var hotkeys_presets_container: VBoxContainer = %ProfileHotkeysContainer
 
 var is_key_rebinding := false
 var last_rebind_time := 0.0
@@ -42,7 +42,7 @@ func get_tab_title() -> String:
 
 
 func _on_menu_init() -> void:
-	%Setting_VirtualKeyboard.setting_connect_global(
+	s_virtual_keyboard.setting_connect_global(
 		"virtual_keyboard_enabled",
 		func(value: bool) -> void: main.m8_virtual_keyboard_enabled = value
 	)
@@ -87,7 +87,7 @@ func _on_menu_init() -> void:
 			func(event: InputEvent) -> void: main.config.set_overlay_hotkey(node_path, event),
 			func() -> void: main.config.clear_overlay_hotkey(node_path)
 		)
-		_update_hotkey_node(control, main.config.get_overlay_hotkey(node_path))
+		_update_hotkey_node(control, main.config.get_overlay_hotkey(node_path) as InputEvent)
 
 
 func _update_keybind_buttons(action: String, bind_1: Button, bind_2: Button) -> void:
@@ -112,7 +112,9 @@ func reset_key_rebinds() -> void:
 		"key_edit"
 	]:
 		InputMap.action_erase_events(action)
-		InputMap.action_add_event(action, ProjectSettings.get_setting("input/" + action).events[0])
+		InputMap.action_add_event(
+			action, ProjectSettings.get_setting("input/" + action).events[0] as InputEvent
+		)
 	save_key_rebinds()
 	Log.ln("keybinds reset to default")
 
@@ -195,11 +197,11 @@ func start_rebind_action(action: String, index: int = 0) -> void:
 ##
 func _handle_input_rebind(event: InputEvent) -> void:
 	if is_key_rebinding:
-		if event is InputEventKey and event.pressed:
-			if event.keycode != KEY_ESCAPE:
+		if event is InputEventKey and event.is_pressed():
+			if (event as InputEventKey).keycode != KEY_ESCAPE:
 				key_rebind_callback.call(event)
 			end_rebind()
-		if event is InputEventJoypadButton and event.pressed:
+		if event is InputEventJoypadButton and event.is_pressed():
 			key_rebind_callback.call(event)
 			end_rebind()
 		return
@@ -208,7 +210,7 @@ func _handle_input_rebind(event: InputEvent) -> void:
 func end_rebind() -> void:
 	is_key_rebinding = false
 	last_rebind_time = Time.get_ticks_msec()
-	%BindActionPopup.visible = false
+	bind_action_popup.visible = false
 
 
 func _input(event: InputEvent) -> void:
@@ -222,7 +224,9 @@ func _input(event: InputEvent) -> void:
 ## [clear_fn] is called when the user clears the binding.
 ##
 func _init_hotkey_node(hotkey_node: Control, rebind_fn: Callable, clear_fn: Callable) -> void:
-	hotkey_node.get_node("ButtonBind").pressed.connect(
+	var button_bind: Button = hotkey_node.get_node("ButtonBind")
+	var button_clear: Button = hotkey_node.get_node("ButtonClear")
+	button_bind.pressed.connect(
 		func() -> void:
 			start_rebind(
 				func(e: InputEvent) -> void:
@@ -230,7 +234,7 @@ func _init_hotkey_node(hotkey_node: Control, rebind_fn: Callable, clear_fn: Call
 					_update_hotkey_node(hotkey_node, e)
 			)
 	)
-	hotkey_node.get_node("ButtonClear").pressed.connect(
+	button_clear.pressed.connect(
 		func() -> void:
 			clear_fn.call()
 			_update_hotkey_node(hotkey_node, null)
@@ -238,38 +242,39 @@ func _init_hotkey_node(hotkey_node: Control, rebind_fn: Callable, clear_fn: Call
 
 
 func _update_hotkey_node(hotkey_node: Control, event: InputEvent) -> void:
+	var button_bind: Button = hotkey_node.get_node("ButtonBind")
 	if event:
-		hotkey_node.get_node("ButtonBind").text = event.as_text()
+		button_bind.text = event.as_text()
 	else:
-		hotkey_node.get_node("ButtonBind").text = "---"
+		button_bind.text = "---"
 
 
 ##
 ## Recreate the profile hotkey UI with the current list of profiles and
 ## their saved hotkey bindings.
 ##
-func refresh_profile_hotkeys() -> void:
+func refresh_hotkeys_presets() -> void:
 	if not main:
 		return
 
-	for child in profile_hotkeys_container.get_children():
+	for child in hotkeys_presets_container.get_children():
 		if child != profile_hotkey_template:
 			child.queue_free()
 
-	for profile_name: String in main.list_profile_names():
+	for profile_name: String in main.list_preset_names():
 		var container: HBoxContainer = profile_hotkey_template.duplicate()
-		var event: Variant = main.config.get_profile_hotkey(profile_name)
+		var event: Variant = main.config.preset_get_hotkey(profile_name)
 		container.visible = true
-		container.get_node("Label").text = profile_name
-		_update_hotkey_node(container, event)
-		profile_hotkeys_container.add_child(container)
+		(container.get_node("Label") as Label).text = profile_name
+		_update_hotkey_node(container, event as InputEvent)
+		hotkeys_presets_container.add_child(container)
 
 		_init_hotkey_node(
 			container,
 			func(e: InputEvent) -> void:
-				main.config.set_profile_hotkey(profile_name, e)
-				refresh_profile_hotkeys(),
+				main.config.preset_set_hotkey(profile_name, e)
+				refresh_hotkeys_presets(),
 			func() -> void:
-				main.config.clear_profile_hotkey(profile_name)
-				refresh_profile_hotkeys()
+				main.config.preset_delete_hotkey(profile_name)
+				refresh_hotkeys_presets()
 		)

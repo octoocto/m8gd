@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bx26oqvasqfha"]
 
-[ext_resource type="Script" uid="uid://dakylm0gd3i3q" path="res://overlays/overlay_input.gd" id="1_a4iwt"]
+[ext_resource type="Script" uid="uid://2yvlafyfb0y8" path="res://overlays/overlay_input.gd" id="1_a4iwt"]
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_kxkeb"]
 [ext_resource type="Script" uid="uid://c1bdn3740c7n8" path="res://ui/aspect_ratio_control.gd" id="3_x53l1"]
 
@@ -11,7 +11,6 @@ offset_right = 160.0
 offset_bottom = 128.0
 theme = ExtResource("1_kxkeb")
 script = ExtResource("1_a4iwt")
-metadata/_custom_type_script = "uid://bvcsxyui7l318"
 
 [node name="Control" type="Control" parent="."]
 unique_name_in_owner = true

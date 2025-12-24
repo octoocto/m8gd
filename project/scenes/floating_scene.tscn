@@ -1,6 +1,6 @@
 [gd_scene load_steps=28 format=3 uid="uid://da23gfk2abg5f"]
 
-[ext_resource type="Script" uid="uid://bgmr4rdpq5ill" path="res://scenes/floating_scene.gd" id="1_ufbfg"]
+[ext_resource type="Script" uid="uid://cnlm6xbshm60g" path="res://scenes/floating_scene.gd" id="1_ufbfg"]
 [ext_resource type="Texture2D" uid="uid://d01h4xbn66tpi" path="res://assets/texture_07.png" id="2_yqhq4"]
 [ext_resource type="Shader" uid="uid://okxo3d88kn1h" path="res://shaders/screen_blur.gdshader" id="3_nedee"]
 [ext_resource type="PackedScene" uid="uid://bckroenwlecqv" path="res://scene_camera_3d.tscn" id="4_8iar1"]
@@ -16,9 +16,9 @@ frequency = 1.0
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_t5wih"]
 width = 2048
 height = 2048
-invert = true
-color_ramp = SubResource("Gradient_1mc0v")
 noise = SubResource("FastNoiseLite_d2j5s")
+color_ramp = SubResource("Gradient_1mc0v")
+invert = true
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_fmvik"]
 shader = ExtResource("3_nedee")
@@ -96,8 +96,8 @@ noise_type = 3
 frequency = 0.3711
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_6kjnt"]
-color_ramp = SubResource("Gradient_w7vqr")
 noise = SubResource("FastNoiseLite_uwqla")
+color_ramp = SubResource("Gradient_w7vqr")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_nx6w6"]
 render_priority = 0

@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://c3lv6bqqi5wej"]
+[gd_scene load_steps=9 format=3 uid="uid://c3lv6bqqi5wej"]
 
 [ext_resource type="PackedScene" uid="uid://dsgvm3dda1kjp" path="res://ui/header.tscn" id="1_aqk45"]
 [ext_resource type="Script" uid="uid://b8j8l0lr1k4w6" path="res://ui/menus/menu_input.gd" id="1_vdots"]
@@ -8,6 +8,27 @@
 [ext_resource type="PackedScene" uid="uid://jvyexp7mquoa" path="res://ui/button.tscn" id="5_tnu4l"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vxsnp"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 0.8)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.12549, 0.156863, 0.188235, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tnu4l"]
 content_margin_left = 2.0
 content_margin_top = 2.0
 content_margin_right = 2.0
@@ -19,11 +40,13 @@ texture_filter = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = -1043.0
-offset_bottom = -624.0
+offset_left = -3.5
+offset_right = -1039.5
+offset_bottom = -628.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_vxsnp")
+theme_override_styles/panel = SubResource("StyleBoxFlat_vxsnp")
 script = ExtResource("1_vdots")
 metadata/_tab_index = 4
 
@@ -34,8 +57,11 @@ size_flags_vertical = 3
 
 [node name="Header" parent="VBoxContainer" instance=ExtResource("1_aqk45")]
 layout_mode = 2
+theme_type_variation = &""
 text = "M8 Remote Input"
 top_spacing = false
+enabled = true
+hint_text = ""
 
 [node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -44,14 +70,20 @@ columns = 3
 [node name="Label9" parent="VBoxContainer/GridContainer" instance=ExtResource("4_tnu4l")]
 layout_mode = 2
 text = "Key"
+enabled = true
+hint_text = ""
 
 [node name="Label10" parent="VBoxContainer/GridContainer" instance=ExtResource("4_tnu4l")]
 layout_mode = 2
 text = "Primary"
+enabled = true
+hint_text = ""
 
 [node name="Label11" parent="VBoxContainer/GridContainer" instance=ExtResource("4_tnu4l")]
 layout_mode = 2
 text = "Secondary"
+enabled = true
+hint_text = ""
 
 [node name="HSeparator" type="HSeparator" parent="VBoxContainer/GridContainer"]
 layout_mode = 2
@@ -66,6 +98,8 @@ layout_mode = 2
 layout_mode = 2
 min_width = 50
 text = "Up"
+enabled = true
+hint_text = ""
 
 [node name="ButtonBindUp1" type="Button" parent="VBoxContainer/GridContainer"]
 unique_name_in_owner = true
@@ -85,6 +119,8 @@ text_overrun_behavior = 4
 layout_mode = 2
 min_width = 50
 text = "Down"
+enabled = true
+hint_text = ""
 
 [node name="ButtonBindDown1" type="Button" parent="VBoxContainer/GridContainer"]
 unique_name_in_owner = true
@@ -104,6 +140,8 @@ text_overrun_behavior = 4
 layout_mode = 2
 min_width = 50
 text = "Left"
+enabled = true
+hint_text = ""
 
 [node name="ButtonBindLeft1" type="Button" parent="VBoxContainer/GridContainer"]
 unique_name_in_owner = true
@@ -123,6 +161,8 @@ text_overrun_behavior = 4
 layout_mode = 2
 min_width = 50
 text = "Right"
+enabled = true
+hint_text = ""
 
 [node name="ButtonBindRight1" type="Button" parent="VBoxContainer/GridContainer"]
 unique_name_in_owner = true
@@ -142,6 +182,8 @@ text_overrun_behavior = 4
 layout_mode = 2
 min_width = 50
 text = "Option"
+enabled = true
+hint_text = ""
 
 [node name="ButtonBindOpt1" type="Button" parent="VBoxContainer/GridContainer"]
 unique_name_in_owner = true
@@ -161,6 +203,8 @@ text_overrun_behavior = 4
 layout_mode = 2
 min_width = 50
 text = "Edit"
+enabled = true
+hint_text = ""
 
 [node name="ButtonBindEdit1" type="Button" parent="VBoxContainer/GridContainer"]
 unique_name_in_owner = true
@@ -180,6 +224,8 @@ text_overrun_behavior = 4
 layout_mode = 2
 min_width = 50
 text = "Shift"
+enabled = true
+hint_text = ""
 
 [node name="ButtonBindShift1" type="Button" parent="VBoxContainer/GridContainer"]
 unique_name_in_owner = true
@@ -199,6 +245,8 @@ text_overrun_behavior = 4
 layout_mode = 2
 min_width = 50
 text = "Play"
+enabled = true
+hint_text = ""
 
 [node name="ButtonBindPlay1" type="Button" parent="VBoxContainer/GridContainer"]
 unique_name_in_owner = true
@@ -220,12 +268,16 @@ layout_mode = 2
 [node name="ButtonResetBinds" parent="VBoxContainer" instance=ExtResource("5_tnu4l")]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_vxsnp")
+theme_override_styles/panel = SubResource("StyleBoxFlat_tnu4l")
+theme_override_styles/panel = SubResource("StyleBoxFlat_tnu4l")
 text = "RESET TO DEFAULT"
 
 [node name="LabelHeader2" parent="VBoxContainer" instance=ExtResource("1_aqk45")]
 layout_mode = 2
+theme_type_variation = &""
 text = "Virtual Keyboard"
+enabled = true
+hint_text = ""
 
 [node name="Setting_VirtualKeyboard" parent="VBoxContainer" instance=ExtResource("3_1p8ay")]
 unique_name_in_owner = true
@@ -234,7 +286,10 @@ setting_name = "Enable Virtual Keyboard"
 
 [node name="LabelHeader3" parent="VBoxContainer" instance=ExtResource("1_aqk45")]
 layout_mode = 2
-text = "Profile Hotkeys"
+theme_type_variation = &""
+text = "Preset Hotkeys"
+enabled = true
+hint_text = ""
 
 [node name="ProfileHotkeysContainer" type="VBoxContainer" parent="VBoxContainer"]
 unique_name_in_owner = true
@@ -267,7 +322,10 @@ text = "Clear"
 
 [node name="LabelHeader4" parent="VBoxContainer" instance=ExtResource("1_aqk45")]
 layout_mode = 2
+theme_type_variation = &""
 text = "Overlay Hotkeys"
+enabled = true
+hint_text = ""
 
 [node name="OverlayHotkeyWaveform" type="HBoxContainer" parent="VBoxContainer"]
 unique_name_in_owner = true

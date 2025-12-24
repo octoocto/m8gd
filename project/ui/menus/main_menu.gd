@@ -14,11 +14,11 @@ extends MenuBase
 @onready var menu_overlays: MenuBase = %MenuOverlays
 @onready var menu_shaders: MenuBase = %MenuShaders
 @onready var menu_colors: MenuBase = %MenuColors
-@onready var menu_devices: MenuBase = %MenuDevices
+@onready var menu_devices: MenuDevices = %MenuDevices
 @onready var menu_input: InputMenu = %MenuInput
 @onready var menu_video: MenuBase = %MenuVideo
 @onready var menu_audio: MenuBase = %MenuAudio
-@onready var menu_profiles: MenuBase = %MenuProfiles
+@onready var menu_presets: MenuBase = %MenuPresets
 @onready var menu_debug: MenuBase = %MenuDebug
 
 @onready var button_goto_scene: UIButton = %ButtonGotoScene
@@ -29,7 +29,7 @@ extends MenuBase
 @onready var button_goto_input: UIButton = %ButtonGotoInput
 @onready var button_goto_video: UIButton = %ButtonGotoVideo
 @onready var button_goto_audio: UIButton = %ButtonGotoAudio
-@onready var button_goto_profiles: UIButton = %ButtonGotoProfiles
+@onready var button_goto_presets: UIButton = %ButtonGotoPresets
 @onready var button_goto_debug: UIButton = %ButtonGotoDebug
 
 @onready var opt_load_scene: UIOptionButton = %OptionLoadScene
@@ -51,10 +51,10 @@ func _on_menu_init() -> void:
 
 	button_exit.pressed.connect(func() -> void: main.quit())
 	button_close.pressed.connect(func() -> void: visible = false)
-	for i in tab_container.get_tab_count():
-		var tab := tab_container.get_tab_control(i)
-		if tab.has_method("get_tab_title"):
-			tab_container.set_tab_title(i, tab.get_tab_title())
+	# for i in tab_container.get_tab_count():
+	# 	var tab := tab_container.get_tab_control(i)
+	# 	if tab.has_method("get_tab_title"):
+	# 		tab_container.set_tab_title(i, tab.get_tab_title())
 	display_rect.texture = main.m8_client.get_display()
 
 	_init_scene_loader()
@@ -67,7 +67,7 @@ func _on_menu_init() -> void:
 	_connect_goto(button_goto_input, menu_input)
 	_connect_goto(button_goto_video, menu_video)
 	_connect_goto(button_goto_audio, menu_audio)
-	_connect_goto(button_goto_profiles, menu_profiles)
+	_connect_goto(button_goto_presets, menu_presets)
 	_connect_goto(button_goto_debug, menu_debug)
 
 	button_back.pressed.connect(_back)
@@ -152,7 +152,7 @@ func _init_scene_loader() -> void:
 	opt_load_scene.item_selected.connect(
 		func(idx: int) -> void:
 			if idx != -1:
-				main.load_scene(opt_load_scene.get_item_metadata(idx))
+				main.load_scene(opt_load_scene.get_item_metadata(idx) as String)
 			_setup_as_button.call()
 	)
 	_setup_as_button.call()
