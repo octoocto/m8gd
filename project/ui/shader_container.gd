@@ -74,4 +74,4 @@ func set_shader_parameter(
 func _on_update() -> void:
 	for c in get_children():
 		if c is Control:
-			fit_child_in_rect(c, Rect2(Vector2.ZERO, size))
+			fit_child_in_rect(c as Control, Rect2(Vector2.ZERO, size))

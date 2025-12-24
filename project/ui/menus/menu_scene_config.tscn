@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://dv8crbibtrpck"]
 
 [ext_resource type="PackedScene" uid="uid://m4rgiakfy3m2" path="res://ui/menus/menu_frame.tscn" id="1_wthso"]
-[ext_resource type="Script" uid="uid://c3iwtq64lssgh" path="res://ui/menus/menu_scene_config.gd" id="1_x6k17"]
+[ext_resource type="Script" uid="uid://qrj2e6c68ovb" path="res://ui/menus/menu_scene_config.gd" id="1_x6k17"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_icp2e"]
 content_margin_left = 0.0

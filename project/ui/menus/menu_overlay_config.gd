@@ -11,12 +11,12 @@ extends MenuFrameBase
 # @onready var button_finish: Button = %ButtonFinish
 
 ## The overlay element currently being edited.
-var overlay_target: Control
+var overlay_target: OverlayBase
 
 
 func _disconnect_all(sig: Signal) -> void:
 	for conn: Dictionary in sig.get_connections():
-		sig.disconnect(conn.callable)
+		sig.disconnect(conn.callable as Callable)
 
 
 func _on_menu_init() -> void:
@@ -86,7 +86,7 @@ func _init_params_for(overlay: OverlayBase) -> void:
 				prop.usage & PROPERTY_USAGE_STORAGE
 				and prop.usage & PROPERTY_USAGE_EDITOR
 				and prop.usage & PROPERTY_USAGE_SCRIPT_VARIABLE
-				and not prop.name.begins_with("_")
+				and not (prop.name as String).begins_with("_")
 			)
 	)
 
@@ -94,8 +94,8 @@ func _init_params_for(overlay: OverlayBase) -> void:
 		var property: String = prop.name
 		var setting := MenuUtils.create_setting_from_property(prop)
 
-		setting.value = overlay.get(property)
-		setting.setting_name = prop.name.capitalize()
+		setting.set_value(overlay.get(property))
+		setting.setting_name = (prop.name as String).capitalize()
 		param_container.add_child(setting)
 		setting.setting_connect_overlay(overlay, property)
 

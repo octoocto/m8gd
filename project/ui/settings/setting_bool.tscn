@@ -20,13 +20,12 @@
 
 [node name="SettingBool" type="PanelContainer"]
 texture_filter = 1
-offset_right = 203.0
-offset_bottom = 11.0
+offset_right = 204.0
+offset_bottom = 7.0
 size_flags_horizontal = 3
 size_flags_vertical = 4
 theme = ExtResource("1_b6avg")
 script = ExtResource("1_0smb8")
-setting_name = "test"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
@@ -40,11 +39,12 @@ theme_override_constants/separation = 0
 
 [node name="LabelName" parent="HBoxContainer/HBoxContainer" instance=ExtResource("3_ejw1u")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 0)
+visible = false
+custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_ejw1u")
 no_padding = true
-text = "TEST"
+text = "test"
 
 [node name="PanelContainer" type="PanelContainer" parent="HBoxContainer"]
 layout_mode = 2
@@ -57,15 +57,11 @@ layout_mode = 2
 size_flags_vertical = 4
 theme_override_constants/separation = 4
 
-[node name="LabelValue" type="Label" parent="HBoxContainer/PanelContainer/HBoxContainer"]
+[node name="LabelValue" parent="HBoxContainer/PanelContainer/HBoxContainer" instance=ExtResource("3_ejw1u")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
-size_flags_horizontal = 3
-text = "OFF"
-horizontal_alignment = 2
-vertical_alignment = 1
-autowrap_mode = 1
+text = "Off"
+color_override = 4
 
 [node name="CheckButton" type="CheckButton" parent="HBoxContainer/PanelContainer/HBoxContainer"]
 unique_name_in_owner = true

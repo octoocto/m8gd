@@ -31,10 +31,16 @@ class_name SettingFile extends SettingBase
 		panel_style_value = p_value
 		emit_ui_changed()
 
+@onready var button: Button = %Button
+@onready var file_dialog: FileDialog = %FileDialog
+@onready var hbox: HBoxContainer = %HBoxContainer
+@onready var panel_container: PanelContainer = %PanelContainer
+@onready var label_name: Label = %LabelName
+
 
 func _on_ready() -> void:
-	%Button.pressed.connect(open_file_dialog)
-	%FileDialog.file_selected.connect(on_file_selected)
+	button.pressed.connect(open_file_dialog)
+	file_dialog.file_selected.connect(on_file_selected)
 
 
 func on_file_selected(path: String) -> void:
@@ -48,7 +54,7 @@ func open_file_dialog() -> void:
 	# %FileDialog.canceled.connect(func() -> void:
 	# 	%FileDialog.files_selected.disconnect(callback)
 	# , CONNECT_ONE_SHOT)
-	%FileDialog.show()
+	file_dialog.show()
 
 
 func _on_changed() -> void:
@@ -58,22 +64,18 @@ func _on_changed() -> void:
 	modulate = Color.WHITE if enabled else Color.from_hsv(0, 0, 0.25)
 
 	if setting_name == "":
-		%LabelName.visible = false
-		%HBoxContainer.visible = false
+		label_name.visible = false
+		hbox.visible = false
 	else:
-		%LabelName.text = _format_text(setting_name)
-		%LabelName.visible = true
-		%HBoxContainer.visible = true
+		label_name.text = _format_text(setting_name)
+		label_name.visible = true
+		hbox.visible = true
 
-	%FileDialog.filters = [filters]
+	file_dialog.filters = [filters]
 
-	%PanelContainer.set("theme_override_styles/panel", panel_style_value)
+	panel_container.set("theme_override_styles/panel", panel_style_value)
 
-	%LabelName.custom_minimum_size.x = setting_name_min_width
-	%HBoxContainer.set("theme_override_constants/separation", setting_name_indent)
+	label_name.custom_minimum_size.x = setting_name_min_width
+	hbox.set("theme_override_constants/separation", setting_name_indent)
 
-	%Button.text = value.get_file() if value != "" else empty_text
-
-
-func get_color_picker() -> ColorPicker:
-	return %ColorPickerButton.get_picker()
+	button.text = value.get_file() if value != "" else empty_text

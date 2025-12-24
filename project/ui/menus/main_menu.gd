@@ -14,7 +14,7 @@ extends MenuBase
 @onready var menu_overlays: MenuBase = %MenuOverlays
 @onready var menu_shaders: MenuBase = %MenuShaders
 @onready var menu_colors: MenuBase = %MenuColors
-@onready var menu_devices: MenuBase = %MenuDevices
+@onready var menu_devices: MenuDevices = %MenuDevices
 @onready var menu_input: InputMenu = %MenuInput
 @onready var menu_video: MenuBase = %MenuVideo
 @onready var menu_audio: MenuBase = %MenuAudio
@@ -51,10 +51,10 @@ func _on_menu_init() -> void:
 
 	button_exit.pressed.connect(func() -> void: main.quit())
 	button_close.pressed.connect(func() -> void: visible = false)
-	for i in tab_container.get_tab_count():
-		var tab := tab_container.get_tab_control(i)
-		if tab.has_method("get_tab_title"):
-			tab_container.set_tab_title(i, tab.get_tab_title())
+	# for i in tab_container.get_tab_count():
+	# 	var tab := tab_container.get_tab_control(i)
+	# 	if tab.has_method("get_tab_title"):
+	# 		tab_container.set_tab_title(i, tab.get_tab_title())
 	display_rect.texture = main.m8_client.get_display()
 
 	_init_scene_loader()
@@ -152,7 +152,7 @@ func _init_scene_loader() -> void:
 	opt_load_scene.item_selected.connect(
 		func(idx: int) -> void:
 			if idx != -1:
-				main.load_scene(opt_load_scene.get_item_metadata(idx))
+				main.load_scene(opt_load_scene.get_item_metadata(idx) as String)
 			_setup_as_button.call()
 	)
 	_setup_as_button.call()

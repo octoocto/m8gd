@@ -18,10 +18,10 @@ var selected: int:
 
 @onready var option_button: OptionButton = $OptionButton
 
-@onready var stylebox_normal: StyleBox
-@onready var stylebox_hover: StyleBox
-@onready var stylebox_pressed: StyleBox
-@onready var stylebox_disabled: StyleBox
+@onready var stylebox_normal: StyleBoxFlat
+@onready var stylebox_hover: StyleBoxFlat
+@onready var stylebox_pressed: StyleBoxFlat
+@onready var stylebox_disabled: StyleBoxFlat
 
 
 func _on_ready() -> void:

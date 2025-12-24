@@ -37,7 +37,7 @@ func _on_menu_init() -> void:
 				main.menu_overlay.menu_show_for(overlay)
 		)
 
-		overlay.visibility_changed.connect(func() -> void: s_enable.value = overlay.visible)
+		overlay.visibility_changed.connect(func() -> void: s_enable.set_value(overlay.visible))
 
 	Log.ln("added %d overlay settings" % overlays.get_overlays().size())
 

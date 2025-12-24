@@ -43,7 +43,7 @@ size_flags_vertical = 4
 [node name="LabelName" parent="HBoxContainer" instance=ExtResource("3_6ucju")]
 unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(120, 0)
+custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer"]

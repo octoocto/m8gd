@@ -27,7 +27,6 @@ var _is_int_type := false
 @export var value := 0.0:
 	set(p_value):
 		value = clamp(p_value, min_value, max_value)
-		%HSlider.value = value
 		emit_value_changed()
 
 @export var show_ticks := false:
@@ -58,7 +57,7 @@ var stylebox_slider: StyleBoxLine
 var stylebox_grabber_area: StyleBoxFlat
 var stylebox_grabber_area_highlight: StyleBoxFlat
 
-var stylebox_line_edit: StyleBox
+var stylebox_line_edit: StyleBoxFlat
 
 var format_fn: Callable
 
@@ -68,7 +67,10 @@ func _on_ready() -> void:
 	line_edit.gui_input.connect(
 		func(event: InputEvent) -> void:
 			if event is InputEventMouseButton:
-				if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+				if (
+					(event as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT
+					and event.is_pressed()
+				):
 					line_edit.accept_event()
 					if _is_int_type:
 						line_edit.text = "%d" % slider.value
@@ -139,7 +141,7 @@ func _on_changed() -> void:
 	line_edit.add_theme_color_override("selection_color", _pal("input_selection"))
 	line_edit.add_theme_color_override("caret_color", _pal("input_caret"))
 
-	_is_int_type = is_zero_approx(abs(step - int(step)))
+	_is_int_type = is_zero_approx(absf(step - int(step)))
 
 	slider.step = step
 	slider.min_value = min_value

@@ -31,17 +31,21 @@ static func create_setting_from_property(prop: Dictionary, accept_no_hints := tr
 
 			match type:
 				TYPE_VECTOR2I:
-					setting = SETTING_VEC2I.instantiate()
-					setting.min_value = Vector2i(-3000, -3000)
-					setting.max_value = Vector2i(3000, 3000)
+					var s: SettingVec2i = SETTING_VEC2I.instantiate()
+					s.min_value = Vector2i(-3000, -3000)
+					s.max_value = Vector2i(3000, 3000)
+					setting = s
 				TYPE_BOOL:
 					setting = SETTING_BOOL.instantiate()
 				TYPE_INT:
-					setting = SETTING_NUMBER.instantiate()
-					setting.format_string = "%d"
+					var s: SettingNumber = SETTING_NUMBER.instantiate()
+					s.step = 1.0
+					s.format_string = "%d"
+					setting = s
 				TYPE_FLOAT:
-					setting = SETTING_NUMBER.instantiate()
-					setting.step = 0.01
+					var s: SettingNumber = SETTING_NUMBER.instantiate()
+					s.step = 0.01
+					setting = s
 				TYPE_STRING:
 					setting = SETTING_STRING.instantiate()
 				TYPE_COLOR:
@@ -105,7 +109,7 @@ static func create_setting_from_property(prop: Dictionary, accept_no_hints := tr
 	return setting
 
 
-static func create_setting_options() -> SettingBase:
+static func create_setting_options() -> SettingOptions:
 	return SETTING_OPTIONS.instantiate()
 
 
@@ -114,6 +118,6 @@ static func create_setting_file() -> SettingFile:
 
 
 static func create_header(text: String) -> Control:
-	var label := HEADER.instantiate()
+	var label: UIHeader = HEADER.instantiate()
 	label.text = text
 	return label

@@ -47,6 +47,10 @@ const KEY_ITEM := preload("res://overlays/overlay_keys_item.tscn")
 @onready var current_item: OverlayKeysItem  # last added item in the key overlay list
 @onready var current_keystate: int = -1  # bitfield of the pressed keys for the current item
 
+@onready var control_offset: Control = %ControlOffset
+@onready var control: Control = %Control
+@onready var vbox: VBoxContainer = %VBoxContainer
+
 
 func _overlay_init() -> void:
 	visibility_changed.connect(
@@ -87,9 +91,9 @@ func _process(delta: float) -> void:
 	super(delta)
 	if Engine.is_editor_hint():
 		return
-	%ItemSample1.visible = _draw_bounds
-	%ItemSample2.visible = _draw_bounds
-	%ItemSample3.visible = _draw_bounds
+	(%ItemSample1 as OverlayKeysItem).visible = _draw_bounds
+	(%ItemSample2 as OverlayKeysItem).visible = _draw_bounds
+	(%ItemSample3 as OverlayKeysItem).visible = _draw_bounds
 
 
 ##
@@ -198,13 +202,13 @@ func _update() -> void:
 	if not is_inside_tree():
 		return
 
-	%ControlOffset.size = size
-	%ControlOffset.position = position_offset
-	%Control.size = Vector2(0, size.y)
-	%Control.position = Vector2.ZERO
-	%VBoxContainer.size = size
-	%VBoxContainer.position = Vector2.ZERO
+	control_offset.size = size
+	control_offset.position = position_offset
+	control.size = Vector2(0, size.y)
+	control.position = Vector2.ZERO
+	vbox.size = size
+	vbox.position = Vector2.ZERO
 	anchors_preset = anchors_preset
 
-	for item in %VBoxContainer.get_children():
-		update_item(item)
+	for item in vbox.get_children():
+		update_item(item as OverlayKeysItem)

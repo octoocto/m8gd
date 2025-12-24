@@ -88,6 +88,7 @@ func _on_menu_init() -> void:
 func _on_changed() -> void:
 	confirm_overwrite = false
 	confirm_delete = false
+
 	button_save.text = "Save"
 	button_delete.text = "Delete"
 	button_save.enabled = s_name.value != ""

@@ -1,6 +1,6 @@
 [gd_scene load_steps=24 format=3 uid="uid://f2tvhcv8kiuu"]
 
-[ext_resource type="Script" uid="uid://cg73j23kegkdr" path="res://scenes/desktop_scene.gd" id="1_0y3bn"]
+[ext_resource type="Script" uid="uid://bwyvmb6tnim5s" path="res://scenes/desktop_scene.gd" id="1_0y3bn"]
 [ext_resource type="PackedScene" uid="uid://bckroenwlecqv" path="res://scene_camera_3d.tscn" id="5_d472a"]
 [ext_resource type="Material" uid="uid://dv1jtj3wvh678" path="res://assets/grid_overlay.tres" id="7_7cg8p"]
 [ext_resource type="PackedScene" uid="uid://dk52g4jj43v12" path="res://models/m8_model.tscn" id="7_y135g"]
@@ -40,10 +40,10 @@ frequency = 0.0161
 offset = Vector3(-351.18, 0, 0)
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_b4fil"]
+noise = SubResource("FastNoiseLite_s73vr")
+color_ramp = SubResource("Gradient_5offb")
 seamless = true
 normalize = false
-color_ramp = SubResource("Gradient_5offb")
-noise = SubResource("FastNoiseLite_s73vr")
 
 [sub_resource type="Gradient" id="Gradient_bnue4"]
 interpolation_mode = 1
@@ -66,9 +66,9 @@ frequency = 0.004
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_otixg"]
 resource_local_to_scene = true
-seamless = true
-color_ramp = SubResource("Gradient_mmq47")
 noise = SubResource("FastNoiseLite_3605e")
+color_ramp = SubResource("Gradient_mmq47")
+seamless = true
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_wnfn1"]
 resource_local_to_scene = true

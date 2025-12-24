@@ -1,4 +1,5 @@
 @tool
+class_name OverlayAudioSpectrum
 extends OverlayBase
 
 enum Type { PIXEL, BAR, LINE }
@@ -50,12 +51,12 @@ func _colors_scope() -> Color:
 func _draw() -> void:
 	super()
 
-	if not main.audio_is_spectrum_analyzer_enabled():
+	if not is_instance_valid(main) or not main.audio_is_spectrum_analyzer_enabled():
 		return
 
 	# var logspace := logrange(analyzer_freq_min, analyzer_freq_max, analyzer_res + 1)
 	# var logspace := range(analyzer_freq_min, analyzer_freq_max, (analyzer_freq_max - analyzer_freq_min) / float(analyzer_res))
-	var magnitudes := []
+	var magnitudes := PackedFloat32Array()
 	var res := size.x * style_rows
 
 	highest_peak = lerp(0.1, highest_peak, 0.5)
@@ -127,8 +128,7 @@ func _draw() -> void:
 
 		var offset := (
 			Vector2(
-				floor(i / float(size.x)) * -int(size.x),
-				floor(i / float(size.x)) * row_spacing + row_spacing
+				floorf(i / size.x) * int(-size.x), floorf(i / size.x) * row_spacing + row_spacing
 			)
 			+ Vector2(position_offset)
 		)

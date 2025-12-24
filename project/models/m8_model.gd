@@ -22,13 +22,16 @@ class_name DeviceModel extends StaticBody3D
 @export var key_option := false
 @export var key_edit := false
 
+@onready var m01_screen: MeshInstance3D = %M01_Screen
+@onready var m02_screen: MeshInstance3D = %M02_Screen
+
 var main: Main
 
 var _node_prefix := "M01_"
 
 var _node_origin_positions := {}
 
-@onready var screen_material: ShaderMaterial = %M01_Screen.material_override
+@onready var screen_material: ShaderMaterial = m01_screen.material_override
 
 
 func _ready() -> void:
@@ -72,6 +75,15 @@ func _physics_process(_delta: float) -> void:
 	var key_s: MeshInstance3D = get_node(_node_prefix + "KeyShiftCap")
 	var key_p: MeshInstance3D = get_node(_node_prefix + "KeyPlayCap")
 
+	var key_u_material: StandardMaterial3D = key_u.material_overlay
+	var key_d_material: StandardMaterial3D = key_d.material_overlay
+	var key_l_material: StandardMaterial3D = key_l.material_overlay
+	var key_r_material: StandardMaterial3D = key_r.material_overlay
+	var key_o_material: StandardMaterial3D = key_o.material_overlay
+	var key_e_material: StandardMaterial3D = key_e.material_overlay
+	var key_s_material: StandardMaterial3D = key_s.material_overlay
+	var key_p_material: StandardMaterial3D = key_p.material_overlay
+
 	# animate keycap positions if pressed/unpressed
 	key_u.position = lerp(
 		key_u.position, _node_origin_positions[key_u] + int(key_up) * pressed_trans, press_speed
@@ -99,14 +111,14 @@ func _physics_process(_delta: float) -> void:
 	)
 
 	# animate keycap colors if pressed/unpressed
-	key_u.material_overlay.albedo_color.a = highlight_opacity if key_up else 0.0
-	key_d.material_overlay.albedo_color.a = highlight_opacity if key_down else 0.0
-	key_l.material_overlay.albedo_color.a = highlight_opacity if key_left else 0.0
-	key_r.material_overlay.albedo_color.a = highlight_opacity if key_right else 0.0
-	key_o.material_overlay.albedo_color.a = highlight_opacity if key_option else 0.0
-	key_e.material_overlay.albedo_color.a = highlight_opacity if key_edit else 0.0
-	key_s.material_overlay.albedo_color.a = highlight_opacity if key_shift else 0.0
-	key_p.material_overlay.albedo_color.a = highlight_opacity if key_play else 0.0
+	key_u_material.albedo_color.a = highlight_opacity if key_up else 0.0
+	key_d_material.albedo_color.a = highlight_opacity if key_down else 0.0
+	key_l_material.albedo_color.a = highlight_opacity if key_left else 0.0
+	key_r_material.albedo_color.a = highlight_opacity if key_right else 0.0
+	key_o_material.albedo_color.a = highlight_opacity if key_option else 0.0
+	key_e_material.albedo_color.a = highlight_opacity if key_edit else 0.0
+	key_s_material.albedo_color.a = highlight_opacity if key_shift else 0.0
+	key_p_material.albedo_color.a = highlight_opacity if key_play else 0.0
 
 
 func init(p_main: Main) -> void:
@@ -156,8 +168,12 @@ func init(p_main: Main) -> void:
 ## be the name of one of the M8 keys (ex: "Up").
 ##
 func set_key_cap_color(key_name: String, color: Color) -> void:
-	get_node("%M01_Key{0}Cap".format([key_name])).material_override.albedo_color = color
-	get_node("%M02_Key{0}Cap".format([key_name])).material_override.albedo_color = color
+	var m01_keycap: MeshInstance3D = get_node("%M01_Key{0}Cap".format([key_name]))
+	var m02_keycap: MeshInstance3D = get_node("%M02_Key{0}Cap".format([key_name]))
+	var m01_material: StandardMaterial3D = m01_keycap.material_override
+	var m02_material: StandardMaterial3D = m02_keycap.material_override
+	m01_material.albedo_color = color
+	m02_material.albedo_color = color
 
 
 ##
@@ -170,44 +186,46 @@ func set_key_cap_color(key_name: String, color: Color) -> void:
 func set_key_highlight_color(key_name: String, color: Color) -> void:
 	if key_name in ["Up", "Down", "Left", "Right"]:
 		set_dir_key_highlight_color(color)
-	else:
-		var c: Color = get_node("%M01_Key{0}Cap".format([key_name])).material_overlay.albedo_color
-		get_node("%M01_Key{0}Cap".format([key_name])).material_overlay.albedo_color = Color(
-			color, c.a
-		)
-		get_node("%M02_Key{0}Cap".format([key_name])).material_overlay.albedo_color = Color(
-			color, c.a
-		)
+		return
+
+	var m01_keycap: MeshInstance3D = get_node("%M01_Key{0}Cap".format([key_name]))
+	var m02_keycap: MeshInstance3D = get_node("%M02_Key{0}Cap".format([key_name]))
+	var m01_material: StandardMaterial3D = m01_keycap.material_overlay
+	var m02_material: StandardMaterial3D = m02_keycap.material_overlay
+	var c: Color = m01_material.albedo_color
+	m01_material.albedo_color = Color(color, c.a)
+	m02_material.albedo_color = Color(color, c.a)
 
 
 func set_dir_key_highlight_color(color: Color) -> void:
-	var colors: Array[Color] = [
-		%M01_KeyUpCap.material_overlay.albedo_color,
-		%M01_KeyDownCap.material_overlay.albedo_color,
-		%M01_KeyLeftCap.material_overlay.albedo_color,
-		%M01_KeyRightCap.material_overlay.albedo_color,
-		%M02_KeyUpCap.material_overlay.albedo_color,
-		%M02_KeyDownCap.material_overlay.albedo_color,
-		%M02_KeyLeftCap.material_overlay.albedo_color,
-		%M02_KeyRightCap.material_overlay.albedo_color
+	var keycaps := [
+		%M01_KeyUpCap,
+		%M01_KeyDownCap,
+		%M01_KeyLeftCap,
+		%M01_KeyRightCap,
+		%M02_KeyUpCap,
+		%M02_KeyDownCap,
+		%M02_KeyLeftCap,
+		%M02_KeyRightCap
 	]
-	%M01_KeyUpCap.material_overlay.albedo_color = Color(color, colors[0].a)
-	%M01_KeyDownCap.material_overlay.albedo_color = Color(color, colors[1].a)
-	%M01_KeyLeftCap.material_overlay.albedo_color = Color(color, colors[2].a)
-	%M01_KeyRightCap.material_overlay.albedo_color = Color(color, colors[3].a)
-	%M02_KeyUpCap.material_overlay.albedo_color = Color(color, colors[4].a)
-	%M02_KeyDownCap.material_overlay.albedo_color = Color(color, colors[5].a)
-	%M02_KeyLeftCap.material_overlay.albedo_color = Color(color, colors[6].a)
-	%M02_KeyRightCap.material_overlay.albedo_color = Color(color, colors[7].a)
+	for keycap: MeshInstance3D in keycaps:
+		var material: StandardMaterial3D = keycap.material_overlay
+		material.albedo_color = Color(color, material.albedo_color.a)
 
 
 func set_part_color(part_name: String, color: Color) -> void:
-	get_node("%M01_{0}".format([part_name])).material_override.albedo_color = color
-	get_node("%M02_{0}".format([part_name])).material_override.albedo_color = color
+	var m01_part: MeshInstance3D = get_node("%M01_{0}".format([part_name]))
+	var m02_part: MeshInstance3D = get_node("%M02_{0}".format([part_name]))
+	var m01_material: StandardMaterial3D = m01_part.material_override
+	var m02_material: StandardMaterial3D = m02_part.material_override
+	m01_material.albedo_color = color
+	m02_material.albedo_color = color
 
 
 func get_part_color(part_name: String) -> Color:
-	return get_node("%M01_{0}".format([part_name])).material_override.albedo_color
+	var m01_part: MeshInstance3D = get_node("%M01_{0}".format([part_name]))
+	var m01_material: StandardMaterial3D = m01_part.material_override
+	return m01_material.albedo_color
 
 
 ##
@@ -237,16 +255,18 @@ func _update_model() -> void:
 
 	# update 3D model
 	_node_prefix = "M01_" if model == 0 else "M02_"
-	for child in get_children():
-		child.visible = child.name.begins_with(_node_prefix)
-		if child.name.ends_with("Stem"):  # hide switch stems
-			child.visible = false
+	for child: Node in get_children():
+		if child is MeshInstance3D:
+			var mesh := child as MeshInstance3D
+			mesh.visible = mesh.name.begins_with(_node_prefix)
+			if mesh.name.ends_with("Stem"):  # hide switch stems
+				mesh.visible = false
 
 	set_part_color("Body", main.config.get_color(&"model_color_body"))
 
 	# update 3D model screen
-	set_screen_filter(main.config.get_value_model(&"model_screen_linear_filter", true))
-	set_screen_emission(main.config.get_value_model(&"model_screen_emission", 0.5))
+	set_screen_filter(main.config.get_value_model(&"model_screen_linear_filter", true) as bool)
+	set_screen_emission(main.config.get_value_model(&"model_screen_emission", 0.5) as float)
 
 	# update keycap colors
 	for key_name: String in ["Up", "Down", "Left", "Right", "Option", "Edit", "Shift", "Play"]:

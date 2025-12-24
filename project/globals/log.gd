@@ -3,9 +3,9 @@ extends Node
 
 
 func ln(message: String, index: int = 1) -> void:
-	var stack: Array = get_stack()
+	var stack: Array[Dictionary] = get_stack()
 	if stack.size() > index:
-		var source: String = stack[index].source.trim_prefix("res://")
+		var source: String = (stack[index].source as String).trim_prefix("res://")
 		var line: int = stack[index].line
 		print_rich("[color=white][%s:%d][/color] %s" % [source, line, message])
 	else:

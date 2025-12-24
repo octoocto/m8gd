@@ -10,7 +10,7 @@
 
 [node name="SettingColor" type="PanelContainer"]
 texture_filter = 1
-offset_right = 38.0
+offset_right = 44.0
 offset_bottom = 7.0
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -35,7 +35,7 @@ layout_mode = 2
 [node name="LabelName" parent="HBoxContainer/HBoxContainer" instance=ExtResource("3_ubd56")]
 unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(120, 0)
+custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 text = "TEST"
 color_override = Color(0.564706, 0.690196, 0.721569, 1)

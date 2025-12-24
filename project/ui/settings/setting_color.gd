@@ -24,6 +24,10 @@ class_name SettingColor extends SettingBase
 @onready var reset_value: Color = value
 
 @onready var button: ColorPickerButton = %ColorPickerButton
+@onready var panel: PanelContainer = %PanelContainer
+@onready var hbox: HBoxContainer = %HBoxContainer
+@onready var label_name: UILabel = %LabelName
+@onready var label_value: UILabel = %LabelValue
 
 @onready var picker: ColorPicker = button.get_picker()
 
@@ -38,15 +42,15 @@ func _on_ready() -> void:
 		func(event: InputEvent) -> void:
 			if (
 				event is InputEventMouseButton
-				and event.button_index == MOUSE_BUTTON_RIGHT
-				and event.pressed
+				and (event as InputEventMouseButton).button_index == MOUSE_BUTTON_RIGHT
+				and event.is_pressed()
 			):
-				%ColorPickerButton.accept_event()
+				button.accept_event()
 				value = reset_value
 	)
 
 	add_theme_stylebox_override("panel", StyleBoxEmpty.new())
-	%PanelContainer.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+	panel.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
 	reset_size()
 
 	picker.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -64,28 +68,28 @@ func _on_changed() -> void:
 		button.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 
 	if setting_name == "":
-		%LabelName.visible = false
-		%HBoxContainer.visible = false
+		label_name.visible = false
+		hbox.visible = false
 	else:
-		%LabelName.text = _format_text(setting_name)
-		%LabelName.visible = true
-		%HBoxContainer.visible = true
+		label_name.text = _format_text(setting_name)
+		label_name.visible = true
+		hbox.visible = true
 
 	spacer_r.visible = label_separation > 0
 	spacer_r.custom_minimum_size.x = label_separation
 
 	# %PanelContainer.set("theme_override_styles/panel", panel_style_value)
 
-	%LabelName.horizontal_alignment = label_alignment
-	%LabelName.custom_minimum_size.x = setting_name_min_width
-	%LabelName.color_override = _pal("text")
+	label_name.horizontal_alignment = label_alignment
+	label_name.custom_minimum_size.x = setting_name_min_width
+	label_name.color_override = _pal("text")
 
-	%HBoxContainer.set("theme_override_constants/separation", setting_name_indent)
+	hbox.set("theme_override_constants/separation", setting_name_indent)
 
 	button.color = value
-	%LabelValue.text = "%s" % value.to_html(false).to_upper()
-	%LabelValue.visible = show_html
-	%LabelValue.color_override = _pal("text_value")
+	label_value.text = "%s" % value.to_html(false).to_upper()
+	label_value.visible = show_html
+	label_value.color_override = _pal("text_value")
 
 
 func get_color_picker() -> ColorPicker:

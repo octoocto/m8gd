@@ -60,6 +60,8 @@ layout_mode = 2
 theme_type_variation = &""
 text = "M8 Remote Input"
 top_spacing = false
+enabled = true
+hint_text = ""
 
 [node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
 layout_mode = 2
@@ -68,14 +70,20 @@ columns = 3
 [node name="Label9" parent="VBoxContainer/GridContainer" instance=ExtResource("4_tnu4l")]
 layout_mode = 2
 text = "Key"
+enabled = true
+hint_text = ""
 
 [node name="Label10" parent="VBoxContainer/GridContainer" instance=ExtResource("4_tnu4l")]
 layout_mode = 2
 text = "Primary"
+enabled = true
+hint_text = ""
 
 [node name="Label11" parent="VBoxContainer/GridContainer" instance=ExtResource("4_tnu4l")]
 layout_mode = 2
 text = "Secondary"
+enabled = true
+hint_text = ""
 
 [node name="HSeparator" type="HSeparator" parent="VBoxContainer/GridContainer"]
 layout_mode = 2
@@ -90,6 +98,8 @@ layout_mode = 2
 layout_mode = 2
 min_width = 50
 text = "Up"
+enabled = true
+hint_text = ""
 
 [node name="ButtonBindUp1" type="Button" parent="VBoxContainer/GridContainer"]
 unique_name_in_owner = true
@@ -109,6 +119,8 @@ text_overrun_behavior = 4
 layout_mode = 2
 min_width = 50
 text = "Down"
+enabled = true
+hint_text = ""
 
 [node name="ButtonBindDown1" type="Button" parent="VBoxContainer/GridContainer"]
 unique_name_in_owner = true
@@ -128,6 +140,8 @@ text_overrun_behavior = 4
 layout_mode = 2
 min_width = 50
 text = "Left"
+enabled = true
+hint_text = ""
 
 [node name="ButtonBindLeft1" type="Button" parent="VBoxContainer/GridContainer"]
 unique_name_in_owner = true
@@ -147,6 +161,8 @@ text_overrun_behavior = 4
 layout_mode = 2
 min_width = 50
 text = "Right"
+enabled = true
+hint_text = ""
 
 [node name="ButtonBindRight1" type="Button" parent="VBoxContainer/GridContainer"]
 unique_name_in_owner = true
@@ -166,6 +182,8 @@ text_overrun_behavior = 4
 layout_mode = 2
 min_width = 50
 text = "Option"
+enabled = true
+hint_text = ""
 
 [node name="ButtonBindOpt1" type="Button" parent="VBoxContainer/GridContainer"]
 unique_name_in_owner = true
@@ -185,6 +203,8 @@ text_overrun_behavior = 4
 layout_mode = 2
 min_width = 50
 text = "Edit"
+enabled = true
+hint_text = ""
 
 [node name="ButtonBindEdit1" type="Button" parent="VBoxContainer/GridContainer"]
 unique_name_in_owner = true
@@ -204,6 +224,8 @@ text_overrun_behavior = 4
 layout_mode = 2
 min_width = 50
 text = "Shift"
+enabled = true
+hint_text = ""
 
 [node name="ButtonBindShift1" type="Button" parent="VBoxContainer/GridContainer"]
 unique_name_in_owner = true
@@ -223,6 +245,8 @@ text_overrun_behavior = 4
 layout_mode = 2
 min_width = 50
 text = "Play"
+enabled = true
+hint_text = ""
 
 [node name="ButtonBindPlay1" type="Button" parent="VBoxContainer/GridContainer"]
 unique_name_in_owner = true
@@ -245,12 +269,15 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_tnu4l")
+theme_override_styles/panel = SubResource("StyleBoxFlat_tnu4l")
 text = "RESET TO DEFAULT"
 
 [node name="LabelHeader2" parent="VBoxContainer" instance=ExtResource("1_aqk45")]
 layout_mode = 2
 theme_type_variation = &""
 text = "Virtual Keyboard"
+enabled = true
+hint_text = ""
 
 [node name="Setting_VirtualKeyboard" parent="VBoxContainer" instance=ExtResource("3_1p8ay")]
 unique_name_in_owner = true
@@ -261,6 +288,8 @@ setting_name = "Enable Virtual Keyboard"
 layout_mode = 2
 theme_type_variation = &""
 text = "Preset Hotkeys"
+enabled = true
+hint_text = ""
 
 [node name="ProfileHotkeysContainer" type="VBoxContainer" parent="VBoxContainer"]
 unique_name_in_owner = true
@@ -295,6 +324,8 @@ text = "Clear"
 layout_mode = 2
 theme_type_variation = &""
 text = "Overlay Hotkeys"
+enabled = true
+hint_text = ""
 
 [node name="OverlayHotkeyWaveform" type="HBoxContainer" parent="VBoxContainer"]
 unique_name_in_owner = true

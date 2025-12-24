@@ -68,10 +68,10 @@ func show_if(setting: SettingBase, cond_fn: Callable = Callable()) -> void:
 		if cond_fn.is_valid():
 			visible = cond_fn.call(value)
 		else:
-			visible = bool(value)
+			visible = value as bool
 
 	setting.value_changed.connect(callback)
-	callback.call(setting.value)
+	callback.call(setting.get_value())
 
 
 func enable_if(setting: SettingBase, cond_fn: Callable = Callable()) -> void:
@@ -79,10 +79,10 @@ func enable_if(setting: SettingBase, cond_fn: Callable = Callable()) -> void:
 		if cond_fn.is_valid():
 			enabled = cond_fn.call(value)
 		else:
-			enabled = bool(value)
+			enabled = value as bool
 
 	setting.value_changed.connect(callback)
-	callback.call(setting.value)
+	callback.call(setting.get_value())
 
 
 func _format_text(text: String) -> String:
@@ -132,7 +132,7 @@ func _pal(constant_name: String, theme_type: StringName = "ThemePalette") -> Col
 
 func _pal_or(constant_name: String, color_override: Variant) -> Color:
 	if color_override is int and color_override >= 0:
-		return _pal_index(color_override)
+		return _pal_index(color_override as int)
 	elif color_override is Color:
 		return color_override
 
@@ -141,6 +141,6 @@ func _pal_or(constant_name: String, color_override: Variant) -> Color:
 
 func _make_stylebox_unique(stylebox_name: StringName, control: Control = self) -> StyleBox:
 	control.remove_theme_stylebox_override(stylebox_name)
-	var stylebox := control.get_theme_stylebox(stylebox_name).duplicate()
+	var stylebox: StyleBox = control.get_theme_stylebox(stylebox_name).duplicate()
 	control.add_theme_stylebox_override(stylebox_name, stylebox)
 	return stylebox

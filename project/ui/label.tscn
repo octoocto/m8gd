@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://b1wsbkovx87xh"]
 
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_252ol"]
-[ext_resource type="Script" uid="uid://ds5woj2arufa2" path="res://ui/label.gd" id="1_sp5j7"]
+[ext_resource type="Script" uid="uid://y1r21don45ee" path="res://ui/label.gd" id="1_sp5j7"]
 
 [node name="Label" type="PanelContainer"]
 texture_filter = 1
@@ -9,7 +9,9 @@ offset_right = 1.0
 offset_bottom = 7.0
 theme = ExtResource("1_252ol")
 script = ExtResource("1_sp5j7")
+metadata/_custom_type_script = "uid://y1r21don45ee"
 
-[node name="Label" type="Label" parent="."]
+[node name="_Label" type="Label" parent="."]
+unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.282353, 0.313726, 0.376471, 1)
+theme_override_colors/font_color = Color(0.564706, 0.690196, 0.721569, 1)

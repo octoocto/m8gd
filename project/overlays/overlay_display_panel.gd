@@ -26,9 +26,12 @@ extends OverlayBase
 		opacity = value
 		_update()
 
+@onready var display_panel: PanelContainer = %DisplayPanel
+@onready var display_texture_rect: TextureRect = %DisplayTextureRect
+
 
 func _overlay_init() -> void:
-	%DisplayTextureRect.texture = main.m8_client.get_display()
+	display_texture_rect.texture = main.m8_client.get_display()
 	main.m8_theme_changed.connect(
 		func(_colors: PackedColorArray, _complete: bool) -> void: _update()
 	)
@@ -37,10 +40,10 @@ func _overlay_init() -> void:
 func _update() -> void:
 	if is_inside_tree():
 		# update position
-		%DisplayPanel.position = position_offset
+		display_panel.position = position_offset
 
 		# update padding
-		var stylebox: StyleBox = %DisplayPanel.get_theme_stylebox("panel")
+		var stylebox: StyleBoxFlat = display_panel.get_theme_stylebox("panel")
 		stylebox.content_margin_left = padding.x
 		stylebox.content_margin_right = padding.x
 		stylebox.content_margin_top = padding.y
@@ -51,15 +54,17 @@ func _update() -> void:
 		stylebox.corner_radius_bottom_right = corner_radius
 
 		# update shader
-		%DisplayPanel.material.set_shader_parameter("panel_opacity", opacity)
-		%DisplayPanel.material.set_shader_parameter("blur_amount", blur_amount)
-		%DisplayPanel.material.set_shader_parameter("panel_color", main.m8_get_theme_colors()[0])
+		(display_panel.material as ShaderMaterial).set_shader_parameter("panel_opacity", opacity)
+		(display_panel.material as ShaderMaterial).set_shader_parameter("blur_amount", blur_amount)
+		(display_panel.material as ShaderMaterial).set_shader_parameter(
+			"panel_color", main.m8_get_theme_colors()[0]
+		)
 
 		# update size
 		var display_size := main.m8_client.get_display().get_size() * integer_scale
-		%DisplayTextureRect.custom_minimum_size = display_size
-		%DisplayPanel.custom_minimum_size = Vector2.ZERO
-		%DisplayPanel.size = Vector2.ZERO
-		size = %DisplayPanel.size
+		display_texture_rect.custom_minimum_size = display_size
+		display_panel.custom_minimum_size = Vector2.ZERO
+		display_panel.size = Vector2.ZERO
+		size = display_panel.size
 
 		anchors_preset = anchors_preset  # needed for correct anchor to be used

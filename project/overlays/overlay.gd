@@ -40,7 +40,7 @@ func get_overlay_property_list() -> Array[Dictionary]:
 				prop.usage & PROPERTY_USAGE_STORAGE
 				and prop.usage & PROPERTY_USAGE_EDITOR
 				and prop.usage & PROPERTY_USAGE_SCRIPT_VARIABLE
-				and not prop.name.begins_with("_")
+				and not (prop.name as String).begins_with("_")
 			)
 	)
 

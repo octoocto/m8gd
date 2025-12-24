@@ -42,7 +42,7 @@ func _init_menu_scene() -> void:
 	option_load_scene.item_selected.connect(
 		func(idx: int) -> void:
 			if idx != -1:
-				main.load_scene(option_load_scene.get_item_metadata(idx))
+				main.load_scene(option_load_scene.get_item_metadata(idx) as String)
 			_setup_as_button.call()
 	)
 	_setup_as_button.call()
@@ -60,6 +60,12 @@ func _init_menu_scene() -> void:
 	)
 
 
+@onready var s_mouse_camera: SettingBool = %Setting_MouseCamera
+@onready var s_human_camera: SettingBool = %Setting_HumanCamera
+@onready var s_human_camera_strength: SettingNumber = %Setting_HumanCameraStrength
+@onready var s_human_camera_frequency: SettingNumber = %Setting_HumanCameraFrequency
+
+
 func _init_menu_camera() -> void:
 	button_open_camera_config.pressed.connect(
 		func() -> void:
@@ -67,7 +73,7 @@ func _init_menu_camera() -> void:
 			main.menu_camera.menu_show()
 	)
 
-	%Setting_MouseCamera.setting_connect_camera(
+	s_mouse_camera.setting_connect_camera(
 		"mouse_controlled_pan_zoom",
 		func(value: bool) -> void:
 			main.current_scene.get_3d_camera().mouse_controlled_pan_zoom = value
@@ -75,31 +81,31 @@ func _init_menu_camera() -> void:
 				main.current_scene.get_3d_camera().reset_transform()
 	)
 
-	%Setting_HumanCamera.setting_connect_camera(
+	s_human_camera.setting_connect_camera(
 		"humanized_movement",
 		func(value: bool) -> void: main.current_scene.get_3d_camera().humanized_movement = value
 	)
-	%Setting_HumanCameraStrength.setting_connect_camera("humanize_amount")
-	%Setting_HumanCameraStrength.enable_if(%Setting_HumanCamera)
-	%Setting_HumanCameraFrequency.setting_connect_camera("humanize_freq")
-	%Setting_HumanCameraFrequency.enable_if(%Setting_HumanCamera)
+	s_human_camera_strength.setting_connect_camera("humanize_amount")
+	s_human_camera_strength.enable_if(s_human_camera)
+	s_human_camera_frequency.setting_connect_camera("humanize_freq")
+	s_human_camera_frequency.enable_if(s_human_camera)
 
 	Events.scene_loaded.connect(
 		func(_scene_path: String, scene: M8Scene) -> void:
 			if !scene.has_3d_camera():
 				button_open_camera_config.enabled = false
-				%Setting_MouseCamera.enabled = false
-				%Setting_HumanCamera.enabled = false
+				s_mouse_camera.enabled = false
+				s_human_camera.enabled = false
 				return
 
 			button_open_camera_config.enabled = true
-			%Setting_MouseCamera.enabled = true
-			%Setting_HumanCamera.enabled = true
+			s_mouse_camera.enabled = true
+			s_human_camera.enabled = true
 
-			%Setting_MouseCamera.reload()
-			%Setting_HumanCamera.reload()
-			%Setting_HumanCameraStrength.reload()
-			%Setting_HumanCameraFrequency.reload()
+			s_mouse_camera.reload()
+			s_human_camera.reload()
+			s_human_camera_strength.reload()
+			s_human_camera_frequency.reload()
 	)
 
 

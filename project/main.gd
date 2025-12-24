@@ -42,24 +42,8 @@ static var instance: Main = null
 @export var visualizer_frequency_min := 0
 @export var visualizer_frequency_max := 400
 
-var m8_virtual_keyboard_enabled := false
-var m8_virtual_keyboard_notes := []
-var m8_virtual_keyboard_octave := 3
-var m8_virtual_keyboard_velocity := 127
-
-var device_manager := DeviceManager.new()
-
-var audio_peak := 0.0  # audio peak (in dB)
-var audio_peak_max := 0.0
-var audio_level_raw := 0.0  # audio peak (in linear from 0.0 to 1.0)
-var audio_level := 0.0  # audio peak (in linear from 0.0 to 1.0)
-var last_peak := 0.0
-var last_peak_max := 0.0
-var last_audio_level := 0.0
-
-# ALT+mouse dragging variables
-var _window_drag_enabled := false
-var _window_drag_initial_pos := Vector2.ZERO
+@onready var label_fps: Label = %LabelFPS
+@onready var label_status: Label = %LabelStatus
 
 @onready var m8_client: M8GD = %M8GD
 @onready var config := M8Config.load()
@@ -86,6 +70,25 @@ var _window_drag_initial_pos := Vector2.ZERO
 @onready var cam_status: RichTextLabel = %CameraStatus
 @onready var cam_help: RichTextLabel = %CameraControls
 @onready var cam_status_template: String = cam_status.text
+
+var m8_virtual_keyboard_enabled := false
+var m8_virtual_keyboard_notes: Array[int] = []
+var m8_virtual_keyboard_octave := 3
+var m8_virtual_keyboard_velocity := 127
+
+var device_manager := DeviceManager.new()
+
+var audio_peak := 0.0  # audio peak (in dB)
+var audio_peak_max := 0.0
+var audio_level_raw := 0.0  # audio peak (in linear from 0.0 to 1.0)
+var audio_level := 0.0  # audio peak (in linear from 0.0 to 1.0)
+var last_peak := 0.0
+var last_peak_max := 0.0
+var last_audio_level := 0.0
+
+# ALT+mouse dragging variables
+var _window_drag_enabled := false
+var _window_drag_initial_pos := Vector2.ZERO
 
 
 static func is_ready() -> bool:
@@ -145,14 +148,14 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	device_manager._process(delta)
 
-	%LabelFPS.text = "%d" % Engine.get_frames_per_second()
+	label_fps.text = "%d" % Engine.get_frames_per_second()
 
-	var palette := m8_get_theme_colors()
-	if palette.size() < 16:
-		for i in range(16):
-			get_node("%%Color_Palette%d" % (i + 1)).color = Color(0, 0, 0, 0)
-		for i in range(palette.size()):
-			get_node("%%Color_Palette%d" % (i + 1)).color = palette[i]
+	# var palette := m8_get_theme_colors()
+	# if palette.size() < 16:
+	# 	for i in range(16):
+	# 		get_node("%%Color_Palette%d" % (i + 1)).color = Color(0, 0, 0, 0)
+	# 	for i in range(palette.size()):
+	# 		get_node("%%Color_Palette%d" % (i + 1)).color = palette[i]
 
 
 func _physics_process(delta: float) -> void:
@@ -166,9 +169,9 @@ func _physics_process(delta: float) -> void:
 
 	# fade out status message
 
-	if %LabelStatus.modulate.a > 0:
-		%LabelStatus.modulate.a = lerp(
-			%LabelStatus.modulate.a, %LabelStatus.modulate.a - delta * 2.0, 0.2
+	if label_status.modulate.a > 0:
+		label_status.modulate.a = lerp(
+			label_status.modulate.a, label_status.modulate.a - delta * 2.0, 0.2
 		)
 
 
@@ -176,11 +179,12 @@ func _input(event: InputEvent) -> void:
 	# ALT+mouse window dragging
 	if get_window().mode == Window.MODE_WINDOWED:
 		if event is InputEventMouseButton:
-			if event.button_index == MOUSE_BUTTON_LEFT:
-				if event.pressed and Input.is_key_pressed(KEY_ALT) and !_window_drag_enabled:
+			var event_mb := event as InputEventMouseButton
+			if event_mb.button_index == MOUSE_BUTTON_LEFT:
+				if event_mb.pressed and Input.is_key_pressed(KEY_ALT) and !_window_drag_enabled:
 					_window_drag_enabled = true
 					_window_drag_initial_pos = get_window().get_mouse_position()
-				elif !event.pressed and _window_drag_enabled:
+				elif !event_mb.pressed and _window_drag_enabled:
 					_window_drag_enabled = false
 
 		if event is InputEventMouseMotion:
@@ -189,8 +193,9 @@ func _input(event: InputEvent) -> void:
 				get_window().position += Vector2i(delta)
 
 	if event is InputEventKey:
+		var event_key := event as InputEventKey
 		# screenshot F12
-		if event.pressed and event.keycode == KEY_F12:
+		if event_key.pressed and event_key.keycode == KEY_F12:
 			var id := 1
 			var screenshot_name := "%d.png" % id
 
@@ -202,20 +207,20 @@ func _input(event: InputEvent) -> void:
 			print_to_screen("Screenshot saved as %s" % screenshot_name)
 
 		# fullscreen ALT+ENTER toggle
-		if event.pressed and event.keycode == KEY_ENTER and event.alt_pressed:
+		if event_key.pressed and event_key.keycode == KEY_ENTER and event_key.alt_pressed:
 			if get_window().mode == Window.MODE_WINDOWED:
 				get_window().mode = Window.MODE_EXCLUSIVE_FULLSCREEN
 			else:
 				get_window().mode = Window.MODE_WINDOWED
 
 		# manual reset audio
-		if event.pressed and event.keycode == KEY_R and event.ctrl_pressed:
+		if event_key.pressed and event_key.keycode == KEY_R and event_key.ctrl_pressed:
 			device_manager.reset_audio_device()
 
-		if event.pressed and event.keycode == KEY_ESCAPE:
-			if %SplashContainer.visible:
-				%SplashContainer.visible = false
-				return
+		if event_key.pressed and event_key.keycode == KEY_ESCAPE:
+			# if %SplashContainer.visible:
+			# 	%SplashContainer.visible = false
+			# 	return
 
 			# menu on/off toggle
 			if is_menu_open():
@@ -391,14 +396,6 @@ func list_preset_names() -> Array:
 	return config.list_preset_names()
 
 
-func rename_profile(new_profile_name: String) -> void:
-	config.rename_current_profile(new_profile_name)
-
-
-func create_new_profile() -> String:
-	return config.create_new_profile()
-
-
 func preset_delete(profile_name: String) -> void:
 	if profile_name == get_current_profile_name():
 		load_default_profile()
@@ -425,26 +422,6 @@ func get_scene_m8_model() -> DeviceModel:
 		return current_scene.get_device_model()
 	else:
 		return null
-
-
-func get_filter_shader_parameter(shader_node_path: NodePath, shader_parameter: String) -> Variant:
-	var shader_node: ColorRect = get_node(shader_node_path)
-	assert(
-		shader_node.material.get_shader_parameter(shader_parameter) != null,
-		"shader parameter does not exist in %s: %s" % [shader_node_path, shader_parameter]
-	)
-	return shader_node.material.get_shader_parameter(shader_parameter)
-
-
-func set_filter_shader_parameter(
-	shader_node_path: NodePath, shader_parameter: String, value: Variant
-) -> void:
-	var shader_node: ColorRect = get_node(shader_node_path)
-	assert(
-		shader_node.material.get_shader_parameter(shader_parameter) != null,
-		"shader parameter does not exist in %s: %s" % [shader_node_path, shader_parameter]
-	)
-	shader_node.material.set_shader_parameter(shader_parameter, value)
 
 
 # M8 client methods
@@ -483,7 +460,7 @@ func on_m8_theme_changed(colors: PackedColorArray, complete: bool) -> void:
 
 
 func m8_send_theme_color(index: int, color: Color) -> void:
-	m8_client.send_theme_color(index, color)
+	m8_client.set_theme_color(index, color)
 
 
 func m8_send_enable_display() -> void:
@@ -503,7 +480,7 @@ func m8_send_keyjazz(note: int, velocity: int) -> void:
 
 
 func m8_send_control(keys: int) -> void:
-	m8_client.send_input(keys)
+	m8_client.set_key_state(keys)
 
 
 func m8_is_key_pressed(keycode: int) -> bool:
@@ -606,13 +583,19 @@ func update_audio_analyzer() -> void:
 	audio_level = max(audio_level, peak)
 	last_audio_level = audio_level
 
-	# %LabelAudioPeak.text = "%06f" % audio_peak_raw
-	%LabelAudioPeakAvg.text = "%06f" % audio_peak
-	%LabelAudioPeakMax.text = "%06f" % audio_peak_max
-	%LabelAudioLevel.text = "%06f" % audio_level
+	var label_audio_peak_avg: Label = %LabelAudioPeakAvg
+	var label_audio_peak_max: Label = %LabelAudioPeakMax
+	var label_audio_level: Label = %LabelAudioLevel
+	var rect_audio_level: ColorRect = %RectAudioLevel
+	var rect_audio_level_avg: ColorRect = %RectAudioLevelAvg
 
-	%RectAudioLevel.size.x = (audio_level_raw) * 200
-	%RectAudioLevelAvg.position.x = (audio_level) * 200.0 + 88.0
+	# label_audio_peak_avg.text = "%06f" % audio_peak
+	label_audio_peak_avg.text = "%06f" % audio_peak
+	label_audio_peak_max.text = "%06f" % audio_peak_max
+	label_audio_level.text = "%06f" % audio_level
+
+	rect_audio_level.size.x = (audio_level_raw) * 200
+	rect_audio_level_avg.position.x = (audio_level) * 200.0 + 88.0
 
 
 func display_get_scale() -> float:
@@ -685,7 +668,7 @@ func _handle_input_keys(event: InputEvent) -> bool:
 	else:
 		return false
 
-	m8_client.set_key_pressed(key, event.pressed)
+	m8_client.set_key_pressed(key, event.is_pressed())
 
 	return true
 
@@ -699,8 +682,8 @@ func _handle_input_hotkeys_presets(event: InputEvent) -> bool:
 	):
 		return false
 
-	var profile_name: Variant = config.find_profile_name_from_hotkey(event)
-	if profile_name is String:
+	var profile_name: String = config.find_profile_name_from_hotkey(event)
+	if profile_name != "":
 		print("loading profile from hotkey: %s" % profile_name)
 		config.preset_load(profile_name)
 		return true
@@ -717,10 +700,10 @@ func _handle_input_hotkeys_overlays(event: InputEvent) -> bool:
 	):
 		return false
 
-	var overlay_node_path: Variant = config.find_overlay_node_path_from_hotkey(event)
-	if overlay_node_path is String:
+	var overlay_node_path: String = config.find_overlay_node_path_from_hotkey(event)
+	if overlay_node_path != "":
 		print("toggling overlay from hotkey: %s" % overlay_node_path)
-		var overlay := get_node("%" + overlay_node_path)
+		var overlay: Control = get_node("%" + overlay_node_path)
 		if overlay:
 			overlay.visible = not overlay.visible
 		return true
@@ -728,10 +711,11 @@ func _handle_input_hotkeys_overlays(event: InputEvent) -> bool:
 	return false
 
 
-func _handle_input_keyjazz(event: InputEvent) -> bool:
-	if !m8_virtual_keyboard_enabled or is_any_menu_open() or event is not InputEventKey:
+func _handle_input_keyjazz(e: InputEvent) -> bool:
+	if !m8_virtual_keyboard_enabled or is_any_menu_open() or e is not InputEventKey:
 		return false
 
+	var event := e as InputEventKey
 	var note := m8_virtual_keyboard_octave * 12
 
 	match event.physical_keycode:

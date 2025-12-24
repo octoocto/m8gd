@@ -44,8 +44,8 @@ var version: int = 0
 ## The encoded string of the last loaded preset.
 @export var current_preset_autosave: String = ""
 
-@export var hotkeys_presets := {}
-@export var hotkeys_overlays := {}
+@export var hotkeys_presets: Dictionary[StringName, InputEvent] = {}
+@export var hotkeys_overlays: Dictionary[StringName, InputEvent] = {}
 
 # video settings
 @export var fullscreen := false
@@ -435,18 +435,18 @@ func clear_overlay_hotkey(overlay_node_path: String) -> void:
 	_print("cleared overlay hotkey for: %s" % overlay_node_path)
 
 
-func find_profile_name_from_hotkey(event: InputEvent) -> Variant:
+func find_profile_name_from_hotkey(event: InputEvent) -> String:
 	for key: String in hotkeys_presets.keys():
 		if event.is_match(hotkeys_presets[key]):
 			return key
-	return null
+	return ""
 
 
-func find_overlay_node_path_from_hotkey(event: InputEvent) -> Variant:
+func find_overlay_node_path_from_hotkey(event: InputEvent) -> String:
 	for key: String in hotkeys_overlays.keys():
 		if event.is_match(hotkeys_overlays[key]):
 			return key
-	return null
+	return ""
 
 
 const KEY_COLOR_HIGHLIGHT_PREFIX: StringName = "hl_color_"

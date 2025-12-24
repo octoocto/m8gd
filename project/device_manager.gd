@@ -43,9 +43,9 @@ func _process(delta: float) -> void:
 		next_device_scan -= delta
 
 
-func init(main: Main) -> void:
-	self.main = main
-	self.audio_monitor = main.audio_monitor
+func init(p_main: Main) -> void:
+	self.main = p_main
+	self.audio_monitor = p_main.audio_monitor
 
 
 func start_waiting_for_devices() -> void:

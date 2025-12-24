@@ -70,6 +70,12 @@ func _ready() -> void:
 
 	super()
 
+func get_value() -> Variant:
+	return get("value")
+
+func set_value(value: Variant) -> void:
+	set("value", value)
+
 func set_value_no_signal(value: Variant) -> void:
 	_value_changed_signal_enabled = false
 	set("value",value)
@@ -87,9 +93,9 @@ func emit_value_changed() -> void:
 ## This is useful when a profile or scene has just been loaded, and
 ## the initial value could be different.
 ##
-func reload(emit_value_changed := true) -> void:
+func reload(emit_value_changed_signal := true) -> void:
 	assert(_is_initialized and _value_read_fn, "This setting has not been initialized yet: %s" % name)
-	if emit_value_changed:
+	if emit_value_changed_signal:
 		set("value", _value_read_fn.call())
 	else:
 		set_value_no_signal(_value_read_fn.call())
@@ -241,8 +247,8 @@ func setting_connect_camera(property: String, value_changed_fn: Variant = null, 
 			var init_value: Variant
 			if main.get_scene_camera():
 				var default: Variant
-				if value_init_fn:
-					default = value_init_fn.call()
+				if value_init_fn is Callable and (value_init_fn as Callable).is_valid():
+					default = (value_init_fn as Callable).call()
 				else:
 					default = main.get_scene_camera().get(property)
 				init_value = config.get_value_scene(scene, property, default)
@@ -254,8 +260,8 @@ func setting_connect_camera(property: String, value_changed_fn: Variant = null, 
 			var scene := main.current_scene
 			if main.get_scene_camera():
 				config.set_value_scene(scene, property, value)
-				if value_changed_fn:
-					value_changed_fn.call(value)
+				if value_changed_fn is Callable and (value_changed_fn as Callable).is_valid():
+					(value_changed_fn as Callable).call(value)
 				else:
 					main.get_scene_camera().set(property, value)
 				Events.setting_changed.emit(self, value)
@@ -291,4 +297,4 @@ func validate_string(value: String) -> String:
 
 func _clear_signals() -> void:
 	for conn: Dictionary in value_changed.get_connections():
-		value_changed.disconnect(conn.callable)
+		value_changed.disconnect(conn.callable as Callable)
