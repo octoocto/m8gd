@@ -713,7 +713,7 @@ func _handle_input_hotkeys_overlays(event: InputEvent) -> bool:
 	var overlay_node_path: String = config.find_overlay_node_path_from_hotkey(event)
 	if overlay_node_path != "":
 		print("toggling overlay from hotkey: %s" % overlay_node_path)
-		var overlay: Control = get_node("%" + overlay_node_path)
+		var overlay: OverlayBase = overlays.get_node("%" + overlay_node_path)
 		if overlay:
 			overlay.visible = not overlay.visible
 		return true
