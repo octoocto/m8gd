@@ -1,14 +1,14 @@
 [gd_scene load_steps=6 format=3 uid="uid://dv8crbibtrpck"]
 
 [ext_resource type="PackedScene" uid="uid://m4rgiakfy3m2" path="res://ui/menus/menu_frame.tscn" id="1_wthso"]
-[ext_resource type="Script" uid="uid://xgm5cwsm8r77" path="res://ui/menus/menu_scene_config.gd" id="1_x6k17"]
+[ext_resource type="Script" uid="uid://c3iwtq64lssgh" path="res://ui/menus/menu_scene_config.gd" id="1_x6k17"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_icp2e"]
 content_margin_left = 0.0
 content_margin_top = 0.0
 content_margin_right = 0.0
 content_margin_bottom = 0.0
-bg_color = Color(0, 0, 0, 1)
+bg_color = Color(0, 0, 0, 0.8)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
@@ -45,7 +45,7 @@ title = "Scene Parameters"
 show_close_button = true
 
 [node name="Header" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" index="0"]
-text = "SCENE PARAMETERS"
+text = "Scene Parameters"
 
 [node name="ButtonClose" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" index="1"]
 visible = true

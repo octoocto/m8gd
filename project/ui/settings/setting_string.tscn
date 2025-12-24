@@ -1,34 +1,27 @@
-[gd_scene load_steps=3 format=3 uid="uid://c5kj6fcv4g2ux"]
+[gd_scene load_steps=4 format=3 uid="uid://c5kj6fcv4g2ux"]
 
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_7udu3"]
 [ext_resource type="Script" uid="uid://c7061wpajhuc4" path="res://ui/settings/setting_string.gd" id="2_jwi12"]
+[ext_resource type="PackedScene" uid="uid://b1wsbkovx87xh" path="res://ui/label.tscn" id="3_jhdsb"]
 
 [node name="SettingString" type="PanelContainer"]
 texture_filter = 1
-offset_right = 22.0
-offset_bottom = 11.0
+offset_right = 20.0
+offset_bottom = 7.0
 size_flags_horizontal = 3
 size_flags_vertical = 4
 theme = ExtResource("1_7udu3")
 script = ExtResource("2_jwi12")
+metadata/_custom_type_script = "uid://c7061wpajhuc4"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_constants/separation = 0
-
-[node name="Control" type="Control" parent="HBoxContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="LabelName" type="Label" parent="HBoxContainer/HBoxContainer"]
+[node name="LabelName" parent="HBoxContainer" instance=ExtResource("3_jhdsb")]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
-text = "t"
 
 [node name="PanelContainer" type="PanelContainer" parent="HBoxContainer"]
 layout_mode = 2

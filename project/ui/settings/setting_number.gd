@@ -26,9 +26,9 @@ var _is_int_type := false
 
 @export var value := 0.0:
 	set(p_value):
-		value = p_value
+		value = clamp(p_value, min_value, max_value)
+		%HSlider.value = value
 		emit_value_changed()
-		value = %HSlider.value
 
 @export var show_ticks := false:
 	set(p_value):

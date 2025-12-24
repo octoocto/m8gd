@@ -1,0 +1,27 @@
+[gd_resource type="ShaderMaterial" load_steps=5 format=3 uid="uid://curcunqn0rv55"]
+
+[ext_resource type="Shader" uid="uid://ddeledy6hskpq" path="res://shaders/post_process.gdshader" id="1_th6lq"]
+
+[sub_resource type="Gradient" id="Gradient_2pcn5"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_cy2mg"]
+frequency = 1.0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_351vg"]
+width = 4096
+height = 4096
+noise = SubResource("FastNoiseLite_cy2mg")
+color_ramp = SubResource("Gradient_2pcn5")
+
+[resource]
+shader = ExtResource("1_th6lq")
+shader_parameter/noise_texture = SubResource("NoiseTexture2D_351vg")
+shader_parameter/noise_strength = 0.01999999955296
+shader_parameter/static_noise_strength = 0.0
+shader_parameter/brightness = 1.0
+shader_parameter/contrast = 1.0
+shader_parameter/saturation = 1.0
+shader_parameter/vignette_strength = 0.0
+shader_parameter/vignette_inner_radius = 0.1
+shader_parameter/vignette_outer_radius = 1.0
+shader_parameter/vignette_dither_strength = 0.03

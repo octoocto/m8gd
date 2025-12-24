@@ -1,0 +1,197 @@
+[gd_scene load_steps=14 format=3 uid="uid://cl0l1ahpak3yn"]
+
+[ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_14jgw"]
+[ext_resource type="Script" uid="uid://cqykgmgk21s66" path="res://ui/menus/menu_presets.gd" id="1_racsg"]
+[ext_resource type="PackedScene" uid="uid://c5kj6fcv4g2ux" path="res://ui/settings/setting_string.tscn" id="2_14jgw"]
+[ext_resource type="PackedScene" uid="uid://jvyexp7mquoa" path="res://ui/button.tscn" id="4_fhu81"]
+[ext_resource type="Texture2D" uid="uid://empk3tddpq0c" path="res://assets/icon/icon_plus.png" id="5_4fufk"]
+[ext_resource type="PackedScene" uid="uid://b1wsbkovx87xh" path="res://ui/label.tscn" id="6_f5ywr"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f5ywr"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 0.8)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.12549, 0.156863, 0.188235, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ylcl1"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_udhpn"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.12549, 0.156863, 0.188235, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h0fok"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(1, 0.12549, 0.25098, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sd2qt"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(1, 0.12549, 0.25098, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_85eid"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.282353, 0.313726, 0.376471, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4rc8y"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.12549, 0.156863, 0.188235, 1)
+
+[node name="MenuProfiles" type="PanelContainer"]
+texture_filter = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -54.0
+offset_right = -1105.0
+offset_bottom = -885.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_14jgw")
+theme_override_styles/panel = SubResource("StyleBoxFlat_f5ywr")
+script = ExtResource("1_racsg")
+
+[node name="ConfigContainer" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="SName" parent="ConfigContainer" instance=ExtResource("2_14jgw")]
+unique_name_in_owner = true
+layout_mode = 2
+validate = true
+setting_name = "Preset Name"
+setting_name_min_width = 100
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="ConfigContainer"]
+layout_mode = 2
+
+[node name="ButtonSave" parent="ConfigContainer/HBoxContainer3" instance=ExtResource("4_fhu81")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_ylcl1")
+text = "Save"
+icon = ExtResource("5_4fufk")
+enabled = false
+hint_text = "Save the current state as a preset"
+
+[node name="ButtonLoad" parent="ConfigContainer/HBoxContainer3" instance=ExtResource("4_fhu81")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_udhpn")
+text = "Load"
+icon = ExtResource("5_4fufk")
+hint_text = "Load a preset"
+
+[node name="ButtonNew" parent="ConfigContainer/HBoxContainer3" instance=ExtResource("4_fhu81")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_h0fok")
+color_bg = 5
+text = "Reset"
+hint_text = "Reset to the default preset"
+
+[node name="ButtonDelete" parent="ConfigContainer/HBoxContainer3" instance=ExtResource("4_fhu81")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_sd2qt")
+color_bg = 5
+text = "Delete"
+
+[node name="RichTextLabel" type="RichTextLabel" parent="ConfigContainer/HBoxContainer3"]
+visible = false
+custom_minimum_size = Vector2(80, 18)
+layout_mode = 2
+size_flags_vertical = 4
+bbcode_enabled = true
+text = "[b]Profile[/b]"
+scroll_active = false
+
+[node name="OptionProfiles2" type="OptionButton" parent="ConfigContainer/HBoxContainer3"]
+visible = false
+clip_contents = true
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="ButtonPrint" parent="ConfigContainer" instance=ExtResource("4_fhu81")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_85eid")
+color_bg = 2
+text = "Print .ini"
+
+[node name="HSeparator" type="HSeparator" parent="ConfigContainer"]
+layout_mode = 2
+
+[node name="LabelStatus" parent="ConfigContainer" instance=ExtResource("6_f5ywr")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 17)
+layout_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="ConfigContainer"]
+layout_mode = 2
+
+[node name="Label" parent="ConfigContainer" instance=ExtResource("6_f5ywr")]
+layout_mode = 2
+text = "Presets contain info on:
+- the active scene
+- the active overlay(s)
+- the active shaders(s)
+- configs for each scene,
+  overlay, and shader"
+color_override = 2
+
+[node name="LoaderContainer" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="LoaderListContainer" type="VBoxContainer" parent="LoaderContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ButtonCancelLoader" parent="LoaderContainer" instance=ExtResource("4_fhu81")]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_4rc8y")
+text = "Cancel"

@@ -96,7 +96,7 @@ func connect_serial_device(port: String = "", force: bool = false) -> void:
 
 
 func disconnect_serial_device() -> void:
-	if not is_serial_device_connected():
+	if not is_serial_device_connected() or not main.m8_client.is_connected():
 		return
 
 	main.m8_client.disconnect()

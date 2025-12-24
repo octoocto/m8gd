@@ -101,8 +101,8 @@ func _on_menu_init() -> void:
 		init_window_size,
 		func(value: Vector2i) -> void:
 			window.size = value
-			config.set_property_global("window_width", value.x)
-			config.set_property_global("window_height", value.y)
+			config.set_global_value("window_width", value.x)
+			config.set_global_value("window_height", value.y)
 	)
 
 	window.size_changed.connect(

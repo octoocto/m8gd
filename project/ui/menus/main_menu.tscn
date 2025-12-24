@@ -4,7 +4,7 @@
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_qr6r4"]
 [ext_resource type="PackedScene" uid="uid://disepgw6epns6" path="res://ui/menus/menu_scene.tscn" id="3_0k4wn"]
 [ext_resource type="PackedScene" uid="uid://dsgvm3dda1kjp" path="res://ui/header.tscn" id="3_o1ovh"]
-[ext_resource type="PackedScene" uid="uid://cl0l1ahpak3yn" path="res://ui/menus/menu_profiles.tscn" id="4_buwx5"]
+[ext_resource type="PackedScene" uid="uid://cl0l1ahpak3yn" path="res://ui/menus/menu_presets.tscn" id="4_buwx5"]
 [ext_resource type="PackedScene" uid="uid://b8sdswwu5dtu5" path="res://ui/menus/menu_overlays.tscn" id="4_j5v2v"]
 [ext_resource type="PackedScene" uid="uid://xgujtwkeeg3d" path="res://ui/menus/menu_colors.tscn" id="4_w22xg"]
 [ext_resource type="PackedScene" uid="uid://cm3h6xr6v7ewi" path="res://ui/label2.tscn" id="5_cn7hl"]
@@ -466,7 +466,7 @@ text_right = "..."
 horizontal_alignment = 0
 inline = true
 
-[node name="ButtonGotoProfiles" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" instance=ExtResource("12_10bvg")]
+[node name="ButtonGotoPresets" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" instance=ExtResource("12_10bvg")]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_k50mi")
@@ -475,7 +475,7 @@ color_bg_hover = 1
 color_bg_pressed = 0
 color_bg_disabled = null
 color_fg = 3
-text = "Profiles"
+text = "Presets"
 text_right = "..."
 horizontal_alignment = 0
 inline = true
@@ -493,7 +493,7 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_xmuii")
 is_inner_menu = true
 metadata/_tab_index = 1
 
-[node name="MenuProfiles" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer" instance=ExtResource("4_buwx5")]
+[node name="MenuPresets" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer" instance=ExtResource("4_buwx5")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -529,7 +529,6 @@ metadata/_tab_index = 5
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_type_variation = &""
 theme_override_styles/panel = SubResource("StyleBoxEmpty_63puf")
 is_inner_menu = true
 metadata/_tab_index = 6

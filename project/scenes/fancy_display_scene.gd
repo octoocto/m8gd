@@ -116,11 +116,11 @@ func init_menu(menu: SceneConfigMenu) -> void:
 				%BackgroundTextureRect.texture = main.m8_client.get_display()
 			2:
 				%BackgroundTextureRect.visible = true
-				%BackgroundTextureRect.texture = load_media_to_texture_rect(get_setting("background_file"), %BGVideoStreamPlayer)
+				%BackgroundTextureRect.texture = load_media_to_texture_rect(get_value("background_file"), %BGVideoStreamPlayer)
 	)
 
 	menu.add_file_custom("background_file", "", func(path: String) -> void:
-		if get_setting("background_mode") == 2:
+		if get_value("background_mode") == 2:
 			%BackgroundTextureRect.texture = load_media_to_texture_rect(path, %BGVideoStreamPlayer)
 	)
 

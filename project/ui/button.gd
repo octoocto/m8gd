@@ -93,7 +93,7 @@ func _on_ready() -> void:
 						emit_ui_changed()
 						return
 
-					if mouse_down and is_mouse_inside():
+					if enabled and mouse_down and is_mouse_inside():
 						pressed.emit()
 
 					mouse_down = false

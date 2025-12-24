@@ -30,7 +30,7 @@ const REBIND_COOLDOWN := 100  # ms until can rebind again
 @onready var button_reset_binds: UIButton = %ButtonResetBinds
 
 @onready var profile_hotkey_template: HBoxContainer = %ProfileHotkeyTemplate
-@onready var profile_hotkeys_container: VBoxContainer = %ProfileHotkeysContainer
+@onready var hotkeys_presets_container: VBoxContainer = %ProfileHotkeysContainer
 
 var is_key_rebinding := false
 var last_rebind_time := 0.0
@@ -248,28 +248,28 @@ func _update_hotkey_node(hotkey_node: Control, event: InputEvent) -> void:
 ## Recreate the profile hotkey UI with the current list of profiles and
 ## their saved hotkey bindings.
 ##
-func refresh_profile_hotkeys() -> void:
+func refresh_hotkeys_presets() -> void:
 	if not main:
 		return
 
-	for child in profile_hotkeys_container.get_children():
+	for child in hotkeys_presets_container.get_children():
 		if child != profile_hotkey_template:
 			child.queue_free()
 
-	for profile_name: String in main.list_profile_names():
+	for profile_name: String in main.list_preset_names():
 		var container: HBoxContainer = profile_hotkey_template.duplicate()
-		var event: Variant = main.config.get_profile_hotkey(profile_name)
+		var event: Variant = main.config.preset_get_hotkey(profile_name)
 		container.visible = true
 		container.get_node("Label").text = profile_name
 		_update_hotkey_node(container, event)
-		profile_hotkeys_container.add_child(container)
+		hotkeys_presets_container.add_child(container)
 
 		_init_hotkey_node(
 			container,
 			func(e: InputEvent) -> void:
-				main.config.set_profile_hotkey(profile_name, e)
-				refresh_profile_hotkeys(),
+				main.config.preset_set_hotkey(profile_name, e)
+				refresh_hotkeys_presets(),
 			func() -> void:
-				main.config.clear_profile_hotkey(profile_name)
-				refresh_profile_hotkeys()
+				main.config.preset_delete_hotkey(profile_name)
+				refresh_hotkeys_presets()
 		)

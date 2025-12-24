@@ -14,7 +14,7 @@ signal deinitialized
 signal scene_loaded(scene_path: String, scene: M8Scene)
 
 @warning_ignore("UNUSED_SIGNAL")
-signal profile_loaded(profile_name: String)
+signal preset_loaded(preset_name: String)
 
 @warning_ignore("UNUSED_SIGNAL")
 signal setting_changed(setting: SettingBase, value: Variant)
@@ -41,4 +41,6 @@ signal device_key_pressed(key: M8GD.M8Key, pressed: bool)
 
 ## Emitted when a property in the config for a profile changes.
 @warning_ignore("UNUSED_SIGNAL")
-signal config_profile_property_changed(profile_name: String, property: String, value: Variant)
+signal config_preset_value_changed(
+	profile_name: String, section: String, key: String, value: Variant
+)

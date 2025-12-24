@@ -6,6 +6,11 @@ extends MenuBase
 @onready var button_open_camera_config: UIButton = %ButtonOpenCameraConfig
 @onready var label_current_scene: UILabel2 = %LabelCurrentScene
 
+@onready var s_model_type: SettingOptions = %Setting_ModelType
+@onready var s_model_hl_opacity: SettingNumber = %Setting_ModelHighlightOpacity
+@onready var s_model_screen_filter: SettingOptions = %Setting_ModelScreenFilter
+@onready var s_model_screen_emission: SettingNumber = %Setting_ModelScreenEmission
+
 
 func _on_menu_init() -> void:
 	_init_menu_scene()
@@ -101,7 +106,7 @@ func _init_menu_camera() -> void:
 func _init_menu_model() -> void:
 	# Model settings
 
-	%Setting_ModelType.setting_connect_profile(
+	s_model_type.setting_connect_model(
 		"model_type",
 		func(value: int) -> void:
 			if not _model():
@@ -112,39 +117,41 @@ func _init_menu_model() -> void:
 			elif value == 2:
 				_model().model = 1
 	)
-	%Setting_ModelHighlightOpacity.setting_connect_profile(
+	s_model_hl_opacity.setting_connect_model(
 		"model_hl_opacity",
 		func(value: float) -> void:
 			if _model():
 				_model().highlight_opacity = value
 	)
-	%Setting_ModelScreenFilter.setting_connect_profile(
+	s_model_screen_filter.setting_connect_model(
 		"model_screen_linear_filter",
 		func(value: int) -> void:
 			if _model():
 				_model().set_screen_filter(true if value == 1 else false)
 	)
-	%Setting_ModelScreenEmission.setting_connect_profile(
+	s_model_screen_emission.setting_connect_model(
 		"model_screen_emission",
 		func(value: float) -> void:
 			if _model():
 				_model().set_screen_emission(value)
 	)
 
+	Events.preset_loaded.connect(
+		func(_profile_name: String) -> void:
+			s_model_type.reload()
+			s_model_hl_opacity.reload()
+			s_model_screen_filter.reload()
+			s_model_screen_emission.reload()
+	)
+
 	Events.scene_loaded.connect(
 		func(_scene_path: String, scene: M8Scene) -> void:
-			var enabled := scene.has_3d_camera()
+			var is_3d_scene := scene.has_3d_camera()
 
-			%Setting_ModelType.enabled = enabled
-			%Setting_ModelHighlightOpacity.enabled = enabled
-			%Setting_ModelScreenFilter.enabled = enabled
-			%Setting_ModelScreenEmission.enabled = enabled
-
-			if enabled:
-				%Setting_ModelType.reload()
-				%Setting_ModelHighlightOpacity.reload()
-				%Setting_ModelScreenFilter.reload()
-				%Setting_ModelScreenEmission.reload()
+			s_model_type.enabled = is_3d_scene
+			s_model_hl_opacity.enabled = is_3d_scene
+			s_model_screen_filter.enabled = is_3d_scene
+			s_model_screen_emission.enabled = is_3d_scene
 	)
 
 

@@ -1,12 +1,12 @@
 [gd_scene load_steps=3 format=3 uid="uid://d2wnq8ai2ykus"]
 
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_2t1ve"]
-[ext_resource type="Script" uid="uid://dlkrwb25egyq" path="res://ui/settings/setting_vec2.gd" id="1_6vysa"]
+[ext_resource type="Script" uid="uid://blpixtwnuwttt" path="res://ui/settings/setting_vec2.gd" id="1_6vysa"]
 
 [node name="SettingVec2" type="PanelContainer"]
 texture_filter = 1
-offset_right = 118.0
-offset_bottom = 23.0
+offset_right = 90.0
+offset_bottom = 7.0
 size_flags_horizontal = 3
 size_flags_vertical = 4
 theme = ExtResource("1_2t1ve")

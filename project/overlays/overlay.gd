@@ -24,7 +24,7 @@ func _ready() -> void:
 	if self.main:
 		Log.call_task(_overlay_init, "init overlay '%s'" % name)
 
-	Events.profile_loaded.connect(func(_profile_name: String) -> void: reload())
+	Events.preset_loaded.connect(func(_profile_name: String) -> void: reload())
 	reload()
 
 
@@ -60,12 +60,12 @@ func reload() -> void:
 
 	var config := main.config
 
-	size = config.config_overlay_get(self, "size", size)
-	anchors_preset = config.config_overlay_get(self, "anchors_preset", anchors_preset)
-	_position_offset = config.config_overlay_get(self, "_position_offset", _position_offset)
+	size = config.get_value_overlay(self, "size", size)
+	anchors_preset = config.get_value_overlay(self, "anchors_preset", anchors_preset)
+	_position_offset = config.get_value_overlay(self, "_position_offset", _position_offset)
 
 	for prop_name in get_overlay_property_names():
-		var prop_value: Variant = config.config_overlay_get(self, prop_name, get(prop_name))
+		var prop_value: Variant = config.get_value_overlay(self, prop_name, get(prop_name))
 		set(prop_name, prop_value)
 
 	_update()

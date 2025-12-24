@@ -37,16 +37,12 @@ offset_bottom = 0.0
 grow_horizontal = 1
 grow_vertical = 1
 size_flags_horizontal = 0
-_position_offset = null
-_draw_bounds = null
 
 [node name="OverlayDisplayPanel" parent="Control" instance=ExtResource("3_uuwvl")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
 opacity = 2.0
-_position_offset = null
-_draw_bounds = null
 
 [node name="OverlayAudioWaveform" parent="Control" instance=ExtResource("4_cat8f")]
 unique_name_in_owner = true
@@ -61,4 +57,5 @@ size_flags_horizontal = 8
 size_flags_vertical = 10
 
 [node name="OverlayInputDisplay" parent="Control" instance=ExtResource("7_cat8f")]
+visible = false
 layout_mode = 1

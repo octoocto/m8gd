@@ -1,16 +1,32 @@
 class_name M8Config extends Resource
 
 const CONFIG_FILE_PATH := "user://config.res"
+const PRESETS_DIR_PATH := "user://presets/"
 
 const DEFAULT_SCENE_PATH: String = "res://scenes/floating_scene.tscn"
 const DEFAULT_COLOR_KEYCAP := Color.BLACK
 const DEFAULT_COLOR_BODY := Color.BLACK
-const DEFAULT_PROFILE := "__default__"
 
 const CONFIG_KEY_OVERLAY = "overlay.%s.%s"
 const CONFIG_KEY_CAMERA = "camera.%s"
 const CONFIG_KEY_SHADER = "filter.%s.shader.%s"
 const CONFIG_KEY_SCENE_CUSTOM = "custom.%s"
+
+const SECTION_PRESET := "preset"
+const SECTION_COLORS := "colors"
+const SECTION_SCENE := "scene"
+const SECTION_SHADER := "shader"
+const SECTION_OVERLAY := "overlay"
+const SECTION_MODEL := "model"
+
+const SECTIONS := [
+	SECTION_PRESET,
+	SECTION_COLORS,
+	SECTION_SCENE,
+	SECTION_SHADER,
+	SECTION_OVERLAY,
+	SECTION_MODEL,
+]
 
 var version: int = 0
 
@@ -21,23 +37,15 @@ var version: int = 0
 # @export var scene_parameters := {} # Dictionary[String, Dictionary]
 # @export var last_scene_path: String # path to last scene opened
 
-## a dictionary in the form of:
-## [codeblock]
-##     profiles = {"<profile name>": profile_dict}
-## [/codeblock]
-## where [profile_dict] is a dictionary in the form of:
-## [codeblock]
-##     profile_dict = {
-##         "scene_file_path": <scene file path>,
-##         "scene_properties": {"<scene file path>": {}},
-##         # other properties (overlays, etc.)
-##         "properties": {}
-##     }
-## [/codeblock]
-@export var profiles := {}
-@export var current_profile := DEFAULT_PROFILE
-@export var profile_hotkeys := {}
-@export var overlay_hotkeys := {}
+## The name of the current or last loaded preset.
+## If not empty, the preset with this name will be loaded on startup.
+@export var current_preset_name: String = ""
+
+## The encoded string of the last loaded preset.
+@export var current_preset_autosave: String = ""
+
+@export var hotkeys_presets := {}
+@export var hotkeys_overlays := {}
 
 # video settings
 @export var fullscreen := false
@@ -77,6 +85,8 @@ var version: int = 0
 @export var action_events := {}  # Dictionary[String, Array]
 @export var virtual_keyboard_enabled := false
 
+var current_preset := ConfigFile.new()
+
 
 static func _print(message: String) -> void:
 	Log.ln("[color=green]%s[/color]" % message)
@@ -91,6 +101,8 @@ func assert_setting_exists(setting: String) -> void:
 
 
 func save() -> void:
+	current_preset_autosave = current_preset.encode_to_text()
+
 	var error := ResourceSaver.save(self, CONFIG_FILE_PATH)
 	if error == OK:
 		_print("config saved")
@@ -111,304 +123,330 @@ static func load() -> M8Config:
 		config = M8Config.new()
 		_print("creating new config")
 
-	config.init_profile(DEFAULT_PROFILE)
+	if config.current_preset_autosave != "":
+		config.current_preset.parse(config.current_preset_autosave)
+		_print("loaded preset from autosave")
+	elif config.current_preset_name != "":
+		config.preset_load(config.current_preset_name)
+
 	return config
 
 
 ##
-## Get the current scene path according to the current profile and
-## the current scene in the profile.
+## Get the current scene path according to the current preset and
+## the current scene in the preset.
 ##
 ## Intended to be used by the main function to load the initial scene.
 ##
 func get_current_scene_path() -> String:
-	if DEFAULT_PROFILE not in profiles.keys():
-		init_profile(DEFAULT_PROFILE)
-		return DEFAULT_SCENE_PATH
-
-	var scene_file_path: String = profiles[current_profile]["scene_file_path"]
-	assert(scene_file_path != null)
-	return scene_file_path
+	var scene_path: String = get_value(SECTION_PRESET, "scene", DEFAULT_SCENE_PATH)
+	assert(scene_path != "", "current scene path cannot be empty")
+	return scene_path
 
 
-##
-## Create a new profile.
-## The current scene of the new profile will be the same as the one used by
-## the current profile.
-##
-func init_profile(profile_name: String, use_current_profile_settings := true) -> void:
-	var scene_file_path: String
+func list_preset_names() -> PackedStringArray:
+	var dir := DirAccess.open(PRESETS_DIR_PATH)
+	if dir == null:
+		_print("failed to list presets: %s" % error_string(DirAccess.get_open_error()))
+		return PackedStringArray()
 
-	# if creating the default profile, use the default scene
-	if profile_name == DEFAULT_PROFILE:
-		scene_file_path = DEFAULT_SCENE_PATH
-	else:
-		scene_file_path = get_current_scene_path()
-
-	if profile_name not in profiles.keys():
-		if use_current_profile_settings and current_profile in profiles.keys():
-			profiles[profile_name] = profiles[current_profile].duplicate(true)
-		else:
-			profiles[profile_name] = {
-				"scene_file_path": scene_file_path, "scene_properties": {}, "properties": {}
-			}
-		_print("init profile: %s" % profile_name)
-
-
-func list_profile_names() -> Array:
-	return profiles.keys().filter(
-		func(profile_name: String) -> bool: return profile_name != DEFAULT_PROFILE
+	var array := (
+		Array(dir.get_files())
+		. filter(func(f: String) -> bool: return f.get_extension().to_lower() == "ini")
+		. map(func(f: String) -> String: return f.get_file().get_basename())
 	)
 
+	_print("found %d presets" % array.size())
+	return PackedStringArray(array)
 
-##
-## Rename the current profile.
-##
-func rename_current_profile(new_profile_name: String) -> void:
-	assert(current_profile != DEFAULT_PROFILE)
 
-	var old_profile_name := current_profile
-	var profile_hotkey: InputEvent = get_profile_hotkey(old_profile_name)
-	var profile_dict: Dictionary = profiles[old_profile_name]
+func current_preset_exists() -> bool:
+	return preset_exists(current_preset_name)
 
-	profiles[new_profile_name] = profile_dict
-	profiles.erase(old_profile_name)
-	clear_profile_hotkey(old_profile_name)
 
-	current_profile = new_profile_name
-	set_profile_hotkey(new_profile_name, profile_hotkey)
-
-	_print("rename profile: %s -> %s" % [old_profile_name, new_profile_name])
+func preset_exists(preset_name: String) -> bool:
+	if preset_name == "":
+		return false
+	var preset_path := _preset_get_path(preset_name)
+	return FileAccess.file_exists(preset_path)
 
 
 ##
-## Create a new profile. A name will be generated.
+## Save the current preset.
 ##
-func create_new_profile() -> String:
-	var profile_name := "new profile"
-	var iterations := 1
+func preset_save(preset_name: String, overwrite := false) -> String:
+	preset_name = _validate_preset_name(preset_name)
+	assert(preset_name != "", "preset name cannot be empty")
 
-	while true:
-		if profile_name not in profiles.keys():
-			init_profile(profile_name, true)
-			_print("created profile: %s" % [profile_name])
-			return profile_name
+	if preset_exists(preset_name) and !overwrite:
+		assert(false, "preset '%s' already exists" % preset_name)
 
-		profile_name = "new profile (%d)" % iterations
-		iterations += 1
+	# make sure presets directory exists
+	if not DirAccess.dir_exists_absolute(PRESETS_DIR_PATH):
+		DirAccess.make_dir_absolute(PRESETS_DIR_PATH)
+		_print("created presets directory: %s" % PRESETS_DIR_PATH)
 
-	assert(false)
-	return ""
+	var path := _preset_get_path(preset_name)
 
-
-##
-## Delete a profile.
-##
-func delete_profile(profile_name: String) -> void:
-	assert(profile_name in profiles.keys())
-	assert(profile_name != current_profile)
-	profiles.erase(profile_name)
-	_print("deleted profile: %s" % [profile_name])
+	current_preset.save(path)
+	current_preset_name = preset_name
+	_print("saved preset: %s" % preset_name)
+	return path
 
 
 ##
-## Set the current profile. The saved current scene path of the new profile
-## may or may not be the same as the last profile.
+## Loads a preset.
 ##
-## Note that this function just sets the internal config variable and
-## no actual loading is done.
+## If [preset_name] is empty, loads an empty preset (equivalent to making a new preset).
 ##
-func use_profile(profile_name: String) -> void:
-	init_profile(profile_name)
-	current_profile = profile_name
-	_print("USING profile: %s" % profile_name)
+func preset_load(preset_name: String) -> void:
+	if preset_name != "":
+		preset_name = _validate_preset_name(preset_name)
+		assert(preset_exists(preset_name), "preset '%s' does not exist" % preset_name)
+
+	current_preset = ConfigFile.new()
+	current_preset.set_value(SECTION_PRESET, "scene", DEFAULT_SCENE_PATH)
+	current_preset_name = preset_name
+
+	if current_preset_name != "":
+		var res := current_preset.load(_preset_get_path(current_preset_name))
+		assert(
+			res == OK, "failed to load preset '%s': %s" % [current_preset_name, error_string(res)]
+		)
+
+	_emit_preset_loaded()
+
+
+func preset_load_last() -> void:
+	if current_preset.get_sections().size() > 0:
+		# looks like a preset is already loaded, so just emit the signal
+		_emit_preset_loaded()
+		return
+
+	preset_load(current_preset_name)
+
+
+func preset_load_new() -> void:
+	preset_load("")
+
+
+##
+## Delete a preset.
+##
+## If the deleted preset is the current preset, this will also load a new empty preset.
+##
+func preset_delete(preset_name: String) -> void:
+	preset_name = _validate_preset_name(preset_name)
+	assert(preset_exists(preset_name), "preset '%s' does not exist" % _get_preset_name(preset_name))
+	DirAccess.remove_absolute(_preset_get_path(preset_name))
+	_print("deleted preset: %s" % [preset_name])
+	if preset_name == current_preset_name:
+		preset_load_new()
+
+
+func preset_delete_current() -> void:
+	preset_delete(current_preset_name)
 
 
 func clear_scene_parameters(scene: M8Scene) -> void:
-	var profile: Dictionary = profiles[current_profile]
-	var scene_prop_dict: Dictionary = profile["scene_properties"]
-	scene_prop_dict.erase(scene.scene_file_path)
-	_print("CLEARED scene properties for path: %s" % scene.scene_file_path)
+	var section := SECTION_SCENE % _validate_preset_key(scene.scene_file_path)
+	if not current_preset.has_section(section):
+		current_preset.erase_section(section)
+		_print("erased section: %s" % section)
 
 
 ##
-## Set the current scene for the current profile.
+## Set a value in the current preset.
 ##
-## Note that this function just sets the internal config variable and
-## no actual loading is done.
-##
-func use_scene(scene: M8Scene) -> void:
-	assert(scene != null)
-	profiles[current_profile]["scene_file_path"] = scene.scene_file_path
-	_print("USING scene file path: %s" % scene.scene_file_path)
+func set_value(section: String, key: String, value: Variant) -> void:
+	section = _validate_preset_section(section)
+	key = _validate_preset_key(key)
 
+	# check if the value exists first to avoid an error
+	var exists := current_preset.has_section_key(section, key)
+	var last_value: Variant = null
+	if exists:
+		last_value = current_preset.get_value(section, key)
 
-##
-## Get the scene properties dict for the current profile/scene.
-##
-func _get_scene_properties() -> Dictionary:
-	var profile: Dictionary = profiles[current_profile]
-	var scene_file_path: String = profile["scene_file_path"]
-	var scene_prop_dict: Dictionary = profile["scene_properties"]
-
-	if scene_file_path not in scene_prop_dict.keys():
-		scene_prop_dict[scene_file_path] = {}
-		_print("INIT scene props for scene: %s" % scene_file_path)
-
-	return scene_prop_dict[scene_file_path]
-
-
-##
-## Get the properties dict for the current profile.
-##
-func _get_profile_properties() -> Dictionary:
-	return profiles[current_profile]["properties"]
-
-
-##
-## Get a scene property for the current profile and current scene.
-## If this property doesn't exist, set it to the value from [default].
-##
-func get_property_scene(propname: String, default: Variant = null) -> Variant:
-	var scene_props: Dictionary = _get_scene_properties()
-
-	# set parameter from config, or add parameter to config
-	if !scene_props.has(propname) or scene_props[propname] == null:
-		scene_props[propname] = default
-		_print("INIT scene prop: %s = %s" % [propname, default])
-
-	# print("scene: profile %s: get %s=%s" % [current_profile, property, profile[property]])
-	# _print("GET scene prop: %s, value = %s" % [propname, scene_props[propname]])
-	return scene_props[propname]
-
-
-##
-## Set a scene property for the current profile and current scene.
-##
-func set_property_scene(propname: String, value: Variant) -> void:
-	var scene_props: Dictionary = _get_scene_properties()
-	if !scene_props.has(propname) or scene_props[propname] != value:
-		scene_props[propname] = value
-		_print("SET scene prop: %s = %s" % [propname, value])
-
-
-##
-## Get a property for the current profile.
-##
-func get_property(propname: String, default: Variant = null) -> Variant:
-	var props := _get_profile_properties()
-
-	# set parameter from config, or add parameter to config
-	if !props.has(propname) or props[propname] == null:
-		props[propname] = default
-		_print("INIT profile prop: %s = %s" % [propname, default])
-
-	# _print("GET profile prop: %s, value = %s" % [propname, props[propname]])
-	return props[propname]
-
-
-##
-## Set a property for the current profile.
-##
-func set_property(propname: String, value: Variant) -> void:
-	var props := _get_profile_properties()
-
-	if (
-		!props.has(propname)
-		or props[propname] != type_convert(value, typeof(props[propname]))
-		or props[propname] == null
-	):
-		props[propname] = value
-		_print("SET profile prop: %s = %s" % [propname, value])
-		Events.config_profile_property_changed.emit(current_profile, propname, value)
+	if last_value != value:
+		if last_value == null:
+			_print("new preset value: [%s] %s = %s" % [section, key, value])
+		else:
+			_print("set preset value: [%s] %s = %s" % [section, key, value])
+		current_preset.set_value(section, key, value)
+		Events.config_preset_value_changed.emit(current_preset_name, section, key, value)
 
 
 ##
 ## Set a global config setting.
 ##
-func set_property_global(property: String, value: Variant) -> void:
-	assert(property in self)
-	if get(property) != value:
-		set(property, value)
-		_print("SET global prop: %s = %s" % [property, value])
+## This is equivalent to setting the exported variable in this resource directly.
+##
+func set_global_value(key: String, value: Variant) -> void:
+	assert(key in self)
+	if get(key) != value:
+		set(key, value)
+		_print("set config value: %s = %s" % [key, value])
+
+
+##
+## Get a value from the current preset.
+##
+func get_value(section: String, key: String, default: Variant) -> Variant:
+	section = _validate_preset_section(section)
+	key = _validate_preset_key(key)
+	return current_preset.get_value(section, key, default)
+	# var value: Variant = current_preset.get_value(section, key, default)
+	# _print("GET preset prop: %s, value = %s" % [propname, props[propname]])
+	# return value
 
 
 ##
 ## Get a global config setting.
 ##
-func get_property_global(property: String) -> Variant:
-	assert(property in self)
-	var value: Variant = get(property)
-	# _print("GET global prop: %s, value = %s" % [property, value])
+func get_global_value(key: String) -> Variant:
+	assert(key in self)
+	var value: Variant = get(key)
+	# _print("GET global prop: %s, value = %s" % [key, value])
 	return value
 
 
 ##
-## Set a profile's hotkey to an [InputEvent].
+## Set the current scene for the current preset.
 ##
-func set_profile_hotkey(profile_name: String, event: InputEvent) -> void:
+## Note that this function just sets the internal config variable and
+## no actual loading is done.
+##
+func set_scene(scene: M8Scene) -> void:
+	assert(scene != null)
+	set_value(SECTION_PRESET, "scene", scene.scene_file_path)
+
+
+##
+## Get a scene property for the current preset and current scene.
+## If this property doesn't exist, set it to the value from [default].
+##
+func get_value_scene(scene: M8Scene, key: String, default: Variant) -> Variant:
+	var section := "%s/%s" % [SECTION_SCENE, _validate_preset_key(scene.scene_file_path)]
+	return get_value(section, key, default)
+
+
+##
+## Set a scene property for the current preset and current scene.
+##
+func set_value_scene(scene: M8Scene, key: String, value: Variant) -> void:
+	var section := "%s/%s" % [SECTION_SCENE, _validate_preset_key(scene.scene_file_path)]
+	return set_value(section, key, value)
+
+
+func get_value_overlay(overlay: Control, key: String, default: Variant) -> Variant:
+	var section := "%s/%s" % [SECTION_OVERLAY, _validate_preset_key(overlay.name)]
+	if default == null:
+		default = overlay.get(key)
+	return get_value(section, key, default)
+
+
+func set_value_overlay(overlay: Control, key: String, value: Variant) -> void:
+	var section := "%s/%s" % [SECTION_OVERLAY, _validate_preset_key(overlay.name)]
+	overlay.set(key, value)
+	set_value(section, key, value)
+
+
+func get_value_overlay_global(key: String, default: Variant) -> Variant:
+	var section := SECTION_OVERLAY
+	return get_value(section, key, default)
+
+
+func set_value_overlay_global(key: String, value: Variant) -> void:
+	var section := SECTION_OVERLAY
+	set_value(section, key, value)
+
+
+func set_value_shader(shader_rect: ShaderRect, key: String, value: Variant) -> void:
+	var section := "%s/%s" % [SECTION_SHADER, _validate_preset_key(shader_rect.name)]
+	set_value(section, key, value)
+
+
+func get_value_shader(shader_rect: ShaderRect, key: String, default: Variant) -> Variant:
+	var section := "%s/%s" % [SECTION_SHADER, _validate_preset_key(shader_rect.name)]
+	return get_value(section, key, default)
+
+
+func get_value_shader_global(key: String, default: Variant) -> Variant:
+	var section := SECTION_SHADER
+	return get_value(section, key, default)
+
+
+func set_value_shader_global(key: String, value: Variant) -> void:
+	var section := SECTION_SHADER
+	set_value(section, key, value)
+
+
+func set_value_model(key: String, value: Variant) -> void:
+	set_value(SECTION_MODEL, key, value)
+
+
+func get_value_model(key: String, default: Variant) -> Variant:
+	return get_value(SECTION_MODEL, key, default)
+
+
+func get_color(key: String) -> Color:
+	return get_value(SECTION_COLORS, key, Color.WHITE)
+
+
+func set_color(key: String, color: Color) -> void:
+	set_value(SECTION_COLORS, key, color)
+
+
+##
+## Set a preset's hotkey to an [InputEvent].
+##
+func preset_set_hotkey(profile_name: String, event: InputEvent) -> void:
 	if event:
-		profile_hotkeys[profile_name] = event
-		_print("set profile hotkey: %s -> %s" % [event.as_text(), profile_name])
+		hotkeys_presets[profile_name] = event
+		_print("set preset hotkey: %s -> %s" % [event.as_text(), profile_name])
 
 
 ##
-## Returns a profile's hotkey ([InputEvent]). If the profile does not have a hotkey,
+## Returns a preset's hotkey ([InputEvent]). If the preset does not have a hotkey,
 ## returns [null].
 ##
-func get_profile_hotkey(profile_name: String) -> Variant:
-	return profile_hotkeys.get(profile_name)
+func preset_get_hotkey(profile_name: String) -> Variant:
+	return hotkeys_presets.get(profile_name)
 
 
-func clear_profile_hotkey(profile_name: String) -> void:
-	profile_hotkeys.erase(profile_name)
-	_print("cleared profile hotkey for: %s" % profile_name)
+func preset_delete_hotkey(profile_name: String) -> void:
+	hotkeys_presets.erase(profile_name)
+	_print("cleared preset hotkey for: %s" % profile_name)
 
 
 func set_overlay_hotkey(overlay_node_path: String, event: InputEvent) -> void:
 	if event:
-		overlay_hotkeys[overlay_node_path] = event
+		hotkeys_overlays[overlay_node_path] = event
 		_print("set overlay hotkey: %s -> %s" % [event.as_text(), overlay_node_path])
 
 
 func get_overlay_hotkey(overlay_node_path: String) -> Variant:
-	return overlay_hotkeys.get(overlay_node_path)
+	return hotkeys_overlays.get(overlay_node_path)
 
 
 func clear_overlay_hotkey(overlay_node_path: String) -> void:
-	profile_hotkeys.erase(overlay_node_path)
+	hotkeys_presets.erase(overlay_node_path)
 	_print("cleared overlay hotkey for: %s" % overlay_node_path)
 
 
 func find_profile_name_from_hotkey(event: InputEvent) -> Variant:
-	for key: String in profile_hotkeys.keys():
-		if event.is_match(profile_hotkeys[key]):
+	for key: String in hotkeys_presets.keys():
+		if event.is_match(hotkeys_presets[key]):
 			return key
 	return null
 
 
 func find_overlay_node_path_from_hotkey(event: InputEvent) -> Variant:
-	for key: String in overlay_hotkeys.keys():
-		if event.is_match(overlay_hotkeys[key]):
+	for key: String in hotkeys_overlays.keys():
+		if event.is_match(hotkeys_overlays[key]):
 			return key
 	return null
-
-
-func _get_propkey_overlay(overlay: Control, property: String) -> String:
-	return CONFIG_KEY_OVERLAY % [overlay.name, property]
-
-
-func config_overlay_get(overlay: Control, property: String, default: Variant = null) -> Variant:
-	var config_property := _get_propkey_overlay(overlay, property)
-	if default == null:
-		default = overlay.get(property)
-	return get_property(config_property, default)
-
-
-func config_overlay_set(overlay: Control, property: String, value: Variant) -> void:
-	var config_property := _get_propkey_overlay(overlay, property)
-	overlay.set(property, value)
-	set_property(config_property, value)
 
 
 const KEY_COLOR_HIGHLIGHT_PREFIX: StringName = "hl_color_"
@@ -432,4 +470,39 @@ func get_color_highlight(key: String) -> Color:
 			]
 		)
 	)
-	return get_property(key, Color.WHITE)
+	return get_value(SECTION_COLORS, key, Color.WHITE)
+
+
+func _get_preset_name(preset_name: String) -> String:
+	if preset_name == "":
+		return "<unnamed preset>"
+	return preset_name
+
+
+func _validate_preset_name(preset_name: String) -> String:
+	return preset_name.get_file().get_basename().validate_filename().to_lower()
+
+
+func _validate_preset_section(section: String) -> String:
+	var parts := section.split("/")
+	var subsection := "/".join(parts.slice(1))
+	assert(parts[0] in SECTIONS, "invalid preset section: %s" % parts[0])
+	if parts.size() == 1:
+		return _validate_preset_key(parts[0])
+	else:
+		return "%s/%s" % [_validate_preset_key(parts[0]), _validate_preset_name(subsection)]
+
+
+func _validate_preset_key(key: String) -> String:
+	return key.to_snake_case().to_lower()
+
+
+func _preset_get_path(preset_name: String) -> String:
+	return "%s%s.ini" % [PRESETS_DIR_PATH, _validate_preset_name(preset_name)]
+
+
+func _emit_preset_loaded() -> void:
+	Log.call_task(
+		Events.preset_loaded.emit.bind(current_preset_name),
+		"load profile '%s'" % _get_preset_name(current_preset_name)
+	)

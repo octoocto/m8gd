@@ -68,5 +68,5 @@ func get_auto_display_integer_scale() -> int:
 		intscale += 1
 	return (int)(intscale / main.display_get_scale())
 
-func get_setting(setting: String) -> Variant:
-	return main.config.get_property_scene(setting)
+func get_value(setting: String) -> Variant:
+	return main.config.get_value_scene(self, setting, get(setting))

@@ -26,3 +26,9 @@ func get_uniform_list() -> Array:
 	# 	func(d: Dictionary) -> bool: return d.hint_string != ""
 	# )
 	return shader_material.shader.get_shader_uniform_list()
+
+
+func get_uniform_value(uniform_name: String) -> Variant:
+	if not shader_material:
+		return null
+	return shader_material.get_shader_parameter(uniform_name)

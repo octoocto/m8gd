@@ -10,11 +10,11 @@ extends MenuBase
 func _on_menu_init() -> void:
 	var overlays: OverlayContainer = main.overlays
 
-	s_scale.setting_connect_profile(
+	s_scale.setting_connect_overlay_global(
 		"overlay_scale", func(value: int) -> void: overlays.content_scale = value
 	)
 
-	s_apply_filters.setting_connect_profile(
+	s_apply_filters.setting_connect_overlay_global(
 		"overlay_above_shaders", func(value: bool) -> void: overlays.z_index = 1 if value else 0
 	)
 
@@ -41,7 +41,7 @@ func _on_menu_init() -> void:
 
 	Log.ln("added %d overlay settings" % overlays.get_overlays().size())
 
-	Events.profile_loaded.connect(
+	Events.preset_loaded.connect(
 		func(_profile_name: String) -> void:
 			s_scale.reload()
 			s_apply_filters.reload()

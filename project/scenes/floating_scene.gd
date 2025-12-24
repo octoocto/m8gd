@@ -98,7 +98,7 @@ func init(p_main: Main) -> void:
 
 func init_menu(menu: SceneConfigMenu) -> void:
 	# menu.add_exports_from(self)
-	# menu.init_profile(self)
+	# menu._preset_init(self)
 
 	menu.add_section("Audio Spectrum")
 	var setting_spectrum := menu.add_auto("enable_audio_spectrum")

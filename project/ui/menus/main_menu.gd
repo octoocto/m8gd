@@ -18,7 +18,7 @@ extends MenuBase
 @onready var menu_input: InputMenu = %MenuInput
 @onready var menu_video: MenuBase = %MenuVideo
 @onready var menu_audio: MenuBase = %MenuAudio
-@onready var menu_profiles: MenuBase = %MenuProfiles
+@onready var menu_presets: MenuBase = %MenuPresets
 @onready var menu_debug: MenuBase = %MenuDebug
 
 @onready var button_goto_scene: UIButton = %ButtonGotoScene
@@ -29,7 +29,7 @@ extends MenuBase
 @onready var button_goto_input: UIButton = %ButtonGotoInput
 @onready var button_goto_video: UIButton = %ButtonGotoVideo
 @onready var button_goto_audio: UIButton = %ButtonGotoAudio
-@onready var button_goto_profiles: UIButton = %ButtonGotoProfiles
+@onready var button_goto_presets: UIButton = %ButtonGotoPresets
 @onready var button_goto_debug: UIButton = %ButtonGotoDebug
 
 @onready var opt_load_scene: UIOptionButton = %OptionLoadScene
@@ -67,7 +67,7 @@ func _on_menu_init() -> void:
 	_connect_goto(button_goto_input, menu_input)
 	_connect_goto(button_goto_video, menu_video)
 	_connect_goto(button_goto_audio, menu_audio)
-	_connect_goto(button_goto_profiles, menu_profiles)
+	_connect_goto(button_goto_presets, menu_presets)
 	_connect_goto(button_goto_debug, menu_debug)
 
 	button_back.pressed.connect(_back)

@@ -124,6 +124,8 @@ func _ready() -> void:
 
 	get_window().size_changed.connect(Events.window_modified.emit)
 
+	Events.preset_loaded.connect(_on_preset_loaded)
+
 	# %Check_SplashDoNotShow.toggled.connect(
 	# 	func(toggle_mode: bool) -> void: config.splash_show = !toggle_mode
 	# )
@@ -224,10 +226,10 @@ func _input(event: InputEvent) -> void:
 	if _handle_input_keys(event):
 		return
 
-	if _handle_input_overlay_hotkeys(event):
+	if _handle_input_hotkeys_overlays(event):
 		return
 
-	if _handle_input_profile_hotkeys(event):
+	if _handle_input_hotkeys_presets(event):
 		return
 
 	if _handle_input_keyjazz(event):
@@ -319,7 +321,7 @@ func load_scene(scene_path: String) -> bool:
 
 			# initialize scene and config
 			scene.init(self)
-			config.use_scene(scene)
+			config.set_scene(scene)
 			current_scene = scene
 
 			Events.scene_loaded.emit(p_scene_path, scene)
@@ -363,52 +365,30 @@ func get_scene_paths() -> PackedStringArray:
 ## Load the last saved profile.
 ##
 func load_last_profile() -> void:
-	load_profile(config.current_profile)
+	config.preset_load_last()
 
 
-##
-## Load a profile. If the profile doesn't exist, it will be initialized with
-## the current scene and properties.
-##
-## Loading a profile will load the scene that was saved to it, as well as its
-## scene properties, and all profile properties (overlays, filters, etc).
-##
-func load_profile(profile_name: String) -> bool:
-	return Log.call_task(
-		func() -> bool:
-			config.use_profile(profile_name)
-			var scene_path := config.get_current_scene_path()
-			assert(scene_path != null)
+func _on_preset_loaded(_preset_name: String) -> void:
+	var scene_path := config.get_current_scene_path()
+	assert(scene_path != null)
 
-			load_scene(scene_path)
-			m8_client.set_display_background_alpha(0)
-
-			Events.profile_loaded.emit(profile_name)
-
-			print("profile loaded!")
-
-			return true,
-		'load profile "%s"' % profile_name
-	)
+	load_scene(scene_path)
+	m8_client.set_display_background_alpha(0)
 
 
 func load_default_profile() -> void:
-	load_profile(config.DEFAULT_PROFILE)
+	config.preset_load_new()
 
 
 ##
 ## Get the name of the active profile.
 ##
 func get_current_profile_name() -> String:
-	return config.current_profile
+	return config.current_preset_name
 
 
-func is_using_default_profile() -> bool:
-	return config.current_profile == config.DEFAULT_PROFILE
-
-
-func list_profile_names() -> Array:
-	return config.list_profile_names()
+func list_preset_names() -> Array:
+	return config.list_preset_names()
 
 
 func rename_profile(new_profile_name: String) -> void:
@@ -419,10 +399,10 @@ func create_new_profile() -> String:
 	return config.create_new_profile()
 
 
-func delete_profile(profile_name: String) -> void:
+func preset_delete(profile_name: String) -> void:
 	if profile_name == get_current_profile_name():
 		load_default_profile()
-	config.delete_profile(profile_name)
+	config.preset_delete(profile_name)
 
 
 ##
@@ -710,7 +690,7 @@ func _handle_input_keys(event: InputEvent) -> bool:
 	return true
 
 
-func _handle_input_profile_hotkeys(event: InputEvent) -> bool:
+func _handle_input_hotkeys_presets(event: InputEvent) -> bool:
 	if (
 		is_any_menu_open()
 		or (event is not InputEventKey and event is not InputEventJoypadButton)
@@ -722,13 +702,13 @@ func _handle_input_profile_hotkeys(event: InputEvent) -> bool:
 	var profile_name: Variant = config.find_profile_name_from_hotkey(event)
 	if profile_name is String:
 		print("loading profile from hotkey: %s" % profile_name)
-		load_profile(profile_name)
+		config.preset_load(profile_name)
 		return true
 
 	return false
 
 
-func _handle_input_overlay_hotkeys(event: InputEvent) -> bool:
+func _handle_input_hotkeys_overlays(event: InputEvent) -> bool:
 	if (
 		is_any_menu_open()
 		or (event is not InputEventKey and event is not InputEventJoypadButton)

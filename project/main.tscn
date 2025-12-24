@@ -425,7 +425,6 @@ scale = Vector2(2, 2)
 theme = ExtResource("13_e5i6c")
 script = ExtResource("18_d13ii")
 content_scale = 2
-metadata/_custom_type_script = "uid://cqeodrynubkp8"
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/MenuContainer"]
 layout_mode = 2

@@ -103,27 +103,27 @@ func _update_format() -> void:
 ## set the property in the current scene's camera.
 ##
 func setting_connect_camera_2(property_x: String, property_y: String) -> void:
-	var config_property_x := _get_propkey_camera(property_x)
-	var config_property_y := _get_propkey_camera(property_y)
 	setting_connect(
 		func() -> Variant:
 			var camera := main.get_scene_camera()
+			var scene := main.current_scene
 			if camera:
 				assert(property_x in camera, "Property does not exist in camera: %s" % property_x)
 				assert(property_y in camera, "Property does not exist in camera: %s" % property_y)
 				var default_x: Variant = camera.get(property_x)
 				var default_y: Variant = camera.get(property_y)
 				return Vector2(
-					main.config.get_property_scene(config_property_x, default_x),
-					main.config.get_property_scene(config_property_y, default_y)
+					main.config.get_value_scene(scene, property_x, default_x),
+					main.config.get_value_scene(scene, property_y, default_y)
 				)
 			else:
 				return null,
 		func(p_value: Variant) -> void:
 			var camera := main.get_scene_camera()
+			var scene := main.current_scene
 			if camera:
 				main.get_scene_camera().set(property_x, p_value.x)
 				main.get_scene_camera().set(property_y, p_value.y)
-				main.config.set_property_scene(config_property_x, p_value.x)
-				main.config.set_property_scene(config_property_y, p_value.y)
+				main.config.set_value_scene(scene, property_x, p_value.x)
+				main.config.set_value_scene(scene, property_y, p_value.y)
 	)

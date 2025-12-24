@@ -40,9 +40,9 @@ var tweens: Dictionary[Panel, Tween] = {}
 
 func _overlay_init() -> void:
 	Events.device_key_pressed.connect(_animate_pressed)
-	Events.config_profile_property_changed.connect(
-		func(_profile_name: String, property: String, _value: Variant) -> void:
-			if property.begins_with(main.config.KEY_COLOR_HIGHLIGHT_PREFIX):
+	Events.config_preset_value_changed.connect(
+		func(_profile_name: String, section: String, _property: String, _value: Variant) -> void:
+			if section == main.config.SECTION_COLORS:
 				_update()
 	)
 
