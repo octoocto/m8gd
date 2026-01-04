@@ -84,8 +84,8 @@ func _on_menu_init() -> void:
 	button_cancel_loader.pressed.connect(func() -> void: _show_config())
 	button_print.pressed.connect(func() -> void: print(config.current_preset.encode_to_text()))
 	visibility_changed.connect(
-		func(v: bool) -> void:
-			if v:
+		func() -> void:
+			if visible:
 				_show_config()
 	)
 
