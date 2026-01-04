@@ -571,6 +571,7 @@ mouse_filter = 2
 [node name="SceneCameraMenu" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer" instance=ExtResource("16_getpj")]
 unique_name_in_owner = true
 visible = false
+z_index = 1
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
@@ -579,6 +580,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_dg77c")
 [node name="SceneConfigMenu" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer" instance=ExtResource("9_bisyb")]
 unique_name_in_owner = true
 visible = false
+z_index = 1
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
@@ -587,6 +589,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_ycdy4")
 [node name="MenuOverlay" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer" instance=ExtResource("16_4bi6d")]
 unique_name_in_owner = true
 visible = false
+z_index = 1
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
