@@ -30,11 +30,11 @@ Table of contents
 Download
 ========
 
-[GitHub Releases (Windows, Linux, & MacOS (x86_64 only))](https://github.com/octoocto/m8gd/releases)
+[GitHub Releases (Windows, Linux, & MacOS)](https://github.com/octoocto/m8gd/releases)
 
 Note that this project is a work-in-progress. All releases are pre-release builds.
 
-Linux builds require the `libserialport` package to be installed.
+**For MacOS users**: please see the [Running on MacOS](#running-on-macos) section for additional instructions on running the app.
 
 If you wish to build this project from source, please see [Building](#building).
 
@@ -56,20 +56,22 @@ Various overlays can be toggled on/off and configured in the main menu.
 
 - **Audio Spectrum**: an audio spectrum (magnitude over frequency) graph.
 - **Audio Waveform**: an audio waveform (magnitude over time) graph.
-- **M8 Display**: a secondary 2D M8 display panel. Useful for overlaying over 3D scenes.
-- **Key Display**: displays live keystrokes and key combos (either from the physical M8 or from m8gd) live.
+- **Display Panel**: a secondary 2D M8 display panel. Useful for overlaying over 3D scenes.
+- **Keycast**: displays live keystrokes and key combos (either from the physical device or the app).
+- **Input Display**: displays the M8 key layout with live key presses (either from the physical device or the app).
 
 ### M8 Theme Integration
 
 The audio spectrum and audio waveform overlays are able to use colors from your M8's current theme (defaults to white), however, you must enter the Theme screen on the M8 at least once while m8gd is open first.
 
-## Filters
+## Shaders
 
-Various filters/shaders can be toggled on/off and configured in the main menu.
+Various shaders/filters can be toggled on/off and configured in the main menu.
 
-- **VHS Shader**: emulates VHS tape effects
-- **CRT Shader**: emulates a CRT monitor
-- **Noise Filter**: a subtle noise filter. Useful in the Fancy Display scene to avoid gradient banding.
+- **VHS Shader**: emulates VHS effects
+- **Retro Shader**: emulates CRT effects such as scanlines
+- **Bezel Shader**: emulates monitor curvature and bezel
+- **Post Process Shader**: a general post-processing shader to adjust brightness, contrast, saturation, vignette, and noise
 
 ## Controls
 
@@ -107,6 +109,8 @@ Option | Z
 Edit   | X
 
 ### M8 Keyjazz / Virtual Keyboard
+
+Note: the Virtual Keyboard must be enabled first (main menu > input).
 
 Action            | Default Binding (KB)
 ------------------|---------------------
@@ -182,6 +186,8 @@ Run `python build.py -h` for different options
 
 ## Audio issues
 
+### How audio is monitored
+
 In order to monitor audio, m8gd will attempt to find the audio input device associated with the M8 and listen to it.
 
 ### No audio playing
@@ -193,7 +199,7 @@ m8gd will also detect if the audio device is connected but not playing (this may
 
 ## Running on macOS
 
-At this time, the macOS build included in the releases does not have an official Apple Developer code signature and will likely not start as-is. 
+At this time, the MacOS build included in the releases does not have an official Apple Developer code signature and will likely not start as-is.
 
 To allow the app to run, run the following command (replace `"m8gd.app"` with the location of the downloaded app if needed):
 ```
