@@ -4,7 +4,10 @@ extends MenuBase
 @onready var s_audio_handler: SettingBase = %Setting_AudioHandler
 @onready var s_volume: SettingBase = %Setting_Volume
 @onready var l_audio_driver: UILabel2 = %LabelAudioDriver
+@onready var l_audio_format: UILabel2 = %LabelAudioFormat
+@onready var l_audio_channels: UILabel2 = %LabelAudioChannels
 @onready var l_audio_rate: UILabel2 = %LabelAudioRate
+@onready var l_audio_buffer: UILabel2 = %LabelAudioBuffer
 @onready var l_audio_latency: UILabel2 = %LabelAudioLatency
 @onready var s_sa_enable: SettingBase = %Setting_SAEnable
 @onready var s_sa_min: SettingBase = %Setting_SAMin
@@ -30,7 +33,10 @@ func _on_menu_init() -> void:
 		func() -> void:
 			if visible:
 				l_audio_driver.text = main.device_manager.audio_get_driver_name()
+				l_audio_format.text = main.device_manager.audio_get_format()
+				l_audio_channels.text = "%d" % main.device_manager.audio_get_num_channels()
 				l_audio_rate.text = "%d Hz" % main.device_manager.audio_get_mix_rate()
+				l_audio_buffer.text = "%d" % main.device_manager.audio_get_buffer_size()
 				l_audio_latency.text = "%.2f ms" % main.device_manager.audio_get_latency()
 	)
 

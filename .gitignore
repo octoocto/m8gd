@@ -1,3 +1,5 @@
+*~
+
 # Godot 4+ specific ignores
 .godot/
 
@@ -9,6 +11,7 @@ compile_commands.json
 *.dll
 *.a
 *.so
+*.dylib
 *.framework
 *.o
 *.os
@@ -23,8 +26,8 @@ compile_commands.json
 
 # scons cache
 .sconsign.dblite
-/.scons_cache/
-
+.scons_cache/
+**/.scons_cache/
 thirdparty/*/**
 
 # 3d modeling files
@@ -33,3 +36,14 @@ thirdparty/*/**
 
 # image editing files
 *.kra
+
+# Rust project files
+debug
+target
+x86_64**
+aarm64**
+.rustc_info.json
+**.*.rs.bk
+*.pdb
+**/mutants.out*/
+

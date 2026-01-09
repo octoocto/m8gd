@@ -1,0 +1,11 @@
+[package]
+name = "libm8gd"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+godot = "0.4.5"
+libm8 = { version = "0.1.0", path = "../libm8" }

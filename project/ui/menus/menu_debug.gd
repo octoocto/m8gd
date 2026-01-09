@@ -10,42 +10,42 @@ func _on_menu_init() -> void:
 	var config := main.config
 
 	# custom font loading
-	for tuple: Array in [
-		["Font01Normal", 0, M8GD.M8_FONT_01_SMALL],
-		["Font01Big", 1, M8GD.M8_FONT_01_BIG],
-		["Font02Normal", 2, M8GD.M8_FONT_02_SMALL],
-		["Font02Bold", 3, M8GD.M8_FONT_02_BOLD],
-		["Font02Huge", 4, M8GD.M8_FONT_02_HUGE],
-	]:
-		var setting_options := get_node("%%%s/SettingOptions" % tuple[0])
-		var setting_file := get_node("%%%s/SettingFile" % tuple[0])
-		setting_options.setting_connect(
-			tuple[1],
-			func(value: int) -> void:
-				match value:
-					0:
-						main.m8_set_font(tuple[2], main.FONT_01_SMALL)
-						setting_file.value = ""
-					1:
-						main.m8_set_font(tuple[2], main.FONT_01_BIG)
-						setting_file.value = ""
-					2:
-						main.m8_set_font(tuple[2], main.FONT_02_SMALL)
-						setting_file.value = ""
-					3:
-						main.m8_set_font(tuple[2], main.FONT_02_BOLD)
-						setting_file.value = ""
-					4:
-						main.m8_set_font(tuple[2], main.FONT_02_HUGE)
-						setting_file.value = ""
-		)
-		setting_file.setting_connect(
-			"",
-			func(value: String) -> void:
-				if value:
-					setting_options.value = 5
-					main.m8_set_font_from_file(tuple[2], value)
-		)
+	# for tuple: Array in [
+	# 	["Font01Normal", 0, M8GD.M8_FONT_01_SMALL],
+	# 	["Font01Big", 1, M8GD.M8_FONT_01_BIG],
+	# 	["Font02Normal", 2, M8GD.M8_FONT_02_SMALL],
+	# 	["Font02Bold", 3, M8GD.M8_FONT_02_BOLD],
+	# 	["Font02Huge", 4, M8GD.M8_FONT_02_HUGE],
+	# ]:
+	# 	var setting_options := get_node("%%%s/SettingOptions" % tuple[0])
+	# 	var setting_file := get_node("%%%s/SettingFile" % tuple[0])
+	# 	setting_options.setting_connect(
+	# 		tuple[1],
+	# 		func(value: int) -> void:
+	# 			match value:
+	# 				0:
+	# 					main.m8_set_font(tuple[2], main.FONT_01_SMALL)
+	# 					setting_file.value = ""
+	# 				1:
+	# 					main.m8_set_font(tuple[2], main.FONT_01_BIG)
+	# 					setting_file.value = ""
+	# 				2:
+	# 					main.m8_set_font(tuple[2], main.FONT_02_SMALL)
+	# 					setting_file.value = ""
+	# 				3:
+	# 					main.m8_set_font(tuple[2], main.FONT_02_BOLD)
+	# 					setting_file.value = ""
+	# 				4:
+	# 					main.m8_set_font(tuple[2], main.FONT_02_HUGE)
+	# 					setting_file.value = ""
+	# 	)
+	# 	setting_file.setting_connect(
+	# 		"",
+	# 		func(value: String) -> void:
+	# 			if value:
+	# 				setting_options.value = 5
+	# 				main.m8_set_font_from_file(tuple[2], value)
+	# 	)
 
 	%CheckButtonDebug.toggled.connect(
 		func(toggled_on: bool) -> void:

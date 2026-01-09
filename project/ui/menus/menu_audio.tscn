@@ -1,24 +1,48 @@
-[gd_scene load_steps=9 format=3 uid="uid://bnyisdw58c3c8"]
+[gd_scene load_steps=10 format=3 uid="uid://bnyisdw58c3c8"]
 
 [ext_resource type="PackedScene" uid="uid://dsgvm3dda1kjp" path="res://ui/header.tscn" id="1_h0xai"]
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_mrigi"]
-[ext_resource type="Script" uid="uid://dc3gl6kkbviph" path="res://ui/menus/menu_audio.gd" id="1_xth7c"]
+[ext_resource type="Script" uid="uid://caaiqet6v5gul" path="res://ui/menus/menu_audio.gd" id="1_xth7c"]
 [ext_resource type="PackedScene" uid="uid://bgsxagi62acni" path="res://ui/settings/setting_options.tscn" id="2_xth7c"]
 [ext_resource type="PackedScene" uid="uid://b1r8nehsgp111" path="res://ui/settings/setting_number.tscn" id="3_btcwg"]
 [ext_resource type="PackedScene" uid="uid://c5kj1uj0ohnmm" path="res://ui/settings/setting_bool.tscn" id="4_xny6n"]
 [ext_resource type="PackedScene" uid="uid://cm3h6xr6v7ewi" path="res://ui/label2.tscn" id="6_lmmc1"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lmmc1"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lmmc1"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 0.8)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.12549, 0.156863, 0.188235, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+anti_aliasing = false
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vmhn1"]
 
 [node name="Audio" type="PanelContainer"]
 texture_filter = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = -15.0
+offset_right = -980.0
+offset_bottom = -814.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_mrigi")
-theme_type_variation = &"MenuBase"
+theme_override_styles/panel = SubResource("StyleBoxFlat_lmmc1")
 script = ExtResource("1_xth7c")
 metadata/_tab_index = 6
 
@@ -28,12 +52,13 @@ layout_mode = 2
 
 [node name="Header" parent="VBoxContainer" instance=ExtResource("1_h0xai")]
 layout_mode = 2
+theme_type_variation = &""
 text = "Output"
 
 [node name="Setting_AudioHandler" parent="VBoxContainer" instance=ExtResource("2_xth7c")]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_lmmc1")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_vmhn1")
 items = PackedStringArray("Godot", "SDL")
 value = 0
 setting_name = "Audio Handler"
@@ -43,7 +68,6 @@ unique_name_in_owner = true
 layout_mode = 2
 setting_value_min_width = 24
 max_value = 1.0
-step = 0.01
 value = 0.8
 as_percent = true
 format_string = "%d%%"
@@ -51,6 +75,7 @@ setting_name = "Volume"
 
 [node name="Header2" parent="VBoxContainer" instance=ExtResource("1_h0xai")]
 layout_mode = 2
+theme_type_variation = &""
 text = "Driver Info"
 
 [node name="LabelAudioDriver" parent="VBoxContainer" instance=ExtResource("6_lmmc1")]
@@ -59,10 +84,28 @@ layout_mode = 2
 text_left = "Audio Driver"
 text = "----"
 
+[node name="LabelAudioFormat" parent="VBoxContainer" instance=ExtResource("6_lmmc1")]
+unique_name_in_owner = true
+layout_mode = 2
+text_left = "Format"
+text = "----"
+
+[node name="LabelAudioChannels" parent="VBoxContainer" instance=ExtResource("6_lmmc1")]
+unique_name_in_owner = true
+layout_mode = 2
+text_left = "Channels"
+text = "----"
+
 [node name="LabelAudioRate" parent="VBoxContainer" instance=ExtResource("6_lmmc1")]
 unique_name_in_owner = true
 layout_mode = 2
 text_left = "Mix Rate"
+text = "----"
+
+[node name="LabelAudioBuffer" parent="VBoxContainer" instance=ExtResource("6_lmmc1")]
+unique_name_in_owner = true
+layout_mode = 2
+text_left = "Buffer Size"
 text = "----"
 
 [node name="LabelAudioLatency" parent="VBoxContainer" instance=ExtResource("6_lmmc1")]
@@ -73,12 +116,12 @@ text = "----"
 
 [node name="Header3" parent="VBoxContainer" instance=ExtResource("1_h0xai")]
 layout_mode = 2
+theme_type_variation = &""
 text = "Spectrum Analyzer"
 
 [node name="Setting_SAEnable" parent="VBoxContainer" instance=ExtResource("4_xny6n")]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &""
 setting_name = "Enable"
 
 [node name="Setting_SAMin" parent="VBoxContainer" instance=ExtResource("3_btcwg")]

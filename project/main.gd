@@ -24,15 +24,15 @@ const M8_ACTIONS := [
 	"key_up", "key_down", "key_left", "key_right", "key_shift", "key_play", "key_option", "key_edit"
 ]
 
-const M8_KEYS: Array[M8GD.M8Key] = [
-	M8GD.M8_KEY_UP,
-	M8GD.M8_KEY_DOWN,
-	M8GD.M8_KEY_LEFT,
-	M8GD.M8_KEY_RIGHT,
-	M8GD.M8_KEY_SHIFT,
-	M8GD.M8_KEY_PLAY,
-	M8GD.M8_KEY_OPTION,
-	M8GD.M8_KEY_EDIT
+const M8_KEYS: Array[int] = [
+	LibM8.KEY_UP,
+	LibM8.KEY_DOWN,
+	LibM8.KEY_LEFT,
+	LibM8.KEY_RIGHT,
+	LibM8.KEY_SHIFT,
+	LibM8.KEY_PLAY,
+	LibM8.KEY_OPTION,
+	LibM8.KEY_EDIT
 ]
 
 static var instance: Main = null
@@ -45,7 +45,6 @@ static var instance: Main = null
 @onready var label_fps: Label = %LabelFPS
 @onready var label_status: Label = %LabelStatus
 
-@onready var m8_client: M8GD = %M8GD
 @onready var config := M8Config.load()
 
 @onready var console: Console = %LabelConsole
@@ -70,6 +69,8 @@ static var instance: Main = null
 @onready var cam_status: RichTextLabel = %CameraStatus
 @onready var cam_help: RichTextLabel = %CameraControls
 @onready var cam_status_template: String = cam_status.text
+
+var m8c: GodotM8Client = GodotM8Client.new()
 
 var m8_virtual_keyboard_enabled := false
 var m8_virtual_keyboard_notes: Array[int] = []
@@ -107,21 +108,16 @@ static func get_instance(high_priority := false) -> Main:
 
 
 func _ready() -> void:
-	m8_client.load_font(M8GD.M8_FONT_01_SMALL, FONT_01_SMALL)
-	m8_client.load_font(M8GD.M8_FONT_01_BIG, FONT_01_BIG)
-	m8_client.load_font(M8GD.M8_FONT_02_SMALL, FONT_02_SMALL)
-	m8_client.load_font(M8GD.M8_FONT_02_BOLD, FONT_02_BOLD)
-	m8_client.load_font(M8GD.M8_FONT_02_HUGE, FONT_02_HUGE)
-
+	add_child(m8c)
 	get_window().min_size = Vector2i(640, 480)
 
 	Log.call_task(
 		func() -> void:
 			device_manager.init(self)
-			m8_client.system_info.connect(on_m8_system_info)
-			m8_client.disconnected.connect(on_m8_device_disconnect)
-			m8_client.theme_changed.connect(on_m8_theme_changed)
-			m8_client.key_pressed.connect(Events.device_key_pressed.emit),
+			m8c.system_info_received.connect(on_m8_system_info)
+			m8c.disconnected.connect(on_m8_device_disconnect)
+			m8c.theme_colors_updated.connect(on_m8_theme_changed)
+			m8c.key_pressed.connect(Events.device_key_pressed.emit),
 		"init devices"
 	)
 
@@ -147,7 +143,6 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	device_manager._process(delta)
-
 	label_fps.text = "%d" % Engine.get_frames_per_second()
 
 	# var palette := m8_get_theme_colors()
@@ -161,7 +156,7 @@ func _process(delta: float) -> void:
 func _physics_process(delta: float) -> void:
 	update_audio_analyzer()
 
-	# var modulate_color := m8_client.get_theme_colors()[0]
+	# var modulate_color := m8c.get_theme_colors()[0]
 	# modulate_color.v = 1.0
 	# %BGShader.material.set_shader_parameter("tint_color", modulate_color)
 
@@ -378,7 +373,7 @@ func _on_preset_loaded(_preset_name: String) -> void:
 	assert(scene_path != null)
 
 	load_scene(scene_path)
-	m8_client.set_display_background_alpha(0)
+	m8c.set_display_bg_alpha(0.0)
 
 
 func load_default_profile() -> void:
@@ -429,10 +424,13 @@ func get_scene_m8_model() -> DeviceModel:
 
 
 func _update_labels() -> void:
+	if not is_instance_valid(m8c):
+		return
+
 	if device_manager.is_serial_device_connected():
 		label_serial_port.text = "serial port: %s" % device_manager.current_serial_device
-		label_hardware.text = "HW: %s" % m8_client.get_hardware_name()
-		label_firmware.text = "FW: %s" % m8_client.get_firmware_version()
+		label_hardware.text = "HW: %s" % m8c.get_hardware_name()
+		label_firmware.text = "FW: %s" % m8c.get_firmware_version()
 	else:
 		label_serial_port.text = "waiting for serial port..."
 		label_hardware.text = ""
@@ -460,40 +458,42 @@ func on_m8_theme_changed(colors: PackedColorArray, complete: bool) -> void:
 
 
 func m8_send_theme_color(index: int, color: Color) -> void:
-	m8_client.set_theme_color(index, color)
+	m8c.set_theme_color(index, color)
 
 
 func m8_send_enable_display() -> void:
-	m8_client.send_enable_display()
+	m8c.debug_enable_display()
 
 
 func m8_send_disable_display() -> void:
-	m8_client.send_disable_display()
+	m8c.debug_enable_display()
 
 
 func m8_send_reset_display() -> void:
-	m8_client.send_reset_display()
+	m8c.debug_reset_display()
 
 
 func m8_send_keyjazz(note: int, velocity: int) -> void:
-	m8_client.send_keyjazz(note, velocity)
+	m8c.play_note(note, velocity)
 
 
 func m8_send_control(keys: int) -> void:
-	m8_client.set_key_state(keys)
+	m8c.debug_set_keys(keys)
 
 
 func m8_is_key_pressed(keycode: int) -> bool:
-	return m8_client.is_key_pressed(keycode)
+	return m8c.is_key_pressed(keycode)
 
 
 func m8_get_theme_colors() -> PackedColorArray:
-	return m8_client.get_theme_colors()
+	return m8c.get_theme_colors()
 
 
 func m8_set_font(font: int, bitmap: BitMap) -> void:
-	m8_client.load_font(font, bitmap)
-	m8_send_reset_display()
+	# TODO
+	return
+	# m8c.load_font(font, bitmap)
+	# m8_send_reset_display()
 
 
 func m8_set_font_from_file(font: int, path: String) -> void:
@@ -528,11 +528,11 @@ func audio_get_spectrum_analyzer() -> AudioEffectSpectrumAnalyzerInstance:
 
 
 func audio_set_spectrum_analyzer_enabled(enabled: bool) -> void:
-	AudioServer.set_bus_effect_enabled(0, 0, enabled)
+	device_manager.audio_set_spectrum_analyzer_enabled(enabled)
 
 
 func audio_is_spectrum_analyzer_enabled() -> bool:
-	return AudioServer.is_bus_effect_enabled(0, 0)
+	return device_manager.audio_is_spectrum_analyzer_enabled()
 
 
 ## Set audio volume, where [volume] is a float between 0.0 and 1.0.
@@ -540,11 +540,8 @@ func audio_set_volume(volume: float) -> void:
 	device_manager.audio_set_volume(volume)
 
 
-func audio_fft(from_hz: float, to_hz: float) -> float:
-	var magnitude := audio_get_spectrum_analyzer().get_magnitude_for_frequency_range(
-		from_hz, to_hz, AudioEffectSpectrumAnalyzerInstance.MAGNITUDE_AVERAGE
-	)
-	return (magnitude.x + magnitude.y) / 2.0
+func audio_get_magnitude_at_freq(frequency: float) -> float:
+	return device_manager.audio_get_magnitude_at_freq(frequency)
 
 
 func update_audio_analyzer() -> void:
@@ -658,27 +655,27 @@ func _handle_input_keys(event: InputEvent) -> bool:
 	if is_any_menu_open():
 		return false
 
-	var key := M8GD.M8_KEY_UP
+	var key := LibM8.KEY_UP
 	if event.is_action("key_up"):
 		pass
 	elif event.is_action("key_down"):
-		key = M8GD.M8_KEY_DOWN
+		key = LibM8.KEY_DOWN
 	elif event.is_action("key_left"):
-		key = M8GD.M8_KEY_LEFT
+		key = LibM8.KEY_LEFT
 	elif event.is_action("key_right"):
-		key = M8GD.M8_KEY_RIGHT
+		key = LibM8.KEY_RIGHT
 	elif event.is_action("key_shift"):
-		key = M8GD.M8_KEY_SHIFT
+		key = LibM8.KEY_SHIFT
 	elif event.is_action("key_play"):
-		key = M8GD.M8_KEY_PLAY
+		key = LibM8.KEY_PLAY
 	elif event.is_action("key_option"):
-		key = M8GD.M8_KEY_OPTION
+		key = LibM8.KEY_OPTION
 	elif event.is_action("key_edit"):
-		key = M8GD.M8_KEY_EDIT
+		key = LibM8.KEY_EDIT
 	else:
 		return false
 
-	m8_client.set_key_pressed(key, event.is_pressed())
+	m8c.set_key_pressed(key, event.is_pressed())
 
 	return true
 

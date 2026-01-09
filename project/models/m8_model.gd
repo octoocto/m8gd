@@ -124,8 +124,8 @@ func _physics_process(_delta: float) -> void:
 func init(p_main: Main) -> void:
 	main = p_main
 
-	screen_material.set_shader_parameter("texture_linear", main.m8_client.get_display())
-	screen_material.set_shader_parameter("texture_nearest", main.m8_client.get_display())
+	screen_material.set_shader_parameter("texture_linear", main.m8c.get_display_texture())
+	screen_material.set_shader_parameter("texture_nearest", main.m8c.get_display_texture())
 
 	main.m8_connected.connect(
 		func() -> void: screen_material.set_shader_parameter("backlight", true)
@@ -137,28 +137,30 @@ func init(p_main: Main) -> void:
 
 	screen_material.set_shader_parameter("backlight", false)
 
-	main.m8_client.key_pressed.connect(
+	main.m8c.key_pressed.connect(
 		func(key: int, pressed: bool) -> void:
 			match key:
-				M8GD.M8_KEY_UP:
+				LibM8.KEY_UP:
 					key_up = pressed
-				M8GD.M8_KEY_DOWN:
+				LibM8.KEY_DOWN:
 					key_down = pressed
-				M8GD.M8_KEY_LEFT:
+				LibM8.KEY_LEFT:
 					key_left = pressed
-				M8GD.M8_KEY_RIGHT:
+				LibM8.KEY_RIGHT:
 					key_right = pressed
-				M8GD.M8_KEY_OPTION:
+				LibM8.KEY_OPTION:
 					key_option = pressed
-				M8GD.M8_KEY_EDIT:
+				LibM8.KEY_EDIT:
 					key_edit = pressed
-				M8GD.M8_KEY_SHIFT:
+				LibM8.KEY_SHIFT:
 					key_shift = pressed
-				M8GD.M8_KEY_PLAY:
+				LibM8.KEY_PLAY:
 					key_play = pressed
 	)
 
-	main.m8_client.system_info.connect(func(_hw: String, _fw: String) -> void: _auto_model_type())
+	main.m8c.system_info_received.connect(
+		func(_hw: String, _fw: String) -> void: _auto_model_type()
+	)
 
 	_update_model()
 
@@ -246,7 +248,7 @@ func _auto_model_type() -> void:
 	if not is_inside_tree():
 		return
 	if model_auto:
-		model = 1 if main.m8_client.get_hardware_name() == "model_02" else 0
+		model = 1 if main.m8c.get_hardware_name() == "model_02" else 0
 
 
 func _update_model() -> void:

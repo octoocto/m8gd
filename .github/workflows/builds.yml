@@ -15,133 +15,11 @@ jobs:
       matrix:
         include:
           # Debug templates
-          #   - platform: linux
-          #     float-precision: single
-          #     arch: x86_64
-          #     target-type: template_debug
-          #     os: ubuntu-20.04
-
-          #   - platform: windows
-          #     float-precision: single
-          #     arch: x86_32
-          #     target-type: template_debug
-          #     os: windows-latest
-
-          #   - platform: windows
-          #     float-precision: single
-          #     arch: x86_64
-          #     target-type: template_debug
-          #     os: windows-latest
-
-          #   - platform: macos
-          #     float-precision: single
-          #     arch: universal
-          #     target-type: template_debug
-          #     os: macos-latest
-
-          #   - platform: android
-          #     float-precision: single
-          #     arch: arm64
-          #     target-type: template_debug
-          #     os: ubuntu-20.04
-
-          #   - platform: android
-          #     float-precision: single
-          #     arch: arm32
-          #     target-type: template_debug
-          #     os: ubuntu-20.04
-
-          #   - platform: android
-          #     float-precision: single
-          #     arch: x86_64
-          #     target-type: template_debug
-          #     os: ubuntu-20.04
-
-          #   - platform: android
-          #     float-precision: single
-          #     arch: x86_32
-          #     target-type: template_debug
-          #     os: ubuntu-20.04
-
-          #   - platform: ios
-          #     float-precision: single
-          #     arch: arm64
-          #     target-type: template_debug
-          #     os: macos-latest
-
-          #   - platform: web
-          #     float-precision: single
-          #     arch: wasm32
-          #     target-type: template_debug
-          #     os: ubuntu-20.04
-
-          # # Release templates
-          #   - platform: linux
-          #     float-precision: single
-          #     arch: x86_64
-          #     target-type: template_release
-          #     os: ubuntu-20.04
-
-          # - platform: windows
-          #   float-precision: single
-          #   arch: x86_32
-          #   target-type: template_release
-          #   os: windows-latest
-
-          # - platform: windows
-          #   float-precision: single
-          #   arch: x86_64
-          #   target-type: template_release
-          #   os: windows-latest
-
-          # - platform: macos
-          #   float-precision: single
-          #   arch: universal
-          #   target-type: template_release
-          #   os: macos-latest
-
-          # - platform: android
-          #   float-precision: single
-          #   arch: arm64
-          #   target-type: template_release
-          #   os: ubuntu-20.04
-
-          # - platform: android
-          #   float-precision: single
-          #   arch: arm32
-          #   target-type: template_release
-          #   os: ubuntu-20.04
-
-          # - platform: android
-          #   float-precision: single
-          #   arch: x86_64
-          #   target-type: template_release
-          #   os: ubuntu-20.04
-
-          # - platform: android
-          #   float-precision: single
-          #   arch: x86_32
-          #   target-type: template_release
-          #   os: ubuntu-20.04
-
-          # - platform: ios
-          #   float-precision: single
-          #   arch: arm64
-          #   target-type: template_release
-          #   os: macos-latest
-
-          # - platform: web
-          #   float-precision: single
-          #   arch: wasm32
-          #   target-type: template_release
-          #   os: ubuntu-20.04
-
-          # Double precision templates
-          # Double precision debug templates
           - platform: linux
             float-precision: double
             arch: x86_64
             target-type: template_debug
+            target: debug
             os: ubuntu-22.04
 
           # - platform: windows
@@ -154,6 +32,7 @@ jobs:
             float-precision: double
             arch: x86_64
             target-type: template_debug
+            target: debug
             os: ubuntu-22.04
             host: x86_64-w64-mingw32
 
@@ -161,29 +40,12 @@ jobs:
             float-precision: double
             arch: universal
             target-type: template_debug
+            target: debug
             os: macos-latest
 
           # - platform: android
           #   float-precision: double
           #   arch: arm64
-          #   target-type: template_debug
-          #   os: ubuntu-20.04
-
-          # - platform: android
-          #   float-precision: double
-          #   arch: arm32
-          #   target-type: template_debug
-          #   os: ubuntu-20.04
-
-          # - platform: android
-          #   float-precision: double
-          #   arch: x86_64
-          #   target-type: template_debug
-          #   os: ubuntu-20.04
-
-          # - platform: android
-          #   float-precision: double
-          #   arch: x86_32
           #   target-type: template_debug
           #   os: ubuntu-20.04
 
@@ -204,18 +66,14 @@ jobs:
             float-precision: double
             arch: x86_64
             target-type: template_release
+            target: release
             os: ubuntu-22.04
-
-          # - platform: windows
-          #   float-precision: double
-          #   arch: x86_32
-          #   target-type: template_release
-          #   os: windows-latest
 
           - platform: windows
             float-precision: double
             arch: x86_64
             target-type: template_release
+            target: release
             os: ubuntu-22.04
             host: x86_64-w64-mingw32
 
@@ -223,29 +81,12 @@ jobs:
             float-precision: double
             arch: universal
             target-type: template_release
+            target: release
             os: macos-latest
 
           # - platform: android
           #   float-precision: double
           #   arch: arm64
-          #   target-type: template_release
-          #   os: ubuntu-20.04
-
-          # - platform: android
-          #   float-precision: double
-          #   arch: arm32
-          #   target-type: template_release
-          #   os: ubuntu-20.04
-
-          # - platform: android
-          #   float-precision: double
-          #   arch: x86_64
-          #   target-type: template_release
-          #   os: ubuntu-20.04
-
-          # - platform: android
-          #   float-precision: double
-          #   arch: x86_32
           #   target-type: template_release
           #   os: ubuntu-20.04
 
@@ -260,6 +101,7 @@ jobs:
           #   arch: wasm32
           #   target-type: template_release
           #   os: ubuntu-20.04
+
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
@@ -275,6 +117,7 @@ jobs:
           float-precision: ${{ matrix.float-precision }}
           build-target-type: ${{ matrix.target-type }}
           host: ${{ matrix.host }}
+          cargo_target: ${{ matrix.cargo_target }}
 
       - name: MacOS - Sign
         # Disable sign if secrets are not set
@@ -295,7 +138,10 @@ jobs:
         shell: bash
         run: |
           mkdir -p "${{ github.workspace }}/artifact/addons/libm8gd/"
-          cp -a "${{ github.workspace }}/LICENSE" "${{ github.workspace }}/project/addons/libm8gd/." "${{ github.workspace }}/artifact/addons/libm8gd/"
+          cp -av \
+          "${{ github.workspace }}/LICENSE" \
+          "${{ github.workspace }}/project/addons/libm8gd/." \
+          "${{ github.workspace }}/artifact/addons/libm8gd/"
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4

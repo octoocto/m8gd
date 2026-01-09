@@ -59,6 +59,7 @@ runs:
       uses: android-actions/setup-android@v3
       with:
         packages: "ndk;${{ env.ANDROID_NDK_VERSION }} cmdline-tools;latest build-tools;34.0.0 platforms;android-34 cmake;3.22.1"
+
     # Linux only
     - name: Linux - Install dependencies
       if: ${{ inputs.platform == 'linux' }}
@@ -66,7 +67,12 @@ runs:
       run: |
         sudo apt-get update -qq
         sudo apt-get install -qqq build-essential pkg-config
-        sudo apt-get install libasound2-dev libpulse-dev libpipewire-0.3-dev
+        sudo apt-get install libasound2-dev libpulse-dev \
+        libaudio-dev libfribidi-dev libjack-dev libsndio-dev libx11-dev libxext-dev \
+        libxrandr-dev libxcursor-dev libxfixes-dev libxi-dev libxss-dev libxtst-dev \
+        libxkbcommon-dev libdrm-dev libgbm-dev libgl1-mesa-dev libgles2-mesa-dev \
+        libegl1-mesa-dev libdbus-1-dev libibus-1.0-dev libudev-dev libthai-dev
+
     # MacOS only
     - name: MacOS - Set up Homebrew
       if: ${{ inputs.platform == 'macos' }}
@@ -75,6 +81,7 @@ runs:
       shell: sh
       if: ${{ inputs.platform == 'macos' }}
       run: brew install autoconf automake libtool
+
     # Web only
     - name: Web - Set up Emscripten latest
       if: ${{ inputs.platform == 'web' }}
@@ -87,6 +94,7 @@ runs:
       shell: sh
       run: |
         emcc -v
+
     # Windows only
     - name: Windows - Set up mingw64
       if: ${{ inputs.platform == 'windows' }}
@@ -117,13 +125,7 @@ runs:
     - name: Set up cache
       uses: actions/cache@v4
       with:
-        path: |
-          ${{ github.workspace }}/.scons-cache/
-          ${{ github.workspace }}/**/.sconsign.dblite
-          ${{ github.workspace }}/godot-cpp/gen
-          ${{ github.workspace }}/thirdparty/libserialport/.libs/libserialport.a
-          ${{ github.workspace }}/thirdparty/SDL/build/.libs/libSDL2.a
-          ${{ github.workspace }}/thirdparty/SDL/build/.libs/libSDL2main.a
+        path: ${{ github.workspace }}/libm8gd/target/
         key: ${{ inputs.platform }}_${{ inputs.arch }}_${{ inputs.float-precision }}_${{ inputs.build-target-type }}_cache
         restore-keys: |
           ${{ inputs.platform }}_${{ inputs.arch }}_${{ inputs.float-precision }}_${{ inputs.build-target-type }}_cache
@@ -137,5 +139,5 @@ runs:
         SCONS_CACHE: ${{ github.workspace }}/.scons-cache/
         SCONS_CACHE_LIMIT: 4096
       run: |
-        python build.py --host=${{ inputs.host }} --target=${{ inputs.build-target-type }} --platform=${{ inputs.platform }} --arch=${{ inputs.arch }} --extension-only
+        python build.py --target=${{ inputs.build-target-type }} --platform=${{ inputs.platform }} --arch=${{ inputs.arch }} --extension-only
       working-directory: ${{ inputs.gdextension-directory }}

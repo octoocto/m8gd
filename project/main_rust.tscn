@@ -1,0 +1,114 @@
+[gd_scene load_steps=7 format=3 uid="uid://s6vp0d8hhbfi"]
+
+[ext_resource type="Script" uid="uid://lcml4h8f48u0" path="res://main_rust.gd" id="1_fu1b4"]
+[ext_resource type="PackedScene" uid="uid://263mog4cxgwr" path="res://overlays/overlay_audio_spectrum.tscn" id="2_jftoq"]
+[ext_resource type="Script" uid="uid://dj6m2yu48i1tp" path="res://audio_spectrum.gd" id="3_t20vq"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fu1b4"]
+bg_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fu1b4"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_km4di"]
+bg_color = Color(1, 1, 1, 1)
+draw_center = false
+border_width_top = 4
+border_color = Color(1, 1, 1, 1)
+
+[node name="CenterContainer" type="CenterContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_fu1b4")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="LabelFPS" type="Label" parent="HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "FPS"
+
+[node name="AudioSpectrum" parent="HBoxContainer/VBoxContainer" instance=ExtResource("2_jftoq")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+script = ExtResource("3_t20vq")
+analyzer_freq_min = 20
+analyzer_freq_max = 20000
+analyzer_res_divisor = 1
+style_peak_to_alpha_amount = 0.0
+style_bar_gap = 0
+style_bar_width = 2
+
+[node name="ColorRect" type="ColorRect" parent="HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(960, 720)
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer/VBoxContainer/ColorRect"]
+unique_name_in_owner = true
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RectPeakL" type="ProgressBar" parent="HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(8, 0)
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_styles/fill = SubResource("StyleBoxFlat_fu1b4")
+max_value = 1.0
+step = 0.0
+fill_mode = 3
+show_percentage = false
+
+[node name="RectPeakL2" type="ProgressBar" parent="HBoxContainer/RectPeakL"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxEmpty_fu1b4")
+theme_override_styles/fill = SubResource("StyleBoxFlat_km4di")
+max_value = 1.0
+step = 0.0
+fill_mode = 3
+show_percentage = false
+
+[node name="RectPeakR" type="ProgressBar" parent="HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(8, 0)
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_styles/fill = SubResource("StyleBoxFlat_fu1b4")
+max_value = 1.0
+step = 0.0
+fill_mode = 3
+show_percentage = false
+
+[node name="RectPeakR2" type="ProgressBar" parent="HBoxContainer/RectPeakR"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxEmpty_fu1b4")
+theme_override_styles/fill = SubResource("StyleBoxFlat_km4di")
+max_value = 1.0
+step = 0.0
+value = 0.51
+fill_mode = 3
+show_percentage = false

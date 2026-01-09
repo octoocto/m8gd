@@ -59,17 +59,17 @@ func _overlay_init() -> void:
 				clear()
 	)
 	Events.device_key_pressed.connect(
-		func(key: M8GD.M8Key, pressed: bool) -> void:
+		func(key: int, pressed: bool) -> void:
 			if not pressed:
 				return
 
 			if is_instance_valid(current_item):
-				if main.m8_client.get_key_state() == current_keystate:
+				if main.m8c.get_key_state() == current_keystate:
 					inc_current_item()
 					return
-				elif key in [M8GD.M8_KEY_UP, M8GD.M8_KEY_DOWN, M8GD.M8_KEY_LEFT, M8GD.M8_KEY_RIGHT]:
+				elif key in [LibM8.KEY_UP, LibM8.KEY_DOWN, LibM8.KEY_LEFT, LibM8.KEY_RIGHT]:
 					if (
-						main.m8_is_key_pressed(M8GD.M8_KEY_SHIFT)
+						main.m8_is_key_pressed(LibM8.KEY_SHIFT)
 						and current_item.pressed_times == 1
 						and current_item.keys_pressed == 1
 					):
@@ -155,16 +155,16 @@ func update_current_item() -> void:
 	if not is_inside_tree() or not is_instance_valid(current_item):
 		return
 
-	current_keystate = main.m8_client.get_key_state()
+	current_keystate = main.m8c.get_key_state()
 	update_item(current_item)
-	current_item.pressed_u = main.m8_is_key_pressed(M8GD.M8_KEY_UP)
-	current_item.pressed_d = main.m8_is_key_pressed(M8GD.M8_KEY_DOWN)
-	current_item.pressed_l = main.m8_is_key_pressed(M8GD.M8_KEY_LEFT)
-	current_item.pressed_r = main.m8_is_key_pressed(M8GD.M8_KEY_RIGHT)
-	current_item.pressed_o = main.m8_is_key_pressed(M8GD.M8_KEY_OPTION)
-	current_item.pressed_e = main.m8_is_key_pressed(M8GD.M8_KEY_EDIT)
-	current_item.pressed_s = main.m8_is_key_pressed(M8GD.M8_KEY_SHIFT)
-	current_item.pressed_p = main.m8_is_key_pressed(M8GD.M8_KEY_PLAY)
+	current_item.pressed_u = main.m8_is_key_pressed(LibM8.KEY_UP)
+	current_item.pressed_d = main.m8_is_key_pressed(LibM8.KEY_DOWN)
+	current_item.pressed_l = main.m8_is_key_pressed(LibM8.KEY_LEFT)
+	current_item.pressed_r = main.m8_is_key_pressed(LibM8.KEY_RIGHT)
+	current_item.pressed_o = main.m8_is_key_pressed(LibM8.KEY_OPTION)
+	current_item.pressed_e = main.m8_is_key_pressed(LibM8.KEY_EDIT)
+	current_item.pressed_s = main.m8_is_key_pressed(LibM8.KEY_SHIFT)
+	current_item.pressed_p = main.m8_is_key_pressed(LibM8.KEY_PLAY)
 	_restart_fade_tween()
 
 
