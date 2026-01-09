@@ -31,7 +31,7 @@ extends OverlayBase
 
 
 func _overlay_init() -> void:
-	display_texture_rect.texture = main.m8_client.get_display()
+	display_texture_rect.texture = main.m8c.get_display_texture()
 	main.m8_theme_changed.connect(
 		func(_colors: PackedColorArray, _complete: bool) -> void: _update()
 	)
@@ -61,7 +61,7 @@ func _update() -> void:
 		)
 
 		# update size
-		var display_size := main.m8_client.get_display().get_size() * integer_scale
+		var display_size := main.m8c.get_display_texture().get_size() * integer_scale
 		display_texture_rect.custom_minimum_size = display_size
 		display_panel.custom_minimum_size = Vector2.ZERO
 		display_panel.size = Vector2.ZERO

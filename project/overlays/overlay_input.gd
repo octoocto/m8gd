@@ -24,15 +24,15 @@ extends OverlayBase
 
 @onready var control: Control = $Control
 
-@onready var key_to_rect: Dictionary[M8GD.M8Key, Panel] = {
-	M8GD.M8_KEY_UP: %RectUp,
-	M8GD.M8_KEY_DOWN: %RectDown,
-	M8GD.M8_KEY_LEFT: %RectLeft,
-	M8GD.M8_KEY_RIGHT: %RectRight,
-	M8GD.M8_KEY_OPTION: %RectOption,
-	M8GD.M8_KEY_EDIT: %RectEdit,
-	M8GD.M8_KEY_SHIFT: %RectShift,
-	M8GD.M8_KEY_PLAY: %RectPlay,
+@onready var key_to_rect: Dictionary[int, Panel] = {
+	LibM8.KEY_UP: %RectUp,
+	LibM8.KEY_DOWN: %RectDown,
+	LibM8.KEY_LEFT: %RectLeft,
+	LibM8.KEY_RIGHT: %RectRight,
+	LibM8.KEY_OPTION: %RectOption,
+	LibM8.KEY_EDIT: %RectEdit,
+	LibM8.KEY_SHIFT: %RectShift,
+	LibM8.KEY_PLAY: %RectPlay,
 }
 
 var tweens: Dictionary[Panel, Tween] = {}
@@ -51,11 +51,11 @@ func _update() -> void:
 	control.position = position_offset
 	anchors_preset = anchors_preset
 
-	for key: M8GD.M8Key in main.M8_KEYS:
+	for key: int in main.M8_KEYS:
 		_animate_pressed(key, main.m8_is_key_pressed(key))
 
 
-func _animate_pressed(key: M8GD.M8Key, pressed: bool) -> void:
+func _animate_pressed(key: int, pressed: bool) -> void:
 	var rect: Panel = key_to_rect[key]
 
 	if tweens.has(rect) and tweens[rect].is_running():
@@ -71,20 +71,20 @@ func _animate_pressed(key: M8GD.M8Key, pressed: bool) -> void:
 		tweens[rect].tween_property(rect, "modulate:a", opacity_released, 0.1)
 
 
-func _get_color(key: M8GD.M8Key) -> Color:
+func _get_color(key: int) -> Color:
 	if not use_highlight_colors:
 		return Color.WHITE
 
 	match key:
-		M8GD.M8_KEY_UP, M8GD.M8_KEY_DOWN, M8GD.M8_KEY_LEFT, M8GD.M8_KEY_RIGHT:
+		LibM8.KEY_UP, LibM8.KEY_DOWN, LibM8.KEY_LEFT, LibM8.KEY_RIGHT:
 			return main.config.get_color_highlight(main.config.KEY_COLOR_HIGHLIGHT_DIR)
-		M8GD.M8_KEY_SHIFT:
+		LibM8.KEY_SHIFT:
 			return main.config.get_color_highlight(main.config.KEY_COLOR_HIGHLIGHT_SHIFT)
-		M8GD.M8_KEY_PLAY:
+		LibM8.KEY_PLAY:
 			return main.config.get_color_highlight(main.config.KEY_COLOR_HIGHLIGHT_PLAY)
-		M8GD.M8_KEY_OPTION:
+		LibM8.KEY_OPTION:
 			return main.config.get_color_highlight(main.config.KEY_COLOR_HIGHLIGHT_OPTION)
-		M8GD.M8_KEY_EDIT:
+		LibM8.KEY_EDIT:
 			return main.config.get_color_highlight(main.config.KEY_COLOR_HIGHLIGHT_EDIT)
 		_:
 			return Color.WHITE

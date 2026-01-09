@@ -55,7 +55,7 @@ func _on_menu_init() -> void:
 	# 	var tab := tab_container.get_tab_control(i)
 	# 	if tab.has_method("get_tab_title"):
 	# 		tab_container.set_tab_title(i, tab.get_tab_title())
-	display_rect.texture = main.m8_client.get_display()
+	display_rect.texture = main.m8c.get_display_texture()
 
 	_init_scene_loader()
 

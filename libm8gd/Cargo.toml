@@ -1,0 +1,12 @@
+[package]
+name = "libm8gd"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+godot = "0.4.5"
+# godot = { git = "https://github.com/godot-rust/gdext", branch = "master", features = ["api-custom", "experimental-wasm", "lazy-function-tables"] }
+libm8 = { version = "0.1.0", path = "../libm8" }

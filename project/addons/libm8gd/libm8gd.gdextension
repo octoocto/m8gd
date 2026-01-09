@@ -1,15 +1,14 @@
 [configuration]
-
-entry_symbol = "libm8gd_init"
-compatibility_minimum = 4.3
+entry_symbol = "gdext_rust_init"
+compatibility_minimum = 4.1
+reloadable = true
 
 [libraries]
-
-macos.debug = "res://addons/libm8gd/bin/libm8gd.macos.debug.framework/libm8gd.macos.debug"
-macos.release = "res://addons/libm8gd/bin/libm8gd.macos.release.framework/libm8gd.macos.release"
-
-windows.debug.x86_64 = "res://addons/libm8gd/bin/libm8gd.windows.debug.x86_64.dll"
-windows.release.x86_64 = "res://addons/libm8gd/bin/libm8gd.windows.release.x86_64.dll"
-
-linux.debug.x86_64 = "res://addons/libm8gd/bin/libm8gd.linux.debug.x86_64.so"
-linux.release.x86_64 = "res://addons/libm8gd/bin/libm8gd.linux.release.x86_64.so"
+linux.debug.x86_64 =     "res://../libm8gd/target/x86_64-unknown-linux-gnu/debug/liblibm8gd.so"
+linux.release.x86_64 =   "res://../libm8gd/target/x86_64-unknown-linux-gnu/release/liblibm8gd.so"
+windows.debug.x86_64 =   "res://../libm8gd/target/x86_64-pc-windows-msvc/debug/libm8gd.dll"
+windows.release.x86_64 = "res://../libm8gd/target/x86_64-pc-windows-msvc/release/libm8gd.dll"
+macos.debug =            "res://../libm8gd/target/x86_64-apple-darwin/debug/liblibm8gd.dylib"
+macos.release =          "res://../libm8gd/target/x86_64-apple-darwin/release/liblibm8gd.dylib"
+macos.debug.arm64 =      "res://../libm8gd/target/aarch64-apple-darwin/debug/liblibm8gd.dylib"
+macos.release.arm64 =    "res://../libm8gd/target/aarch64-apple-darwin/release/liblibm8gd.dylib"

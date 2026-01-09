@@ -175,7 +175,7 @@ func refresh_device_list() -> void:
 		var index := list_serial_ports.add_item(device)
 		list_serial_ports.set_item_metadata(index, device)
 
-		if not M8GD.is_m8_serial_port(device):
+		if not LibM8.is_valid_serial_port(device):
 			list_serial_ports.set_item_icon(index, ICON_WARNING)
 			list_serial_ports.set_item_tooltip(index, "This port might not be an M8 device.")
 

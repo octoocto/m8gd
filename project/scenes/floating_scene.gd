@@ -104,7 +104,7 @@ func init(p_main: Main) -> void:
 
 	get_device_model().init(main)
 	(display_mesh.material_override as ShaderMaterial).set_shader_parameter(
-		"tex", main.m8_client.get_display()
+		"tex", main.m8c.get_display_texture()
 	)
 	camera.init(main)
 

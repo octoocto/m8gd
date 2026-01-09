@@ -174,7 +174,7 @@ func set_surface_mode(index: int) -> void:
 			material = load("res://assets/ambientcg/asphalt010.tres")
 			material.albedo_color = surface_color
 		2:  # display
-			material.albedo_texture = main.m8_client.get_display()
+			material.albedo_texture = main.m8c.get_display_texture()
 			material.albedo_color = surface_color
 			material.uv1_triplanar = true
 			material.uv1_scale = Vector3(0.125, 0.125, 0.125)

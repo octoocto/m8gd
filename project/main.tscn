@@ -615,6 +615,3 @@ layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_vivmo")
-
-[node name="M8GD" type="M8GD" parent="."]
-unique_name_in_owner = true

@@ -29,6 +29,7 @@ Events="*res://globals/events.gd"
 
 [debug]
 
+settings/stdout/print_fps=true
 gdscript/warnings/untyped_declaration=2
 gdscript/warnings/unsafe_property_access=2
 gdscript/warnings/unsafe_method_access=2

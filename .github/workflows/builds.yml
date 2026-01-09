@@ -142,6 +142,7 @@ jobs:
             float-precision: double
             arch: x86_64
             target-type: template_debug
+            cargo-target: x86_64-unknown-linux-gnu
             os: ubuntu-22.04
 
           # - platform: windows
@@ -154,6 +155,7 @@ jobs:
             float-precision: double
             arch: x86_64
             target-type: template_debug
+            cargo-target: x86_64-pc-windows-gnu
             os: ubuntu-22.04
             host: x86_64-w64-mingw32
 
@@ -161,6 +163,7 @@ jobs:
             float-precision: double
             arch: universal
             target-type: template_debug
+            cargo-target: aarch64-apple-darwin
             os: macos-latest
 
           # - platform: android
@@ -204,6 +207,7 @@ jobs:
             float-precision: double
             arch: x86_64
             target-type: template_release
+            cargo-target: x86_64-unknown-linux-gnu
             os: ubuntu-22.04
 
           # - platform: windows
@@ -216,6 +220,7 @@ jobs:
             float-precision: double
             arch: x86_64
             target-type: template_release
+            cargo-target: x86_64-pc-windows-gnu
             os: ubuntu-22.04
             host: x86_64-w64-mingw32
 
@@ -223,6 +228,7 @@ jobs:
             float-precision: double
             arch: universal
             target-type: template_release
+            cargo-target: aarch64-apple-darwin
             os: macos-latest
 
           # - platform: android
@@ -275,6 +281,7 @@ jobs:
           float-precision: ${{ matrix.float-precision }}
           build-target-type: ${{ matrix.target-type }}
           host: ${{ matrix.host }}
+          cargo_target: ${{ matrix.cargo_target }}
 
       - name: MacOS - Sign
         # Disable sign if secrets are not set
@@ -295,7 +302,20 @@ jobs:
         shell: bash
         run: |
           mkdir -p "${{ github.workspace }}/artifact/addons/libm8gd/"
-          cp -a "${{ github.workspace }}/LICENSE" "${{ github.workspace }}/project/addons/libm8gd/." "${{ github.workspace }}/artifact/addons/libm8gd/"
+          mkdir -p "${{ github.workspace }}/artifact/addons/libm8gd/${{ matrix.cargo-target }}"
+          cp -av \
+          "${{ github.workspace }}/LICENSE" \
+          "${{ github.workspace }}/project/addons/libm8gd/libm8gd.gdextension" \
+          "${{ github.workspace }}/project/addons/libm8gd/libm8gd.gdextension.uid" \
+          "${{ github.workspace }}/artifact/addons/libm8gd/"
+          find "${{ github.workspace }}/libm8gd/target/${{ matrix.cargo-target }}" -maxdepth 2 -type f \
+          -name "*.so" -o -name "*.dll" -o -name "*.dylib" | \
+          xargs cp -t "${{ github.workspace }}/artifact/addons/libm8gd/${{ matrix.cargo-target }}"
+        # rsync -a --ignore-missing-args \
+        # "${{ github.workspace }}/LICENSE" \
+        # "${{ github.workspace }}/artifact/addons/libm8gd/"
+        # "${{ github.workspace }}/build/." \
+        # "${{ github.workspace }}/project/addons/libm8gd/." \
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
