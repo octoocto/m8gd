@@ -120,6 +120,8 @@ pub struct SerialBackend {
     /// Receiver for incoming errors.
     error_receiver: Option<mpsc::Receiver<Error>>,
 
+    disconnect_callback: Option<Box<dyn FnMut()>>,
+
     /// If the port is connected.
     ///
     /// If true, [self.path] and [self.port] will be [Some].
@@ -144,6 +146,8 @@ impl SerialBackend {
 
             read_receiver: None,
             error_receiver: None,
+
+            disconnect_callback: None,
             is_connected: false,
             command_buffer: ByteBuffer::new(),
             slip_escaped: false,

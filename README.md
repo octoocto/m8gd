@@ -9,7 +9,7 @@ m8gd: M8 Headless Display and Visualizer
 
 **m8gd** is a M8 display client for the M8 Tracker that provides a variety of 3D and 2D scenes.
 
-This repository consists of the C++ library and GDExtension `libm8gd` that allows Godot to connect to M8 devices, and the Godot project `m8gd`.
+This repository consists of the Rust library and GDExtension `libm8gd` that allows Godot to connect to M8 devices, and the Godot project `m8gd`.
 
 Table of contents
 =================
@@ -125,12 +125,11 @@ Increase Velocity | `]`
 ## Requirements
 
 - Git
-- GCC (if on Windows/Linux) or Clang (if on macOS)
-- Homebrew or MacPorts (if on macOS)
-- Python 3.6+
-- Scons (`python -m pip install scons`)
-- pkg-config
-- libserialport
+- Windows/Linux only: GCC
+- MacOS only: Clang
+- MacOS only: Homebrew or MacPorts
+- [Python 3.6+](https://www.python.org/downloads/)
+- [Rustup](https://rustup.rs/)
 - [Godot 4.3-stable](https://godotengine.org/download/archive/4.3-stable/)
 
 If on Windows, a MSYS2/MinGW64 installation is recommended when compiling.
@@ -140,27 +139,23 @@ If on Windows, a MSYS2/MinGW64 installation is recommended when compiling.
 #### Windows (via MinGW64)
 
 ```bash
-$ pacman -S git pkg-conf python python-pip base-devel mingw-w64-x86_64-gcc mingw-w64-x86_64-libserialport
-$ python -m pip install scons
+$ pacman -S git python python-pip base-devel mingw-w64-x86_64-gcc
 ```
 
 #### Linux (Arch Linux)
 
 ```bash
-$ sudo pacman -S git pkg-conf python python-pip base-devel gcc libserialport
-$ python -m pip install scons
+$ sudo pacman -S git python python-pip base-devel gcc
 ```
 
 #### MacOS
 
 ```bash
 # with Homebrew
-$ brew install scons python3 libserialport libtool
+$ brew install python3 libtool
 
 # with MacPorts
-$ macports install scons
 $ macports install python3
-$ macports install libserialport
 $ macports install libtool
 ```
 
@@ -169,12 +164,10 @@ $ macports install libtool
 ```bash
 $ git clone https://github.com/octoocto/m8gd
 $ cd m8gd
-$ git submodule update --init
-$ export SCONS_CACHE=/tmp
 $ python3 build.py
 ```
 
-To build on Apple Silicon M-chips, add `--arch arm64` parameter to the build command.
+On MacOS, the GDExtension will be built as a universal binary (both x86_64 and arm64 architectures).
 
 The `build.py` script will automatically download Godot and its export templates in order to export the project if it does not find a `godot` command. To force the script to run without downloading anything, run `python build.py --nodownload` instead.
 

@@ -1,6 +1,8 @@
+mod cpal;
 mod sdl;
 
 use crate::Error;
+pub use crate::audio::cpal::*;
 pub use crate::audio::sdl::*;
 
 pub trait AudioBackend {

@@ -10,7 +10,6 @@ pub trait Client {
     fn handle_command(&mut self, command: CommandIn) -> Result<(), Error>;
 
     // Provided methods
-
     fn is_connected(&mut self) -> bool {
         match self.backend() {
             Some(backend) => backend.is_connected(),
