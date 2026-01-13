@@ -47,6 +47,8 @@ pub struct GodotM8Client {
 
     backend: Option<Box<dyn Backend>>,
     audio_backend: Option<audio::SdlAudioBackend>,
+    #[init(val = 1.0)]
+    audio_volume: f32,
 
     hardware_type: Option<libm8::HardwareType>,
     firmware_version: String,
@@ -395,6 +397,7 @@ impl GodotM8Client {
                 return false;
             };
             godot_print!("Starting audio...");
+            let _ = audio_backend.set_volume(self.audio_volume);
             let input_device = gstring_to_option(input_device);
             let output_device = gstring_to_option(output_device);
             match audio_backend.start(input_device, output_device) {
@@ -435,8 +438,9 @@ impl GodotM8Client {
 
     #[func]
     fn set_volume(&mut self, volume: f32) {
+        self.audio_volume = volume.clamp(0.0, 1.0);
         if let Some(audio_backend) = self.audio_backend.as_mut() {
-            let _ = audio_backend.set_volume(volume);
+            let _ = audio_backend.set_volume(self.audio_volume);
         }
     }
 

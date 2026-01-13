@@ -93,12 +93,12 @@ struct AudioInCallback {
 }
 
 impl AudioInCallback {
-    fn new(output_stream: AudioStreamOwner) -> Self {
+    fn new(output_stream: AudioStreamOwner, volume: f32) -> Self {
         AudioInCallback {
             output_stream: Some(AudioStreamHandle(output_stream)),
             buffer: [Format::default(); AUDIO_BUFFER_SIZE * 2],
 
-            volume: 1.0,
+            volume,
             peaks: [0.0, 0.0],
 
             spectrum_analyzer_enabled: true,
@@ -157,6 +157,8 @@ pub struct SdlAudioBackend {
 
     input_stream: Option<AudioStreamWithCallback<AudioInCallback>>,
     input_stream_spec: Option<(SdlAudioSpec, usize)>,
+
+    volume: f32,
     // output_stream: Option<Arc<Mutex<AudioStreamOwner>>>,
 }
 
@@ -183,7 +185,7 @@ impl super::AudioBackend for SdlAudioBackend {
 
         let input_stream = input_device.open_recording_stream_with_callback(
             &Self::DESIRED_SPEC_IN,
-            AudioInCallback::new(output_stream),
+            AudioInCallback::new(output_stream, self.volume),
         )?;
 
         input_stream.resume()?;
@@ -229,8 +231,9 @@ impl super::AudioBackend for SdlAudioBackend {
     }
 
     fn set_volume(&mut self, volume: f32) -> Result<(), Error> {
-        let volume = volume.clamp(0.0, 1.0);
-        Ok(self.callback_lock()?.volume = volume)
+        self.volume = volume.clamp(0.0, 1.0);
+        println!("libm8: Setting volume to {}", self.volume);
+        Ok(self.callback_lock()?.volume = self.volume)
     }
 
     fn volume_peaks(&mut self) -> Result<[f32; 2], Error> {
@@ -318,6 +321,7 @@ impl SdlAudioBackend {
             audio_subsystem,
             input_stream: None,
             input_stream_spec: None,
+            volume: 1.0,
             // output_stream: None,
         })
     }
