@@ -6,28 +6,42 @@ use cpal::{Device, DeviceDescription, Host, StreamConfig};
 use enum_map::EnumMap;
 use ringbuf::HeapRb;
 use ringbuf::traits::{Consumer, Producer, Split};
+use spectrum_analyzer::FrequencySpectrum;
 
+use super::AudioSpec;
 use crate::Error;
 
 const BUFFER_SIZE: usize = 512;
 
 pub struct CpalAudioBackend {
     host: Host,
+    multichannel_enabled: bool,
     input_stream: Option<cpal::Stream>,
     output_stream: Option<cpal::Stream>,
     buffers: Arc<Mutex<EnumMap<AudioTrack, Vec<f32>>>>,
+
+    volume: Arc<Mutex<f32>>,
+    volume_peaks: [f32; 2],
+
+    spectrum_analyzer_enabled: bool,
+    frequency_spectrum: Option<FrequencySpectrum>,
 }
 
 impl CpalAudioBackend {
-    pub fn new() -> Result<Self, Error> {
+    pub fn new(volume: f32) -> Result<Self, Error> {
         Ok(Self {
             host: cpal::default_host(),
+            multichannel_enabled: false,
             input_stream: None,
             output_stream: None,
             buffers: Arc::new(Mutex::new(EnumMap::from_fn(|_| vec![0.0; BUFFER_SIZE * 4]))),
+            volume: Arc::new(Mutex::new(volume)),
+            volume_peaks: [0.0, 0.0],
+
+            spectrum_analyzer_enabled: true,
+            frequency_spectrum: None,
         })
     }
-
     fn input_device_by_name(host: &Host, name: Option<String>) -> Option<Device> {
         let is_desc_valid = |desc: DeviceDescription| -> bool {
             match &name {
@@ -85,8 +99,10 @@ impl super::AudioBackend for CpalAudioBackend {
         //     println!("----------------------------------");
         // }
 
-        let config = StreamConfig {
-            channels: 24,
+        let channels_in = if self.multichannel_enabled { 24 } else { 2 };
+
+        let config_in = StreamConfig {
+            channels: channels_in,
             sample_rate: 44100,
             buffer_size: cpal::BufferSize::Fixed(BUFFER_SIZE as u32),
         };
@@ -98,33 +114,35 @@ impl super::AudioBackend for CpalAudioBackend {
         };
 
         println!("Requested spec:");
-        println!("  Channels: {}", config.channels);
-        println!("  Sample rate: {}", config.sample_rate);
-        println!("  Buffer size: {:?}", config.buffer_size);
+        println!("  Channels: {}", config_in.channels);
+        println!("  Sample rate: {}", config_in.sample_rate);
+        println!("  Buffer size: {:?}", config_in.buffer_size);
 
-        let buffer_size = match config.buffer_size {
+        let buffer_size = match config_in.buffer_size {
             cpal::BufferSize::Fixed(size) => size,
             cpal::BufferSize::Default => BUFFER_SIZE as u32,
         };
 
         let latency_ms = 20.0;
-        let latency_frames = (latency_ms / 1000.0) * config.sample_rate as f32;
+        let latency_frames = (latency_ms / 1000.0) * config_in.sample_rate as f32;
         let latency_samples = latency_frames as usize * 2 as usize;
 
         let ring = HeapRb::<f32>::new(latency_samples * 2);
         let (mut producer, mut consumer) = ring.split();
 
         println!("Using latency buffer of {} samples", latency_samples);
+        println!("Using multichannel mode: {}", self.multichannel_enabled);
 
         for _ in 0..latency_samples {
             producer.try_push(0.0).unwrap();
         }
 
         let buffers_clone = self.buffers.clone();
+        let multichannel_enabled = self.multichannel_enabled;
 
         let input_data_fn = move |data: &[f32], _: &cpal::InputCallbackInfo| {
             // println!("Input callback with {} samples", data.len());
-            let expected = (buffer_size * 24) as usize;
+            let expected = (buffer_size * channels_in as u32) as usize;
             if data.len() < expected {
                 eprintln!(
                     "Input buffer overflow: expected {}, received {}",
@@ -134,44 +152,54 @@ impl super::AudioBackend for CpalAudioBackend {
                 return;
             }
 
-            let chunks = data.chunks_exact(24);
-            // println!("Processing {} chunks", chunks.len());
-            for (i, chunk) in chunks.enumerate() {
-                // println!("Processing chunk {}", i);
-                for (key, value) in buffers_clone.lock().unwrap().iter_mut() {
-                    let channels = key.channels();
-                    let (left, right) = (chunk[channels.0], chunk[channels.1]);
-                    value[i] = (left + right) / 2.0;
-                    if key == AudioTrack::Mix {
-                        let _ = producer.try_push(left).and(producer.try_push(right));
+            let chunks = data.chunks_exact(channels_in as usize);
+            if multichannel_enabled {
+                // println!("Processing {} chunks", chunks.len());
+                for (i, chunk) in chunks.enumerate() {
+                    // println!("Processing chunk {}", i);
+                    for (key, value) in buffers_clone.lock().unwrap().iter_mut() {
+                        let channels = key.channels();
+                        let (left, right) = (chunk[channels.0], chunk[channels.1]);
+                        value[i] = (left + right) / 2.0;
+                        if key == AudioTrack::Mix {
+                            let _ = producer.try_push(left).and(producer.try_push(right));
+                        }
                     }
                 }
+            } else {
+                let value = &mut buffers_clone.lock().unwrap()[AudioTrack::Mix];
+                for (i, chunk) in chunks.enumerate() {
+                    let channels = (0, 1);
+                    let (left, right) = (chunk[channels.0], chunk[channels.1]);
+                    value[i] = (left + right) / 2.0;
+                    let _ = producer.try_push(left).and(producer.try_push(right));
+                }
             }
-            //
-            // for &sample in data {
-            //     let _ = producer.try_push(sample);
-            // }
         };
 
-        let output_data_fn = move |data: &mut [f32], _: &cpal::OutputCallbackInfo| {
-            let mut dropped_samples = false;
-            // println!("Output callback with {} samples", data.len());
-            for sample in data {
-                *sample = match consumer.try_pop() {
-                    Some(s) => s,
-                    None => {
-                        dropped_samples = true;
-                        0.0
-                    }
-                };
-            }
-            if dropped_samples {
-                eprintln!("Output buffer overflow: dropped samples");
+        let output_data_fn = {
+            let volume = self.volume.clone();
+            move |data: &mut [f32], _: &cpal::OutputCallbackInfo| {
+                let mut dropped_samples = false;
+                let volume = **volume.lock().as_ref().unwrap();
+                // println!("Output callback with {} samples", data.len());
+                for sample in data {
+                    *sample = match consumer.try_pop() {
+                        Some(s) => s * volume,
+                        None => {
+                            dropped_samples = true;
+                            0.0
+                        }
+                    };
+                }
+                if dropped_samples {
+                    eprintln!("Output buffer overflow: dropped samples");
+                }
             }
         };
 
         let input_stream = input_device.build_input_stream(
-            &config,
+            &config_in,
             input_data_fn,
             |err| eprintln!("Input audio stream error: {}", err),
             None,
@@ -234,7 +262,8 @@ impl super::AudioBackend for CpalAudioBackend {
         Ok(1.0)
     }
 
-    fn set_volume(&mut self, volume: f32) -> Result<(), Error> {
+    fn set_volume(&mut self, new_volume: f32) -> Result<(), Error> {
+        *self.volume.lock().as_deref_mut().unwrap() = new_volume;
         Ok(())
     }
 
@@ -254,8 +283,14 @@ impl super::AudioBackend for CpalAudioBackend {
         Ok(false)
     }
 
-    fn input_spec(&self) -> Result<super::AudioSpec, Error> {
-        todo!()
+    fn input_spec(&self) -> Result<AudioSpec, Error> {
+        Ok(AudioSpec {
+            driver_name: "n/a".to_string(),
+            format: "n/a".to_string(),
+            num_channels: 2,
+            sample_rate: 44100,
+            buffer_size: BUFFER_SIZE,
+        })
     }
 
     fn track_buffer(&mut self, track: AudioTrack) -> Result<Vec<f32>, Error> {
@@ -265,6 +300,11 @@ impl super::AudioBackend for CpalAudioBackend {
             ));
         };
         Ok(buffers[track].clone())
+    }
+
+    fn set_multichannel_mode(&mut self, enabled: bool) -> Result<(), Error> {
+        self.multichannel_enabled = enabled;
+        Ok(())
     }
 }
 

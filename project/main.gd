@@ -453,8 +453,8 @@ func on_m8_device_disconnect() -> void:
 	device_manager.disconnect_serial_device()
 
 
-func on_m8_theme_changed(colors: PackedColorArray, complete: bool) -> void:
-	m8_theme_changed.emit(colors, complete)
+func on_m8_theme_changed(colors: PackedColorArray) -> void:
+	m8_theme_changed.emit(colors)
 
 
 func m8_send_theme_color(index: int, color: Color) -> void:

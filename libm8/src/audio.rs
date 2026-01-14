@@ -17,6 +17,11 @@ pub trait AudioBackend {
     fn stop(&mut self) -> Result<(), Error>;
     fn is_running(&self) -> bool;
 
+    /// Sets whether to start audio in multichannel mode.
+    ///
+    /// If multichannel mode is not supported, returns [Error::AudioError].
+    fn set_multichannel_mode(&mut self, enabled: bool) -> Result<(), Error>;
+
     fn list_input_devices(&self) -> Result<Vec<String>, Error>;
     fn list_output_devices(&self) -> Result<Vec<String>, Error>;
 

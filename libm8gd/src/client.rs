@@ -1,5 +1,6 @@
+use crate::display::ImageBuffer;
+
 use super::Color;
-use crate::display;
 use godot::classes::BitMap;
 use godot::classes::Image;
 use godot::classes::ImageTexture;
@@ -47,7 +48,7 @@ fn bytes_to_bitmap(bytes: &[u8]) -> Option<Gd<BitMap>> {
 pub struct GodotM8Client {
     base: Base<Node>,
 
-    client_backend: Option<Box<dyn Backend>>,
+    client_backend: Option<Box<dyn ClientBackend>>,
     audio_backend: Option<AudioBackendType>,
     #[init(val = 1.0)]
     audio_volume: f32,
@@ -59,7 +60,8 @@ pub struct GodotM8Client {
 
     #[init(val = true)]
     display_enabled: bool,
-    display_buffer: display::DisplayBuffer,
+    // display_image: Gd<Image>,
+    display_buffer: ImageBuffer,
     display_texture: Gd<ImageTexture>,
 
     #[init(val = 255)]
@@ -74,6 +76,26 @@ pub struct GodotM8Client {
 
     last_osc_size: usize,
     last_draw_color: libm8::Color,
+}
+
+impl Client for GodotM8Client {
+    fn backend(&mut self) -> Option<&mut dyn ClientBackend> {
+        match &mut self.client_backend {
+            Some(client_backend) => Some(client_backend.as_mut()),
+            None => None,
+        }
+    }
+
+    fn handle_command(&mut self, command: libm8::CommandIn) -> Result<(), libm8::Error> {
+        match command {
+            libm8::CommandIn::DrawRect { params } => self.on_draw_rect(params),
+            libm8::CommandIn::DrawChar { params } => self.on_draw_char(params),
+            libm8::CommandIn::DrawOsc { params } => self.on_draw_osc(params),
+            libm8::CommandIn::GetKeyState { keystate } => self.on_key_pressed(keystate),
+            libm8::CommandIn::GetSystemInfo { info } => self.on_get_system_info(info),
+        }
+        Ok(())
+    }
 }
 
 #[godot_api]
@@ -94,19 +116,21 @@ impl INode for GodotM8Client {
     }
 
     fn process(&mut self, _delta: f64) {
-        if self.client_backend.is_none() || !self.is_connected() {
+        if self.client_backend.is_none() || !self.is_connected() || !self.display_enabled {
             return;
         }
 
-        if self.display_enabled {
-            match self.poll() {
-                Ok(_) => self.display_update(),
-                Err(e) => {
-                    godot_error!("{:?}", e);
-                    self.disconnect();
-                }
-            }
+        if let Err(e) = self.poll() {
+            godot_error!("{:?}", e);
+            self.disconnect();
+            return;
         }
+
+        // self.display_update();
+    }
+
+    fn physics_process(&mut self, _delta: f64) {
+        self.display_update();
     }
 }
 
@@ -143,7 +167,15 @@ impl GodotM8Client {
         self.display_buffer
             .set_size(width as usize, height as usize);
         self.display_texture
-            .set_image(&self.display_buffer.to_godot());
+            .set_image(&self.display_buffer.to_image());
+        // self.display_image = Image::create_empty(
+        //     width as i32,
+        //     height as i32,
+        //     false,
+        //     godot::classes::image::Format::RGBA8,
+        // )
+        // .unwrap();
+        // self.display_texture.set_image(&self.display_image);
         godot_print!("Set display size to = {}x{}", width, height);
     }
 
@@ -288,6 +320,7 @@ impl GodotM8Client {
         self.client_backend = None;
         self.audio_backend = None;
         self.display_buffer.fill(&libm8::Color::new(0, 0, 0), 255);
+        // self.display_image.fill(GodotColor::BLACK);
         self.display_update();
         self.signals().disconnected().emit();
         godot_print!("Sucessfully disconnected from M8 device.");
@@ -372,7 +405,7 @@ impl GodotM8Client {
     /// If initialization fails, [struct@audio_backend] will still be [None].
     fn audio_try_init(&mut self) {
         if self.audio_backend.is_none() {
-            self.audio_backend = match AudioBackendType::new() {
+            self.audio_backend = match AudioBackendType::new(self.audio_volume) {
                 Ok(audio_backend) => Some(audio_backend),
                 Err(e) => {
                     godot_error!("Failed to initialize audio backend: {}", e);
@@ -391,6 +424,7 @@ impl GodotM8Client {
             };
             godot_print!("Starting audio...");
             let _ = audio_backend.set_volume(self.audio_volume);
+            let _ = audio_backend.set_multichannel_mode(true);
             let input_device = gstring_to_option(input_device);
             let output_device = gstring_to_option(output_device);
             match audio_backend.start(input_device, output_device) {
@@ -530,37 +564,7 @@ impl GodotM8Client {
     }
 }
 
-impl Client for GodotM8Client {
-    fn backend(&mut self) -> Option<&mut dyn Backend> {
-        match &mut self.client_backend {
-            Some(client_backend) => Some(client_backend.as_mut()),
-            None => None,
-        }
-    }
-
-    fn handle_command(&mut self, command: libm8::CommandIn) -> Result<(), libm8::Error> {
-        match command {
-            libm8::CommandIn::DrawRect { params } => self.on_draw_rect(params),
-            libm8::CommandIn::DrawChar { params } => self.on_draw_char(params),
-            libm8::CommandIn::DrawOsc { params } => self.on_draw_osc(params),
-            libm8::CommandIn::GetKeyState { keystate } => self.on_key_pressed(keystate),
-            libm8::CommandIn::GetSystemInfo { info } => self.on_get_system_info(info),
-        }
-        Ok(())
-    }
-}
-
 impl GodotM8Client {
-    fn display_ready(&self) -> bool {
-        self.display_buffer.width() > 0 && self.display_buffer.height() > 0
-    }
-
-    fn display_update(&mut self) {
-        if self.display_ready() {
-            self.display_texture.update(&self.display_buffer.to_godot());
-        }
-    }
-
     fn use_font(&mut self, font_type: libm8::FontType) -> () {
         if self.font.as_ref().is_none_or(|ft| *ft != font_type) {
             let index = font_type.clone() as usize;
@@ -570,9 +574,25 @@ impl GodotM8Client {
             godot_print!("Using font: {:?}", self.font);
         }
     }
+}
+
+// display texture methods
+impl GodotM8Client {
+    fn display_ready(&self) -> bool {
+        self.display_buffer.width() > 0 && self.display_buffer.height() > 0
+        // self.display_image.get_size() != Vector2i::ZERO
+    }
+
+    fn display_update(&mut self) {
+        if self.display_ready() {
+            self.display_texture.update(&self.display_buffer.to_image());
+            // self.display_texture.update(&self.display_image);
+        }
+    }
 
     fn draw_rect(
-        buffer: &mut display::DisplayBuffer,
+        // image: &mut Gd<Image>,
+        buffer: &mut ImageBuffer,
         x: i32,
         y: i32,
         width: i32,
@@ -580,20 +600,18 @@ impl GodotM8Client {
         color: &libm8::Color,
         alpha: u8,
     ) -> () {
-        // let rect = Rect2i::from_components(x, y, width, height);
-        // image.fill_rect(rect, color.to_godot_color_with_alpha(alpha));
-        // godot_print!("Drawing rect at ({}, {}) size {}x{}", x, y, width, height);
-        // println!("Drawing rect at ({}, {}) size {}x{}", x, y, width, height);
         if x < 0 || y < 0 || width <= 0 || height <= 0 {
-            godot_warn!(
-                "Ignoring invalid draw_rect: {}, {}, {}, {}",
-                x,
-                y,
-                width,
-                height
-            );
+            // godot_warn!(
+            //     "Ignoring invalid draw_rect: {}, {}, {}, {}",
+            //     x,
+            //     y,
+            //     width,
+            //     height
+            // );
             return;
         }
+        // let color = GodotColor::from_rgba8(color.r, color.g, color.b, alpha);
+        // image.fill_rect(Rect2i::from_components(x, y, width, height), color);
         buffer.set_rect(
             x as usize,
             y as usize,
@@ -603,21 +621,32 @@ impl GodotM8Client {
             alpha,
         );
     }
-    fn draw_pixel(buffer: &mut display::DisplayBuffer, x: i32, y: i32, color: &libm8::Color) -> () {
-        // if x < 0 || y < 0 || x >= image.get_width() || y >= image.get_height() {
-        // godot_error!("Attempted to set pixel out of bounds: ({}, {})", x, y);
-        // return;
-        // }
-        // image.set_pixel(x, y, color.to_godot_color());
-        // godot_print!("Drawing pixel at ({}, {})", x, y);
-        buffer.set_pixel(x as usize, y as usize, color, u8::MAX);
-    }
 
+    fn draw_pixel(
+        // image: &mut Gd<Image>,
+        buffer: &mut ImageBuffer,
+        x: i32,
+        y: i32,
+        color: &libm8::Color,
+    ) -> () {
+        // if x < 0 || y < 0 || x >= image.get_width() || y >= image.get_height() {
+        if x < 0 || y < 0 || x >= buffer.width() as i32 || y >= buffer.height() as i32 {
+            // godot_warn!("Ignoring invalid draw_pixel: {}, {}", x, y);
+            return;
+        }
+        // let color = GodotColor::from_rgba8(color.r, color.g, color.b, 255);
+        // image.set_pixel(x, y, color);
+        buffer.set_pixel(x as usize, y as usize, color, 255);
+    }
+}
+
+// incoming command handlers
+impl GodotM8Client {
     fn on_draw_rect(&mut self, params: libm8::DrawRectParams) {
         let font_data = self.font.as_ref().unwrap().get_data();
 
-        let disp_w = self.display_buffer.width() as i32;
-        let disp_h = self.display_buffer.height() as i32;
+        // let (disp_w, disp_h) = self.display_image.get_size().to_tuple();
+        let (disp_w, disp_h) = self.display_buffer.size();
 
         let x = params.x as i32;
         let y = (params.y as i32 + font_data.draw_y_offset as i32).max(0);
@@ -633,7 +662,7 @@ impl GodotM8Client {
         };
 
         // use color as background color if rect covers entire display
-        if x <= 0 && y <= 0 && w >= disp_w && h >= disp_h {
+        if x <= 0 && y <= 0 && w >= disp_w as i32 && h >= disp_h as i32 {
             self.bg_color = color.clone();
             self.theme_colors.clear();
             // self.theme_colors.push(self.bg_color.clone());
@@ -672,6 +701,7 @@ impl GodotM8Client {
         };
 
         Self::draw_rect(&mut self.display_buffer, x, y, w, h, &color, alpha);
+        // Self::draw_rect(&mut self.display_image, x, y, w, h, &color, alpha);
     }
 
     fn on_draw_char(&mut self, params: libm8::DrawCharParams) {
@@ -688,7 +718,6 @@ impl GodotM8Client {
 
         let font_data = self.font.as_ref().unwrap().get_data();
         let font_bitmap = self.font_bitmap.as_ref().unwrap();
-        let display_image = &mut self.display_buffer;
 
         // starting position of glyph in font bitmap
         let x0 = (c as u8 % super::FONT_BITMAP_SIZE.0) * font_data.char_width;
@@ -700,16 +729,18 @@ impl GodotM8Client {
 
         let draw_bg: bool = color_bg != color_fg;
 
+        // godot_print!("Drawing char '{}' at ({}, {})", c, rect_x, rect_y,);
+
         for i in 0..font_data.char_width {
             let i = i as i32;
             for j in 0..font_data.char_height {
                 let j = j as i32;
                 if font_bitmap.get_bit(x0 as i32 + i, y0 as i32 + j) {
                     // foreground pixel
-                    Self::draw_pixel(display_image, rect_x + i, rect_y + j, &color_fg);
+                    Self::draw_pixel(&mut self.display_buffer, rect_x + i, rect_y + j, &color_fg);
                 } else if draw_bg {
                     // background pixel
-                    Self::draw_pixel(display_image, rect_x + i, rect_y + j, &color_bg);
+                    Self::draw_pixel(&mut self.display_buffer, rect_x + i, rect_y + j, &color_bg);
                 }
             }
         }
@@ -721,6 +752,7 @@ impl GodotM8Client {
         let size = points.len();
 
         let display_image = &mut self.display_buffer;
+        // let display_image = &mut self.display_image;
         let font_data = self.font.as_ref().unwrap().get_data();
 
         let osc_size = if size == 0 {
@@ -731,6 +763,7 @@ impl GodotM8Client {
         };
 
         let x = display_image.width() as i32 - osc_size as i32;
+        // let x = display_image.get_width() - osc_size as i32;
 
         // clear previous osc waveform area
         Self::draw_rect(

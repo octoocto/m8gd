@@ -55,7 +55,7 @@ impl LibM8 {
     /// Returns a list of available serial ports.
     #[func]
     fn list_serial_ports(#[opt(default = true)] show_valid_only: bool) -> Array<GString> {
-        let vec = libm8::get_serial_ports(show_valid_only);
+        let vec = libm8::list_serial_port_names(show_valid_only);
         vec.into_iter()
             .map(|s| GString::from(&s))
             .collect::<Array<GString>>()

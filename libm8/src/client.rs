@@ -4,7 +4,7 @@ pub trait Client {
     // Required methods
 
     /// Get the backend used to communicate with the M8 device.
-    fn backend(&mut self) -> Option<&mut dyn Backend>;
+    fn backend(&mut self) -> Option<&mut dyn ClientBackend>;
 
     /// Process an incoming command from the M8 device.
     fn handle_command(&mut self, command: CommandIn) -> Result<(), Error>;
@@ -17,7 +17,8 @@ pub trait Client {
         }
     }
 
-    /// Poll incoming commands from the M8 device.
+    /// Poll incoming commands from the connected device and handles them using
+    /// [`Client::handle_command`].
     fn poll(&mut self) -> Result<(), Error> {
         let commands = self.backend().ok_or(Error::NoBackend)?.poll()?;
         for command in commands {
@@ -60,14 +61,20 @@ pub trait Client {
     }
 }
 
-// Represents a method of connecting to an M8 device.
-pub trait Backend {
+// Represents a method for a Client to connect to an M8 device.
+pub trait ClientBackend {
     fn connect(&mut self) -> Result<(), Error>;
     fn disconnect(&mut self) -> Result<(), Error>;
     fn is_connected(&self) -> bool;
 
+    /// Returns whether the connected device is in multichannel audio mode.
+    ///
+    /// If no device is connected, or if multichannel mode cannot be determined,
+    /// returns [`None`].
+    fn is_multichannel_audio(&self) -> Option<bool>;
+
     /// Poll incoming commands from the device, returning a vector of
-    /// commands that can be processed.
+    /// commands that were received.
     ///
     /// # Errors
     ///
@@ -76,7 +83,7 @@ pub trait Backend {
     /// is returned.
     ///
     /// If any error is returned, the connection is no longer valid and the client that owns
-    /// this backend should call [`Backend::disconnect()`].
+    /// this backend should call [`ClientBackend::disconnect`].
     fn poll(&mut self) -> Result<Vec<CommandIn>, Error>;
 
     /// Send a command to the device.

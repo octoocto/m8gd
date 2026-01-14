@@ -1,6 +1,6 @@
 use crate::*;
 
-use serialport;
+use serialport::{self, SerialPortInfo, SerialPortType};
 use std::result::Result;
 use std::sync::Arc;
 use std::sync::atomic::AtomicBool;
@@ -43,9 +43,25 @@ pub fn is_valid_serial_port(port: &serialport::SerialPortInfo) -> bool {
 }
 
 pub fn is_valid_serial_port_path(path: &str) -> bool {
-    match get_serial_ports(true).into_iter().find(|p| p == path) {
+    match list_serial_port_names(true).into_iter().find(|p| p == path) {
         Some(_) => true,
         None => false,
+    }
+}
+
+/// Find a serial port by its path.
+///
+/// If [path] is [None], return the first available valid port.
+///
+/// If no valid ports were found, return [None].
+fn find_serial_port(path: Option<String>, valid_only: bool) -> Option<SerialPortInfo> {
+    let ports = list_serial_ports(valid_only);
+    if ports.is_empty() {
+        return None;
+    }
+    match path {
+        Some(p) => ports.iter().find(|port| port.port_name == p).cloned(),
+        None => Some(ports[0].clone()),
     }
 }
 
@@ -53,7 +69,14 @@ pub fn is_valid_serial_port_path(path: &str) -> bool {
 ///
 /// If [valid_only] is true, only return ports to M8 devices.
 ///
-pub fn get_serial_ports(valid_only: bool) -> Vec<String> {
+pub fn list_serial_port_names(valid_only: bool) -> Vec<String> {
+    list_serial_ports(valid_only)
+        .iter()
+        .map(|port| port.port_name.clone())
+        .collect()
+}
+
+pub fn list_serial_ports(valid_only: bool) -> Vec<SerialPortInfo> {
     let ports = serialport::available_ports()
         .unwrap_or(Vec::new())
         .iter()
@@ -64,7 +87,7 @@ pub fn get_serial_ports(valid_only: bool) -> Vec<String> {
                 true
             }
         })
-        .map(|port| port.port_name.clone())
+        .map(|port| port.clone())
         .collect();
     ports
 }
@@ -111,6 +134,9 @@ pub struct SerialBackend {
     /// If connected, the serial port.
     port: Option<Box<dyn serialport::SerialPort>>,
 
+    /// If connected, the serial port type.
+    port_type: Option<SerialPortType>,
+
     /// Handle to the read thread.
     read_thread_handle: Option<thread::JoinHandle<()>>,
     read_thread_running: Arc<AtomicBool>,
@@ -138,6 +164,7 @@ impl SerialBackend {
 
             path: None,
             port: None,
+            port_type: None,
 
             read_thread_handle: None,
             read_thread_running: Arc::new(AtomicBool::new(false)),
@@ -167,7 +194,7 @@ impl SerialBackend {
         };
 
         // check if the preferred path exists
-        let port_exists = get_serial_ports(check_if_valid)
+        let port_exists = list_serial_port_names(check_if_valid)
             .iter()
             .filter(|p| p.as_str() == preferred_path)
             .count()
@@ -224,7 +251,7 @@ impl SerialBackend {
     }
 }
 
-impl Backend for SerialBackend {
+impl ClientBackend for SerialBackend {
     fn connect(&mut self) -> Result<(), Error> {
         if self.is_connected() {
             return Err(Error::DeviceConnectionError(
@@ -232,21 +259,13 @@ impl Backend for SerialBackend {
             ));
         }
 
-        let path = match &self.preferred_path {
-            Some(p) => String::from(p),
-            None => {
-                // use first valid port
-                let ports = get_serial_ports(true);
-                if ports.is_empty() {
-                    return Err(Error::DeviceConnectionError(
-                        "No valid serial ports found".to_string(),
-                    ));
-                }
-                ports[0].clone()
-            }
-        };
+        let port_info = find_serial_port(self.preferred_path.clone(), true).ok_or(
+            Error::DeviceConnectionError("No valid serial ports found".to_string()),
+        )?;
 
-        let result = serialport::new(&path, 115200)
+        let path = &port_info.port_name;
+
+        let result = serialport::new(path, 115200)
             .data_bits(serialport::DataBits::Eight)
             .parity(serialport::Parity::None)
             .stop_bits(serialport::StopBits::One)
@@ -270,8 +289,9 @@ impl Backend for SerialBackend {
 
                 self.read_receiver = Some(read_receiver);
                 self.error_receiver = Some(error_receiver);
-                self.path = Some(path);
+                self.path = Some(path.clone());
                 self.port = Some(port);
+                self.port_type = Some(port_info.port_type);
                 self.is_connected = true;
                 self.read_thread_running = Arc::new(AtomicBool::new(true));
 
@@ -304,16 +324,6 @@ impl Backend for SerialBackend {
             ));
         }
 
-        // stop read thread
-        // match self.thread_stop_sender.take().unwrap().send(()) {
-        //     Ok(_) => {}
-        //     Err(e) => {
-        //         eprintln!("Error stopping read thread: {}", e);
-        //         Err(Error::DeviceConnectionError(
-        //             "Failed to stop read thread".to_string(),
-        //         ))?
-        //     }
-        // }
         self.read_thread_running
             .store(false, std::sync::atomic::Ordering::Relaxed);
         println!("Stopping read thread...");
@@ -345,6 +355,17 @@ impl Backend for SerialBackend {
 
     fn is_connected(&self) -> bool {
         return self.is_connected && self.port.is_some();
+    }
+
+    fn is_multichannel_audio(&self) -> Option<bool> {
+        if !self.is_connected() {
+            return None;
+        }
+        let port_type = self.port_type.as_ref()?;
+        Some(match port_type {
+            SerialPortType::UsbPort(info) => info.pid == M8_PID_MULTICHANNEL,
+            _ => false,
+        })
     }
 
     fn send_command(&mut self, command: CommandOut) -> Result<(), Error> {

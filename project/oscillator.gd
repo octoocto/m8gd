@@ -23,6 +23,9 @@ func init(p_m8c: GodotM8Client, p_track_index: int) -> void:
 
 
 func _physics_process(_delta: float) -> void:
+	if not visible:
+		return
+
 	buffer = m8c.get_audio_track_buffer(self.track_index)
 	custom_minimum_size = Vector2(width, 48)
 	if buffer.size() > width:

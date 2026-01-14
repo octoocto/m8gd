@@ -276,6 +276,12 @@ impl super::AudioBackend for SdlAudioBackend {
     fn track_buffer(&mut self, track: audio::AudioTrack) -> Result<Vec<f32>, Error> {
         todo!()
     }
+
+    fn set_multichannel_mode(&mut self, _enabled: bool) -> Result<(), Error> {
+        Err(AudioError(
+            "Multichannel mode is not supported in SDL3 backend.".to_string(),
+        ))
+    }
 }
 
 fn format_name(format: Option<sdl3::audio::AudioFormat>) -> String {

@@ -1,5 +1,9 @@
 use godot::{
-    classes::{Image, class_macros::private::virtuals::Os::PackedArray, image::Format},
+    classes::{
+        Image,
+        class_macros::private::virtuals::Os::{PackedArray, PackedByteArray},
+        image::Format,
+    },
     global::godot_warn,
     meta::{ByValue, GodotConvert, ToGodot},
     obj::Gd,
@@ -7,16 +11,18 @@ use godot::{
 
 use libm8::Color;
 
+const IMAGE_FORMAT: Format = godot::classes::image::Format::RGBA8;
+
 /// A display buffer in RGBA8 format.
 #[derive(Default)]
-pub struct DisplayBuffer {
+pub struct ImageBuffer {
     width: usize,
     height: usize,
     image: Gd<Image>,
-    data: PackedArray<u8>,
+    data: Vec<u8>,
 }
 
-impl DisplayBuffer {
+impl ImageBuffer {
     pub fn create_image(width: usize, height: usize) -> Gd<Image> {
         let image = Image::create_empty(width as i32, height as i32, false, Format::RGBA8).unwrap();
         image
@@ -28,6 +34,10 @@ impl DisplayBuffer {
 
     pub fn height(&self) -> usize {
         self.height
+    }
+
+    pub fn size(&self) -> (usize, usize) {
+        (self.width, self.height)
     }
 
     // pub fn clear(&mut self, color: &Color, a: u8) {
@@ -80,26 +90,21 @@ impl DisplayBuffer {
         self.width = width;
         self.height = height;
         self.image = Self::create_image(width, height);
-        self.data = PackedArray::from(vec![0; width * height * 4]);
+        self.data = vec![0; width * height * 4];
     }
-}
 
-impl GodotConvert for DisplayBuffer {
-    type Via = Gd<Image>;
-}
-
-impl ToGodot for DisplayBuffer {
-    type Pass = ByValue;
-
-    fn to_godot(&self) -> Self::Via {
-        let mut image = self.image.clone();
-        image.set_data(
+    pub fn to_image(&mut self) -> Gd<Image> {
+        self.image.set_data(
             self.width as i32,
             self.height as i32,
             false,
-            Format::RGBA8,
-            &self.data,
+            IMAGE_FORMAT,
+            &PackedByteArray::from(self.data.clone()),
         );
-        image
+        self.image.clone()
     }
+}
+
+impl GodotConvert for ImageBuffer {
+    type Via = Gd<Image>;
 }

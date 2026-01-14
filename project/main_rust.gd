@@ -50,34 +50,36 @@ func _initialize_m8c() -> void:
 	print("valid serial ports:")
 	print(serial_ports)
 
-	if serial_ports.size() > 0:
-		m8c.connect_with_serial(serial_ports[0], true)
+	if serial_ports.size() == 0:
+		return
 
-		if not m8c.is_connected():
-			print("failed to connect to serial port: %s" % serial_ports[0])
-			return
+	m8c.connect_with_serial(serial_ports[0], true)
 
-		m8c.audio_start("", "")
-		m8c.system_info_received.connect(_on_receive_system_info)
-		m8c.theme_colors_updated.connect(
-			func(colors: PackedColorArray) -> void:
-				print("received theme colors:")
-				for color in colors:
-					print("%s" % color.to_html(false).to_upper())
-		)
-		print("connected to serial port: %s" % serial_ports[0])
-		audio_spectrum.m8c = m8c
-		osc_1.init(m8c, 1)
-		osc_2.init(m8c, 2)
-		osc_3.init(m8c, 3)
-		osc_4.init(m8c, 4)
-		osc_5.init(m8c, 5)
-		osc_6.init(m8c, 6)
-		osc_7.init(m8c, 7)
-		osc_8.init(m8c, 8)
-		osc_9.init(m8c, 9)
-		osc_10.init(m8c, 10)
-		osc_11.init(m8c, 11)
+	if not m8c.is_connected():
+		print("failed to connect to serial port: %s" % serial_ports[0])
+		return
+
+	m8c.audio_start("", "")
+	m8c.system_info_received.connect(_on_receive_system_info)
+	m8c.theme_colors_updated.connect(
+		func(colors: PackedColorArray) -> void:
+			print("received theme colors:")
+			for color in colors:
+				print("%s" % color.to_html(false).to_upper())
+	)
+	print("connected to serial port: %s" % serial_ports[0])
+	audio_spectrum.m8c = m8c
+	osc_1.init(m8c, 1)
+	osc_2.init(m8c, 2)
+	osc_3.init(m8c, 3)
+	osc_4.init(m8c, 4)
+	osc_5.init(m8c, 5)
+	osc_6.init(m8c, 6)
+	osc_7.init(m8c, 7)
+	osc_8.init(m8c, 8)
+	osc_9.init(m8c, 9)
+	osc_10.init(m8c, 10)
+	osc_11.init(m8c, 11)
 
 	texture_rect.visibility_changed.connect(
 		func(visible: bool) -> void:
