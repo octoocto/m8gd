@@ -9,6 +9,8 @@ use libm8::Client;
 use libm8::audio::AudioBackend;
 use libm8::*;
 
+type AudioBackendType = audio::CpalAudioBackend;
+
 fn bytes_to_bitmap(bytes: &[u8]) -> Option<Gd<BitMap>> {
     let mut font_image = Image::new_gd();
     if font_image.load_bmp_from_buffer(&PackedArray::<u8>::from(bytes)) == godot::global::Error::OK
@@ -45,8 +47,8 @@ fn bytes_to_bitmap(bytes: &[u8]) -> Option<Gd<BitMap>> {
 pub struct GodotM8Client {
     base: Base<Node>,
 
-    backend: Option<Box<dyn Backend>>,
-    audio_backend: Option<audio::SdlAudioBackend>,
+    client_backend: Option<Box<dyn Backend>>,
+    audio_backend: Option<AudioBackendType>,
     #[init(val = 1.0)]
     audio_volume: f32,
 
@@ -92,7 +94,7 @@ impl INode for GodotM8Client {
     }
 
     fn process(&mut self, _delta: f64) {
-        if self.backend.is_none() || !self.is_connected() {
+        if self.client_backend.is_none() || !self.is_connected() {
             return;
         }
 
@@ -101,6 +103,7 @@ impl INode for GodotM8Client {
                 Ok(_) => self.display_update(),
                 Err(e) => {
                     godot_error!("{:?}", e);
+                    self.disconnect();
                 }
             }
         }
@@ -247,7 +250,7 @@ impl GodotM8Client {
         #[opt(default = "")] preferred_path: GString,
         #[opt(default = true)] check_if_valid: bool,
     ) -> bool {
-        let mut backend = libm8::SerialBackend::new();
+        let mut client_backend = libm8::SerialBackend::new();
         let preferred_path = if preferred_path.is_empty() {
             None
         } else {
@@ -255,14 +258,14 @@ impl GodotM8Client {
         };
 
         let result: Result<(), Error> = (|| {
-            backend.set_preferred_path(preferred_path.as_deref(), check_if_valid)?;
-            backend.connect()?;
+            client_backend.set_preferred_path(preferred_path.as_deref(), check_if_valid)?;
+            client_backend.connect()?;
             Ok(())
         })();
 
         match result {
             Ok(()) => {
-                self.backend = Some(backend);
+                self.client_backend = Some(client_backend);
                 true
             }
             Err(e) => {
@@ -274,31 +277,21 @@ impl GodotM8Client {
 
     #[func]
     fn is_connected(&mut self) -> bool {
-        match self.backend() {
-            Some(backend) => backend.is_connected(),
-            None => false,
-        }
+        self.backend().is_some_and(|backend| backend.is_connected())
     }
 
     #[func]
     fn disconnect(&mut self) -> bool {
-        match self.backend.as_mut() {
-            Some(backend) => match backend.disconnect() {
-                Ok(_) => {
-                    self.backend = None;
-                    godot_print!("Sucessfully disconnected from M8 device.");
-                    self.display_buffer.fill(&libm8::Color::new(0, 0, 0), 255);
-                    self.display_update();
-                    self.signals().disconnected().emit();
-                    true
-                }
-                Err(e) => {
-                    godot_error!("Error disconnecting from M8 device: {}", e);
-                    false
-                }
-            },
-            None => true,
+        if !self.is_connected() {
+            return false;
         }
+        self.client_backend = None;
+        self.audio_backend = None;
+        self.display_buffer.fill(&libm8::Color::new(0, 0, 0), 255);
+        self.display_update();
+        self.signals().disconnected().emit();
+        godot_print!("Sucessfully disconnected from M8 device.");
+        true
     }
 }
 
@@ -376,10 +369,10 @@ impl GodotM8Client {
     /// Attempt to initialize the audio backend (without starting it) if
     /// it hasn't been initialized yet.
     ///
-    /// If initialization fails, [self.audio_backend] will still be [None].
+    /// If initialization fails, [struct@audio_backend] will still be [None].
     fn audio_try_init(&mut self) {
         if self.audio_backend.is_none() {
-            self.audio_backend = match audio::SdlAudioBackend::new() {
+            self.audio_backend = match AudioBackendType::new() {
                 Ok(audio_backend) => Some(audio_backend),
                 Err(e) => {
                     godot_error!("Failed to initialize audio backend: {}", e);
@@ -524,12 +517,23 @@ impl GodotM8Client {
             let _ = audio_backend.set_spectrum_analyzer_enabled(enabled);
         }
     }
+
+    #[func]
+    pub fn get_audio_track_buffer(&mut self, index: i32) -> Vec<f32> {
+        let track = libm8::audio::AudioTrack::from_index(index as usize);
+        if let Some(audio_backend) = self.audio_backend.as_mut() {
+            if let Ok(buffer) = audio_backend.track_buffer(track) {
+                return buffer;
+            }
+        }
+        vec![]
+    }
 }
 
 impl Client for GodotM8Client {
     fn backend(&mut self) -> Option<&mut dyn Backend> {
-        match &mut self.backend {
-            Some(backend) => Some(backend.as_mut()),
+        match &mut self.client_backend {
+            Some(client_backend) => Some(client_backend.as_mut()),
             None => None,
         }
     }
@@ -580,8 +584,16 @@ impl GodotM8Client {
         // image.fill_rect(rect, color.to_godot_color_with_alpha(alpha));
         // godot_print!("Drawing rect at ({}, {}) size {}x{}", x, y, width, height);
         // println!("Drawing rect at ({}, {}) size {}x{}", x, y, width, height);
-        assert!(x >= 0 && y >= 0);
-        assert!(width >= 0 && height >= 0);
+        if x < 0 || y < 0 || width <= 0 || height <= 0 {
+            godot_warn!(
+                "Ignoring invalid draw_rect: {}, {}, {}, {}",
+                x,
+                y,
+                width,
+                height
+            );
+            return;
+        }
         buffer.set_rect(
             x as usize,
             y as usize,
@@ -623,6 +635,8 @@ impl GodotM8Client {
         // use color as background color if rect covers entire display
         if x <= 0 && y <= 0 && w >= disp_w && h >= disp_h {
             self.bg_color = color.clone();
+            self.theme_colors.clear();
+            // self.theme_colors.push(self.bg_color.clone());
             godot_print!(
                 "Set background color to rgb({}, {}, {})",
                 self.bg_color.r,
@@ -640,15 +654,14 @@ impl GodotM8Client {
             || (w == 36 && h == 11)
             || (w == 45 && h == 13)
         {
-            if self.theme_colors.len() == libm8::NUM_THEME_COLORS {
-                self.theme_colors.clear();
-            }
-            self.theme_colors.push(color.clone());
-            if self.theme_colors.len() == libm8::NUM_THEME_COLORS {
-                let colors = Self::color_vec_to_array(&self.theme_colors);
-                self.signals()
-                    .theme_colors_updated()
-                    .emit(colors.to_godot());
+            if self.theme_colors.len() < libm8::NUM_THEME_COLORS {
+                self.theme_colors.push(color.clone());
+                if self.theme_colors.len() == libm8::NUM_THEME_COLORS {
+                    let colors = Self::color_vec_to_array(&self.theme_colors);
+                    self.signals()
+                        .theme_colors_updated()
+                        .emit(colors.to_godot());
+                }
             }
         }
 

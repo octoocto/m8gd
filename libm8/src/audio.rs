@@ -4,6 +4,7 @@ mod sdl;
 use crate::Error;
 pub use crate::audio::cpal::*;
 pub use crate::audio::sdl::*;
+use enum_map::Enum;
 
 pub trait AudioBackend {
     /// Starts audio processing with the specified input and output devices.
@@ -37,6 +38,8 @@ pub trait AudioBackend {
 
     fn input_spec(&self) -> Result<AudioSpec, Error>;
     // fn output_spec(&self) -> Result<AudioSpec, Error>;
+
+    fn track_buffer(&mut self, track: AudioTrack) -> Result<Vec<f32>, Error>;
 }
 
 pub struct AudioSpec {
@@ -73,5 +76,57 @@ impl AudioSpec {
             return 0.0;
         }
         (self.buffer_size as f32 / self.sample_rate as f32) * 1000.0
+    }
+}
+
+/// Represents an audio track on the M8 device if set to multichannel mode.
+#[derive(Debug, PartialEq, Enum)]
+pub enum AudioTrack {
+    Mix,
+    Track1,
+    Track2,
+    Track3,
+    Track4,
+    Track5,
+    Track6,
+    Track7,
+    Track8,
+    ModFx,
+    DelayFx,
+    ReverbFx,
+}
+
+impl AudioTrack {
+    pub fn from_index(index: usize) -> AudioTrack {
+        match index {
+            1 => AudioTrack::Track1,
+            2 => AudioTrack::Track2,
+            3 => AudioTrack::Track3,
+            4 => AudioTrack::Track4,
+            5 => AudioTrack::Track5,
+            6 => AudioTrack::Track6,
+            7 => AudioTrack::Track7,
+            8 => AudioTrack::Track8,
+            9 => AudioTrack::ModFx,
+            10 => AudioTrack::DelayFx,
+            11 => AudioTrack::ReverbFx,
+            _ => AudioTrack::Mix,
+        }
+    }
+    pub fn channels(&self) -> (usize, usize) {
+        match self {
+            AudioTrack::Mix => (0, 1),
+            AudioTrack::Track1 => (2, 3),
+            AudioTrack::Track2 => (4, 5),
+            AudioTrack::Track3 => (6, 7),
+            AudioTrack::Track4 => (8, 9),
+            AudioTrack::Track5 => (10, 11),
+            AudioTrack::Track6 => (12, 13),
+            AudioTrack::Track7 => (14, 15),
+            AudioTrack::Track8 => (16, 17),
+            AudioTrack::ModFx => (18, 19),
+            AudioTrack::DelayFx => (20, 21),
+            AudioTrack::ReverbFx => (22, 23),
+        }
     }
 }

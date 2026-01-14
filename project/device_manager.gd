@@ -46,6 +46,11 @@ func _process(delta: float) -> void:
 func init(p_main: Main) -> void:
 	self.main = p_main
 	self.audio_monitor = p_main.audio_monitor
+	self.main.m8c.disconnected.connect(
+		func() -> void:
+			main.device_manager.current_serial_device = ""
+			main.device_manager.current_audio_device = ""
+	)
 
 
 func start_waiting_for_devices() -> void:
@@ -75,7 +80,7 @@ func connect_serial_device(port: String = "", force: bool = false) -> void:
 
 	disconnect_serial_device()
 
-	if not main.m8c.connect_with_serial(port, force):
+	if not main.m8c.connect_with_serial(port, !force):
 		print("serial: failed to connect to port: %s", port)
 		main.menu.menu_devices.set_status_serialport(
 			"Not connected: failed to connect to port: %s" % port

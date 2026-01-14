@@ -1,56 +1,21 @@
+use std::sync::{Arc, Mutex};
+
+use crate::audio::AudioTrack;
 use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
 use cpal::{Device, DeviceDescription, Host, StreamConfig};
+use enum_map::EnumMap;
 use ringbuf::HeapRb;
 use ringbuf::traits::{Consumer, Producer, Split};
 
 use crate::Error;
 
-impl From<cpal::DeviceIdError> for Error {
-    fn from(e: cpal::DeviceIdError) -> Error {
-        Error::AudioError(e.to_string())
-    }
-}
-
-impl From<cpal::DefaultStreamConfigError> for Error {
-    fn from(e: cpal::DefaultStreamConfigError) -> Error {
-        Error::AudioError(e.to_string())
-    }
-}
-
-impl From<cpal::DevicesError> for Error {
-    fn from(e: cpal::DevicesError) -> Error {
-        Error::AudioError(e.to_string())
-    }
-}
-
-impl From<cpal::DeviceNameError> for Error {
-    fn from(e: cpal::DeviceNameError) -> Error {
-        Error::AudioError(e.to_string())
-    }
-}
-
-impl From<cpal::SupportedStreamConfigsError> for Error {
-    fn from(e: cpal::SupportedStreamConfigsError) -> Error {
-        Error::AudioError(e.to_string())
-    }
-}
-
-impl From<cpal::BuildStreamError> for Error {
-    fn from(e: cpal::BuildStreamError) -> Error {
-        Error::AudioError(e.to_string())
-    }
-}
-
-impl From<cpal::PlayStreamError> for Error {
-    fn from(e: cpal::PlayStreamError) -> Error {
-        Error::AudioError(e.to_string())
-    }
-}
+const BUFFER_SIZE: usize = 512;
 
 pub struct CpalAudioBackend {
     host: Host,
     input_stream: Option<cpal::Stream>,
     output_stream: Option<cpal::Stream>,
+    buffers: Arc<Mutex<EnumMap<AudioTrack, Vec<f32>>>>,
 }
 
 impl CpalAudioBackend {
@@ -59,6 +24,7 @@ impl CpalAudioBackend {
             host: cpal::default_host(),
             input_stream: None,
             output_stream: None,
+            buffers: Arc::new(Mutex::new(EnumMap::from_fn(|_| vec![0.0; BUFFER_SIZE * 4]))),
         })
     }
 
@@ -122,13 +88,13 @@ impl super::AudioBackend for CpalAudioBackend {
         let config = StreamConfig {
             channels: 24,
             sample_rate: 44100,
-            buffer_size: cpal::BufferSize::Fixed(512),
+            buffer_size: cpal::BufferSize::Fixed(BUFFER_SIZE as u32),
         };
 
         let config_out = StreamConfig {
             channels: 2,
             sample_rate: 44100,
-            buffer_size: cpal::BufferSize::Fixed(512),
+            buffer_size: cpal::BufferSize::Fixed(BUFFER_SIZE as u32),
         };
 
         println!("Requested spec:");
@@ -136,41 +102,67 @@ impl super::AudioBackend for CpalAudioBackend {
         println!("  Sample rate: {}", config.sample_rate);
         println!("  Buffer size: {:?}", config.buffer_size);
 
+        let buffer_size = match config.buffer_size {
+            cpal::BufferSize::Fixed(size) => size,
+            cpal::BufferSize::Default => BUFFER_SIZE as u32,
+        };
+
         let latency_ms = 20.0;
         let latency_frames = (latency_ms / 1000.0) * config.sample_rate as f32;
-        let latency_samples = latency_frames as usize * config.channels as usize;
+        let latency_samples = latency_frames as usize * 2 as usize;
 
         let ring = HeapRb::<f32>::new(latency_samples * 2);
         let (mut producer, mut consumer) = ring.split();
+
+        println!("Using latency buffer of {} samples", latency_samples);
 
         for _ in 0..latency_samples {
             producer.try_push(0.0).unwrap();
         }
 
+        let buffers_clone = self.buffers.clone();
+
         let input_data_fn = move |data: &[f32], _: &cpal::InputCallbackInfo| {
-            let mut dropped_samples = false;
-            for &sample in data {
-                if producer.try_push(sample).is_err() {
-                    dropped_samples = true;
+            // println!("Input callback with {} samples", data.len());
+            let expected = (buffer_size * 24) as usize;
+            if data.len() < expected {
+                eprintln!(
+                    "Input buffer overflow: expected {}, received {}",
+                    expected,
+                    data.len()
+                );
+                return;
+            }
+
+            let chunks = data.chunks_exact(24);
+            // println!("Processing {} chunks", chunks.len());
+            for (i, chunk) in chunks.enumerate() {
+                // println!("Processing chunk {}", i);
+                for (key, value) in buffers_clone.lock().unwrap().iter_mut() {
+                    let channels = key.channels();
+                    let (left, right) = (chunk[channels.0], chunk[channels.1]);
+                    value[i] = (left + right) / 2.0;
+                    if key == AudioTrack::Mix {
+                        let _ = producer.try_push(left).and(producer.try_push(right));
+                    }
                 }
             }
-            if dropped_samples {
-                eprintln!("Input buffer overflow: dropped samples");
-            }
+            //
+            // for &sample in data {
+            //     let _ = producer.try_push(sample);
+            // }
         };
 
         let output_data_fn = move |data: &mut [f32], _: &cpal::OutputCallbackInfo| {
             let mut dropped_samples = false;
-            let mut buf_chunk: [f32; 24] = [0.0; 24];
-            for chunk in data.chunks_mut(2) {
-                let removed = consumer.pop_slice(&mut buf_chunk);
-                if removed < 24 {
-                    dropped_samples = true;
-                    chunk[0] = 0.0;
-                    chunk[1] = 0.0;
-                } else {
-                    chunk[0] = buf_chunk[0];
-                    chunk[1] = buf_chunk[1];
+            // println!("Output callback with {} samples", data.len());
+            for sample in data {
+                *sample = match consumer.try_pop() {
+                    Some(s) => s,
+                    None => {
+                        dropped_samples = true;
+                        0.0
+                    }
                 };
             }
             if dropped_samples {
@@ -181,13 +173,13 @@ impl super::AudioBackend for CpalAudioBackend {
         let input_stream = input_device.build_input_stream(
             &config,
             input_data_fn,
-            |err| eprintln!("Input stream error: {}", err),
+            |err| eprintln!("Input audio stream error: {}", err),
             None,
         )?;
         let output_stream = output_device.build_output_stream(
             &config_out,
             output_data_fn,
-            |err| eprintln!("Output stream error: {}", err),
+            |err| eprintln!("Output audio stream error: {}", err),
             None,
         )?;
 
@@ -264,5 +256,56 @@ impl super::AudioBackend for CpalAudioBackend {
 
     fn input_spec(&self) -> Result<super::AudioSpec, Error> {
         todo!()
+    }
+
+    fn track_buffer(&mut self, track: AudioTrack) -> Result<Vec<f32>, Error> {
+        let Ok(buffers) = self.buffers.lock() else {
+            return Err(Error::AudioError(
+                "Failed to retrieve track buffer lock".to_string(),
+            ));
+        };
+        Ok(buffers[track].clone())
+    }
+}
+
+impl From<cpal::DeviceIdError> for Error {
+    fn from(e: cpal::DeviceIdError) -> Error {
+        Error::AudioError(e.to_string())
+    }
+}
+
+impl From<cpal::DefaultStreamConfigError> for Error {
+    fn from(e: cpal::DefaultStreamConfigError) -> Error {
+        Error::AudioError(e.to_string())
+    }
+}
+
+impl From<cpal::DevicesError> for Error {
+    fn from(e: cpal::DevicesError) -> Error {
+        Error::AudioError(e.to_string())
+    }
+}
+
+impl From<cpal::DeviceNameError> for Error {
+    fn from(e: cpal::DeviceNameError) -> Error {
+        Error::AudioError(e.to_string())
+    }
+}
+
+impl From<cpal::SupportedStreamConfigsError> for Error {
+    fn from(e: cpal::SupportedStreamConfigsError) -> Error {
+        Error::AudioError(e.to_string())
+    }
+}
+
+impl From<cpal::BuildStreamError> for Error {
+    fn from(e: cpal::BuildStreamError) -> Error {
+        Error::AudioError(e.to_string())
+    }
+}
+
+impl From<cpal::PlayStreamError> for Error {
+    fn from(e: cpal::PlayStreamError) -> Error {
+        Error::AudioError(e.to_string())
     }
 }

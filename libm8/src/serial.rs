@@ -120,8 +120,6 @@ pub struct SerialBackend {
     /// Receiver for incoming errors.
     error_receiver: Option<mpsc::Receiver<Error>>,
 
-    disconnect_callback: Option<Box<dyn FnMut()>>,
-
     /// If the port is connected.
     ///
     /// If true, [self.path] and [self.port] will be [Some].
@@ -147,7 +145,6 @@ impl SerialBackend {
             read_receiver: None,
             error_receiver: None,
 
-            disconnect_callback: None,
             is_connected: false,
             command_buffer: ByteBuffer::new(),
             slip_escaped: false,
@@ -385,8 +382,8 @@ impl Backend for SerialBackend {
         // check for any errors in the read thread
 
         if let Ok(error) = error_receiver.try_recv() {
-            let _ = self.disconnect();
-            return Err(error);
+            // read thread panicked
+            return Err(Error::DeviceReadError(error.to_string()));
         }
 
         let mut commands = vec![];
@@ -396,7 +393,6 @@ impl Backend for SerialBackend {
         let (bytes, bytes_read) = match read_receiver.try_recv() {
             Ok((bytes, bytes_read)) => (bytes, bytes_read),
             Err(mpsc::TryRecvError::Disconnected) => {
-                let _ = self.disconnect();
                 return Err(Error::DeviceNotConnected(format!(
                     "Device disconnected on port {:?}",
                     self.path
@@ -444,14 +440,19 @@ impl Backend for SerialBackend {
                         self.slip_escaped = false;
                     }
                     _ => {
-                        let estring = format!("Invalid SLIP escaped character: {}", byte);
-                        eprintln!("{}", estring);
-                        return Err(Error::CommandParseError(estring));
+                        eprintln!("{}", format!("Invalid SLIP escaped character: {}", byte));
+                        self.command_buffer.clear();
                     }
                 }
             }
         }
 
         Ok(commands)
+    }
+}
+
+impl Drop for SerialBackend {
+    fn drop(&mut self) {
+        let _ = self.disconnect();
     }
 }

@@ -60,14 +60,25 @@ pub trait Client {
     }
 }
 
+// Represents a method of connecting to an M8 device.
 pub trait Backend {
     fn connect(&mut self) -> Result<(), Error>;
     fn disconnect(&mut self) -> Result<(), Error>;
     fn is_connected(&self) -> bool;
 
-    /// Poll incoming commands from the M8 device.
+    /// Poll incoming commands from the device, returning a vector of
+    /// commands that can be processed.
+    ///
+    /// # Errors
+    ///
+    /// If the device has disconnected while running this method, [`Error::DeviceNotConnected`] is returned.
+    /// If the backend can no longer read data from the device, [`Error::DeviceReadError`]
+    /// is returned.
+    ///
+    /// If any error is returned, the connection is no longer valid and the client that owns
+    /// this backend should call [`Backend::disconnect()`].
     fn poll(&mut self) -> Result<Vec<CommandIn>, Error>;
 
-    /// Send a command to the M8 device.
+    /// Send a command to the device.
     fn send_command(&mut self, command: CommandOut) -> Result<(), Error>;
 }

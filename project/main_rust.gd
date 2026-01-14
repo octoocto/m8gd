@@ -14,6 +14,18 @@ const FONT_02_HUGE: BitMap = preload("res://assets/m8_fonts/12_12.bmp")
 @onready var label_fps: Label = %LabelFPS
 @onready var audio_spectrum: AudioSpectrum = %AudioSpectrum
 
+@onready var osc_1: TrackOscilloscope = %Osc1
+@onready var osc_2: TrackOscilloscope = %Osc2
+@onready var osc_3: TrackOscilloscope = %Osc3
+@onready var osc_4: TrackOscilloscope = %Osc4
+@onready var osc_5: TrackOscilloscope = %Osc5
+@onready var osc_6: TrackOscilloscope = %Osc6
+@onready var osc_7: TrackOscilloscope = %Osc7
+@onready var osc_8: TrackOscilloscope = %Osc8
+@onready var osc_9: TrackOscilloscope = %Osc9
+@onready var osc_10: TrackOscilloscope = %Osc10
+@onready var osc_11: TrackOscilloscope = %Osc11
+
 var m8c := GodotM8Client.new()
 var timer: Timer
 
@@ -48,10 +60,24 @@ func _initialize_m8c() -> void:
 		m8c.audio_start("", "")
 		m8c.system_info_received.connect(_on_receive_system_info)
 		m8c.theme_colors_updated.connect(
-			func(colors: PackedColorArray) -> void: print("received theme colors: %s" % str(colors))
+			func(colors: PackedColorArray) -> void:
+				print("received theme colors:")
+				for color in colors:
+					print("%s" % color.to_html(false).to_upper())
 		)
 		print("connected to serial port: %s" % serial_ports[0])
 		audio_spectrum.m8c = m8c
+		osc_1.init(m8c, 1)
+		osc_2.init(m8c, 2)
+		osc_3.init(m8c, 3)
+		osc_4.init(m8c, 4)
+		osc_5.init(m8c, 5)
+		osc_6.init(m8c, 6)
+		osc_7.init(m8c, 7)
+		osc_8.init(m8c, 8)
+		osc_9.init(m8c, 9)
+		osc_10.init(m8c, 10)
+		osc_11.init(m8c, 11)
 
 	texture_rect.visibility_changed.connect(
 		func(visible: bool) -> void:

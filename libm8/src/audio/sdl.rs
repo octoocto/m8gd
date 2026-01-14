@@ -272,6 +272,10 @@ impl super::AudioBackend for SdlAudioBackend {
             buffer_size: samples.clone(),
         })
     }
+
+    fn track_buffer(&mut self, track: audio::AudioTrack) -> Result<Vec<f32>, Error> {
+        todo!()
+    }
 }
 
 fn format_name(format: Option<sdl3::audio::AudioFormat>) -> String {
