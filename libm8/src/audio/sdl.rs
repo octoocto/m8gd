@@ -273,7 +273,7 @@ impl super::AudioBackend for SdlAudioBackend {
         })
     }
 
-    fn track_buffer(&mut self, track: audio::AudioTrack) -> Result<Vec<f32>, Error> {
+    fn track_buffer(&mut self, _track: audio::AudioTrack) -> Result<Vec<f32>, Error> {
         todo!()
     }
 
