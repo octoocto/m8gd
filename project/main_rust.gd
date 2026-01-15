@@ -53,6 +53,10 @@ func _initialize_m8c() -> void:
 	if serial_ports.size() == 0:
 		return
 
+	m8c.background_color_changed.connect(func(color: Color) -> void:
+		RenderingServer.set_default_clear_color(color)
+	)
+
 	m8c.connect_with_serial(serial_ports[0], true)
 
 	if not m8c.is_connected():

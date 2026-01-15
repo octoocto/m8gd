@@ -454,7 +454,7 @@ func on_m8_device_disconnect() -> void:
 
 
 func on_m8_theme_changed(colors: PackedColorArray) -> void:
-	m8_theme_changed.emit(colors)
+	m8_theme_changed.emit(colors, true)
 
 
 func m8_send_theme_color(index: int, color: Color) -> void:

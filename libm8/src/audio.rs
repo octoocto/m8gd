@@ -6,6 +6,14 @@ pub use crate::audio::cpal::*;
 pub use crate::audio::sdl::*;
 use enum_map::Enum;
 
+pub const LATENCY_MS: f32 = 20.0;
+// number of samples to add onto the buffer due to extra latency
+pub const LATENCY_BUFFER_SIZE: usize = ((LATENCY_MS / 1000.0) * SAMPLE_RATE as f32) as usize;
+pub const BUFFER_SIZE: usize = 512;
+pub const SAMPLE_RATE: usize = 44100;
+pub const NUM_CHANNELS_STEREO: u8 = 2;
+pub const NUM_CHANNELS_MULTICHANNEL: u8 = 24;
+
 pub trait AudioBackend {
     /// Starts audio processing with the specified input and output devices.
     /// If [None] is provided for either device, the default device is used.
