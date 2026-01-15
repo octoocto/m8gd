@@ -7,5 +7,5 @@ edition = "2024"
 crate-type = ["cdylib"]
 
 [dependencies]
-godot = "0.4.5"
+godot = { version = "0.4.5", features = ["register-docs"] }
 libm8 = { version = "0.1.0", path = "../libm8" }

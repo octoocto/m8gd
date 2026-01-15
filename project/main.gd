@@ -490,10 +490,7 @@ func m8_get_theme_colors() -> PackedColorArray:
 
 
 func m8_set_font(font: int, bitmap: BitMap) -> void:
-	# TODO
-	return
-	# m8c.load_font(font, bitmap)
-	# m8_send_reset_display()
+	m8c.set_font_bitmap(font, bitmap)
 
 
 func m8_set_font_from_file(font: int, path: String) -> void:

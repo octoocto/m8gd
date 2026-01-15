@@ -70,10 +70,9 @@ pub struct GodotM8Client {
 
     theme_colors: Vec<libm8::Color>,
 
-    font: Option<libm8::FontType>,
-    font_bitmap: Option<Gd<BitMap>>,
+    font_type: libm8::FontType,
     font_bitmap_array: [Option<Gd<BitMap>>; 5],
-
+    // font_bitmap: Option<&Gd<BitMap>>,
     last_osc_size: usize,
     last_draw_color: libm8::Color,
 }
@@ -101,18 +100,11 @@ impl Client for GodotM8Client {
 #[godot_api]
 impl INode for GodotM8Client {
     fn ready(&mut self) {
-        let font_bitmap_array = &mut self.font_bitmap_array;
-        font_bitmap_array[FontType::Model01Normal as usize] =
-            bytes_to_bitmap(Font::FONT_01_SMALL.bytes);
-        font_bitmap_array[FontType::Model01Big as usize] = bytes_to_bitmap(Font::FONT_01_BIG.bytes);
-        font_bitmap_array[FontType::Model02Normal as usize] =
-            bytes_to_bitmap(Font::FONT_02_SMALL.bytes);
-        font_bitmap_array[FontType::Model02Bold as usize] =
-            bytes_to_bitmap(Font::FONT_02_BOLD.bytes);
-        font_bitmap_array[FontType::Model02Huge as usize] =
-            bytes_to_bitmap(Font::FONT_02_HUGE.bytes);
-
-        self.use_font(libm8::FontType::Model01Normal);
+        self.reset_font_bitmap(libm8::FontType::Model01Normal);
+        self.reset_font_bitmap(libm8::FontType::Model01Big);
+        self.reset_font_bitmap(libm8::FontType::Model02Normal);
+        self.reset_font_bitmap(libm8::FontType::Model02Bold);
+        self.reset_font_bitmap(libm8::FontType::Model02Huge);
     }
 
     fn process(&mut self, _delta: f64) {
@@ -269,13 +261,22 @@ impl GodotM8Client {
     }
 }
 
+/// Returns [None] if the GString is `""`, otherwise returns [Some].
+fn gstring_to_option(s: GString) -> Option<String> {
+    if s.is_empty() {
+        None
+    } else {
+        Some(s.to_string())
+    }
+}
+
 // connection methods
 #[godot_api(secondary)]
 impl GodotM8Client {
-    /// Creates a new GodotM8Client and connects to the M8 device via serial port.
+    /// Connects to an M8 device via the serial port at path `preferred_path`.
     ///
-    /// If [preferred_path] is an empty string, the first available M8 device will be used.
-    /// If [check_if_valid] is true, the connection will only be made if the port is a valid M8 device.
+    /// If `preferred_path` is an empty string, the first available M8 device will be used.
+    /// If `check_if_valid` is true, the connection will only be made if the port is a valid M8 device.
     #[func]
     fn connect_with_serial(
         &mut self,
@@ -283,11 +284,7 @@ impl GodotM8Client {
         #[opt(default = true)] check_if_valid: bool,
     ) -> bool {
         let mut client_backend = libm8::SerialBackend::new();
-        let preferred_path = if preferred_path.is_empty() {
-            None
-        } else {
-            Some(preferred_path.to_string())
-        };
+        let preferred_path = gstring_to_option(preferred_path);
 
         let result: Result<(), Error> = (|| {
             client_backend.set_preferred_path(preferred_path.as_deref(), check_if_valid)?;
@@ -387,15 +384,6 @@ impl GodotM8Client {
         Client::set_keys(self, &keystate).is_ok()
     }
 }
-
-fn gstring_to_option(s: GString) -> Option<String> {
-    if s.is_empty() {
-        None
-    } else {
-        Some(s.to_string())
-    }
-}
-
 // audio methods
 #[godot_api(secondary)]
 impl GodotM8Client {
@@ -521,7 +509,7 @@ impl GodotM8Client {
         dict
     }
 
-    /// For the given frequency [freq] in Hz, returns the magnitude of the audio
+    /// For the given frequency `freq` in Hz, returns the magnitude of the audio
     /// at that frequency, in linear scale.
     ///
     /// If the audio or spectrum analyzer is disabled, returns `0.0`.
@@ -564,15 +552,65 @@ impl GodotM8Client {
     }
 }
 
+// font methods
+#[godot_api(secondary)]
 impl GodotM8Client {
-    fn use_font(&mut self, font_type: libm8::FontType) -> () {
-        if self.font.as_ref().is_none_or(|ft| *ft != font_type) {
-            let index = font_type.clone() as usize;
-            let font_bitmap = &self.font_bitmap_array[index];
-            self.font = Some(font_type);
-            self.font_bitmap = font_bitmap.clone();
-            godot_print!("Using font: {:?}", self.font);
+    fn font_bitmap(&self) -> &Gd<BitMap> {
+        let index = self.font_type.to_index();
+        self.font_bitmap_array
+            .get(index)
+            .expect("Font bitmap should be set")
+            .as_ref()
+            .expect("Font bitmap should not be None")
+    }
+
+    fn use_font(&mut self, font_type: libm8::FontType) {
+        if self.font_type != font_type {
+            self.font_type = font_type;
+            godot_print!("Using font: {:?}", self.font_type);
         }
+    }
+
+    /// Sets a custom font bitmap for the given font type index.
+    ///
+    /// Refer to the `FONT_` constants in [libm8::LibM8] for valid values for `font`.
+    #[func]
+    fn set_font_bitmap(&mut self, font: u8, bitmap: Gd<BitMap>) -> bool {
+        let Some(font) = libm8::FontType::from_index(font as usize) else {
+            godot_error!("Invalid font type index: {}", font);
+            return false;
+        };
+        let (w, h) = bitmap.get_size().to_tuple();
+        let (cols, rows) = super::FONT_BITMAP_SIZE;
+        if w % cols as i32 != 0 || h % rows as i32 != 0 {
+            godot_error!(
+                "Invalid font bitmap size: {}x{}. Must be multiple of {}x{}.",
+                w,
+                h,
+                cols,
+                rows
+            );
+            return false;
+        }
+        self.font_bitmap_array[font.to_index()] = Some(bitmap);
+        let _ = self.reset_display();
+        godot_print!("Set custom font bitmap for font {:?}", font);
+        true
+    }
+
+    fn reset_font_bitmap(&mut self, font: libm8::FontType) {
+        self.font_bitmap_array[font.to_index()] = bytes_to_bitmap(font.get_data().bytes);
+    }
+
+    /// Resets the font bitmap for the given font type index to the default.
+    #[func(rename = reset_font_bitmap)]
+    fn gd_reset_font_bitmap(&mut self, font: u8) -> bool {
+        let Some(font) = libm8::FontType::from_index(font as usize) else {
+            godot_error!("Invalid font type index: {}", font);
+            return false;
+        };
+        self.reset_font_bitmap(font);
+        true
     }
 }
 
@@ -643,7 +681,7 @@ impl GodotM8Client {
 // incoming command handlers
 impl GodotM8Client {
     fn on_draw_rect(&mut self, params: libm8::DrawRectParams) {
-        let font_data = self.font.as_ref().unwrap().get_data();
+        let font_data = self.font_type.get_data();
 
         // let (disp_w, disp_h) = self.display_image.get_size().to_tuple();
         let (disp_w, disp_h) = self.display_buffer.size();
@@ -706,7 +744,7 @@ impl GodotM8Client {
 
     fn on_draw_char(&mut self, params: libm8::DrawCharParams) {
         // bitmap only covers ASCII characters
-        if self.font_bitmap.is_none() || params.c as u8 > 127 {
+        if params.c as u8 > 127 {
             return;
         }
 
@@ -716,12 +754,15 @@ impl GodotM8Client {
         let color_fg = params.color_fg;
         let color_bg = params.color_bg;
 
-        let font_data = self.font.as_ref().unwrap().get_data();
-        let font_bitmap = self.font_bitmap.as_ref().unwrap();
+        let font_data = self.font_type.get_data();
+        let mut font_bitmap = self.font_bitmap();
+        let (char_width, char_height) = font_bitmap.get_size().to_tuple();
+        let char_width = char_width as u8 / super::FONT_BITMAP_SIZE.0;
+        let char_height = char_height as u8 / super::FONT_BITMAP_SIZE.1;
 
         // starting position of glyph in font bitmap
-        let x0 = (c as u8 % super::FONT_BITMAP_SIZE.0) * font_data.char_width;
-        let y0 = (c as u8 / super::FONT_BITMAP_SIZE.0) * font_data.char_height;
+        let x0 = (c as u8 % super::FONT_BITMAP_SIZE.0) * char_width;
+        let y0 = (c as u8 / super::FONT_BITMAP_SIZE.0) * char_height;
 
         let rect_x = x as i32;
         let rect_y =
@@ -731,17 +772,22 @@ impl GodotM8Client {
 
         // godot_print!("Drawing char '{}' at ({}, {})", c, rect_x, rect_y,);
 
-        for i in 0..font_data.char_width {
+        // let font_bitmap = self.font_bitmap().clone();
+
+        for i in 0..char_width {
             let i = i as i32;
-            for j in 0..font_data.char_height {
+            for j in 0..char_height {
                 let j = j as i32;
-                if font_bitmap.get_bit(x0 as i32 + i, y0 as i32 + j) {
-                    // foreground pixel
-                    Self::draw_pixel(&mut self.display_buffer, rect_x + i, rect_y + j, &color_fg);
-                } else if draw_bg {
-                    // background pixel
-                    Self::draw_pixel(&mut self.display_buffer, rect_x + i, rect_y + j, &color_bg);
-                }
+                let color = if font_bitmap.get_bit(x0 as i32 + i, y0 as i32 + j) {
+                    &color_fg
+                } else {
+                    if !draw_bg {
+                        continue;
+                    }
+                    &color_bg
+                };
+                Self::draw_pixel(&mut self.display_buffer, rect_x + i, rect_y + j, color);
+                font_bitmap = self.font_bitmap();
             }
         }
     }
@@ -753,7 +799,7 @@ impl GodotM8Client {
 
         let display_image = &mut self.display_buffer;
         // let display_image = &mut self.display_image;
-        let font_data = self.font.as_ref().unwrap().get_data();
+        let font_data = self.font_type.get_data();
 
         let osc_size = if size == 0 {
             self.last_osc_size
@@ -813,7 +859,7 @@ impl GodotM8Client {
             self.firmware_version = firmware;
         }
 
-        if self.font != Some(font_type.clone()) {
+        if self.font_type != font_type {
             self.use_font(font_type);
         }
     }

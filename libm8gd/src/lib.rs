@@ -28,7 +28,7 @@ impl ToGodot for Color {
 
 #[derive(GodotClass)]
 #[class(no_init)]
-struct LibM8;
+pub struct LibM8;
 
 #[godot_api]
 impl LibM8 {
@@ -48,6 +48,17 @@ impl LibM8 {
     const KEY_EDIT: u8 = libm8::Key::EDIT;
     #[constant]
     const KEY_PLAY: u8 = libm8::Key::PLAY;
+
+    #[constant]
+    const FONT_M01_NORMAL: u8 = 0;
+    #[constant]
+    const FONT_M01_BIG: u8 = 1;
+    #[constant]
+    const FONT_M02_NORMAL: u8 = 2;
+    #[constant]
+    const FONT_M02_BOLD: u8 = 3;
+    #[constant]
+    const FONT_M02_HUGE: u8 = 4;
 }
 
 #[godot_api(secondary)]

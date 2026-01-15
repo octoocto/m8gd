@@ -1,13 +1,14 @@
 use super::HardwareType;
 
-#[derive(Debug, Clone, Hash, PartialEq, Eq)]
+#[derive(Default, Debug, Clone, Hash, PartialEq, Eq)]
 #[repr(u8)]
 pub enum FontType {
-    Model01Normal,
-    Model01Big,
-    Model02Normal,
-    Model02Bold,
-    Model02Huge,
+    #[default]
+    Model01Normal = 0,
+    Model01Big = 1,
+    Model02Normal = 2,
+    Model02Bold = 3,
+    Model02Huge = 4,
 }
 
 impl FontType {
@@ -25,6 +26,21 @@ impl FontType {
                 _ => return FontType::Model01Normal,
             },
         }
+    }
+
+    pub fn from_index(index: usize) -> Option<FontType> {
+        match index {
+            0 => Some(FontType::Model01Normal),
+            1 => Some(FontType::Model01Big),
+            2 => Some(FontType::Model02Normal),
+            3 => Some(FontType::Model02Bold),
+            4 => Some(FontType::Model02Huge),
+            _ => None,
+        }
+    }
+
+    pub fn to_index(&self) -> usize {
+        self.clone() as usize
     }
 
     pub fn get_data(&self) -> &'static Font {

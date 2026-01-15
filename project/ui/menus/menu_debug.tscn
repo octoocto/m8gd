@@ -1,17 +1,52 @@
-[gd_scene load_steps=7 format=3 uid="uid://t27ffaww12ff"]
+[gd_scene load_steps=14 format=3 uid="uid://t27ffaww12ff"]
 
 [ext_resource type="Script" uid="uid://b4r3awfaamn14" path="res://ui/menus/menu_debug.gd" id="1_6rsfl"]
 [ext_resource type="PackedScene" uid="uid://dsgvm3dda1kjp" path="res://ui/header.tscn" id="1_imf32"]
+[ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_s7j2u"]
 [ext_resource type="PackedScene" uid="uid://bgsxagi62acni" path="res://ui/settings/setting_options.tscn" id="2_6rsfl"]
 [ext_resource type="PackedScene" uid="uid://dh6y5qxmki43x" path="res://ui/settings/setting_file.tscn" id="3_ly8fq"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jnpuj"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 0.8)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.12549, 0.156863, 0.188235, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+anti_aliasing = false
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4w3sk"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_p3em5"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bkfnt"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_h8bu0"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_veehm"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_o0ylh"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wlgng"]
 
 [node name="Debug" type="PanelContainer"]
-offset_right = 479.0
-offset_bottom = 567.0
+texture_filter = 1
+offset_right = 329.0
+offset_bottom = 389.0
+theme = ExtResource("1_s7j2u")
+theme_override_styles/panel = SubResource("StyleBoxFlat_jnpuj")
 script = ExtResource("1_6rsfl")
 metadata/_tab_index = 7
 
@@ -39,6 +74,7 @@ size_flags_horizontal = 3
 
 [node name="LabelHeader" parent="VBoxContainer" instance=ExtResource("1_imf32")]
 layout_mode = 2
+theme_type_variation = &""
 text = "M8 Fonts"
 
 [node name="Font01Normal" type="HBoxContainer" parent="VBoxContainer"]
@@ -47,14 +83,16 @@ layout_mode = 2
 
 [node name="SettingOptions" parent="VBoxContainer/Font01Normal" instance=ExtResource("2_6rsfl")]
 layout_mode = 2
-setting_type = 1
+theme_override_styles/panel = SubResource("StyleBoxEmpty_p3em5")
 items = PackedStringArray("M:01 Normal Font", "M:01 Big Font", "M:02 Normal Font", "M:02 Bold Font", "M:02 Huge Font", "Custom")
 value = 0
 setting_name = "M:01 Normal Font"
 setting_name_min_width = 120
 
 [node name="SettingFile" parent="VBoxContainer/Font01Normal" instance=ExtResource("3_ly8fq")]
+texture_filter = 1
 layout_mode = 2
+theme_type_variation = &""
 empty_text = "Load Font Spritesheet..."
 filters = "*.bmp; Font Bitmap"
 setting_name_min_width = 75
@@ -65,14 +103,16 @@ layout_mode = 2
 
 [node name="SettingOptions" parent="VBoxContainer/Font01Big" instance=ExtResource("2_6rsfl")]
 layout_mode = 2
-setting_type = 1
+theme_override_styles/panel = SubResource("StyleBoxEmpty_bkfnt")
 items = PackedStringArray("M:01 Normal Font", "M:01 Big Font", "M:02 Normal Font", "M:02 Bold Font", "M:02 Huge Font", "Custom")
 value = 1
 setting_name = "M:01 Big Font"
 setting_name_min_width = 120
 
 [node name="SettingFile" parent="VBoxContainer/Font01Big" instance=ExtResource("3_ly8fq")]
+texture_filter = 1
 layout_mode = 2
+theme_type_variation = &""
 empty_text = "Load Font Spritesheet..."
 filters = "*.bmp; Font Bitmap"
 setting_name_min_width = 75
@@ -83,14 +123,16 @@ layout_mode = 2
 
 [node name="SettingOptions" parent="VBoxContainer/Font02Normal" instance=ExtResource("2_6rsfl")]
 layout_mode = 2
-setting_type = 1
+theme_override_styles/panel = SubResource("StyleBoxEmpty_h8bu0")
 items = PackedStringArray("M:01 Normal Font", "M:01 Big Font", "M:02 Normal Font", "M:02 Bold Font", "M:02 Huge Font", "Custom")
 value = 2
 setting_name = "M:02 Normal Font"
 setting_name_min_width = 120
 
 [node name="SettingFile" parent="VBoxContainer/Font02Normal" instance=ExtResource("3_ly8fq")]
+texture_filter = 1
 layout_mode = 2
+theme_type_variation = &""
 empty_text = "Load Font Spritesheet..."
 filters = "*.bmp; Font Bitmap"
 setting_name_min_width = 75
@@ -101,14 +143,16 @@ layout_mode = 2
 
 [node name="SettingOptions" parent="VBoxContainer/Font02Bold" instance=ExtResource("2_6rsfl")]
 layout_mode = 2
-setting_type = 1
+theme_override_styles/panel = SubResource("StyleBoxEmpty_veehm")
 items = PackedStringArray("M:01 Normal Font", "M:01 Big Font", "M:02 Normal Font", "M:02 Bold Font", "M:02 Huge Font", "Custom")
 value = 3
 setting_name = "M:02 Bold Font"
 setting_name_min_width = 120
 
 [node name="SettingFile" parent="VBoxContainer/Font02Bold" instance=ExtResource("3_ly8fq")]
+texture_filter = 1
 layout_mode = 2
+theme_type_variation = &""
 empty_text = "Load Font Spritesheet..."
 filters = "*.bmp; Font Bitmap"
 setting_name_min_width = 75
@@ -119,20 +163,23 @@ layout_mode = 2
 
 [node name="SettingOptions" parent="VBoxContainer/Font02Huge" instance=ExtResource("2_6rsfl")]
 layout_mode = 2
-setting_type = 1
+theme_override_styles/panel = SubResource("StyleBoxEmpty_o0ylh")
 items = PackedStringArray("M:01 Normal Font", "M:01 Big Font", "M:02 Normal Font", "M:02 Bold Font", "M:02 Huge Font", "Custom")
 value = 4
 setting_name = "M:02 Huge Font"
 setting_name_min_width = 120
 
 [node name="SettingFile" parent="VBoxContainer/Font02Huge" instance=ExtResource("3_ly8fq")]
+texture_filter = 1
 layout_mode = 2
+theme_type_variation = &""
 empty_text = "Load Font Spritesheet..."
 filters = "*.bmp; Font Bitmap"
 setting_name_min_width = 75
 
 [node name="LabelHeader2" parent="VBoxContainer" instance=ExtResource("1_imf32")]
 layout_mode = 2
+theme_type_variation = &""
 text = "M8 Remote Commands"
 
 [node name="ButtonM8Reset" type="Button" parent="VBoxContainer"]
