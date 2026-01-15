@@ -9,8 +9,8 @@ enum ColorStyle { SCOPE, METER }
 
 @export_group("Analyzer", "analyzer_")
 @export var analyzer_db_min: float = 60.0
-@export_range(100, 20000, 1) var analyzer_freq_min: int = 100
-@export_range(100, 20000, 1) var analyzer_freq_max: int = 10000
+@export_range(20, 20000, 1) var analyzer_freq_min: int = 100
+@export_range(20, 20000, 1) var analyzer_freq_max: int = 10000
 @export_range(0.0, 1.0, 0.01) var analyzer_smoothing: float = 0.5
 
 # @export var size := Vector2i(320, 240)
@@ -67,8 +67,9 @@ func _draw() -> void:
 			continue
 
 		var d := (analyzer_freq_max - analyzer_freq_min) / float(res)
-		var db_from := i * d
-		var db_to := (i + 1) * d
+		var freq := analyzer_freq_min + i * d
+		# var db_from := i * d
+		# var db_to := (i + 1) * d
 
 		if i >= last_peaks.size():
 			last_peaks.resize(int(res))
@@ -76,7 +77,9 @@ func _draw() -> void:
 
 		# var magnitude_raw: float = clamp((analyzer_db_min + linear_to_db(main.audio_fft(logspace[i], logspace[i + 1]))) / analyzer_db_min * 2, 0.0, 1.0)
 		# var magnitude_raw: float = main.audio_fft(db_from, db_to)
-		var magnitude_raw: float = linear_to_db(main.audio_fft(db_from, db_to)) + analyzer_db_min
+		var magnitude_raw: float = (
+			linear_to_db(main.audio_get_magnitude_at_freq(freq)) + analyzer_db_min
+		)
 
 		if magnitude_raw > highest_peak:
 			highest_peak = magnitude_raw

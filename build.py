@@ -12,12 +12,12 @@ import stat
 import urllib.request
 import urllib.error
 import time
+import itertools
 from pathlib import Path
 
-LIBSERIALPORT_PATH = "thirdparty/libserialport/.libs/libserialport.a"
-SDL2_PATH = "thirdparty/sdl/build/.libs/libSDL2.a"
-
 BUILD_DIR = "build"
+LIB_DIR = "libm8gd"
+LIB_OUT_DIR = "project/addons/libm8gd"
 GODOT_VERSION = "4.4.1"
 GODOT_BRANCH = "stable"
 
@@ -45,18 +45,6 @@ godot_path_mac = "Godot.app"
 parser = argparse.ArgumentParser()
 
 parser.add_argument(
-    "--osxcross-sdk",
-    type=str,
-    default="",
-    help="enable building with OSXCross and specify OSXCross SDK",
-)
-parser.add_argument(
-    "--host",
-    type=str,
-    default="",
-    help="set C compiler to use to compile libserialport",
-)
-parser.add_argument(
     "--target",
     type=str,
     choices=["template_debug", "template_release"],
@@ -66,12 +54,12 @@ parser.add_argument(
 parser.add_argument(
     "--extension-only",
     action="store_true",
-    help="only build the gdextension (does not export m8gd)",
+    help="only build the libm8gd GDExtension (does not export m8gd)",
 )
 parser.add_argument(
     "--export-only",
     action="store_true",
-    help="only export m8gd (does not compile the gdextension)",
+    help="only export m8gd (does not compile the libm8gd GDExtension)",
 )
 parser.add_argument(
     "--dev",
@@ -192,43 +180,34 @@ def which(path: str) -> str | None:
                 pass
 
 
-def run(command: str, working_directory: str = None) -> None:
+def run(command: str, working_directory: str = None, env = None, *, capture_output=False):
     if working_directory:
         cwd = os.getcwd()
         os.chdir(working_directory)
 
-    print(command)
+    _println_info(command)
+
+    args = []
+    result = None
     if not using_cygwin():
-        subprocess.run(
-            shlex.split(command),
-            check=True,
-        )
+        args = shlex.split(command)
     else:
         bash_path = find_bash()
         if bash_path:
-            subprocess.run([bash_path, "--login", "-c", command], check=True)
+            args = [bash_path, "--login", "-c", command]
 
+    result = subprocess.run(args, check=False, env=env, capture_output=capture_output)
+
+    # restore working directory
     if working_directory:
         os.chdir(cwd)
 
+    returncode = -1 if result is None else result.returncode
 
-def run_scons(target: str = "", platform: str = "", arch: str = "") -> None:
-    scons_target = "target=%s" % target if target else ""
-    scons_platform = "platform=%s" % platform if platform else ""
-    scons_arch = "arch=%s" % arch if arch else ""
-    try:
-        if args.osxcross_sdk:
-            run(
-                "scons %s platform=macos arch=x86_64 osxcross_sdk=%s"
-                % (scons_target, args.osxcross_sdk)
-            )
-        else:
-            run("scons %s %s %s" % (scons_target, scons_platform, scons_arch))
-    except subprocess.CalledProcessError:
-        _println_err(
-            "Scons was not able to compile the GDExtension successfully. Exiting."
-        )
-        quit(1)
+    if returncode != 0:
+        _println_err("Command %s returned non-zero exit status: %d" % (command, returncode))
+
+    return result
 
 
 def _print(text: str) -> None:
@@ -240,7 +219,7 @@ def _println(text: str) -> None:
 
 
 def _println_info(text: str) -> None:
-    print(f"\033[94m{text}\033[0m")
+    print(f"\033[94m{text}\033[0m", flush=True)
 
 
 def _println_err(text: str) -> None:
@@ -250,10 +229,26 @@ def _println_err(text: str) -> None:
 ################################################################################
 # Build Script
 
+if args.extension_only:
+    build_extension = True
+    build_export = False
+elif args.export_only:
+    build_extension = False
+    build_export = True
+else:
+    build_extension = True
+    build_export = True
+
 target_platform = platform.system().lower() if args.platform == "" else args.platform
 
-if target_platform == "darwin":
-    target_platform = "macos"
+match target_platform:
+    case "darwin" | "macos":
+        target_platform = "macos"
+        cargo_targets = ["x86_64-apple-darwin", "aarch64-apple-darwin"]
+    case "windows":
+        cargo_targets = ["x86_64-pc-windows-gnu"]
+    case "linux":
+        cargo_targets = ["x86_64-unknown-linux-gnu"]
 
 if args.target == "template_debug":
     godot_target = "--export-debug"
@@ -264,92 +259,47 @@ if platform.system() == "Windows":
     os.system("color")
 
 # create build directory if doesn't exist
-Path(BUILD_DIR).mkdir(exist_ok=True)
+build_path = Path(BUILD_DIR)
+build_path.mkdir(exist_ok=True)
 
-if not args.export_only:
-    make_path = find_command("make")
+if build_extension:
+    cargo_path = find_command("cargo")
+    rustup_path = find_command("rustup")
 
-    # compile libserialport
-    if not os.path.exists(LIBSERIALPORT_PATH):
-        _println("Compiling libserialport...")
+    cargo_flags = ""
+    cargo_target = ""
+    if args.target == "template_release":
+        cargo_flags += "--release "
+        cargo_target = "release"
+    else:
+        cargo_target = "debug"
 
-        try:
-            chmod_x("thirdparty/libserialport/autogen.sh")
-            run("./autogen.sh", "thirdparty/libserialport")
-            chmod_x("thirdparty/libserialport/configure")
-            if args.host != "":
-                run(
-                    "./configure --prefix=/usr/{0} --host={0}".format(args.host),
-                    "thirdparty/libserialport",
-                )
-            elif args.arch == "universal":
-                run(
-                    './configure CFLAGS="-arch arm64 -arch x86_64"',
-                    "thirdparty/libserialport",
-                )
-            else:
-                run("./configure", "thirdparty/libserialport")
+    run("%s --version" % cargo_path)
+    run("%s --version" % rustup_path)
 
-            if args.arch == "universal":
-                run(
-                    '%s CFLAGS="-fPIC -arch arm64 -arch x86_64"' % make_path,
-                    "thirdparty/libserialport",
-                )
-            else:
-                run("%s CFLAGS=-fPIC" % make_path, "thirdparty/libserialport")
-        except subprocess.CalledProcessError:
-            _println_err("Errors occured while compiling libserialport. Exiting.")
+    for target in cargo_targets:
+        if run("%s target add %s" % (rustup_path, target)).returncode != 0:
             quit(1)
-    else:
-        _println("Found libserialport!")
-
-    # compile sdl2
-    if not os.path.exists(SDL2_PATH):
-        _println("Compiling sdl2...")
-
-        try:
-            chmod_x("thirdparty/sdl/autogen.sh")
-            run("./autogen.sh", "thirdparty/sdl")
-
-            chmod_x("thirdparty/sdl/configure")
-            configure_args = [
-                "--disable-timers",
-                "--disable-video",
-                "--disable-joystick",
-                "--disable-haptic",
-            ]
-            if args.host != "":
-                configure_args.append("--prefix=/usr/%s" % args.host)
-                configure_args.append("--host=%s" % args.host)
-            elif args.arch == "universal":
-                configure_args.append('CFLAGS="-arch arm64 -arch x86_64"')
-
-            run("./configure %s" % " ".join(configure_args), "thirdparty/sdl")
-
-            if args.arch == "universal":
-                run(
-                    '%s CFLAGS="-fPIC -arch arm64 -arch x86_64"' % make_path,
-                    "thirdparty/sdl",
-                )
-            else:
-                run("%s CFLAGS=-fPIC" % make_path, "thirdparty/sdl")
-        except subprocess.CalledProcessError:
-            _println_err("Errors occured while compiling sdl2. Exiting.")
+        if run("%s build %s --target %s" % (cargo_path, cargo_flags, target), LIB_DIR).returncode != 0:
             quit(1)
-    else:
-        _println("Found sdl2!")
+        res = run("find %s/target/%s/%s/ -maxdepth 1 -name 'lib*.so' -o -name 'lib*.dylib' -o -name '*.dll'" % (LIB_DIR, target, cargo_target), capture_output=True)
 
-    # compile gdextension
-    scons_path = find_command("scons")
-    _println("Compiling libm8gd extension...")
+        lib_file = res.stdout.decode().strip().splitlines()[0]
+        lib_file_ext = lib_file.split(".")[-1]
+        lib_file_out = "%s/%s.%s.%s.%s" % (LIB_OUT_DIR, LIB_DIR, target, cargo_target, lib_file_ext)
 
-    if args.full:
-        run_scons("template_debug", args.platform, args.arch)
-        run_scons("template_release", args.platform, args.arch)
-    else:
-        run_scons(args.target, args.platform, args.arch)
+        shutil.copy(lib_file, lib_file_out)
 
-if args.extension_only:
+    if target_platform == "macos":
+        _println_info("Creating universal dylib for macOS...")
+        lib_file_x86 = "%s/libm8gd.x86_64-apple-darwin.%s.dylib" % (LIB_OUT_DIR, cargo_target)
+        lib_file_arm = "%s/libm8gd.aarch64-apple-darwin.%s.dylib" % (LIB_OUT_DIR, cargo_target)
+        lib_file_universal = "%s/libm8gd.universal.%s.dylib" % (LIB_OUT_DIR, cargo_target)
+        run("lipo -create %s %s -output %s"
+            % (lib_file_x86, lib_file_arm, lib_file_universal))
+        run("rm %s %s" % (lib_file_x86, lib_file_arm))
+
+if not build_export:
     _println("Done!")
     quit(0)
 

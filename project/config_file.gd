@@ -88,8 +88,8 @@ var version: int = 0
 var current_preset := ConfigFile.new()
 
 
-static func _print(message: String) -> void:
-	Log.ln("[color=green]%s[/color]" % message)
+static func _print(message: String, depth := 2) -> void:
+	Log.ln("[color=green]%s[/color]" % message, depth)
 
 
 ## Returns true if this script contains a default for the given setting.
@@ -145,6 +145,7 @@ func get_current_scene_path() -> String:
 
 
 func list_preset_names() -> PackedStringArray:
+	_preset_mkdir()
 	var dir := DirAccess.open(PRESETS_DIR_PATH)
 	if dir == null:
 		_print("failed to list presets: %s" % error_string(DirAccess.get_open_error()))
@@ -156,7 +157,7 @@ func list_preset_names() -> PackedStringArray:
 		. map(func(f: String) -> String: return f.get_file().get_basename())
 	)
 
-	_print("found %d presets" % array.size())
+	_print("found %d presets" % array.size(), 3)
 	return PackedStringArray(array)
 
 
@@ -171,6 +172,13 @@ func preset_exists(preset_name: String) -> bool:
 	return FileAccess.file_exists(preset_path)
 
 
+## make sure presets directory exists
+func _preset_mkdir() -> void:
+	if not DirAccess.dir_exists_absolute(PRESETS_DIR_PATH):
+		DirAccess.make_dir_absolute(PRESETS_DIR_PATH)
+		_print("created presets directory: %s" % PRESETS_DIR_PATH)
+
+
 ##
 ## Save the current preset.
 ##
@@ -181,10 +189,7 @@ func preset_save(preset_name: String, overwrite := false) -> String:
 	if preset_exists(preset_name) and !overwrite:
 		assert(false, "preset '%s' already exists" % preset_name)
 
-	# make sure presets directory exists
-	if not DirAccess.dir_exists_absolute(PRESETS_DIR_PATH):
-		DirAccess.make_dir_absolute(PRESETS_DIR_PATH)
-		_print("created presets directory: %s" % PRESETS_DIR_PATH)
+	_preset_mkdir()
 
 	var path := _preset_get_path(preset_name)
 

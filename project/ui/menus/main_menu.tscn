@@ -199,7 +199,7 @@ content_margin_right = 6.0
 content_margin_bottom = 0.0
 draw_center = false
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ovmky"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mfjjd"]
 content_margin_left = 2.0
 content_margin_top = 2.0
 content_margin_right = 2.0
@@ -233,9 +233,6 @@ offset_bottom = 240.0
 theme = ExtResource("1_qr6r4")
 theme_override_styles/panel = SubResource("StyleBoxFlat_rsjqv")
 script = ExtResource("1_7xjs6")
-is_inner_menu = false
-enabled = true
-hint_text = ""
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -258,8 +255,6 @@ layout_mode = 2
 theme_type_variation = &""
 text = "Main Menu"
 color_override = 4
-enabled = true
-hint_text = ""
 
 [node name="ButtonClose" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" instance=ExtResource("12_10bvg")]
 unique_name_in_owner = true
@@ -318,16 +313,12 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_xv1rc")
 no_padding = true
 text_left = "Current Scene"
 align_right_text_to_right = true
-enabled = true
-hint_text = ""
 
 [node name="OptionLoadScene" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" instance=ExtResource("5_w22xg")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 1
 theme_override_styles/panel = SubResource("StyleBoxEmpty_f72sp")
-enabled = true
-hint_text = ""
 
 [node name="HSeparator2" type="HSeparator" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer"]
 layout_mode = 2
@@ -486,7 +477,6 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_xmuii")
-theme_override_styles/panel = SubResource("StyleBoxEmpty_xmuii")
 is_inner_menu = true
 metadata/_tab_index = 1
 
@@ -496,8 +486,6 @@ visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_0lxgr")
 is_inner_menu = true
-enabled = true
-hint_text = ""
 metadata/_tab_index = 2
 
 [node name="MenuColors" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer" instance=ExtResource("4_w22xg")]
@@ -506,15 +494,12 @@ visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_xok0b")
 is_inner_menu = true
-enabled = true
-hint_text = ""
 metadata/_tab_index = 3
 
 [node name="MenuOverlays" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer" instance=ExtResource("4_j5v2v")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_8dpw5")
 theme_override_styles/panel = SubResource("StyleBoxEmpty_8dpw5")
 is_inner_menu = true
 metadata/_tab_index = 4
@@ -524,7 +509,6 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_fpotr")
-theme_override_styles/panel = SubResource("StyleBoxEmpty_fpotr")
 is_inner_menu = true
 metadata/_tab_index = 5
 
@@ -532,7 +516,6 @@ metadata/_tab_index = 5
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_63puf")
 theme_override_styles/panel = SubResource("StyleBoxEmpty_63puf")
 is_inner_menu = true
 metadata/_tab_index = 6
@@ -543,15 +526,12 @@ visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_k7pwe")
 is_inner_menu = true
-enabled = true
-hint_text = ""
 metadata/_tab_index = 7
 
 [node name="MenuVideo" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer" instance=ExtResource("8_g8g3n")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_pn4ol")
 theme_override_styles/panel = SubResource("StyleBoxEmpty_pn4ol")
 is_inner_menu = true
 metadata/_tab_index = 8
@@ -560,11 +540,8 @@ metadata/_tab_index = 8
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_type_variation = &""
 theme_override_styles/panel = SubResource("StyleBoxEmpty_820nw")
 is_inner_menu = true
-enabled = true
-hint_text = ""
 metadata/_tab_index = 9
 
 [node name="MenuDebug" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer" instance=ExtResource("10_8u0te")]
@@ -573,7 +550,6 @@ visible = false
 texture_filter = 1
 layout_mode = 2
 theme = ExtResource("1_qr6r4")
-theme_override_styles/panel = SubResource("StyleBoxEmpty_ovmky")
 theme_override_styles/panel = SubResource("StyleBoxEmpty_ovmky")
 is_inner_menu = true
 metadata/_tab_index = 10
@@ -595,7 +571,7 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_horizontal = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_ovmky")
+theme_override_styles/panel = SubResource("StyleBoxFlat_mfjjd")
 color_bg_hover = 2
 color_bg_pressed = 0
 text = "< Back"
@@ -606,8 +582,6 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 color_override = 2
-enabled = true
-hint_text = ""
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer2/VBoxContainer"]
 visible = false
