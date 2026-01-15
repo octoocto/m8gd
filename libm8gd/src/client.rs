@@ -10,7 +10,7 @@ use libm8::Client;
 use libm8::audio::AudioBackend;
 use libm8::*;
 
-type AudioBackendType = audio::CpalAudioBackend;
+type AudioBackendType = audio::SdlAudioBackend;
 
 fn bytes_to_bitmap(bytes: &[u8]) -> Option<Gd<BitMap>> {
     let mut font_image = Image::new_gd();
@@ -393,7 +393,7 @@ impl GodotM8Client {
     /// If initialization fails, [struct@audio_backend] will still be [None].
     fn audio_try_init(&mut self) {
         if self.audio_backend.is_none() {
-            self.audio_backend = match AudioBackendType::new(self.audio_volume) {
+            self.audio_backend = match AudioBackendType::new() {
                 Ok(audio_backend) => Some(audio_backend),
                 Err(e) => {
                     godot_error!("Failed to initialize audio backend: {}", e);

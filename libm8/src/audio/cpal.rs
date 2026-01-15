@@ -34,7 +34,7 @@ pub struct CpalAudioBackend {
 }
 
 impl CpalAudioBackend {
-    pub fn new(volume: f32) -> Result<Self, Error> {
+    pub fn new() -> Result<Self, Error> {
         Ok(Self {
             host: cpal::default_host(),
             multichannel_enabled: false,
@@ -42,7 +42,7 @@ impl CpalAudioBackend {
             output_stream: None,
             buffers: Arc::new(Mutex::new(EnumMap::from_fn(|_| vec![0.0; BUFFER_SIZE * 4]))),
 
-            volume: Arc::new(Mutex::new(volume)),
+            volume: Arc::new(Mutex::new(1.0)),
             volume_peaks: Arc::new(Mutex::new([0.0; 2])),
 
             spectrum_analyzer_enabled: true,
