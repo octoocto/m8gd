@@ -803,14 +803,18 @@ impl GodotM8Client {
         let firmware = params.firmware;
         let font_type = params.font;
 
-        self.use_font(font_type.clone());
+        if self.hardware_type != Some(hardware_type.clone()) {
+            self.signals()
+                .system_info_received()
+                .emit(hardware_type.name(), firmware.clone());
+            self.set_display_size(&hardware_type);
 
-        self.signals()
-            .system_info_received()
-            .emit(hardware_type.name(), firmware.clone());
-        self.set_display_size(&hardware_type);
+            self.hardware_type = Some(hardware_type);
+            self.firmware_version = firmware;
+        }
 
-        self.hardware_type = Some(hardware_type);
-        self.firmware_version = firmware;
+        if self.font != Some(font_type.clone()) {
+            self.use_font(font_type);
+        }
     }
 }

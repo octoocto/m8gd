@@ -1,11 +1,7 @@
 use godot::{
-    classes::{
-        Image,
-        class_macros::private::virtuals::Os::{PackedArray, PackedByteArray},
-        image::Format,
-    },
+    classes::{Image, class_macros::private::virtuals::Os::PackedByteArray, image::Format},
     global::godot_warn,
-    meta::{ByValue, GodotConvert, ToGodot},
+    meta::GodotConvert,
     obj::Gd,
 };
 
@@ -13,13 +9,32 @@ use libm8::Color;
 
 const IMAGE_FORMAT: Format = godot::classes::image::Format::RGBA8;
 
+const BUFFER_SIZE_MAX: usize = libm8::HardwareType::SCREEN_SIZE_MAX.0 as usize
+    * libm8::HardwareType::SCREEN_SIZE_MAX.1 as usize
+    * 4;
+
 /// A display buffer in RGBA8 format.
-#[derive(Default)]
+// #[derive(Default)]
 pub struct ImageBuffer {
     width: usize,
     height: usize,
     image: Gd<Image>,
-    data: Vec<u8>,
+    // data: Vec<u8>,
+    data: [u8; BUFFER_SIZE_MAX],
+    data_len: usize,
+}
+
+impl Default for ImageBuffer {
+    fn default() -> Self {
+        ImageBuffer {
+            width: 0,
+            height: 0,
+            image: Gd::<Image>::default(),
+            // data: vec![0; width * height * 4],
+            data: [0; BUFFER_SIZE_MAX],
+            data_len: 0,
+        }
+    }
 }
 
 impl ImageBuffer {
@@ -87,10 +102,15 @@ impl ImageBuffer {
     }
 
     pub fn set_size(&mut self, width: usize, height: usize) {
+        if self.width == width && self.height == height {
+            return;
+        }
         self.width = width;
         self.height = height;
         self.image = Self::create_image(width, height);
-        self.data = vec![0; width * height * 4];
+        // self.data = vec![0; width * height * 4];
+        self.data_len = width * height * 4;
+        self.data[..self.data_len].fill(0);
     }
 
     pub fn to_image(&mut self) -> Gd<Image> {
@@ -99,7 +119,7 @@ impl ImageBuffer {
             self.height as i32,
             false,
             IMAGE_FORMAT,
-            &PackedByteArray::from(self.data.clone()),
+            &PackedByteArray::from(&self.data[..self.data_len]),
         );
         self.image.clone()
     }
