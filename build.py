@@ -47,9 +47,9 @@ parser = argparse.ArgumentParser()
 parser.add_argument(
     "--target",
     type=str,
-    choices=["template_debug", "template_release"],
-    default="template_release",
-    help="set building the debug or release version of m8gd",
+    choices=["debug", "release"],
+    default="release",
+    help="set building the debug or release version of m8gd"
 )
 parser.add_argument(
     "--extension-only",
@@ -62,14 +62,9 @@ parser.add_argument(
     help="only export m8gd (does not compile the libm8gd GDExtension)",
 )
 parser.add_argument(
-    "--dev",
+    "--debug",
     action="store_true",
     help='only build the debug version of the gdextension. an alias for "--extension-only --target=debug"',
-)
-parser.add_argument(
-    "--full",
-    action="store_true",
-    help="build both the debug and release versions of the gdextension, as well as exporting m8gd",
 )
 parser.add_argument(
     "--platform",
@@ -78,14 +73,6 @@ parser.add_argument(
     default="",
     help="set the target platform to build for",
 )
-
-parser.add_argument(
-    "--arch",
-    type=str,
-    default="",
-    help="set the target architecture to build for",
-)
-
 parser.add_argument(
     "--nodownload",
     action="store_true",
@@ -94,9 +81,9 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-if args.dev:
-    args.target = "template_debug"
-    args.extension_only = True
+if args.debug:
+    # args.target = "template_debug"
+    args.target = "debug"
 
 
 def get_export_templates_path() -> str:
@@ -141,7 +128,7 @@ def find_godot() -> str | None:
         if path != None:
             return path
         else:
-            _println_info(f"Could not find godot in {file_path}!")
+            _println(f"Could not find godot in {file_path}!")
 
 
 def chmod_x(path: str) -> None:
@@ -152,7 +139,7 @@ def chmod_x(path: str) -> None:
 def find_command(cmd: str) -> str | None:
     path: str = which(cmd)
     if path != None:
-        _println_info(f"Found %s! (%s)" % (cmd, path))
+        _println(f"Found %s! (%s)" % (cmd, path))
         return path
     else:
         _println_err("Could not find %s!" % cmd)
@@ -215,11 +202,11 @@ def _print(text: str) -> None:
 
 
 def _println(text: str) -> None:
-    print(f"\033[92m{text}\033[0m")
+    print(f"\033[92m{text}\033[0m", flush=True)
 
 
 def _println_info(text: str) -> None:
-    print(f"\033[94m{text}\033[0m", flush=True)
+    print(f"\033[34m{text}\033[0m", flush=True)
 
 
 def _println_err(text: str) -> None:
@@ -250,7 +237,7 @@ match target_platform:
     case "linux":
         cargo_targets = ["x86_64-unknown-linux-gnu"]
 
-if args.target == "template_debug":
+if args.target == "debug":
     godot_target = "--export-debug"
 else:
     godot_target = "--export-release"
@@ -263,12 +250,14 @@ build_path = Path(BUILD_DIR)
 build_path.mkdir(exist_ok=True)
 
 if build_extension:
+    _println("Compiling extension (%s)..." % args.target)
+
     cargo_path = find_command("cargo")
     rustup_path = find_command("rustup")
 
     cargo_flags = ""
     cargo_target = ""
-    if args.target == "template_release":
+    if args.target == "release":
         cargo_flags += "--release "
         cargo_target = "release"
     else:
@@ -288,10 +277,11 @@ if build_extension:
         lib_file_ext = lib_file.split(".")[-1]
         lib_file_out = "%s/%s.%s.%s.%s" % (LIB_OUT_DIR, LIB_DIR, target, cargo_target, lib_file_ext)
 
+        _println("Copying built library to %s..." % (lib_file_out))
         shutil.copy(lib_file, lib_file_out)
 
     if target_platform == "macos":
-        _println_info("Creating universal dylib for macOS...")
+        _println("Creating universal dylib for macOS...")
         lib_file_x86 = "%s/libm8gd.x86_64-apple-darwin.%s.dylib" % (LIB_OUT_DIR, cargo_target)
         lib_file_arm = "%s/libm8gd.aarch64-apple-darwin.%s.dylib" % (LIB_OUT_DIR, cargo_target)
         lib_file_universal = "%s/libm8gd.universal.%s.dylib" % (LIB_OUT_DIR, cargo_target)
@@ -306,7 +296,7 @@ if not build_export:
 # find or download export templates
 export_templates_path = get_export_templates_path()
 if os.path.exists(export_templates_path):
-    _println_info("Found export templates!")
+    _println("Found export templates!")
 elif not args.nodownload:
     url = godot_url_root + godot_zip_export_templates
 
@@ -335,7 +325,7 @@ else:
 godot_path = find_godot()
 
 if godot_path:
-    _println_info("Found godot!")
+    _println("Found godot!")
 elif not args.nodownload:
     if platform.system() == "Windows":
         url = godot_url_root + godot_zip_win

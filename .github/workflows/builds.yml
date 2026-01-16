@@ -115,7 +115,7 @@ jobs:
           platform: ${{ matrix.platform }}
           arch: ${{ matrix.arch }}
           float-precision: ${{ matrix.float-precision }}
-          build-target-type: ${{ matrix.target-type }}
+          build-target-type: ${{ matrix.target }}
           host: ${{ matrix.host }}
 
       - name: MacOS - Sign
@@ -133,7 +133,7 @@ jobs:
           APPLE_DEV_TEAM_ID: ${{ secrets.APPLE_DEV_TEAM_ID }}
           APPLE_DEV_APP_ID: ${{ secrets.APPLE_DEV_APP_ID }}
 
-      - name: Copy LICENSE to extension folder
+      - name: Collect Addon Files as Artifact
         shell: bash
         run: |
           mkdir -p "${{ github.workspace }}/artifact/addons/libm8gd/"

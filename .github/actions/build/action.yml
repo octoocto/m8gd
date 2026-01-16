@@ -139,5 +139,5 @@ runs:
         SCONS_CACHE: ${{ github.workspace }}/.scons-cache/
         SCONS_CACHE_LIMIT: 4096
       run: |
-        python build.py --target=${{ inputs.build-target-type }} --platform=${{ inputs.platform }} --arch=${{ inputs.arch }} --extension-only
+        python build.py --target=${{ inputs.build-target-type }} --platform=${{ inputs.platform }} --extension-only
       working-directory: ${{ inputs.gdextension-directory }}
