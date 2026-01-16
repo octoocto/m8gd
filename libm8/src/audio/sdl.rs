@@ -83,7 +83,7 @@ struct AudioStreamHandle(AudioStreamOwner);
 
 struct AudioInCallback {
     output_stream: Option<AudioStreamHandle>,
-    buffer: [Format; AUDIO_BUFFER_SIZE * 2],
+    buffer: Vec<f32>,
 
     volume: f32,
     peaks: [f32; 2],
@@ -96,7 +96,7 @@ impl AudioInCallback {
     fn new(output_stream: AudioStreamOwner, volume: f32) -> Self {
         AudioInCallback {
             output_stream: Some(AudioStreamHandle(output_stream)),
-            buffer: [Format::default(); AUDIO_BUFFER_SIZE * 2],
+            buffer: vec![0.0; AUDIO_BUFFER_SIZE * 2],
 
             volume,
             peaks: [0.0, 0.0],
@@ -105,15 +105,25 @@ impl AudioInCallback {
             frequency_spectrum: None,
         }
     }
+
+    fn set_buffer_size(&mut self, size: usize) {
+        self.buffer.resize(size * 2, 0.0);
+    }
 }
 
 impl AudioRecordingCallback<f32> for AudioInCallback {
     fn callback(&mut self, input_stream: &mut AudioStream, available: i32) {
+        // println!("Audio received {} samples", available);
+        if available > self.buffer.len() as i32 {
+            println!("Received {} samples, resizing buffer.", available);
+            self.set_buffer_size(available as usize);
+        }
+
         let Some(output_stream) = &self.output_stream else {
             // println!("No output stream available");
             return;
         };
-        // println!("Audio received {} samples", available);
+
         self.peaks = [0.0, 0.0];
 
         let _ = input_stream.read_f32_samples(&mut self.buffer);
@@ -192,6 +202,7 @@ impl super::AudioBackend for SdlAudioBackend {
 
         self.input_stream = Some(input_stream);
         self.input_stream_spec = Some(Self::get_audio_spec(input_device.id())?);
+
         // self.output_stream = Some(output_stream);
 
         Ok(())
