@@ -1,7 +1,7 @@
 [gd_scene load_steps=14 format=3 uid="uid://cl0l1ahpak3yn"]
 
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_14jgw"]
-[ext_resource type="Script" uid="uid://cqykgmgk21s66" path="res://ui/menus/menu_presets.gd" id="1_racsg"]
+[ext_resource type="Script" uid="uid://b1jvv8rrh5swb" path="res://ui/menus/menu_presets.gd" id="1_racsg"]
 [ext_resource type="PackedScene" uid="uid://c5kj6fcv4g2ux" path="res://ui/settings/setting_string.tscn" id="2_14jgw"]
 [ext_resource type="PackedScene" uid="uid://jvyexp7mquoa" path="res://ui/button.tscn" id="4_fhu81"]
 [ext_resource type="Texture2D" uid="uid://empk3tddpq0c" path="res://assets/icon/icon_plus.png" id="5_4fufk"]
@@ -77,7 +77,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_top = -54.0
 offset_right = -1105.0
-offset_bottom = -885.0
+offset_bottom = -899.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_14jgw")
