@@ -64,7 +64,12 @@ func _on_menu_init() -> void:
 	)
 
 	s_always_on_top.setting_connect_global(
-		"always_on_top", func(value: bool) -> void: window.always_on_top = value
+		"always_on_top",
+		func(value: bool) -> void:
+			if window.always_on_top != value:
+				var mode := window.mode
+				window.always_on_top = value
+				window.set_deferred("mode", mode)
 	)
 
 	s_window_size.setting_connect(
