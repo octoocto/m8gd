@@ -197,14 +197,14 @@ impl GodotM8Client {
     #[func]
     fn get_hardware_name(&self) -> String {
         match &self.hardware_type {
-            Some(hardware_type) => hardware_type.to_string(),
+            Some(hardware_type) => hardware_type.name(),
             None => String::from(""),
         }
     }
 
     #[func]
     fn get_firmware_version(&self) -> String {
-        self.firmware_version.clone()
+        (&self.firmware_version).clone()
     }
 
     #[func]
@@ -850,13 +850,16 @@ impl GodotM8Client {
         let font_type = params.font;
 
         if self.hardware_type != Some(hardware_type.clone()) {
-            self.signals()
-                .system_info_received()
-                .emit(hardware_type.name(), firmware.clone());
             self.set_display_size(&hardware_type);
-
             self.hardware_type = Some(hardware_type);
             self.firmware_version = firmware;
+
+            let hardware_name = self.get_hardware_name();
+            let firmware_version = self.get_firmware_version();
+
+            self.signals()
+                .system_info_received()
+                .emit(hardware_name, firmware_version);
         }
 
         if self.font_type != font_type {
