@@ -316,7 +316,8 @@ impl GodotM8Client {
         }
         self.client_backend = None;
         self.audio_backend = None;
-        self.display_buffer.fill(&libm8::Color::new(0, 0, 0), 255);
+        self.display_buffer
+            .fill(&libm8::Color::new(0, 0, 0), &u8::MAX);
         // self.display_image.fill(GodotColor::BLACK);
         self.display_update();
         self.signals().disconnected().emit();
@@ -636,7 +637,7 @@ impl GodotM8Client {
         width: i32,
         height: i32,
         color: &libm8::Color,
-        alpha: u8,
+        alpha: &u8,
     ) -> () {
         if x < 0 || y < 0 || width <= 0 || height <= 0 {
             // godot_warn!(
@@ -666,6 +667,7 @@ impl GodotM8Client {
         x: i32,
         y: i32,
         color: &libm8::Color,
+        alpha: &u8,
     ) -> () {
         // if x < 0 || y < 0 || x >= image.get_width() || y >= image.get_height() {
         if x < 0 || y < 0 || x >= buffer.width() as i32 || y >= buffer.height() as i32 {
@@ -674,7 +676,7 @@ impl GodotM8Client {
         }
         // let color = GodotColor::from_rgba8(color.r, color.g, color.b, 255);
         // image.set_pixel(x, y, color);
-        buffer.set_pixel(x as usize, y as usize, color, 255);
+        buffer.set_pixel(x as usize, y as usize, color, alpha);
     }
 }
 
@@ -733,9 +735,9 @@ impl GodotM8Client {
         }
 
         let alpha = if color == self.bg_color {
-            self.bg_alpha
+            &self.bg_alpha
         } else {
-            u8::MAX
+            &u8::MAX
         };
 
         Self::draw_rect(&mut self.display_buffer, x, y, w, h, &color, alpha);
@@ -778,15 +780,26 @@ impl GodotM8Client {
             let i = i as i32;
             for j in 0..char_height {
                 let j = j as i32;
-                let color = if font_bitmap.get_bit(x0 as i32 + i, y0 as i32 + j) {
-                    &color_fg
+                if font_bitmap.get_bit(x0 as i32 + i, y0 as i32 + j) {
+                    Self::draw_pixel(
+                        &mut self.display_buffer,
+                        rect_x + i,
+                        rect_y + j,
+                        &color_fg,
+                        &u8::MAX,
+                    );
                 } else {
                     if !draw_bg {
                         continue;
                     }
-                    &color_bg
-                };
-                Self::draw_pixel(&mut self.display_buffer, rect_x + i, rect_y + j, color);
+                    Self::draw_pixel(
+                        &mut self.display_buffer,
+                        rect_x + i,
+                        rect_y + j,
+                        &color_bg,
+                        &self.bg_alpha,
+                    );
+                }
                 font_bitmap = self.font_bitmap();
             }
         }
@@ -819,7 +832,7 @@ impl GodotM8Client {
             osc_size as i32,
             font_data.waveform_max as i32 + 1,
             &self.bg_color,
-            u8::MAX,
+            &self.bg_alpha,
         );
 
         // draw points
@@ -828,7 +841,7 @@ impl GodotM8Client {
             if ampl > font_data.waveform_max as i32 {
                 ampl = font_data.waveform_max as i32;
             }
-            Self::draw_pixel(display_image, x + i, ampl, &color);
+            Self::draw_pixel(display_image, x + i, ampl, &color, &u8::MAX);
         }
     }
 

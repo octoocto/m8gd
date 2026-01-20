@@ -59,7 +59,7 @@ impl ImageBuffer {
     //     self.set_rect(0, 0, self.width, self.height, color, a);
     // }
 
-    pub fn set_pixel(&mut self, x: usize, y: usize, color: &Color, a: u8) {
+    pub fn set_pixel(&mut self, x: usize, y: usize, color: &Color, a: &u8) {
         if x >= self.width || y >= self.height {
             return;
         }
@@ -68,10 +68,10 @@ impl ImageBuffer {
         self.data[index] = color.r;
         self.data[index + 1] = color.g;
         self.data[index + 2] = color.b;
-        self.data[index + 3] = a;
+        self.data[index + 3] = *a;
     }
 
-    pub fn set_rect(&mut self, x: usize, y: usize, w: usize, h: usize, color: &Color, a: u8) {
+    pub fn set_rect(&mut self, x: usize, y: usize, w: usize, h: usize, color: &Color, a: &u8) {
         for dy in 0..h {
             for dx in 0..w {
                 let x = match x.checked_add(dx) {
@@ -93,7 +93,7 @@ impl ImageBuffer {
         }
     }
 
-    pub fn fill(&mut self, color: &Color, a: u8) {
+    pub fn fill(&mut self, color: &Color, a: &u8) {
         for y in 0..self.height {
             for x in 0..self.width {
                 self.set_pixel(x, y, color, a);
