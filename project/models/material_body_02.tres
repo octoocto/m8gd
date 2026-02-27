@@ -1,4 +1,4 @@
-[gd_resource type="StandardMaterial3D" load_steps=5 format=3 uid="uid://ceus1nseg5p1a"]
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://ceus1nseg5p1a"]
 
 [ext_resource type="Texture2D" uid="uid://cm84lsw54cq8t" path="res://assets/m8_tracker/textures/labels_02.png" id="1_dyl76"]
 [ext_resource type="Texture2D" uid="uid://cnm2iqhf11y5c" path="res://models/material_noise.tres" id="1_gsvwo"]

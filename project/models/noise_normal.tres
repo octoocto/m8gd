@@ -1,4 +1,4 @@
-[gd_resource type="NoiseTexture2D" load_steps=3 format=3 uid="uid://dkl4iuf1hg2la"]
+[gd_resource type="NoiseTexture2D" format=3 uid="uid://dkl4iuf1hg2la"]
 
 [sub_resource type="Gradient" id="Gradient_mneab"]
 

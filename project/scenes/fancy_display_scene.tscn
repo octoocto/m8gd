@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://bu28kwqtn6cdg"]
+[gd_scene format=3 uid="uid://bu28kwqtn6cdg"]
 
 [ext_resource type="Script" uid="uid://cjoo1hy85e5ad" path="res://scenes/fancy_display_scene.gd" id="1_jfrc1"]
 [ext_resource type="Script" uid="uid://crbrf1okvuwkx" path="res://ui/scalable.gd" id="2_8o2c7"]
@@ -64,12 +64,12 @@ anti_aliasing = false
 atlas = ExtResource("5_ihehy")
 region = Rect2(0, 0, 320, 240)
 
-[node name="M8Scene" type="Node3D"]
+[node name="M8Scene" type="Node3D" unique_id=1250750666]
 script = ExtResource("1_jfrc1")
 metadata/_edit_vertical_guides_ = [640.0]
 metadata/_edit_horizontal_guides_ = [480.0]
 
-[node name="BGVideoStreamPlayer" type="VideoStreamPlayer" parent="."]
+[node name="BGVideoStreamPlayer" type="VideoStreamPlayer" parent="." unique_id=42275026]
 unique_name_in_owner = true
 visible = false
 anchors_preset = 15
@@ -81,7 +81,7 @@ volume_db = -80.0
 expand = true
 loop = true
 
-[node name="ScalableContainer" type="Container" parent="."]
+[node name="ScalableContainer" type="Container" parent="." unique_id=423320843]
 unique_name_in_owner = true
 anchors_preset = 15
 anchor_right = 1.0
@@ -91,11 +91,11 @@ grow_vertical = 2
 script = ExtResource("2_8o2c7")
 metadata/_custom_type_script = "uid://crbrf1okvuwkx"
 
-[node name="BackgroundColorRect" type="ColorRect" parent="ScalableContainer"]
+[node name="BackgroundColorRect" type="ColorRect" parent="ScalableContainer" unique_id=1340672408]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="BackgroundTextureRect" type="TextureRect" parent="ScalableContainer"]
+[node name="BackgroundTextureRect" type="TextureRect" parent="ScalableContainer" unique_id=610308876]
 unique_name_in_owner = true
 texture_filter = 2
 clip_contents = true
@@ -105,15 +105,15 @@ size_flags_vertical = 3
 expand_mode = 1
 stretch_mode = 6
 
-[node name="BackgroundShader" type="ColorRect" parent="ScalableContainer"]
+[node name="BackgroundShader" type="ColorRect" parent="ScalableContainer" unique_id=959633861]
 unique_name_in_owner = true
 material = SubResource("ShaderMaterial_rqrn1")
 layout_mode = 2
 
-[node name="BackBufferCopy" type="BackBufferCopy" parent="ScalableContainer"]
+[node name="BackBufferCopy" type="BackBufferCopy" parent="ScalableContainer" unique_id=23192679]
 copy_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="ScalableContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="ScalableContainer" unique_id=1602180623]
 unique_name_in_owner = true
 material = SubResource("ShaderMaterial_y1b4h")
 layout_mode = 2
@@ -121,7 +121,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_410rj")
 
-[node name="DisplayTextureRect" type="TextureRect" parent="ScalableContainer/PanelContainer"]
+[node name="DisplayTextureRect" type="TextureRect" parent="ScalableContainer/PanelContainer" unique_id=1329389669]
 unique_name_in_owner = true
 texture_filter = 1
 custom_minimum_size = Vector2(320, 240)
