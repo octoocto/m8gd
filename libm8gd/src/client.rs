@@ -118,12 +118,11 @@ impl INode for GodotM8Client {
             return;
         }
 
+        self.display_update();
         // self.display_update();
     }
 
-    fn physics_process(&mut self, _delta: f64) {
-        self.display_update();
-    }
+    fn physics_process(&mut self, _delta: f64) {}
 }
 
 #[godot_api]
