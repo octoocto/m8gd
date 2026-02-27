@@ -4,7 +4,7 @@ extends M8Scene
 	set(value):
 		integer_scale = value
 
-@onready var texture_rect: TextureRect = %TextureRect
+@onready var texture_rect: TextureRect = %DisplayTextureRect
 
 
 func init(p_main: Main) -> void:
@@ -17,17 +17,22 @@ func init(p_main: Main) -> void:
 		func(color: Color) -> void: RenderingServer.set_default_clear_color(color)
 	)
 
+	_update_integer_scale()
+	get_window().size_changed.connect(_update_integer_scale)
+	main.m8c.system_info_received.connect(func(..._args: Array) -> void: _update_integer_scale())
+
 
 func init_menu(menu: SceneConfigMenu) -> void:
 	menu.add_auto("integer_scale")
 
 
-func _get_integer_scale() -> int:
-	if integer_scale == 0:
-		return get_auto_display_integer_scale()
-	else:
-		return min(integer_scale, get_auto_display_integer_scale())
+func _update_integer_scale() -> void:
+	var fn := func() -> void:
+		var integer_scale := 0
+		if self.integer_scale == 0:
+			integer_scale = get_auto_display_integer_scale()
+		else:
+			integer_scale = min(self.integer_scale, get_auto_display_integer_scale())
 
-
-func _process(_delta: float) -> void:
-	texture_rect.custom_minimum_size = (texture_rect.texture.get_size() * _get_integer_scale())
+		texture_rect.custom_minimum_size = (texture_rect.texture.get_size() * integer_scale)
+	fn.call_deferred()

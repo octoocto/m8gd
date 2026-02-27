@@ -33,4 +33,5 @@ func _update_size() -> void:
 	anchor_bottom = 1.0 / content_scale
 
 	for c in get_children():
-		fit_child_in_rect(c as Control, Rect2(Vector2.ZERO, size))
+		if c is Control:
+			fit_child_in_rect(c as Control, Rect2(Vector2.ZERO, size))

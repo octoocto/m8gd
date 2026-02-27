@@ -1,7 +1,7 @@
 [gd_scene load_steps=16 format=3 uid="uid://bu28kwqtn6cdg"]
 
 [ext_resource type="Script" uid="uid://cjoo1hy85e5ad" path="res://scenes/fancy_display_scene.gd" id="1_jfrc1"]
-[ext_resource type="Script" uid="uid://ctx3fbd4vqf5t" path="res://scenes/scalable_sub_viewport.gd" id="2_k48ro"]
+[ext_resource type="Script" uid="uid://crbrf1okvuwkx" path="res://ui/scalable.gd" id="2_8o2c7"]
 [ext_resource type="Shader" uid="uid://okxo3d88kn1h" path="res://shaders/screen_blur.gdshader" id="2_rpd8y"]
 [ext_resource type="Shader" uid="uid://egeyyolvm0rs" path="res://shaders/panel_blur.gdshader" id="4_y8ora"]
 [ext_resource type="Texture2D" uid="uid://ras5y3yqijkx" path="res://assets/m8_screen_placeholder.png" id="5_ihehy"]
@@ -49,10 +49,10 @@ shader_parameter/noise_texture = SubResource("NoiseTexture2D_5dadj")
 shader_parameter/noise_strength = 0.005
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_410rj"]
-content_margin_left = 16.0
-content_margin_top = 16.0
-content_margin_right = 16.0
-content_margin_bottom = 16.0
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
@@ -81,89 +81,47 @@ volume_db = -80.0
 expand = true
 loop = true
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="ScalableContainer" type="Container" parent="."]
 unique_name_in_owner = true
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
+script = ExtResource("2_8o2c7")
+metadata/_custom_type_script = "uid://crbrf1okvuwkx"
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="CenterContainer"]
+[node name="BackgroundColorRect" type="ColorRect" parent="ScalableContainer"]
 unique_name_in_owner = true
-texture_filter = 1
 layout_mode = 2
 
-[node name="SubViewport" type="SubViewport" parent="CenterContainer/SubViewportContainer"]
-unique_name_in_owner = true
-disable_3d = true
-transparent_bg = true
-handle_input_locally = false
-snap_2d_transforms_to_pixel = true
-snap_2d_vertices_to_pixel = true
-canvas_item_default_texture_filter = 0
-size = Vector2i(640, 480)
-size_2d_override = Vector2i(640, 480)
-size_2d_override_stretch = true
-render_target_update_mode = 4
-script = ExtResource("2_k48ro")
-integer_scale = 1
-
-[node name="BackgroundColorRect" type="ColorRect" parent="CenterContainer/SubViewportContainer/SubViewport"]
-unique_name_in_owner = true
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="BackgroundTextureRect" type="TextureRect" parent="CenterContainer/SubViewportContainer/SubViewport"]
+[node name="BackgroundTextureRect" type="TextureRect" parent="ScalableContainer"]
 unique_name_in_owner = true
 texture_filter = 2
 clip_contents = true
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 expand_mode = 1
 stretch_mode = 6
 
-[node name="BackgroundShader" type="ColorRect" parent="CenterContainer/SubViewportContainer/SubViewport"]
+[node name="BackgroundShader" type="ColorRect" parent="ScalableContainer"]
 unique_name_in_owner = true
 material = SubResource("ShaderMaterial_rqrn1")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 
-[node name="BackBufferCopy" type="BackBufferCopy" parent="CenterContainer/SubViewportContainer/SubViewport"]
+[node name="BackBufferCopy" type="BackBufferCopy" parent="ScalableContainer"]
 copy_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="CenterContainer/SubViewportContainer/SubViewport"]
+[node name="PanelContainer" type="PanelContainer" parent="ScalableContainer"]
 unique_name_in_owner = true
 material = SubResource("ShaderMaterial_y1b4h")
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -176.0
-offset_top = -136.0
-offset_right = 176.0
-offset_bottom = 136.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_410rj")
 
-[node name="DisplayTextureRect" type="TextureRect" parent="CenterContainer/SubViewportContainer/SubViewport/PanelContainer"]
+[node name="DisplayTextureRect" type="TextureRect" parent="ScalableContainer/PanelContainer"]
 unique_name_in_owner = true
 texture_filter = 1
 custom_minimum_size = Vector2(320, 240)

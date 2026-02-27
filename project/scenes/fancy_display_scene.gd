@@ -5,7 +5,8 @@ extends M8Scene
 @onready var bg_shader: ColorRect = %BackgroundShader
 @onready var bg_texture_rect: TextureRect = %BackgroundTextureRect
 @onready var display_texture_rect: TextureRect = %DisplayTextureRect
-@onready var sub_viewport: ScalableSubViewport = %SubViewport
+# @onready var sub_viewport: ScalableSubViewport = %SubViewport
+@onready var scalable_container: ScalableContainer = %ScalableContainer
 @onready var center_container: CenterContainer = %CenterContainer
 @onready var bg_color_rect: ColorRect = %BackgroundColorRect
 @onready var panel_container: PanelContainer = %PanelContainer
@@ -33,11 +34,15 @@ extends M8Scene
 	set(value):
 		panel_padding = value
 		if is_inside_tree():
-			var stylebox: StyleBox = panel.get_theme_stylebox("panel")
-			stylebox.content_margin_left = value.x
-			stylebox.content_margin_right = value.x
-			stylebox.content_margin_top = value.y
-			stylebox.content_margin_bottom = value.y
+			var stylebox: StyleBoxFlat = panel.get_theme_stylebox("panel")
+			# stylebox.content_margin_left = value.x
+			# stylebox.content_margin_right = value.x
+			# stylebox.content_margin_top = value.y
+			# stylebox.content_margin_bottom = value.y
+			stylebox.expand_margin_left = value.x
+			stylebox.expand_margin_right = value.x
+			stylebox.expand_margin_top = value.y
+			stylebox.expand_margin_bottom = value.y
 
 @export_range(0, 16) var panel_corner_radius: int = 8:
 	set(value):
@@ -161,12 +166,12 @@ func _update() -> void:
 func _update_integer_scale() -> void:
 	if integer_scale == 0:
 		integer_scale = get_auto_display_integer_scale()
-
-	var window_size := get_window().get_size()
-	var viewport_size := Vector2i((window_size / float(integer_scale)).ceil())
-	center_container.set_anchors_preset(Control.PRESET_FULL_RECT)
-	sub_viewport.integer_size = viewport_size
-	sub_viewport.integer_scale = integer_scale
+	scalable_container.content_scale = integer_scale
+	# var window_size := get_window().get_size()
+	# var viewport_size := Vector2i((window_size / float(integer_scale)).ceil())
+	# center_container.set_anchors_preset(Control.PRESET_FULL_RECT)
+	# sub_viewport.integer_size = viewport_size
+	# sub_viewport.integer_scale = integer_scale
 
 
 func _update_background_color() -> void:
