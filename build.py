@@ -193,6 +193,8 @@ def run(command: str, working_directory: str = None, env = None, *, capture_outp
 
     if returncode != 0:
         _println_err("Command %s returned non-zero exit status: %d" % (command, returncode))
+        if result and result.stderr:
+            print(result.stderr.decode())
 
     return result
 
@@ -277,8 +279,9 @@ if build_extension:
         lib_file_ext = lib_file.split(".")[-1]
         lib_file_out = "%s/%s.%s.%s.%s" % (LIB_OUT_DIR, LIB_DIR, target, cargo_target, lib_file_ext)
 
-        _println("Copying built library to %s..." % (lib_file_out))
-        shutil.copy(lib_file, lib_file_out)
+        _println("Moving built library to %s..." % (lib_file_out))
+        # shutil.copy(lib_file, lib_file_out)
+        res = run("mv %s %s" % (lib_file, lib_file_out), capture_output=True)
 
     if target_platform == "macos":
         _println("Creating universal dylib for macOS...")
