@@ -16,13 +16,26 @@ pub const NUM_CHANNELS_MULTICHANNEL: u8 = 24;
 
 pub trait AudioBackend {
     /// Starts audio processing with the specified input and output devices.
+    ///
+    /// Devices are identified with [String]s that are returned with [list_input_devices()]
+    /// or [list_output_devices()].
+    ///
     /// If [None] is provided for either device, the default device is used.
+    ///
+    /// # Errors
+    /// May return an error if:
+    /// - An invalid input or output device has been given.
+    /// - Audio processing with the backend has failed for any reason.
     fn start(
         &mut self,
         input_device: Option<String>,
         output_device: Option<String>,
     ) -> Result<(), Error>;
+
+    /// Stops audio processing.
     fn stop(&mut self) -> Result<(), Error>;
+
+    /// Returns whether audio is currently processing.
     fn is_running(&self) -> bool;
 
     /// Sets whether to start audio in multichannel mode.
@@ -52,7 +65,7 @@ pub trait AudioBackend {
     fn input_spec(&self) -> Result<AudioSpec, Error>;
     // fn output_spec(&self) -> Result<AudioSpec, Error>;
 
-    fn track_buffer(&mut self, track: AudioTrack) -> Result<Vec<f32>, Error>;
+    fn track_buffer(&self, track: AudioTrack) -> Result<Vec<f32>, Error>;
 }
 
 pub struct AudioSpec {
@@ -93,7 +106,7 @@ impl AudioSpec {
 }
 
 /// Represents an audio track on the M8 device if set to multichannel mode.
-#[derive(Debug, PartialEq, Enum)]
+#[derive(Debug, PartialEq, Enum, Clone, Copy)]
 pub enum AudioTrack {
     Mix,
     Track1,

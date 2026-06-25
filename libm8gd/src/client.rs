@@ -1,4 +1,8 @@
-use crate::display::ImageBuffer;
+pub mod osc;
+
+use crate::client::osc::OscBufferedTexture;
+use crate::client::osc::OscDisplay;
+use crate::display::BufferedTexture;
 
 use super::Color;
 use godot::classes::BitMap;
@@ -10,7 +14,19 @@ use libm8::Client;
 use libm8::audio::AudioBackend;
 use libm8::*;
 
-type AudioBackendType = audio::SdlAudioBackend;
+fn create_audio_backend(backend_name: &str) -> Result<Box<dyn AudioBackend>, Error> {
+    match backend_name.to_lowercase().as_str() {
+        "sdl" => {
+            println!("initializing SDL3 audio backend");
+            audio::SdlAudioBackend::new().and_then(|b| Ok(Box::new(b) as Box<dyn AudioBackend>))
+        }
+        "cpal" => {
+            println!("initializing CPAL audio backend");
+            audio::CpalAudioBackend::new().and_then(|b| Ok(Box::new(b) as Box<dyn AudioBackend>))
+        }
+        _ => Err(Error::NoBackend),
+    }
+}
 
 fn bytes_to_bitmap(bytes: &[u8]) -> Option<Gd<BitMap>> {
     let mut font_image = Image::new_gd();
@@ -49,7 +65,9 @@ pub struct GodotM8Client {
     base: Base<Node>,
 
     client_backend: Option<Box<dyn ClientBackend>>,
-    audio_backend: Option<AudioBackendType>,
+    audio_backend: Option<Box<dyn AudioBackend>>,
+    audio_backend_name: Option<String>,
+
     #[init(val = 1.0)]
     audio_volume: f32,
 
@@ -60,10 +78,8 @@ pub struct GodotM8Client {
 
     #[init(val = true)]
     display_enabled: bool,
-    // display_image: Gd<Image>,
-    display_buffer: ImageBuffer,
-    display_texture: Gd<ImageTexture>,
-
+    display_buffer: BufferedTexture,
+    osc_buffer: OscBufferedTexture,
     #[init(val = 255)]
     bg_alpha: u8,
     bg_color: libm8::Color,
@@ -119,7 +135,7 @@ impl INode for GodotM8Client {
         }
 
         self.display_update();
-        // self.display_update();
+        OscDisplay::update_texture(self);
     }
 
     fn physics_process(&mut self, _delta: f64) {}
@@ -157,8 +173,7 @@ impl GodotM8Client {
         let (width, height) = hardware_type.screen_size();
         self.display_buffer
             .set_size(width as usize, height as usize);
-        self.display_texture
-            .set_image(&self.display_buffer.to_image());
+        OscDisplay::update_size(self);
         // self.display_image = Image::create_empty(
         //     width as i32,
         //     height as i32,
@@ -178,7 +193,12 @@ impl GodotM8Client {
 
     #[func]
     fn get_display_texture(&self) -> Gd<ImageTexture> {
-        self.display_texture.clone()
+        self.display_buffer.texture()
+    }
+
+    #[func]
+    fn get_osc_texture(&mut self) -> Gd<ImageTexture> {
+        OscDisplay::texture(self)
     }
 
     #[func]
@@ -392,15 +412,35 @@ impl GodotM8Client {
     ///
     /// If initialization fails, [struct@audio_backend] will still be [None].
     fn audio_try_init(&mut self) {
+        godot_print!("audio: initializing...");
+        let Some(backend_name) = &self.audio_backend_name else {
+            godot_warn!("audio: failed to initialize - backend has not been set");
+            return;
+        };
         if self.audio_backend.is_none() {
-            self.audio_backend = match AudioBackendType::new() {
-                Ok(audio_backend) => Some(audio_backend),
+            self.audio_backend = match create_audio_backend(backend_name) {
+                Ok(audio_backend) => {
+                    godot_print!("audio: initialized");
+                    Some(audio_backend)
+                }
                 Err(e) => {
-                    godot_error!("Failed to initialize audio backend: {}", e);
+                    godot_error!("audio: failed to initialize: {}", e);
                     None
                 }
             };
         }
+    }
+
+    #[func]
+    fn audio_set_backend(&mut self, backend_name: GString) {
+        self.audio_stop();
+        self.audio_backend_name = if backend_name.is_empty() {
+            godot_print!("audio: backend set to none");
+            None
+        } else {
+            godot_print!("audio: backend set to '{}'", backend_name);
+            Some(backend_name.to_string())
+        };
     }
 
     #[func]
@@ -431,7 +471,7 @@ impl GodotM8Client {
     #[func]
     fn audio_stop(&mut self) {
         if self.is_audio_enabled() {
-            godot_print!("Stopping audio...");
+            godot_print!("audio: stopping...");
             self.audio_backend = None;
         }
     }
@@ -439,9 +479,16 @@ impl GodotM8Client {
     #[func]
     fn audio_list_input_devices(&mut self) -> Vec<GString> {
         self.audio_try_init();
+        godot_print!(
+            "audio: listing input devices for backend: {:?}",
+            &self.audio_backend_name
+        );
         let device_names = match &self.audio_backend {
             Some(audio_backend) => audio_backend.list_input_devices().unwrap_or_default(),
-            None => vec![],
+            None => {
+                godot_print!("audio: backend not running, returning empty list");
+                vec![]
+            }
         };
         device_names.iter().map(|s| GString::from(s)).collect()
     }
@@ -622,15 +669,16 @@ impl GodotM8Client {
     }
 
     fn display_update(&mut self) {
-        if self.display_ready() {
-            self.display_texture.update(&self.display_buffer.to_image());
-            // self.display_texture.update(&self.display_image);
-        }
+        self.display_buffer.update_texture();
+        // if self.display_ready() {
+        //     self.display_texture.update(&self.display_buffer.image());
+        //     // self.display_texture.update(&self.display_image);
+        // }
     }
 
     fn draw_rect(
         // image: &mut Gd<Image>,
-        buffer: &mut ImageBuffer,
+        buffer: &mut BufferedTexture,
         x: i32,
         y: i32,
         width: i32,
@@ -662,7 +710,7 @@ impl GodotM8Client {
 
     fn draw_pixel(
         // image: &mut Gd<Image>,
-        buffer: &mut ImageBuffer,
+        buffer: &mut BufferedTexture,
         x: i32,
         y: i32,
         color: &libm8::Color,

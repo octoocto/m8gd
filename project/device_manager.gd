@@ -1,7 +1,7 @@
 ## Manages M8 serial and audio device connections.
 class_name DeviceManager
 
-enum AudioHandler { GODOT, SDL }
+enum AudioHandler { GODOT, SDL, CPAL }
 
 const AUDIO_BUFFER_SIZE := 1024
 const DEVICE_SCAN_INTERVAL := 5.0
@@ -83,7 +83,7 @@ func connect_serial_device(port: String = "", force: bool = false) -> void:
 	if not main.m8c.connect_with_serial(port, !force):
 		print("serial: failed to connect to port: %s", port)
 		main.menu.menu_devices.set_status_serialport(
-			"Not connected: failed to connect to port: %s" % port
+			"Not connected: failed to connect to port: %s" % port,
 		)
 		is_waiting_for_serial_device = false
 		return
@@ -118,14 +118,14 @@ func is_serial_device_connected() -> bool:
 
 
 func list_audio_devices(show_all: bool = false) -> Array[String]:
-	if audio_handler == AudioHandler.SDL:
-		return main.m8c.audio_list_input_devices()
-	else:
+	if audio_handler == AudioHandler.GODOT:
 		var devices: Array[String] = []
 		for dev in AudioServer.get_input_device_list():
 			if show_all or dev.contains("M8"):
 				devices.append(dev)
 		return devices
+	else:
+		return main.m8c.audio_list_input_devices()
 
 
 ## Connect to and monitor an audio input device with name [device].
@@ -142,7 +142,7 @@ func connect_audio_device(device: String = "", force: bool = false) -> void:
 	if not device in list_audio_devices(force):
 		print("audio: audio device not found: %s" % device)
 		main.menu.menu_devices.set_status_audiodevice(
-			"Not connected: audio device not found: %s" % device
+			"Not connected: audio device not found: %s" % device,
 		)
 		return
 
@@ -176,13 +176,23 @@ func connect_audio_device(device: String = "", force: bool = false) -> void:
 
 			audio_monitor.playing = true
 			current_audio_device = device
-
 		AudioHandler.SDL:
 			print("audio: initializing SDL audio")
+			main.m8c.audio_set_backend("sdl")
 			if not main.m8c.audio_start(device, ""):
 				print("audio: failed to connect to device %s" % device)
 				main.menu.menu_devices.set_status_audiodevice(
-					"Not connected: failed to connect to: %s" % device
+					"Not connected: failed to connect to: %s" % device,
+				)
+				is_audio_connecting = false
+				return
+		AudioHandler.CPAL:
+			print("audio: initializing CPAL audio")
+			main.m8c.audio_set_backend("cpal")
+			if not main.m8c.audio_start(device, ""):
+				print("audio: failed to connect to device %s" % device)
+				main.menu.menu_devices.set_status_audiodevice(
+					"Not connected: failed to connect to: %s" % device,
 				)
 				is_audio_connecting = false
 				return
@@ -190,10 +200,10 @@ func connect_audio_device(device: String = "", force: bool = false) -> void:
 	current_audio_device = device
 	last_audio_device = device
 	is_audio_connecting = false
-	is_waiting_for_audio_device = true  # auto connect again if there are any random disconnects
+	is_waiting_for_audio_device = true # auto connect again if there are any random disconnects
 	print("audio: connected to device %s" % device)
 	main.print_to_screen(
-		"connected to audio device (%s): %s" % [AudioHandler.keys()[audio_handler], device]
+		"connected to audio device (%s): %s" % [AudioHandler.keys()[audio_handler], device],
 	)
 	main.menu.menu_devices.set_status_audiodevice("Connected to: %s" % device)
 	Events.audio_device_connected.emit()
@@ -258,7 +268,15 @@ func audio_set_handler(handler: AudioHandler) -> void:
 		return
 
 	audio_handler = handler
-	print("audio: setting audio handler to %s" % AudioHandler.keys()[audio_handler])
+	match audio_handler:
+		AudioHandler.SDL:
+			main.m8c.audio_set_backend("sdl")
+		AudioHandler.CPAL:
+			main.m8c.audio_set_backend("cpal")
+		AudioHandler.GODOT:
+			main.m8c.audio_set_backend("")
+
+	print("audio: set audio handler to %s" % AudioHandler.keys()[audio_handler])
 
 	reset_audio_device()
 
@@ -291,7 +309,7 @@ func audio_get_peak_volume() -> Vector2:
 		AudioHandler.GODOT:
 			return Vector2(
 				AudioServer.get_bus_peak_volume_left_db(0, 0),
-				AudioServer.get_bus_peak_volume_right_db(0, 0)
+				AudioServer.get_bus_peak_volume_right_db(0, 0),
 			)
 		AudioHandler.SDL:
 			return main.m8c.get_audio_peak_volume()
@@ -304,7 +322,9 @@ func audio_get_magnitude_at_freq(frequency: float) -> float:
 			var analyzer := main.audio_get_spectrum_analyzer()
 			if analyzer:
 				var magnitude := analyzer.get_magnitude_for_frequency_range(
-					frequency, frequency, AudioEffectSpectrumAnalyzerInstance.MAGNITUDE_AVERAGE
+					frequency,
+					frequency,
+					AudioEffectSpectrumAnalyzerInstance.MAGNITUDE_AVERAGE,
 				)
 				return (magnitude.x + magnitude.y) / 2.0
 		AudioHandler.SDL:

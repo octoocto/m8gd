@@ -9,6 +9,19 @@ pub const M8_PID_STEREO: u16 = 0x048A;
 pub const M8_PID_MULTICHANNEL: u16 = 0x048B;
 
 pub const NUM_THEME_COLORS: usize = 13;
+pub const THEME_INDEX_BG: usize = 0;
+pub const THEME_INDEX_TEXT_EMPTY: usize = 1;
+pub const THEME_INDEX_TEXT_INFO: usize = 2;
+pub const THEME_INDEX_TEXT_DEFAULT: usize = 3;
+pub const THEME_INDEX_TEXT_VALUE: usize = 4;
+pub const THEME_INDEX_TEXT_TITLES: usize = 5;
+pub const THEME_INDEX_PLAY_MARKERS: usize = 6;
+pub const THEME_INDEX_CURSOR: usize = 7;
+pub const THEME_INDEX_SELECTION: usize = 8;
+pub const THEME_INDEX_SCOPE: usize = 9;
+pub const THEME_INDEX_METER_LOW: usize = 10;
+pub const THEME_INDEX_METER_MID: usize = 11;
+pub const THEME_INDEX_METER_PEAK: usize = 12;
 
 #[derive(Clone, PartialEq, Debug)]
 pub struct Color {

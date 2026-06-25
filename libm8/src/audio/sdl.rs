@@ -284,8 +284,8 @@ impl super::AudioBackend for SdlAudioBackend {
         })
     }
 
-    fn track_buffer(&mut self, _track: audio::AudioTrack) -> Result<Vec<f32>, Error> {
-        todo!()
+    fn track_buffer(&self, _track: audio::AudioTrack) -> Result<Vec<f32>, Error> {
+        Ok(vec![0.0; AUDIO_BUFFER_SIZE * 2])
     }
 
     fn set_multichannel_mode(&mut self, _enabled: bool) -> Result<(), Error> {

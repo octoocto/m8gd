@@ -1,5 +1,7 @@
 use godot::{
-    classes::{Image, class_macros::private::virtuals::Os::PackedByteArray, image::Format},
+    classes::{
+        Image, ImageTexture, class_macros::private::virtuals::Os::PackedByteArray, image::Format,
+    },
     global::godot_warn,
     meta::GodotConvert,
     obj::Gd,
@@ -15,34 +17,44 @@ const BUFFER_SIZE_MAX: usize = libm8::HardwareType::SCREEN_SIZE_MAX.0 as usize
 
 /// A display buffer in RGBA8 format.
 // #[derive(Default)]
-pub struct ImageBuffer {
+pub struct BufferedTexture {
     width: usize,
     height: usize,
     image: Gd<Image>,
-    // data: Vec<u8>,
-    data: [u8; BUFFER_SIZE_MAX],
+    texture: Gd<ImageTexture>,
+    data: Box<[u8; BUFFER_SIZE_MAX]>,
+    // data: [u8; BUFFER_SIZE_MAX],
     data_len: usize,
 }
 
-impl Default for ImageBuffer {
+impl Default for BufferedTexture {
     fn default() -> Self {
-        ImageBuffer {
-            width: 0,
-            height: 0,
+        BufferedTexture {
+            width: usize::default(),
+            height: usize::default(),
             image: Gd::<Image>::default(),
+            texture: Gd::<ImageTexture>::default(),
             // data: vec![0; width * height * 4],
-            data: [0; BUFFER_SIZE_MAX],
-            data_len: 0,
+            data: Box::new([0; BUFFER_SIZE_MAX]),
+            data_len: usize::default(),
         }
     }
 }
 
-impl ImageBuffer {
-    pub fn create_image(width: usize, height: usize) -> Gd<Image> {
-        let image = Image::create_empty(width as i32, height as i32, false, Format::RGBA8).unwrap();
-        image
+impl BufferedTexture {
+    pub fn new(width: usize, height: usize) -> Self {
+        let mut s = Self::default();
+        s.set_size(width, height);
+        s
     }
 
+    /// Returns true if the texture is currently being used by another node.
+    pub fn is_referenced(&self) -> bool {
+        self.texture.get_reference_count() > 1
+    }
+}
+
+impl BufferedTexture {
     pub fn width(&self) -> usize {
         self.width
     }
@@ -107,13 +119,16 @@ impl ImageBuffer {
         }
         self.width = width;
         self.height = height;
-        self.image = Self::create_image(width, height);
+        self.image =
+            Image::create_empty(width as i32, height as i32, false, Format::RGBA8).unwrap();
         // self.data = vec![0; width * height * 4];
         self.data_len = width * height * 4;
         self.data[..self.data_len].fill(0);
+        self.texture.set_image(&self.image);
     }
 
-    pub fn to_image(&mut self) -> Gd<Image> {
+    /// Updates the texture with the current image data. Call this after modifying the pixel data.
+    pub fn update_texture(&mut self) {
         self.image.set_data(
             self.width as i32,
             self.height as i32,
@@ -121,10 +136,20 @@ impl ImageBuffer {
             IMAGE_FORMAT,
             &PackedByteArray::from(&self.data[..self.data_len]),
         );
-        self.image.clone()
+        // if self.texture.get_size().cast_int().to_tuple() != (self.width as i32, self.height as i32)
+        // {
+        //     self.texture.set_image(&self.image);
+        // } else {
+        self.texture.update(&self.image);
+        // }
+    }
+
+    pub fn texture(&self) -> Gd<ImageTexture> {
+        // self.texture.set_image(&self.image());
+        self.texture.clone()
     }
 }
 
-impl GodotConvert for ImageBuffer {
+impl GodotConvert for BufferedTexture {
     type Via = Gd<Image>;
 }

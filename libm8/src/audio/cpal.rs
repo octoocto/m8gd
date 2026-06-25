@@ -1,3 +1,4 @@
+use std::collections::HashSet;
 use std::sync::{Arc, Mutex};
 
 use crate::audio::AudioTrack;
@@ -77,11 +78,15 @@ impl super::AudioBackend for CpalAudioBackend {
         input_device: Option<String>,
         output_device: Option<String>,
     ) -> Result<(), Error> {
-        let input_device = Self::input_device_by_name(&self.host, input_device).ok_or(
-            Error::AudioError("Could not find valid input device".to_string()),
+        let input_device = Self::input_device_by_name(&self.host, input_device.clone()).ok_or(
+            Error::AudioError(
+                format!("Could not find valid input device: {:?}", input_device).to_string(),
+            ),
         )?;
-        let output_device = Self::output_device_by_name(&self.host, output_device).ok_or(
-            Error::AudioError("Could not find valid output device".to_string()),
+        let output_device = Self::output_device_by_name(&self.host, output_device.clone()).ok_or(
+            Error::AudioError(
+                format!("Could not find valid output device: {:?}", output_device).to_string(),
+            ),
         )?;
 
         println!("Using input device: {}", input_device.id()?);
@@ -275,14 +280,29 @@ impl super::AudioBackend for CpalAudioBackend {
             .host
             .input_devices()
             .map_err(|e| Error::AudioError(e.to_string()))?
-            .filter_map(|dev| dev.description().ok())
-            .filter_map(|desc| {
+            .filter_map(|dev| {
+                dev.description().ok().zip(
+                    dev.default_input_config()
+                        .ok()
+                        .and_then(|conf| Some(conf.config())),
+                )
+            })
+            .filter_map(|(desc, config)| {
                 if desc.name().contains("M8") {
+                    println!("found input device: {}", desc.name());
+                    println!("- manufacturer: {:?}", desc.manufacturer());
+                    println!("- driver: {:?}", desc.driver());
+                    println!("- address: {:?}", desc.address());
+                    println!("- channels: {}", config.channels);
+                    println!("- sample rate: {}", config.sample_rate);
+                    println!("- buffer size: {:?}", config.buffer_size);
                     Some(desc.name().to_string())
                 } else {
                     None
                 }
             })
+            .collect::<HashSet<_>>()
+            .into_iter()
             .collect();
         Ok(names)
     }
@@ -343,6 +363,7 @@ impl super::AudioBackend for CpalAudioBackend {
     }
 
     fn input_spec(&self) -> Result<AudioSpec, Error> {
+        // TODO: return the actual input spec
         Ok(AudioSpec {
             driver_name: "n/a".to_string(),
             format: "n/a".to_string(),
@@ -352,7 +373,7 @@ impl super::AudioBackend for CpalAudioBackend {
         })
     }
 
-    fn track_buffer(&mut self, track: AudioTrack) -> Result<Vec<f32>, Error> {
+    fn track_buffer(&self, track: AudioTrack) -> Result<Vec<f32>, Error> {
         let Ok(buffers) = self.buffers.lock() else {
             return Err(Error::AudioError(
                 "Failed to retrieve track buffer lock".to_string(),

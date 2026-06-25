@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bnyisdw58c3c8"]
+[gd_scene format=3 uid="uid://bnyisdw58c3c8"]
 
 [ext_resource type="PackedScene" uid="uid://dsgvm3dda1kjp" path="res://ui/header.tscn" id="1_h0xai"]
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_mrigi"]
@@ -31,7 +31,7 @@ anti_aliasing = false
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vmhn1"]
 
-[node name="Audio" type="PanelContainer"]
+[node name="Audio" type="PanelContainer" unique_id=1916515004]
 texture_filter = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -46,24 +46,24 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_lmmc1")
 script = ExtResource("1_xth7c")
 metadata/_tab_index = 6
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=969424285]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 
-[node name="Header" parent="VBoxContainer" instance=ExtResource("1_h0xai")]
+[node name="Header" parent="VBoxContainer" unique_id=629636471 instance=ExtResource("1_h0xai")]
 layout_mode = 2
 theme_type_variation = &""
 text = "Output"
 
-[node name="Setting_AudioHandler" parent="VBoxContainer" instance=ExtResource("2_xth7c")]
+[node name="Setting_AudioHandler" parent="VBoxContainer" unique_id=1518430034 instance=ExtResource("2_xth7c")]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_vmhn1")
-items = PackedStringArray("Godot", "SDL")
+items = PackedStringArray("Godot", "SDL", "CPAL")
 value = 0
 setting_name = "Audio Handler"
 
-[node name="Setting_Volume" parent="VBoxContainer" instance=ExtResource("3_btcwg")]
+[node name="Setting_Volume" parent="VBoxContainer" unique_id=734509965 instance=ExtResource("3_btcwg")]
 unique_name_in_owner = true
 layout_mode = 2
 setting_value_min_width = 24
@@ -73,58 +73,58 @@ as_percent = true
 format_string = "%d%%"
 setting_name = "Volume"
 
-[node name="Header2" parent="VBoxContainer" instance=ExtResource("1_h0xai")]
+[node name="Header2" parent="VBoxContainer" unique_id=1373047643 instance=ExtResource("1_h0xai")]
 layout_mode = 2
 theme_type_variation = &""
 text = "Driver Info"
 
-[node name="LabelAudioDriver" parent="VBoxContainer" instance=ExtResource("6_lmmc1")]
+[node name="LabelAudioDriver" parent="VBoxContainer" unique_id=373097928 instance=ExtResource("6_lmmc1")]
 unique_name_in_owner = true
 layout_mode = 2
 text_left = "Audio Driver"
 text = "----"
 
-[node name="LabelAudioFormat" parent="VBoxContainer" instance=ExtResource("6_lmmc1")]
+[node name="LabelAudioFormat" parent="VBoxContainer" unique_id=570888814 instance=ExtResource("6_lmmc1")]
 unique_name_in_owner = true
 layout_mode = 2
 text_left = "Format"
 text = "----"
 
-[node name="LabelAudioChannels" parent="VBoxContainer" instance=ExtResource("6_lmmc1")]
+[node name="LabelAudioChannels" parent="VBoxContainer" unique_id=37332083 instance=ExtResource("6_lmmc1")]
 unique_name_in_owner = true
 layout_mode = 2
 text_left = "Channels"
 text = "----"
 
-[node name="LabelAudioRate" parent="VBoxContainer" instance=ExtResource("6_lmmc1")]
+[node name="LabelAudioRate" parent="VBoxContainer" unique_id=2021897014 instance=ExtResource("6_lmmc1")]
 unique_name_in_owner = true
 layout_mode = 2
 text_left = "Mix Rate"
 text = "----"
 
-[node name="LabelAudioBuffer" parent="VBoxContainer" instance=ExtResource("6_lmmc1")]
+[node name="LabelAudioBuffer" parent="VBoxContainer" unique_id=1009578166 instance=ExtResource("6_lmmc1")]
 unique_name_in_owner = true
 layout_mode = 2
 text_left = "Buffer Size"
 text = "----"
 
-[node name="LabelAudioLatency" parent="VBoxContainer" instance=ExtResource("6_lmmc1")]
+[node name="LabelAudioLatency" parent="VBoxContainer" unique_id=266165100 instance=ExtResource("6_lmmc1")]
 unique_name_in_owner = true
 layout_mode = 2
 text_left = "Output Latency"
 text = "----"
 
-[node name="Header3" parent="VBoxContainer" instance=ExtResource("1_h0xai")]
+[node name="Header3" parent="VBoxContainer" unique_id=946137242 instance=ExtResource("1_h0xai")]
 layout_mode = 2
 theme_type_variation = &""
 text = "Spectrum Analyzer"
 
-[node name="Setting_SAEnable" parent="VBoxContainer" instance=ExtResource("4_xny6n")]
+[node name="Setting_SAEnable" parent="VBoxContainer" unique_id=1493584330 instance=ExtResource("4_xny6n")]
 unique_name_in_owner = true
 layout_mode = 2
 setting_name = "Enable"
 
-[node name="Setting_SAMin" parent="VBoxContainer" instance=ExtResource("3_btcwg")]
+[node name="Setting_SAMin" parent="VBoxContainer" unique_id=97498594 instance=ExtResource("3_btcwg")]
 unique_name_in_owner = true
 layout_mode = 2
 setting_value_min_width = 60
@@ -135,7 +135,7 @@ value = 100.0
 format_string = "%d hz"
 setting_name = "Min Frequency"
 
-[node name="Setting_SAMax" parent="VBoxContainer" instance=ExtResource("3_btcwg")]
+[node name="Setting_SAMax" parent="VBoxContainer" unique_id=1905756980 instance=ExtResource("3_btcwg")]
 unique_name_in_owner = true
 layout_mode = 2
 setting_value_min_width = 60
