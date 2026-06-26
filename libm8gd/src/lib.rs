@@ -1,7 +1,6 @@
 mod client;
 mod display;
 
-use godot::meta::ByValue;
 use godot::prelude::Color as GodotColor;
 use godot::prelude::*;
 
@@ -16,10 +15,14 @@ struct Color(libm8::Color);
 
 impl GodotConvert for Color {
     type Via = GodotColor;
+
+    fn godot_shape() -> godot::meta::shape::GodotShape {
+        GodotColor::godot_shape()
+    }
 }
 
 impl ToGodot for Color {
-    type Pass = ByValue;
+    type Pass = godot::meta::conv::ByValue;
 
     fn to_godot(&self) -> Self::Via {
         GodotColor::from_rgba8(self.0.r, self.0.g, self.0.b, 255)

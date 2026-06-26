@@ -152,4 +152,8 @@ impl BufferedTexture {
 
 impl GodotConvert for BufferedTexture {
     type Via = Gd<Image>;
+
+    fn godot_shape() -> godot::meta::shape::GodotShape {
+        Gd::<Image>::godot_shape()
+    }
 }
