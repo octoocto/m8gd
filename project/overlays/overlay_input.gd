@@ -2,25 +2,10 @@
 class_name OverlayInputDisplay
 extends OverlayBase
 
-@export_range(0.0, 1.0, 0.01) var opacity_pressed: float = 1.0:
-	set(value):
-		opacity_pressed = value
-		_update()
-
-@export_range(0.0, 1.0, 0.01) var opacity_held: float = 0.8:
-	set(value):
-		opacity_held = value
-		_update()
-
-@export_range(0.0, 1.0, 0.01) var opacity_released: float = 0.1:
-	set(value):
-		opacity_released = value
-		_update()
-
-@export var use_highlight_colors: bool = true:
-	set(value):
-		use_highlight_colors = value
-		_update()
+@export_range(0.0, 1.0, 0.01) var opacity_pressed: float = 1.0
+@export_range(0.0, 1.0, 0.01) var opacity_held: float = 0.8
+@export_range(0.0, 1.0, 0.01) var opacity_released: float = 0.1
+@export var use_highlight_colors: bool = true
 
 @onready var control: Control = $Control
 
@@ -35,7 +20,7 @@ extends OverlayBase
 	LibM8.KEY_PLAY: %RectPlay,
 }
 
-var tweens: Dictionary[Panel, Tween] = {}
+var tweens: Dictionary[Panel, Tween] = { }
 
 
 func _overlay_init() -> void:
@@ -43,11 +28,11 @@ func _overlay_init() -> void:
 	Events.config_preset_value_changed.connect(
 		func(_profile_name: String, section: String, _property: String, _value: Variant) -> void:
 			if section == main.config.SECTION_COLORS:
-				_update()
+				self._overlay_update()
 	)
 
 
-func _update() -> void:
+func _overlay_update() -> void:
 	control.position = position_offset
 	anchors_preset = anchors_preset
 

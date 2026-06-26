@@ -1,4 +1,5 @@
-class_name M8Config extends Resource
+class_name M8Config
+extends Resource
 
 const CONFIG_FILE_PATH := "user://config.res"
 const PRESETS_DIR_PATH := "user://presets/"
@@ -44,8 +45,8 @@ var version: int = 0
 ## The encoded string of the last loaded preset.
 @export var current_preset_autosave: String = ""
 
-@export var hotkeys_presets: Dictionary[StringName, InputEvent] = {}
-@export var hotkeys_overlays: Dictionary[StringName, InputEvent] = {}
+@export var hotkeys_presets: Dictionary[StringName, InputEvent] = { }
+@export var hotkeys_overlays: Dictionary[StringName, InputEvent] = { }
 
 # video settings
 @export var fullscreen := false
@@ -54,9 +55,9 @@ var version: int = 0
 @export var window_height := 720
 @export var always_on_top := false
 @export var ui_scale := 0.0
-@export var ui_text_case := 0  # 0 = normal, 1 = uppercase, 2 = lowercase
+@export var ui_text_case := 0 # 0 = normal, 1 = uppercase, 2 = lowercase
 @export var vsync := 1
-@export var fps_cap := 8  # see %Setting_Vsync for items
+@export var fps_cap := 8 # see %Setting_Vsync for items
 
 # graphical settings
 @export var msaa := 0
@@ -75,14 +76,14 @@ var version: int = 0
 @export var audio_to_aberration := 0.02
 
 # audio settings
-@export var audio_handler := 1  # 0 = Godot, 1 = SDL
+@export var audio_handler := 1 # 0 = Godot, 1 = SDL
 @export var volume := 0.8
 
 # misc settings
 @export var debug_info := false
 
 # contains key bindings
-@export var action_events := {}  # Dictionary[String, Array]
+@export var action_events := { } # Dictionary[String, Array]
 @export var virtual_keyboard_enabled := false
 
 var current_preset := ConfigFile.new()
@@ -96,7 +97,8 @@ static func _print(message: String, depth := 2) -> void:
 ##
 func assert_setting_exists(setting: String) -> void:
 	assert(
-		get(setting) != null, "Setting %s does not exist, must define in config_file.gd" % setting
+		get(setting) != null,
+		"Setting %s does not exist, must define in config_file.gd" % setting,
 	)
 
 
@@ -152,9 +154,7 @@ func list_preset_names() -> PackedStringArray:
 		return PackedStringArray()
 
 	var array := (
-		Array(dir.get_files())
-		. filter(func(f: String) -> bool: return f.get_extension().to_lower() == "ini")
-		. map(func(f: String) -> String: return f.get_file().get_basename())
+		Array(dir.get_files()).filter(func(f: String) -> bool: return f.get_extension().to_lower() == "ini").map(func(f: String) -> String: return f.get_file().get_basename())
 	)
 
 	_print("found %d presets" % array.size(), 3)
@@ -216,7 +216,8 @@ func preset_load(preset_name: String) -> void:
 	if current_preset_name != "":
 		var res := current_preset.load(_preset_get_path(current_preset_name))
 		assert(
-			res == OK, "failed to load preset '%s': %s" % [current_preset_name, error_string(res)]
+			res == OK,
+			"failed to load preset '%s': %s" % [current_preset_name, error_string(res)],
 		)
 
 	_emit_preset_loaded()
@@ -351,9 +352,9 @@ func get_value_overlay(overlay: Control, key: String, default: Variant) -> Varia
 	return get_value(section, key, default)
 
 
-func set_value_overlay(overlay: Control, key: String, value: Variant) -> void:
+func set_value_overlay(overlay: OverlayBase, key: String, value: Variant) -> void:
 	var section := "%s/%s" % [SECTION_OVERLAY, _validate_preset_key(overlay.name)]
-	overlay.set(key, value)
+	overlay.set_property(key, value)
 	set_value(section, key, value)
 
 
@@ -473,7 +474,7 @@ func get_color_highlight(key: String) -> Color:
 				KEY_COLOR_HIGHLIGHT_OPTION,
 				KEY_COLOR_HIGHLIGHT_EDIT,
 			]
-		)
+		),
 	)
 	return get_value(SECTION_COLORS, key, Color.WHITE)
 
@@ -509,5 +510,5 @@ func _preset_get_path(preset_name: String) -> String:
 func _emit_preset_loaded() -> void:
 	Log.call_task(
 		Events.preset_loaded.emit.bind(current_preset_name),
-		"load profile '%s'" % _get_preset_name(current_preset_name)
+		"load profile '%s'" % _get_preset_name(current_preset_name),
 	)

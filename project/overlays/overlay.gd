@@ -5,12 +5,12 @@ extends Control
 @export var _position_offset := Vector2i.ZERO:
 	set(value):
 		_position_offset = value
-		_update()
+		self._overlay_update()
 
 @export var _draw_bounds := false:
 	set(value):
 		_draw_bounds = value
-		_update()
+		self._overlay_update()
 
 var position_offset: Vector2i:
 	get:
@@ -33,6 +33,14 @@ func _process(_delta: float) -> void:
 		queue_redraw()
 
 
+func set_property(property_name: StringName, value: Variant) -> void:
+	for property in self.get_property_list():
+		if property.name == property_name:
+			self.set(property_name, value)
+			self._overlay_update()
+			break
+
+
 func get_overlay_property_list() -> Array[Dictionary]:
 	return get_property_list().filter(
 		func(prop: Dictionary) -> bool:
@@ -49,7 +57,7 @@ func get_overlay_property_list() -> Array[Dictionary]:
 func get_overlay_property_names() -> Array[String]:
 	var array: Array[String] = []
 	array.assign(
-		get_overlay_property_list().map(func(prop: Dictionary) -> String: return prop.name)
+		get_overlay_property_list().map(func(prop: Dictionary) -> String: return prop.name),
 	)
 	return array
 
@@ -66,17 +74,20 @@ func reload() -> void:
 
 	for prop_name in get_overlay_property_names():
 		var prop_value: Variant = config.get_value_overlay(self, prop_name, get(prop_name))
-		set(prop_name, prop_value)
+		self.set(prop_name, prop_value)
 
-	_update()
+	self._overlay_update()
 
 	Log.ln("reloaded overlay from config: %s" % name)
 
 
-@abstract func _overlay_init() -> void
+## Called by [_ready()] after [Main] has been loaded.
+func _overlay_init() -> void:
+	self._overlay_update()
 
 
-func _update() -> void:
+## Called when an export var changes or a preset has been loaded.
+func _overlay_update() -> void:
 	pass
 
 

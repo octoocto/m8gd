@@ -1,30 +1,11 @@
 @tool
 extends OverlayBase
 
-@export_range(1, 4) var integer_scale: int = 1:
-	set(value):
-		integer_scale = value
-		_update()
-
-@export var padding: Vector2i = Vector2i(16, 16):
-	set(value):
-		padding = value
-		_update()
-
-@export_range(0, 16) var corner_radius: int = 8:
-	set(value):
-		corner_radius = value
-		_update()
-
-@export_range(0.0, 1.0, 0.01) var opacity: float = 1.0:
-	set(value):
-		opacity = value
-		_update()
-
-@export_range(0.0, 8.0, 0.1) var blur_amount: float = 2.0:
-	set(value):
-		opacity = value
-		_update()
+@export_range(1, 4) var integer_scale: int = 1
+@export var padding: Vector2i = Vector2i(16, 16)
+@export_range(0, 16) var corner_radius: int = 8
+@export_range(0.0, 1.0, 0.01) var opacity: float = 1.0
+@export_range(0.0, 8.0, 0.1) var blur_amount: float = 2.0
 
 @onready var display_panel: PanelContainer = %DisplayPanel
 @onready var display_texture_rect: TextureRect = %DisplayTextureRect
@@ -33,11 +14,11 @@ extends OverlayBase
 func _overlay_init() -> void:
 	display_texture_rect.texture = main.m8c.get_display_texture()
 	main.m8_theme_changed.connect(
-		func(_colors: PackedColorArray, _complete: bool) -> void: _update()
+		func(_colors: PackedColorArray, _complete: bool) -> void: self._overlay_update()
 	)
 
 
-func _update() -> void:
+func _overlay_update() -> void:
 	if is_inside_tree():
 		# update position
 		display_panel.position = position_offset
@@ -57,7 +38,8 @@ func _update() -> void:
 		(display_panel.material as ShaderMaterial).set_shader_parameter("panel_opacity", opacity)
 		(display_panel.material as ShaderMaterial).set_shader_parameter("blur_amount", blur_amount)
 		(display_panel.material as ShaderMaterial).set_shader_parameter(
-			"panel_color", main.m8_get_theme_colors()[0]
+			"panel_color",
+			main.m8_get_theme_colors()[0],
 		)
 
 		# update size
@@ -67,4 +49,4 @@ func _update() -> void:
 		display_panel.size = Vector2.ZERO
 		size = display_panel.size
 
-		anchors_preset = anchors_preset  # needed for correct anchor to be used
+		anchors_preset = anchors_preset # needed for correct anchor to be used

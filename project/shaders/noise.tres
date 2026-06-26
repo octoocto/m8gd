@@ -1,4 +1,4 @@
-[gd_resource type="ShaderMaterial" load_steps=5 format=3 uid="uid://btuib5jp88iyw"]
+[gd_resource type="ShaderMaterial" format=3 uid="uid://btuib5jp88iyw"]
 
 [ext_resource type="Shader" uid="uid://cou0xf7r66qe1" path="res://shaders/noise.gdshader" id="1_6du4b"]
 

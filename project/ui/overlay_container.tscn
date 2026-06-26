@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://bunbsbcuarpxe"]
+[gd_scene format=3 uid="uid://bunbsbcuarpxe"]
 
 [ext_resource type="Script" uid="uid://cacd31v627pqr" path="res://ui/overlay_container.gd" id="1_c86kl"]
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_cat8f"]
@@ -7,8 +7,9 @@
 [ext_resource type="PackedScene" uid="uid://dq6heks88e2ip" path="res://overlays/overlay_audio_waveform.tscn" id="4_cat8f"]
 [ext_resource type="PackedScene" uid="uid://ca2jqh2tc7jix" path="res://overlays/overlay_keys.tscn" id="5_kpk2b"]
 [ext_resource type="PackedScene" uid="uid://bx26oqvasqfha" path="res://overlays/overlay_input_display.tscn" id="7_cat8f"]
+[ext_resource type="Script" uid="uid://cav12o5kuhwh1" path="res://overlays/overlay_osc.gd" id="8_kpk2b"]
 
-[node name="OverlayContainer" type="Container"]
+[node name="OverlayContainer" type="Container" unique_id=2008556517]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -18,10 +19,10 @@ theme = ExtResource("1_cat8f")
 script = ExtResource("1_c86kl")
 metadata/_custom_type_script = "uid://cacd31v627pqr"
 
-[node name="Control" type="Control" parent="."]
+[node name="Control" type="Control" parent="." unique_id=994321966]
 layout_mode = 2
 
-[node name="OverlayAudioSpectrum" parent="Control" instance=ExtResource("2_p0qqa")]
+[node name="OverlayAudioSpectrum" parent="Control" unique_id=1406569900 instance=ExtResource("2_p0qqa")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -38,24 +39,30 @@ grow_horizontal = 1
 grow_vertical = 1
 size_flags_horizontal = 0
 
-[node name="OverlayDisplayPanel" parent="Control" instance=ExtResource("3_uuwvl")]
+[node name="OverlayDisplayPanel" parent="Control" unique_id=1030628056 instance=ExtResource("3_uuwvl")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
 opacity = 2.0
 
-[node name="OverlayAudioWaveform" parent="Control" instance=ExtResource("4_cat8f")]
+[node name="OverlayAudioWaveform" parent="Control" unique_id=1275902586 instance=ExtResource("4_cat8f")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
 
-[node name="OverlayKeycast" parent="Control" instance=ExtResource("5_kpk2b")]
+[node name="OverlayKeycast" parent="Control" unique_id=576939786 instance=ExtResource("5_kpk2b")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
 size_flags_horizontal = 8
 size_flags_vertical = 10
 
-[node name="OverlayInputDisplay" parent="Control" instance=ExtResource("7_cat8f")]
+[node name="OverlayInputDisplay" parent="Control" unique_id=197408408 instance=ExtResource("7_cat8f")]
 visible = false
 layout_mode = 1
+
+[node name="OverlayOsc" type="Control" parent="Control" unique_id=1219755237]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("8_kpk2b")

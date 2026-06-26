@@ -92,8 +92,7 @@ func _physics_process(_delta: float) -> void:
 func init(p_main: Main) -> void:
 	super(p_main)
 
-	var texture := main.m8c.get_display_texture()
-	display_texture_rect.texture = texture
+	self.display_texture_rect.texture = main.m8c.get_display_texture()
 
 	Events.window_modified.connect(_update)
 
@@ -132,7 +131,8 @@ func init_menu(menu: SceneConfigMenu) -> void:
 				2:
 					bg_texture_rect.visible = true
 					bg_texture_rect.texture = load_media_to_texture_rect(
-						get_value("background_file") as String, bg_video_stream_player
+						get_value("background_file") as String,
+						bg_video_stream_player,
 					)
 	)
 
@@ -157,7 +157,7 @@ func _update() -> void:
 
 	var display_size := main.m8c.get_display_texture().get_size()
 
-	if panel_integer_scale == 0:  # auto
+	if panel_integer_scale == 0: # auto
 		display_texture_rect.custom_minimum_size = display_size * get_auto_display_integer_scale()
 	else:
 		display_texture_rect.custom_minimum_size = display_size * panel_integer_scale

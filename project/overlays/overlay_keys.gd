@@ -2,50 +2,29 @@
 class_name OverlayKeycast
 extends OverlayBase
 
-const MAX_ITEMS := 10 + 3  # including sample items
+const MAX_ITEMS := 10 + 3 # including sample items
 
 const KEY_ITEM := preload("res://overlays/overlay_keys_item.tscn")
 
 @export_category("Style: Background")
 
-@export var style_background_enabled := true:
-	set(value):
-		style_background_enabled = value
-		_update()
-@export var style_corner_radius := 4:
-	set(value):
-		style_corner_radius = value
-		_update()
-@export var style_border_width_bottom := 2:
-	set(value):
-		style_border_width_bottom = value
-		_update()
-@export var style_padding := Vector2i(8, -1):
-	set(value):
-		style_padding = value
-		_update()
+@export var style_background_enabled := true
+@export var style_corner_radius := 4
+@export var style_border_width_bottom := 2
+@export var style_padding := Vector2i(8, -1)
 
 @export_category("Style: Font")
 
-@export var style_font_family := "":
-	set(value):
-		style_font_family = value
-		_update()
-@export_range(100, 800) var style_font_weight := 400:
-	set(value):
-		style_font_weight = value
-		_update()
-@export var style_font_size := 16:
-	set(value):
-		style_font_size = value
-		_update()
+@export var style_font_family := ""
+@export_range(100, 800) var style_font_weight := 400
+@export var style_font_size := 16
 
-@onready var anim_tween: Tween  # tween for scroll animation
+@onready var anim_tween: Tween # tween for scroll animation
 
-@onready var current_fade_tween: Tween  # tween for scroll animation
+@onready var current_fade_tween: Tween # tween for scroll animation
 
-@onready var current_item: OverlayKeysItem  # last added item in the key overlay list
-@onready var current_keystate: int = -1  # bitfield of the pressed keys for the current item
+@onready var current_item: OverlayKeysItem # last added item in the key overlay list
+@onready var current_keystate: int = -1 # bitfield of the pressed keys for the current item
 
 @onready var control_offset: Control = %ControlOffset
 @onready var control: Control = %Control
@@ -82,9 +61,9 @@ func _overlay_init() -> void:
 	Events.config_preset_value_changed.connect(
 		func(_profile_name: String, section: String, _property: String, _value: Variant) -> void:
 			if section == main.config.SECTION_COLORS:
-				_update()
+				_overlay_update()
 	)
-	_update()
+	_overlay_update()
 
 
 func _process(delta: float) -> void:
@@ -198,7 +177,7 @@ func inc_current_item() -> void:
 	update_current_item()
 
 
-func _update() -> void:
+func _overlay_update() -> void:
 	if not is_inside_tree():
 		return
 

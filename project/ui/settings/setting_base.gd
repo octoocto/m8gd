@@ -7,7 +7,7 @@ signal value_changed(value: Variant)
 
 enum DisableMethod {
 	DISABLE, # show but make non-editable subsettings that have been disabled
-	HIDE,    # hide subsettings that have been disabled
+	HIDE, # hide subsettings that have been disabled
 }
 
 @export var setting_name := "":
@@ -60,6 +60,7 @@ var _value_changed_signal_enabled := true
 ## This callable should try to read a value from the config file first, or return a default value.
 var _value_read_fn: Callable
 
+
 func _ready() -> void:
 	assert(get("value") != null, "SettingBase subclass %s must have a 'value' property" % name)
 	_default_value = get("value")
@@ -70,16 +71,20 @@ func _ready() -> void:
 
 	super()
 
+
 func get_value() -> Variant:
 	return get("value")
+
 
 func set_value(value: Variant) -> void:
 	set("value", value)
 
+
 func set_value_no_signal(value: Variant) -> void:
 	_value_changed_signal_enabled = false
-	set("value",value)
+	set("value", value)
 	_value_changed_signal_enabled = true
+
 
 func emit_value_changed() -> void:
 	emit_ui_changed()
@@ -87,6 +92,7 @@ func emit_value_changed() -> void:
 		value_changed.emit(get("value"))
 	# else:
 	# 	print("%s: value_changed signal suppressed" % name)
+
 
 ##
 ## Re-initialize this setting to an initial value and emits [value_changed].
@@ -101,6 +107,7 @@ func reload(emit_value_changed_signal := true) -> void:
 		set_value_no_signal(_value_read_fn.call())
 	# print("%s: reinitializing value" % name)
 
+
 ##
 ## Uninitialize this setting, disconnecting all signal connections.
 ## Note: the value won't change.
@@ -110,6 +117,7 @@ func uninit() -> void:
 		_clear_signals()
 		_value_read_fn = func() -> void: return
 		_is_initialized = false
+
 
 ##
 ## Connect this setting to arbitrary callback functions.
@@ -128,11 +136,12 @@ func setting_connect(value_read_fn: Variant, value_changed_fn: Callable) -> void
 		_value_read_fn = value_read_fn
 	else:
 		_value_read_fn = func() -> Variant: return value_read_fn
-		
+
 	value_changed.connect(value_changed_fn)
 	set("value", _value_read_fn.call())
 
 	_is_initialized = true
+
 
 ##
 ## Link this setting to a global config property and a callback function
@@ -150,9 +159,11 @@ func setting_connect_global(property: String, value_changed_fn := Callable()) ->
 		# on write
 		func(value: Variant) -> void:
 			main.config.set_global_value(property, value)
-			if value_changed_fn.is_valid(): value_changed_fn.call(value)
+			if value_changed_fn.is_valid():
+				value_changed_fn.call(value)
 			Events.setting_changed.emit(self, value)
 	)
+
 
 ##
 ## This setting's value will default to its current value in the inspector.
@@ -166,21 +177,27 @@ func setting_connect_profile(section: String, key: String, value_changed_fn := C
 		# on write
 		func(value: Variant) -> void:
 			main.config.set_value(section, key, value)
-			if value_changed_fn.is_valid(): value_changed_fn.call(value)
+			if value_changed_fn.is_valid():
+				value_changed_fn.call(value)
 			Events.setting_changed.emit(self, value)
 	)
+
 
 func setting_connect_overlay_global(key: String, value_changed_fn := Callable()) -> void:
 	setting_connect_profile(config.SECTION_OVERLAY, key, value_changed_fn)
 
+
 func setting_connect_shader_global(key: String, value_changed_fn := Callable()) -> void:
 	setting_connect_profile(config.SECTION_SHADER, key, value_changed_fn)
+
 
 func setting_connect_colors(key: String, value_changed_fn := Callable()) -> void:
 	setting_connect_profile(config.SECTION_COLORS, key, value_changed_fn)
 
+
 func setting_connect_model(key: String, value_changed_fn := Callable()) -> void:
 	setting_connect_profile(config.SECTION_MODEL, key, value_changed_fn)
+
 
 ##
 ## Initialize this setting to a scene property.
@@ -203,9 +220,11 @@ func setting_connect_scene(property: String, value_changed_fn := Callable()) -> 
 			if property in scene:
 				scene.set(property, value)
 			config.set_value_scene(scene, property, value)
-			if value_changed_fn.is_valid(): value_changed_fn.call(value)
+			if value_changed_fn.is_valid():
+				value_changed_fn.call(value)
 			Events.setting_changed.emit(self, value)
 	)
+
 
 ##
 ## Initialize this setting to an overlay property.
@@ -216,7 +235,7 @@ func setting_connect_scene(property: String, value_changed_fn := Callable()) -> 
 ## Changing this setting's value will write the value to the config,
 ## set the property in [overlay], and call [value_changed_fn] if defined.
 ##
-func setting_connect_overlay(overlay: Control, property: String, value_changed_fn := Callable()) -> void:
+func setting_connect_overlay(overlay: OverlayBase, property: String, value_changed_fn := Callable()) -> void:
 	setting_connect(
 		# on read
 		func() -> Variant: return config.get_value_overlay(overlay, property, overlay.get(property)),
@@ -224,9 +243,11 @@ func setting_connect_overlay(overlay: Control, property: String, value_changed_f
 		# on write
 		func(value: Variant) -> void:
 			config.set_value_overlay(overlay, property, value)
-			if value_changed_fn.is_valid(): value_changed_fn.call(value)
+			if value_changed_fn.is_valid():
+				value_changed_fn.call(value)
 			Events.setting_changed.emit(self, value)
 	)
+
 
 ##
 ## Initialize this setting to a camera config property.
@@ -267,6 +288,7 @@ func setting_connect_camera(property: String, value_changed_fn: Variant = null, 
 				Events.setting_changed.emit(self, value)
 	)
 
+
 ##
 ## Connect this setting to a shader uniform.
 ## This setting's value will default to its current value of the property in [overlay].
@@ -284,6 +306,7 @@ func conf_shader_parameter(shader_rect: ShaderRect, parameter: String) -> void:
 			main.config.set_value_shader(shader_rect, parameter, value)
 			Events.setting_changed.emit(self, value)
 	)
+
 
 func validate_string(value: String) -> String:
 	# var regex := RegEx.new()
