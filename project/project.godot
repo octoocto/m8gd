@@ -17,7 +17,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 config/name="m8gd"
 run/main_scene="res://main.tscn"
 config/auto_accept_quit=false
-config/features=PackedStringArray("4.6")
+config/features=PackedStringArray("4.7")
 boot_splash/show_image=false
 config/icon="res://assets/icon/m8_emoji.png"
 
