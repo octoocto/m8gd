@@ -1,5 +1,5 @@
 @tool
-class_name OverlayOsc
+class_name OverlayOscillator
 extends OverlayBase
 
 @export var mix_enabled := false

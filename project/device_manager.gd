@@ -291,7 +291,7 @@ func audio_set_spectrum_analyzer_enabled(enabled: bool) -> void:
 	match audio_handler:
 		AudioHandler.GODOT:
 			AudioServer.set_bus_effect_enabled(0, 0, enabled)
-		AudioHandler.SDL:
+		_:
 			main.m8c.set_spectrum_analyzer_enabled(enabled)
 
 
@@ -299,9 +299,8 @@ func audio_is_spectrum_analyzer_enabled() -> bool:
 	match audio_handler:
 		AudioHandler.GODOT:
 			return AudioServer.is_bus_effect_enabled(0, 0)
-		AudioHandler.SDL:
+		_:
 			return main.m8c.is_spectrum_analyzer_enabled()
-	return false
 
 
 func audio_get_peak_volume() -> Vector2:
@@ -311,9 +310,8 @@ func audio_get_peak_volume() -> Vector2:
 				AudioServer.get_bus_peak_volume_left_db(0, 0),
 				AudioServer.get_bus_peak_volume_right_db(0, 0),
 			)
-		AudioHandler.SDL:
+		_:
 			return main.m8c.get_audio_peak_volume()
-	return Vector2.ZERO
 
 
 func audio_get_magnitude_at_freq(frequency: float) -> float:
@@ -327,9 +325,10 @@ func audio_get_magnitude_at_freq(frequency: float) -> float:
 					AudioEffectSpectrumAnalyzerInstance.MAGNITUDE_AVERAGE,
 				)
 				return (magnitude.x + magnitude.y) / 2.0
-		AudioHandler.SDL:
+			else:
+				return 0.0
+		_:
 			return main.m8c.get_audio_magnitude_at_freq(frequency)
-	return 0.0
 
 
 func audio_get_driver_name() -> String:
@@ -337,9 +336,8 @@ func audio_get_driver_name() -> String:
 		AudioHandler.GODOT:
 			return AudioServer.get_driver_name()
 			# return ProjectSettings.get_setting("audio/driver/driver")
-		AudioHandler.SDL:
+		_:
 			return main.m8c.get_audio_spec()["driver_name"]
-	return ""
 
 
 func audio_get_format() -> String:
@@ -347,27 +345,24 @@ func audio_get_format() -> String:
 		AudioHandler.GODOT:
 			return "n/a"
 			# return ProjectSettings.get_setting("audio/driver/driver")
-		AudioHandler.SDL:
+		_:
 			return main.m8c.get_audio_spec()["format"]
-	return ""
 
 
 func audio_get_mix_rate() -> float:
 	match audio_handler:
 		AudioHandler.GODOT:
 			return AudioServer.get_mix_rate()
-		AudioHandler.SDL:
+		_:
 			return str(main.m8c.get_audio_spec()["sample_rate"]).to_float()
-	return 0.0
 
 
 func audio_get_latency() -> float:
 	match audio_handler:
 		AudioHandler.GODOT:
 			return AudioServer.get_output_latency()
-		AudioHandler.SDL:
+		_:
 			return str(main.m8c.get_audio_spec()["latency_ms"]).to_int()
-	return 0.0
 
 
 func audio_get_buffer_size() -> int:
@@ -375,9 +370,8 @@ func audio_get_buffer_size() -> int:
 		AudioHandler.GODOT:
 			# return AudioServer.get_output_buffer_size()
 			return 0
-		AudioHandler.SDL:
+		_:
 			return str(main.m8c.get_audio_spec()["buffer_size"]).to_int()
-	return 0
 
 
 func audio_get_num_channels() -> int:
@@ -385,6 +379,5 @@ func audio_get_num_channels() -> int:
 		AudioHandler.GODOT:
 			# return AudioServer.get_output_channel_count()
 			return 0
-		AudioHandler.SDL:
+		_:
 			return str(main.m8c.get_audio_spec()["num_channels"]).to_int()
-	return 0

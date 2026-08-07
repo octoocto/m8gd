@@ -227,6 +227,14 @@ impl GodotM8Client {
     }
 
     #[func]
+    fn is_multichannel_audio(&mut self) -> bool {
+        if let Some(backend) = self.client_backend.as_mut() {
+            return backend.is_multichannel_audio().unwrap_or(false);
+        }
+        false
+    }
+
+    #[func]
     fn set_key_pressed(&mut self, key: u8, pressed: bool) {
         let mut keystate = self.keystate.clone();
 
@@ -447,12 +455,13 @@ impl GodotM8Client {
     fn audio_start(&mut self, input_device: GString, output_device: GString) -> bool {
         if !self.is_audio_enabled() {
             self.audio_try_init();
+            let is_multichannel = self.is_multichannel_audio();
             let Some(audio_backend) = self.audio_backend.as_mut() else {
                 return false;
             };
             godot_print!("Starting audio...");
             let _ = audio_backend.set_volume(self.audio_volume);
-            let _ = audio_backend.set_multichannel_mode(true);
+            let _ = audio_backend.set_multichannel_mode(is_multichannel);
             let input_device = gstring_to_option(input_device);
             let output_device = gstring_to_option(output_device);
             match audio_backend.start(input_device, output_device) {
