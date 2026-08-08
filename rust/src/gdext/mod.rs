@@ -1,8 +1,13 @@
 mod client;
-pub mod display;
+mod display;
+
+pub use display::BufferedTexture;
+
+use crate as m8;
 
 use godot::prelude::Color as GodotColor;
 use godot::prelude::*;
+use m8::Color;
 
 const FONT_BITMAP_SIZE: (u8, u8) = (16, 8);
 
@@ -10,8 +15,6 @@ struct LibM8Godot;
 
 #[gdextension]
 unsafe impl ExtensionLibrary for LibM8Godot {}
-
-struct Color(crate::Color);
 
 impl GodotConvert for Color {
     type Via = GodotColor;
@@ -25,7 +28,7 @@ impl ToGodot for Color {
     type Pass = godot::meta::conv::ByValue;
 
     fn to_godot(&self) -> Self::Via {
-        GodotColor::from_rgba8(self.0.r, self.0.g, self.0.b, 255)
+        GodotColor::from_rgba8(self.r, self.g, self.b, 255)
     }
 }
 

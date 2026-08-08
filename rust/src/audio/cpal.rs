@@ -1,33 +1,27 @@
-use std::collections::{HashSet, VecDeque};
-use std::sync::{Arc, Mutex};
+use crate as m8;
 
-use super::AudioSpec;
-use crate::audio::AudioTrack;
-use crate::{Error, SpectrumAnalyzer};
 use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
 use cpal::{Device, Host, OutputCallbackInfo, StreamConfig};
 use enum_map::EnumMap;
+use m8::audio;
+use m8::{Error, SpectrumAnalyzer};
 use ringbuf::traits::{Consumer, Producer, Split};
+use std::collections::{HashSet, VecDeque};
+use std::sync::{Arc, Mutex};
 
-// use super::BUFFER_SIZE;
-use super::LATENCY_BUFFER_SIZE;
-use super::NUM_CHANNELS_MULTICHANNEL;
-use super::NUM_CHANNELS_STEREO;
+use m8::audio::BUFFER_SIZE;
+use m8::audio::LATENCY_BUFFER_SIZE;
+use m8::audio::OSC_BUFFER_SIZE;
+
 // use super::SAMPLE_RATE;
-
-const BUFFER_SIZE: usize = 512;
 const SAMPLE_RATE: usize = 48000;
-// const SAMPLE_FORMAT: cpal::SampleFormat = cpal::SampleFormat::F32;
-
-const OSC_BUFFER_SIZE: usize = 441;
 
 pub struct CpalAudioBackend {
     host: Host,
     multichannel_enabled: bool,
     input_device: Option<AudioStream>,
     output_device: Option<AudioStream>,
-    track_buffers: Arc<Mutex<EnumMap<AudioTrack, RingVec>>>,
-    // track_buffers: Option<EnumMap<AudioTrack, ringbuf::HeapCons<f32>>>,
+    track_buffers: Arc<Mutex<EnumMap<m8::Track, RingVec>>>,
     volume: Arc<Mutex<f32>>,
     volume_peaks: Arc<Mutex<[f32; 2]>>,
 
@@ -61,13 +55,12 @@ impl super::AudioBackend for CpalAudioBackend {
         input_device_name: Option<String>,
         output_device_name: Option<String>,
     ) -> Result<(), Error> {
-        let num_channels = if self.multichannel_enabled {
-            NUM_CHANNELS_MULTICHANNEL as u16
-        } else {
-            NUM_CHANNELS_STEREO as u16
-        };
-
-        let input_devices = find_input_devices(&self.host, &input_device_name, num_channels)?;
+        let usb_audio_mode = m8::UsbAudioMode::from(self.multichannel_enabled);
+        let input_devices = find_input_devices(
+            &self.host,
+            &input_device_name,
+            usb_audio_mode.num_channels(),
+        )?;
         let output_device = find_output_device(&self.host, &output_device_name)?;
 
         let config_out = find_output_stream_config(&output_device)?;
@@ -78,16 +71,16 @@ impl super::AudioBackend for CpalAudioBackend {
         // let latency_samples = latency_frames as usize * 2 as usize;
         // let ring = HeapRb::<f32>::new(latency_samples * 2);
 
-        let buffer_size = (BUFFER_SIZE + LATENCY_BUFFER_SIZE) * 2;
-        let ring = ringbuf::HeapRb::<f32>::new(buffer_size * 2);
-        let (mut rb_sender, rb_receiver) = ring.split();
-        for _ in 0..buffer_size {
-            rb_sender.try_push(0.0).unwrap();
+        let audio_buffer_size = BUFFER_SIZE * 4;
+        let audio_buffer = ringbuf::HeapRb::<f32>::new(audio_buffer_size);
+        let (mut data_prod, data_cons) = audio_buffer.split();
+        for _ in 0..audio_buffer_size {
+            data_prod.try_push(0.0).unwrap();
         }
 
         // println!("Using latency buffer of {} samples", latency_samples);
-        println!("Using buffer size: {}", buffer_size);
-        println!("Using multichannel mode: {}", self.multichannel_enabled);
+        println!("Using data buffer size: {}", audio_buffer_size);
+        println!("Using multichannel mode: {usb_audio_mode:?}");
 
         if input_devices.is_empty() {
             return Err(Error::AudioError(
@@ -100,7 +93,7 @@ impl super::AudioBackend for CpalAudioBackend {
                 self.input_device = Some(AudioStream::open_input(
                     device,
                     config,
-                    self.on_input_data_received(rb_sender, Arc::clone(&self.track_buffers)),
+                    self.on_input_data_received(data_prod, Arc::clone(&self.track_buffers)),
                 )?);
                 break;
             }
@@ -109,7 +102,7 @@ impl super::AudioBackend for CpalAudioBackend {
         self.output_device = Some(AudioStream::open_output(
             output_device,
             config_out,
-            self.on_output_data_requested(rb_receiver),
+            self.on_output_data_requested(data_cons),
         )?);
 
         Ok(())
@@ -213,18 +206,18 @@ impl super::AudioBackend for CpalAudioBackend {
         Ok(self.spectrum_analyzer_enabled)
     }
 
-    fn input_spec(&self) -> Result<AudioSpec, Error> {
+    fn input_spec(&self) -> Result<audio::AudioSpec, Error> {
         if let Some(device) = self.input_device.as_ref() {
-            Ok(AudioSpec {
-                driver_name: self.host.id().to_string(),
+            Ok(audio::AudioSpec {
+                host: self.host.id().to_string(),
                 format: "F32".to_string(),
                 num_channels: device.config.channels as usize,
                 sample_rate: device.config.sample_rate as usize,
                 buffer_size: device.stream.buffer_size()? as usize,
             })
         } else {
-            Ok(AudioSpec {
-                driver_name: "n/a".to_string(),
+            Ok(audio::AudioSpec {
+                host: "n/a".to_string(),
                 format: "n/a".to_string(),
                 num_channels: 2,
                 sample_rate: 44100,
@@ -233,7 +226,7 @@ impl super::AudioBackend for CpalAudioBackend {
         }
     }
 
-    fn track_buffer(&self, track: AudioTrack) -> Result<Vec<f32>, Error> {
+    fn track_buffer(&self, track: m8::Track) -> Result<Vec<f32>, Error> {
         if let Ok(track_buffers) = self.track_buffers.lock() {
             Ok(track_buffers[track].to_vec())
         } else {
@@ -245,14 +238,14 @@ impl super::AudioBackend for CpalAudioBackend {
 impl CpalAudioBackend {
     fn on_input_data_received(
         &self,
-        mut rb_sender: ringbuf::HeapProd<f32>,
-        track_buffers: Arc<Mutex<EnumMap<AudioTrack, RingVec>>>,
+        mut data_prod: ringbuf::HeapProd<f32>,
+        track_buffers: Arc<Mutex<EnumMap<m8::Track, RingVec>>>,
     ) -> impl FnMut(&[f32], &cpal::InputCallbackInfo) + Send + 'static {
-        let multichannel_enabled = self.multichannel_enabled;
-        let channels_in = if multichannel_enabled { 24u16 } else { 2u16 };
+        let usb_audio_mode = m8::UsbAudioMode::from(self.multichannel_enabled);
+        let num_channels = usb_audio_mode.num_channels();
 
         move |data, _| {
-            let expected = BUFFER_SIZE * channels_in as usize;
+            let expected = BUFFER_SIZE * num_channels as usize;
             if data.len() != expected {
                 println!(
                     "CPAL: Input callback - expected {expected} samples, got {}",
@@ -261,32 +254,38 @@ impl CpalAudioBackend {
                 return;
             }
 
+            // println!("CPAL: Input callback with {} samples", data.len());
+
             let Ok(mut track_buffers) = track_buffers.lock() else {
                 return;
             };
 
-            let chunks = data.chunks_exact(channels_in as usize);
-            if multichannel_enabled {
-                for sample in chunks {
-                    for (track, track_data) in track_buffers.iter_mut() {
+            let chunks = data.chunks_exact(num_channels as usize);
+
+            match usb_audio_mode {
+                m8::UsbAudioMode::MULTICHANNEL => {
+                    for sample in chunks {
+                        for (track, track_data) in track_buffers.iter_mut() {
+                            let (left_idx, right_idx) = track.channels();
+                            let (left, right) = (sample[left_idx], sample[right_idx]);
+                            track_data.push((left + right) / 2.0);
+
+                            if track == m8::Track::Mix {
+                                let _ = data_prod.try_push(left).and(data_prod.try_push(right));
+                            }
+                        }
+                    }
+                }
+                m8::UsbAudioMode::STEREO => {
+                    let track = m8::Track::Mix;
+                    let track_data = &mut track_buffers[track];
+                    for sample in chunks {
                         let (left_idx, right_idx) = track.channels();
                         let (left, right) = (sample[left_idx], sample[right_idx]);
                         track_data.push((left + right) / 2.0);
 
-                        if track == AudioTrack::Mix {
-                            let _ = rb_sender.try_push(left).and(rb_sender.try_push(right));
-                        }
+                        let _ = data_prod.try_push(left).and(data_prod.try_push(right));
                     }
-                }
-            } else {
-                let track = AudioTrack::Mix;
-                let track_data = &mut track_buffers[track];
-                for sample in chunks {
-                    let (left_idx, right_idx) = track.channels();
-                    let (left, right) = (sample[left_idx], sample[right_idx]);
-                    track_data.push((left + right) / 2.0);
-
-                    let _ = rb_sender.try_push(left).and(rb_sender.try_push(right));
                 }
             }
         }
@@ -294,47 +293,38 @@ impl CpalAudioBackend {
 
     fn on_output_data_requested(
         &self,
-        mut rb_receiver: ringbuf::HeapCons<f32>,
+        mut data_cons: ringbuf::HeapCons<f32>,
     ) -> impl FnMut(&mut [f32], &OutputCallbackInfo) + Send + 'static {
         let volume = self.volume.clone();
         let volume_peaks = self.volume_peaks.clone();
         let spectrum = self.spectrum.clone();
 
         move |data, _| {
-            let mut dropped_samples = false;
-            let volume = **volume.lock().as_ref().unwrap();
-            let volume_peaks = &mut *volume_peaks.lock().unwrap();
-            volume_peaks[0] = 0.0;
-            volume_peaks[1] = 0.0;
+            let Ok(volume) = volume.lock() else {
+                return;
+            };
+            let Ok(peaks) = &mut volume_peaks.lock() else {
+                return;
+            };
+            peaks[0] = 0.0;
+            peaks[1] = 0.0;
 
-            // let Some(data) = data.as_slice_mut() else {
-            //     println!("CPAL: Received no output data");
-            //     return;
-            // };
-
-            // println!("Output callback with {} samples", data.len());
+            // println!("CPAL: Output callback with {} samples", data.len());
 
             for (i, sample) in data.iter_mut().enumerate() {
-                *sample = match rb_receiver.try_pop() {
+                *sample = match data_cons.try_pop() {
                     Some(s) => {
-                        if s.abs() > volume_peaks[i % 2] {
-                            volume_peaks[i % 2] = s.abs();
+                        if s.abs() > peaks[i % 2] {
+                            peaks[i % 2] = s.abs();
                         }
-                        s * volume
+                        s * *volume
                     }
-                    None => {
-                        dropped_samples = true;
-                        0.0
-                    }
+                    None => 0.0,
                 };
             }
 
             if let Ok(mut spectrum) = spectrum.lock() {
                 spectrum.update_fft(data);
-            }
-
-            if dropped_samples {
-                eprintln!("Output buffer overflow: dropped samples");
             }
         }
     }
@@ -449,16 +439,16 @@ fn find_input_stream_config(device: &Device, channels: u16) -> Result<StreamConf
     let supported_config = device
         .supported_input_configs()?
         .filter_map(|config_range| {
-            println!("- config range: {:?}", config_range);
+            // println!("- config range: {:?}", config_range);
             config_range.try_with_sample_rate(sample_rate)
         })
         .find(|config| {
-            println!(
-                "- config: {{ channels: {}, sample_format: {:?}, buffer_size: {:?} }}",
-                config.channels(),
-                config.sample_format(),
-                config.buffer_size()
-            );
+            // println!(
+            //     "- config: {{ channels: {}, sample_format: {:?}, buffer_size: {:?} }}",
+            //     config.channels(),
+            //     config.sample_format(),
+            //     config.buffer_size()
+            // );
             config.channels() == channels
                 && config.sample_format() == sample_format
                 && match config.buffer_size() {

@@ -2,6 +2,7 @@ pub mod commands;
 pub mod font;
 
 use core::default::Default;
+use enum_map::Enum;
 pub use font::*;
 
 pub const M8_VID: u16 = 0x16C0;
@@ -91,6 +92,83 @@ impl Default for HardwareType {
 impl ToString for HardwareType {
     fn to_string(&self) -> String {
         self.name()
+    }
+}
+
+#[derive(Clone, Copy, Debug)]
+pub enum UsbAudioMode {
+    STEREO,
+    MULTICHANNEL,
+}
+
+impl UsbAudioMode {
+    pub fn num_channels(&self) -> u16 {
+        match self {
+            Self::STEREO => 2,
+            Self::MULTICHANNEL => 24,
+        }
+    }
+}
+
+impl From<bool> for UsbAudioMode {
+    fn from(value: bool) -> Self {
+        if value {
+            Self::MULTICHANNEL
+        } else {
+            Self::STEREO
+        }
+    }
+}
+
+/// Represents an audio track on the M8 device if set to multichannel mode.
+#[derive(Debug, PartialEq, Enum, Clone, Copy)]
+pub enum Track {
+    Mix,
+    Track1,
+    Track2,
+    Track3,
+    Track4,
+    Track5,
+    Track6,
+    Track7,
+    Track8,
+    ModFx,
+    DelayFx,
+    ReverbFx,
+}
+
+impl Track {
+    pub fn from_index(index: usize) -> Track {
+        match index {
+            1 => Track::Track1,
+            2 => Track::Track2,
+            3 => Track::Track3,
+            4 => Track::Track4,
+            5 => Track::Track5,
+            6 => Track::Track6,
+            7 => Track::Track7,
+            8 => Track::Track8,
+            9 => Track::ModFx,
+            10 => Track::DelayFx,
+            11 => Track::ReverbFx,
+            _ => Track::Mix,
+        }
+    }
+    pub fn channels(&self) -> (usize, usize) {
+        match self {
+            Track::Mix => (0, 1),
+            Track::Track1 => (2, 3),
+            Track::Track2 => (4, 5),
+            Track::Track3 => (6, 7),
+            Track::Track4 => (8, 9),
+            Track::Track5 => (10, 11),
+            Track::Track6 => (12, 13),
+            Track::Track7 => (14, 15),
+            Track::Track8 => (16, 17),
+            Track::ModFx => (18, 19),
+            Track::DelayFx => (20, 21),
+            Track::ReverbFx => (22, 23),
+        }
     }
 }
 

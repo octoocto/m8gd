@@ -1,7 +1,11 @@
 ## Manages M8 serial and audio device connections.
 class_name DeviceManager
 
-enum AudioHandler { GODOT, SDL, CPAL }
+enum AudioHandler {
+	GODOT,
+	SDL,
+	CPAL,
+}
 
 const AUDIO_BUFFER_SIZE := 1024
 const DEVICE_SCAN_INTERVAL := 5.0
@@ -37,7 +41,6 @@ func _process(delta: float) -> void:
 		# elif is_serial_device_connected() and is_waiting_for_audio_device:
 		# 	print("audio: scanning for audio devices...")
 		# 	connect_audio_device()
-
 		next_device_scan = DEVICE_SCAN_INTERVAL
 	else:
 		next_device_scan -= delta
@@ -49,7 +52,7 @@ func init(p_main: Main) -> void:
 	self.main.m8c.disconnected.connect(
 		func() -> void:
 			main.device_manager.current_serial_device = ""
-			main.device_manager.current_audio_device = ""
+			main.device_manager.current_audio_device = "",
 	)
 
 

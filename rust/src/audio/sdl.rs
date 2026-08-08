@@ -1,9 +1,12 @@
+use crate as m8;
+
 use std::ffi::CStr;
 use std::os::raw::c_int;
 
-use crate::Error::AudioError;
-use crate::audio::{AudioSpec, SAMPLE_RATE};
-use crate::*;
+use m8::Error;
+use m8::Error::AudioError;
+use m8::SpectrumAnalyzer;
+use m8::audio;
 
 use sdl3::AudioSubsystem;
 use sdl3::audio::{
@@ -25,14 +28,12 @@ impl From<std::sync::PoisonError<std::sync::MutexGuard<'_, AudioStreamOwner>>> f
     }
 }
 
-type Format = f32;
 type SdlAudioSpec = sdl3::audio::AudioSpec;
 
-const AUDIO_FREQ: usize = 44100;
+use m8::audio::SAMPLE_RATE;
 
 const AUDIO_FORMAT: sdl3::audio::AudioFormat = sdl3::audio::AudioFormat::f32_sys();
-
-const AUDIO_BUFFER_SIZE: usize = 1024;
+const BUFFER_SIZE: usize = 1024;
 
 unsafe impl Send for AudioStreamHandle {}
 
@@ -93,13 +94,13 @@ impl AudioInCallback {
     fn new(output_stream: AudioStreamOwner, volume: f32) -> Self {
         AudioInCallback {
             output_stream: Some(AudioStreamHandle(output_stream)),
-            buffer: vec![0.0; AUDIO_BUFFER_SIZE * 2],
+            buffer: vec![0.0; BUFFER_SIZE * 2],
 
             volume,
             peaks: [0.0, 0.0],
 
             spectrum_analyzer_enabled: true,
-            spectrum: SpectrumAnalyzer::new(SAMPLE_RATE as u32),
+            spectrum: SpectrumAnalyzer::new(audio::SAMPLE_RATE as u32),
         }
     }
 
@@ -255,13 +256,13 @@ impl super::AudioBackend for SdlAudioBackend {
         Ok(())
     }
 
-    fn input_spec(&self) -> Result<AudioSpec, Error> {
+    fn input_spec(&self) -> Result<audio::AudioSpec, Error> {
         let (spec, samples) = self
             .input_stream_spec
             .as_ref()
             .ok_or(AudioError("No input stream".to_string()))?;
-        Ok(AudioSpec {
-            driver_name: self.driver_name(),
+        Ok(audio::AudioSpec {
+            host: self.driver_name(),
             format: format_name(spec.format),
             num_channels: spec.channels.unwrap_or(0) as usize,
             sample_rate: spec.freq.unwrap_or(0) as usize,
@@ -269,8 +270,8 @@ impl super::AudioBackend for SdlAudioBackend {
         })
     }
 
-    fn track_buffer(&self, _track: audio::AudioTrack) -> Result<Vec<f32>, Error> {
-        Ok(vec![0.0; AUDIO_BUFFER_SIZE * 2])
+    fn track_buffer(&self, _track: m8::Track) -> Result<Vec<f32>, Error> {
+        Ok(vec![0.0; BUFFER_SIZE * 2])
     }
 
     fn set_multichannel_mode(&mut self, _enabled: bool) -> Result<(), Error> {
@@ -299,12 +300,12 @@ fn format_name(format: Option<sdl3::audio::AudioFormat>) -> String {
 
 impl SdlAudioBackend {
     const DESIRED_SPEC_IN: SdlAudioSpec = SdlAudioSpec {
-        freq: Some(AUDIO_FREQ as i32),
+        freq: Some(SAMPLE_RATE as i32),
         channels: Some(2),
         format: Some(AUDIO_FORMAT),
     };
     const DESIRED_SPEC_OUT: SdlAudioSpec = SdlAudioSpec {
-        freq: Some(AUDIO_FREQ as i32),
+        freq: Some(SAMPLE_RATE as i32),
         channels: Some(2),
         format: Some(AUDIO_FORMAT),
     };
@@ -312,7 +313,7 @@ impl SdlAudioBackend {
     pub fn new() -> Result<Self, Error> {
         sdl3::hint::set(
             sdl3::hint::names::AUDIO_DEVICE_SAMPLE_FRAMES,
-            &AUDIO_BUFFER_SIZE.to_string(),
+            &BUFFER_SIZE.to_string(),
         );
         sdl3::hint::set(sdl3::hint::names::AUDIO_DEVICE_STREAM_ROLE, "Game");
 

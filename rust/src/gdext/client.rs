@@ -1,18 +1,22 @@
 pub mod osc;
 
-use crate::gdext::display::BufferedTexture;
+use crate as m8;
+
 use osc::OscBufferedTexture;
 use osc::OscDisplay;
 
-use super::Color;
-use crate::Client;
-use crate::audio::AudioBackend;
-use crate::*;
 use godot::classes::BitMap;
 use godot::classes::Image;
 use godot::classes::ImageTexture;
 use godot::prelude::Color as GodotColor;
 use godot::prelude::*;
+
+use m8::Client;
+use m8::ClientBackend;
+use m8::Error;
+use m8::audio;
+use m8::audio::AudioBackend;
+use m8::gdext::display::BufferedTexture;
 
 fn create_audio_backend(backend_name: &str) -> Result<Box<dyn AudioBackend>, Error> {
     match backend_name.to_lowercase().as_str() {
@@ -169,7 +173,7 @@ impl GodotM8Client {
         self.display_enabled
     }
 
-    fn set_display_size(&mut self, hardware_type: &HardwareType) {
+    fn set_display_size(&mut self, hardware_type: &m8::HardwareType) {
         let (width, height) = hardware_type.screen_size();
         self.display_buffer
             .set_size(width as usize, height as usize);
@@ -210,7 +214,7 @@ impl GodotM8Client {
 
     #[func]
     fn get_background_color(&self) -> GodotColor {
-        Color(self.bg_color.clone()).to_godot()
+        self.bg_color.to_godot()
     }
 
     #[func]
@@ -277,14 +281,14 @@ impl GodotM8Client {
             let mut array = PackedColorArray::new();
             array.resize(crate::NUM_THEME_COLORS - 1);
             array.fill(GodotColor::WHITE);
-            array.insert(0, Color(self.bg_color.clone()).to_godot());
+            array.insert(0, self.bg_color.to_godot());
             return array;
         }
         Self::color_vec_to_array(&self.theme_colors)
     }
 
     fn color_vec_to_array(colors: &Vec<crate::Color>) -> PackedArray<GodotColor> {
-        PackedArray::from_iter(colors.iter().cloned().map(|c| Color(c).to_godot()))
+        PackedArray::from_iter(colors.iter().cloned().map(|c| c.to_godot()))
     }
 }
 
@@ -392,7 +396,7 @@ impl GodotM8Client {
     /// Returns true if the command was sent successfully.
     #[func]
     fn debug_disable_display(&mut self) -> bool {
-        Client::send_command(self, CommandOut::DisableDisplay).is_ok()
+        Client::send_command(self, m8::CommandOut::DisableDisplay).is_ok()
     }
 
     /// Play a note on the M8 device.
@@ -555,7 +559,7 @@ impl GodotM8Client {
             return dict;
         };
 
-        dict.set("driver_name", spec.driver_name());
+        dict.set("driver_name", spec.host());
         dict.set("format", spec.format().to_string());
         dict.set("sample_rate", spec.sample_rate() as i32);
         dict.set("buffer_size", spec.buffer_size() as i32);
@@ -598,7 +602,7 @@ impl GodotM8Client {
 
     #[func]
     pub fn get_audio_track_buffer(&mut self, index: i32) -> Vec<f32> {
-        let track = crate::audio::AudioTrack::from_index(index as usize);
+        let track = m8::Track::from_index(index as usize);
         if let Some(audio_backend) = self.audio_backend.as_mut() {
             if let Ok(buffer) = audio_backend.track_buffer(track) {
                 return buffer;
@@ -768,7 +772,7 @@ impl GodotM8Client {
                 self.bg_color.g,
                 self.bg_color.b
             );
-            let bg_color = Color(self.bg_color.clone()).to_godot();
+            let bg_color = self.bg_color.to_godot();
             self.signals().background_color_changed().emit(bg_color);
         }
 

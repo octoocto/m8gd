@@ -28,21 +28,21 @@ pub struct BufferedTexture {
 
 impl Default for BufferedTexture {
     fn default() -> Self {
-        BufferedTexture {
-            width: usize::default(),
-            height: usize::default(),
-            image: Gd::<Image>::default(),
-            texture: Gd::<ImageTexture>::default(),
-            // data: vec![0; width * height * 4],
-            data: Box::new([0; BUFFER_SIZE_MAX]),
-            data_len: usize::default(),
-        }
+        Self::new(1, 1)
     }
 }
 
 impl BufferedTexture {
     pub fn new(width: usize, height: usize) -> Self {
-        let mut s = Self::default();
+        let mut s = Self {
+            width,
+            height,
+            image: Gd::<Image>::default(),
+            texture: Gd::<ImageTexture>::default(),
+            // data: vec![0; width * height * 4],
+            data: Box::new([0; BUFFER_SIZE_MAX]),
+            data_len: usize::default(),
+        };
         s.set_size(width, height);
         s
     }
@@ -120,7 +120,6 @@ impl BufferedTexture {
         self.height = height;
         self.image =
             Image::create_empty(width as i32, height as i32, false, Format::RGBA8).unwrap();
-        // self.data = vec![0; width * height * 4];
         self.data_len = width * height * 4;
         self.data[..self.data_len].fill(0);
         self.texture.set_image(&self.image);
@@ -135,16 +134,10 @@ impl BufferedTexture {
             IMAGE_FORMAT,
             &PackedByteArray::from(&self.data[..self.data_len]),
         );
-        // if self.texture.get_size().cast_int().to_tuple() != (self.width as i32, self.height as i32)
-        // {
-        //     self.texture.set_image(&self.image);
-        // } else {
         self.texture.update(&self.image);
-        // }
     }
 
     pub fn texture(&self) -> Gd<ImageTexture> {
-        // self.texture.set_image(&self.image());
         self.texture.clone()
     }
 }

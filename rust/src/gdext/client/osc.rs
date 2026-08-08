@@ -1,9 +1,10 @@
+use crate as m8;
+
 use godot::{builtin::math::FloatExt, classes::ImageTexture, obj::Gd};
 use std::ops::{Deref, DerefMut};
 
-use crate::Color;
-
-use super::BufferedTexture;
+use m8::Color;
+use m8::gdext::BufferedTexture;
 
 enum OscDisplayType {
     /// Emulate the size and layout of the hardware's oscilloscope display.
@@ -98,14 +99,14 @@ impl OscDisplay for super::GodotM8Client {
             return;
         }
         for (i, track) in [
-            crate::audio::AudioTrack::Track1,
-            crate::audio::AudioTrack::Track2,
-            crate::audio::AudioTrack::Track3,
-            crate::audio::AudioTrack::Track4,
-            crate::audio::AudioTrack::Track5,
-            crate::audio::AudioTrack::Track6,
-            crate::audio::AudioTrack::Track7,
-            crate::audio::AudioTrack::Track8,
+            m8::Track::Track1,
+            m8::Track::Track2,
+            m8::Track::Track3,
+            m8::Track::Track4,
+            m8::Track::Track5,
+            m8::Track::Track6,
+            m8::Track::Track7,
+            m8::Track::Track8,
         ]
         .into_iter()
         .enumerate()
