@@ -1,18 +1,18 @@
 pub mod osc;
 
-use crate::client::osc::OscBufferedTexture;
-use crate::client::osc::OscDisplay;
-use crate::display::BufferedTexture;
+use crate::gdext::display::BufferedTexture;
+use osc::OscBufferedTexture;
+use osc::OscDisplay;
 
 use super::Color;
+use crate::Client;
+use crate::audio::AudioBackend;
+use crate::*;
 use godot::classes::BitMap;
 use godot::classes::Image;
 use godot::classes::ImageTexture;
 use godot::prelude::Color as GodotColor;
 use godot::prelude::*;
-use libm8::Client;
-use libm8::audio::AudioBackend;
-use libm8::*;
 
 fn create_audio_backend(backend_name: &str) -> Result<Box<dyn AudioBackend>, Error> {
     match backend_name.to_lowercase().as_str() {
@@ -71,10 +71,10 @@ pub struct GodotM8Client {
     #[init(val = 1.0)]
     audio_volume: f32,
 
-    hardware_type: Option<libm8::HardwareType>,
+    hardware_type: Option<crate::HardwareType>,
     firmware_version: String,
 
-    keystate: libm8::KeyState,
+    keystate: crate::KeyState,
 
     #[init(val = true)]
     display_enabled: bool,
@@ -82,15 +82,15 @@ pub struct GodotM8Client {
     osc_buffer: OscBufferedTexture,
     #[init(val = 255)]
     bg_alpha: u8,
-    bg_color: libm8::Color,
+    bg_color: crate::Color,
 
-    theme_colors: Vec<libm8::Color>,
+    theme_colors: Vec<crate::Color>,
 
-    font_type: libm8::FontType,
+    font_type: crate::FontType,
     font_bitmap_array: [Option<Gd<BitMap>>; 5],
     // font_bitmap: Option<&Gd<BitMap>>,
     last_osc_size: usize,
-    last_draw_color: libm8::Color,
+    last_draw_color: crate::Color,
 }
 
 impl Client for GodotM8Client {
@@ -101,13 +101,13 @@ impl Client for GodotM8Client {
         }
     }
 
-    fn handle_command(&mut self, command: libm8::CommandIn) -> Result<(), libm8::Error> {
+    fn handle_command(&mut self, command: crate::CommandIn) -> Result<(), crate::Error> {
         match command {
-            libm8::CommandIn::DrawRect { params } => self.on_draw_rect(params),
-            libm8::CommandIn::DrawChar { params } => self.on_draw_char(params),
-            libm8::CommandIn::DrawOsc { params } => self.on_draw_osc(params),
-            libm8::CommandIn::GetKeyState { keystate } => self.on_key_pressed(keystate),
-            libm8::CommandIn::GetSystemInfo { info } => self.on_get_system_info(info),
+            crate::CommandIn::DrawRect { params } => self.on_draw_rect(params),
+            crate::CommandIn::DrawChar { params } => self.on_draw_char(params),
+            crate::CommandIn::DrawOsc { params } => self.on_draw_osc(params),
+            crate::CommandIn::GetKeyState { keystate } => self.on_key_pressed(keystate),
+            crate::CommandIn::GetSystemInfo { info } => self.on_get_system_info(info),
         }
         Ok(())
     }
@@ -116,11 +116,11 @@ impl Client for GodotM8Client {
 #[godot_api]
 impl INode for GodotM8Client {
     fn ready(&mut self) {
-        self.reset_font_bitmap(libm8::FontType::Model01Normal);
-        self.reset_font_bitmap(libm8::FontType::Model01Big);
-        self.reset_font_bitmap(libm8::FontType::Model02Normal);
-        self.reset_font_bitmap(libm8::FontType::Model02Bold);
-        self.reset_font_bitmap(libm8::FontType::Model02Huge);
+        self.reset_font_bitmap(crate::FontType::Model01Normal);
+        self.reset_font_bitmap(crate::FontType::Model01Big);
+        self.reset_font_bitmap(crate::FontType::Model02Normal);
+        self.reset_font_bitmap(crate::FontType::Model02Bold);
+        self.reset_font_bitmap(crate::FontType::Model02Huge);
     }
 
     fn process(&mut self, _delta: f64) {
@@ -238,7 +238,7 @@ impl GodotM8Client {
     fn set_key_pressed(&mut self, key: u8, pressed: bool) {
         let mut keystate = self.keystate.clone();
 
-        let Some(key) = libm8::Key::from_byte(key) else {
+        let Some(key) = crate::Key::from_byte(key) else {
             godot_warn!("Invalid key value: {}", key);
             return;
         };
@@ -258,7 +258,7 @@ impl GodotM8Client {
 
     #[func]
     fn is_key_pressed(&self, key: u8) -> bool {
-        let Some(key) = libm8::Key::from_byte(key) else {
+        let Some(key) = crate::Key::from_byte(key) else {
             godot_warn!("Invalid key value: {}", key);
             return false;
         };
@@ -273,9 +273,9 @@ impl GodotM8Client {
 
     #[func]
     fn get_theme_colors(&self) -> PackedArray<GodotColor> {
-        if self.theme_colors.len() < libm8::NUM_THEME_COLORS {
+        if self.theme_colors.len() < crate::NUM_THEME_COLORS {
             let mut array = PackedColorArray::new();
-            array.resize(libm8::NUM_THEME_COLORS - 1);
+            array.resize(crate::NUM_THEME_COLORS - 1);
             array.fill(GodotColor::WHITE);
             array.insert(0, Color(self.bg_color.clone()).to_godot());
             return array;
@@ -283,7 +283,7 @@ impl GodotM8Client {
         Self::color_vec_to_array(&self.theme_colors)
     }
 
-    fn color_vec_to_array(colors: &Vec<libm8::Color>) -> PackedArray<GodotColor> {
+    fn color_vec_to_array(colors: &Vec<crate::Color>) -> PackedArray<GodotColor> {
         PackedArray::from_iter(colors.iter().cloned().map(|c| Color(c).to_godot()))
     }
 }
@@ -310,7 +310,7 @@ impl GodotM8Client {
         #[opt(default = "")] preferred_path: GString,
         #[opt(default = true)] check_if_valid: bool,
     ) -> bool {
-        let mut client_backend = libm8::SerialBackend::new();
+        let mut client_backend = crate::SerialBackend::new();
         let preferred_path = gstring_to_option(preferred_path);
 
         let result: Result<(), Error> = (|| {
@@ -344,7 +344,7 @@ impl GodotM8Client {
         self.client_backend = None;
         self.audio_backend = None;
         self.display_buffer
-            .fill(&libm8::Color::new(0, 0, 0), &u8::MAX);
+            .fill(&crate::Color::new(0, 0, 0), &u8::MAX);
         // self.display_image.fill(GodotColor::BLACK);
         self.display_update();
         self.signals().disconnected().emit();
@@ -408,7 +408,7 @@ impl GodotM8Client {
     /// Returns true if the command was sent successfully.
     #[func]
     fn debug_set_keys(&mut self, keybits: i32) -> bool {
-        let keystate = libm8::KeyState::from(keybits as u8);
+        let keystate = crate::KeyState::from(keybits as u8);
         Client::set_keys(self, &keystate).is_ok()
     }
 }
@@ -598,7 +598,7 @@ impl GodotM8Client {
 
     #[func]
     pub fn get_audio_track_buffer(&mut self, index: i32) -> Vec<f32> {
-        let track = libm8::audio::AudioTrack::from_index(index as usize);
+        let track = crate::audio::AudioTrack::from_index(index as usize);
         if let Some(audio_backend) = self.audio_backend.as_mut() {
             if let Ok(buffer) = audio_backend.track_buffer(track) {
                 return buffer;
@@ -620,7 +620,7 @@ impl GodotM8Client {
             .expect("Font bitmap should not be None")
     }
 
-    fn use_font(&mut self, font_type: libm8::FontType) {
+    fn use_font(&mut self, font_type: crate::FontType) {
         if self.font_type != font_type {
             self.font_type = font_type;
             godot_print!("Using font: {:?}", self.font_type);
@@ -629,10 +629,10 @@ impl GodotM8Client {
 
     /// Sets a custom font bitmap for the given font type index.
     ///
-    /// Refer to the `FONT_` constants in [libm8::LibM8] for valid values for `font`.
+    /// Refer to the `FONT_` constants in [crate::crate] for valid values for `font`.
     #[func]
     fn set_font_bitmap(&mut self, font: u8, bitmap: Gd<BitMap>) -> bool {
-        let Some(font) = libm8::FontType::from_index(font as usize) else {
+        let Some(font) = crate::FontType::from_index(font as usize) else {
             godot_error!("Invalid font type index: {}", font);
             return false;
         };
@@ -654,14 +654,14 @@ impl GodotM8Client {
         true
     }
 
-    fn reset_font_bitmap(&mut self, font: libm8::FontType) {
+    fn reset_font_bitmap(&mut self, font: crate::FontType) {
         self.font_bitmap_array[font.to_index()] = bytes_to_bitmap(font.get_data().bytes);
     }
 
     /// Resets the font bitmap for the given font type index to the default.
     #[func(rename = reset_font_bitmap)]
     fn gd_reset_font_bitmap(&mut self, font: u8) -> bool {
-        let Some(font) = libm8::FontType::from_index(font as usize) else {
+        let Some(font) = crate::FontType::from_index(font as usize) else {
             godot_error!("Invalid font type index: {}", font);
             return false;
         };
@@ -692,7 +692,7 @@ impl GodotM8Client {
         y: i32,
         width: i32,
         height: i32,
-        color: &libm8::Color,
+        color: &crate::Color,
         alpha: &u8,
     ) -> () {
         if x < 0 || y < 0 || width <= 0 || height <= 0 {
@@ -722,7 +722,7 @@ impl GodotM8Client {
         buffer: &mut BufferedTexture,
         x: i32,
         y: i32,
-        color: &libm8::Color,
+        color: &crate::Color,
         alpha: &u8,
     ) -> () {
         // if x < 0 || y < 0 || x >= image.get_width() || y >= image.get_height() {
@@ -738,7 +738,7 @@ impl GodotM8Client {
 
 // incoming command handlers
 impl GodotM8Client {
-    fn on_draw_rect(&mut self, params: libm8::DrawRectParams) {
+    fn on_draw_rect(&mut self, params: crate::DrawRectParams) {
         let font_data = self.font_type.get_data();
 
         // let (disp_w, disp_h) = self.display_image.get_size().to_tuple();
@@ -779,9 +779,9 @@ impl GodotM8Client {
             || (w == 36 && h == 11)
             || (w == 45 && h == 13)
         {
-            if self.theme_colors.len() < libm8::NUM_THEME_COLORS {
+            if self.theme_colors.len() < crate::NUM_THEME_COLORS {
                 self.theme_colors.push(color.clone());
-                if self.theme_colors.len() == libm8::NUM_THEME_COLORS {
+                if self.theme_colors.len() == crate::NUM_THEME_COLORS {
                     let colors = Self::color_vec_to_array(&self.theme_colors);
                     self.signals()
                         .theme_colors_updated()
@@ -800,7 +800,7 @@ impl GodotM8Client {
         // Self::draw_rect(&mut self.display_image, x, y, w, h, &color, alpha);
     }
 
-    fn on_draw_char(&mut self, params: libm8::DrawCharParams) {
+    fn on_draw_char(&mut self, params: crate::DrawCharParams) {
         // bitmap only covers ASCII characters
         if params.c as u8 > 127 {
             return;
@@ -861,7 +861,7 @@ impl GodotM8Client {
         }
     }
 
-    fn on_draw_osc(&mut self, params: libm8::DrawOscParams) {
+    fn on_draw_osc(&mut self, params: crate::DrawOscParams) {
         let color = params.color;
         let points = params.waveform;
         let size = points.len();
@@ -901,9 +901,9 @@ impl GodotM8Client {
         }
     }
 
-    fn on_key_pressed(&mut self, keystate: libm8::KeyState) {
+    fn on_key_pressed(&mut self, keystate: crate::KeyState) {
         if keystate != self.keystate {
-            for key in libm8::Key::ALL_KEYS {
+            for key in crate::Key::ALL_KEYS {
                 let pressed = keystate.is_pressed(key);
                 if pressed != self.keystate.is_pressed(key) {
                     self.signals().key_pressed().emit(key.to_byte(), pressed);
@@ -913,7 +913,7 @@ impl GodotM8Client {
         }
     }
 
-    fn on_get_system_info(&mut self, params: libm8::SystemInfo) {
+    fn on_get_system_info(&mut self, params: crate::SystemInfo) {
         let hardware_type = params.model;
         let firmware = params.firmware;
         let font_type = params.font;

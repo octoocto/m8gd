@@ -1,3 +1,5 @@
+use crate::Color;
+use crate::HardwareType;
 use godot::{
     classes::{
         Image, ImageTexture, class_macros::private::virtuals::Os::PackedByteArray, image::Format,
@@ -7,13 +9,10 @@ use godot::{
     obj::Gd,
 };
 
-use libm8::Color;
-
 const IMAGE_FORMAT: Format = godot::classes::image::Format::RGBA8;
 
-const BUFFER_SIZE_MAX: usize = libm8::HardwareType::SCREEN_SIZE_MAX.0 as usize
-    * libm8::HardwareType::SCREEN_SIZE_MAX.1 as usize
-    * 4;
+const BUFFER_SIZE_MAX: usize =
+    HardwareType::SCREEN_SIZE_MAX.0 as usize * HardwareType::SCREEN_SIZE_MAX.1 as usize * 4;
 
 /// A display buffer in RGBA8 format.
 // #[derive(Default)]

@@ -3,13 +3,20 @@ name = "libm8"
 version = "0.1.0"
 edition = "2024"
 
+[lib]
+name = "m8"
+crate-type = ["cdylib", "rlib"]
+
 [dependencies]
-circular-buffer = "2.0.0"
 cpal = { version = "0.18.1", features = ["pipewire", "asio"] }
-enum-map = "2.7.3"
-itertools = "0.15.0"
-ringbuf = "0.4.8"
 sdl3 = { version = "0.17.0", features = ["build-from-source-static"] }
+enum-map = "2.7.3"
+ringbuf = "0.4.8"
 serialport = "4.8.1"
 spectrum-analyzer = "1.7.0"
 thiserror = "2.0.17"
+
+godot = { version = "0.5.4", features = ["register-docs"], optional = true }
+
+[features]
+gdext = ["dep:godot"]

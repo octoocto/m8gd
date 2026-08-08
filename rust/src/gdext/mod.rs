@@ -1,5 +1,5 @@
 mod client;
-mod display;
+pub mod display;
 
 use godot::prelude::Color as GodotColor;
 use godot::prelude::*;
@@ -11,7 +11,7 @@ struct LibM8Godot;
 #[gdextension]
 unsafe impl ExtensionLibrary for LibM8Godot {}
 
-struct Color(libm8::Color);
+struct Color(crate::Color);
 
 impl GodotConvert for Color {
     type Via = GodotColor;
@@ -36,21 +36,21 @@ pub struct LibM8;
 #[godot_api]
 impl LibM8 {
     #[constant]
-    const KEY_UP: u8 = libm8::Key::UP;
+    const KEY_UP: u8 = crate::Key::UP;
     #[constant]
-    const KEY_DOWN: u8 = libm8::Key::DOWN;
+    const KEY_DOWN: u8 = crate::Key::DOWN;
     #[constant]
-    const KEY_LEFT: u8 = libm8::Key::LEFT;
+    const KEY_LEFT: u8 = crate::Key::LEFT;
     #[constant]
-    const KEY_RIGHT: u8 = libm8::Key::RIGHT;
+    const KEY_RIGHT: u8 = crate::Key::RIGHT;
     #[constant]
-    const KEY_OPTION: u8 = libm8::Key::OPTION;
+    const KEY_OPTION: u8 = crate::Key::OPTION;
     #[constant]
-    const KEY_SHIFT: u8 = libm8::Key::SHIFT;
+    const KEY_SHIFT: u8 = crate::Key::SHIFT;
     #[constant]
-    const KEY_EDIT: u8 = libm8::Key::EDIT;
+    const KEY_EDIT: u8 = crate::Key::EDIT;
     #[constant]
-    const KEY_PLAY: u8 = libm8::Key::PLAY;
+    const KEY_PLAY: u8 = crate::Key::PLAY;
 
     #[constant]
     const FONT_M01_NORMAL: u8 = 0;
@@ -69,7 +69,7 @@ impl LibM8 {
     /// Returns a list of available serial ports.
     #[func]
     fn list_serial_ports(#[opt(default = true)] show_valid_only: bool) -> Array<GString> {
-        let vec = libm8::list_serial_port_names(show_valid_only);
+        let vec = crate::list_serial_port_names(show_valid_only);
         vec.into_iter()
             .map(|s| GString::from(&s))
             .collect::<Array<GString>>()
@@ -77,12 +77,12 @@ impl LibM8 {
 
     #[func]
     fn is_valid_serial_port(path: GString) -> bool {
-        libm8::serial::is_valid_serial_port_path(path.to_string().as_str())
+        crate::serial::is_valid_serial_port_path(path.to_string().as_str())
     }
 
     #[func]
     fn list_audio_input_devices() -> Array<GString> {
-        let vec = libm8::audio::input_device_names().unwrap_or_else(|e| {
+        let vec = crate::audio::input_device_names().unwrap_or_else(|e| {
             godot_error!("Failed to get audio input device names: {}", e.to_string());
             vec![]
         });

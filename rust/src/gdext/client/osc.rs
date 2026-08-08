@@ -1,8 +1,8 @@
+use crate::audio::AudioBackend;
 use godot::{builtin::math::FloatExt, classes::ImageTexture, obj::Gd};
-use libm8::audio::AudioBackend;
 use std::ops::{Deref, DerefMut};
 
-use libm8::Color;
+use crate::Color;
 
 use super::BufferedTexture;
 
@@ -89,7 +89,7 @@ impl OscDisplay for super::GodotM8Client {
         let bg_alpha = self.bg_alpha;
         let fg_color = self
             .theme_colors
-            .get(libm8::THEME_INDEX_SCOPE)
+            .get(crate::THEME_INDEX_SCOPE)
             .unwrap_or(&Color::new(255, 255, 255))
             .clone();
         let width = self.get_display_size().x as usize;
@@ -99,14 +99,14 @@ impl OscDisplay for super::GodotM8Client {
             return;
         }
         for (i, track) in [
-            libm8::audio::AudioTrack::Track1,
-            libm8::audio::AudioTrack::Track2,
-            libm8::audio::AudioTrack::Track3,
-            libm8::audio::AudioTrack::Track4,
-            libm8::audio::AudioTrack::Track5,
-            libm8::audio::AudioTrack::Track6,
-            libm8::audio::AudioTrack::Track7,
-            libm8::audio::AudioTrack::Track8,
+            crate::audio::AudioTrack::Track1,
+            crate::audio::AudioTrack::Track2,
+            crate::audio::AudioTrack::Track3,
+            crate::audio::AudioTrack::Track4,
+            crate::audio::AudioTrack::Track5,
+            crate::audio::AudioTrack::Track6,
+            crate::audio::AudioTrack::Track7,
+            crate::audio::AudioTrack::Track8,
         ]
         .into_iter()
         .enumerate()
