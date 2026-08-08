@@ -572,7 +572,7 @@ impl GodotM8Client {
     #[func]
     pub fn get_audio_magnitude_at_freq(&mut self, freq: f32) -> f32 {
         if let Some(audio_backend) = self.audio_backend.as_mut() {
-            if let Ok(magnitude) = audio_backend.volume_at_frequency(freq) {
+            if let Ok(magnitude) = audio_backend.value_at_frequency(freq) {
                 return magnitude;
             }
         }

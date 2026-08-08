@@ -2,7 +2,7 @@ use std::ffi::CStr;
 use std::os::raw::c_int;
 
 use crate::Error::AudioError;
-use crate::audio::AudioSpec;
+use crate::audio::{AudioSpec, SAMPLE_RATE};
 use crate::*;
 
 use sdl3::AudioSubsystem;
@@ -12,9 +12,6 @@ use sdl3::audio::{
 };
 use sdl3::sys::audio::{SDL_AudioFormat, SDL_AudioSpec, SDL_GetAudioDeviceFormat};
 use sdl3::sys::error::SDL_GetError;
-use spectrum_analyzer::scaling::scale_to_zero_to_one;
-use spectrum_analyzer::windows::hann_window;
-use spectrum_analyzer::{FrequencyLimit, FrequencySpectrum, samples_fft_to_spectrum};
 
 impl From<sdl3::Error> for Error {
     fn from(err: sdl3::Error) -> Self {
@@ -89,7 +86,7 @@ struct AudioInCallback {
     peaks: [f32; 2],
 
     spectrum_analyzer_enabled: bool,
-    frequency_spectrum: Option<FrequencySpectrum>,
+    spectrum: SpectrumAnalyzer,
 }
 
 impl AudioInCallback {
@@ -102,7 +99,7 @@ impl AudioInCallback {
             peaks: [0.0, 0.0],
 
             spectrum_analyzer_enabled: true,
-            frequency_spectrum: None,
+            spectrum: SpectrumAnalyzer::new(SAMPLE_RATE as u32),
         }
     }
 
@@ -129,18 +126,7 @@ impl AudioRecordingCallback<f32> for AudioInCallback {
         let _ = input_stream.read_f32_samples(&mut self.buffer);
 
         if self.spectrum_analyzer_enabled {
-            match samples_fft_to_spectrum(
-                hann_window(&self.buffer).as_slice(),
-                AUDIO_FREQ as u32,
-                // FrequencyLimit::Range(20.0, 20000.0),
-                FrequencyLimit::All,
-                Some(&scale_to_zero_to_one),
-            ) {
-                Ok(spectrum) => {
-                    self.frequency_spectrum = Some(spectrum);
-                }
-                Err(_) => {}
-            }
+            self.spectrum.update_fft(&self.buffer);
         }
 
         for (i, sample) in self.buffer.iter_mut().take(available as usize).enumerate() {
@@ -251,12 +237,11 @@ impl super::AudioBackend for SdlAudioBackend {
         Ok(self.callback_lock()?.peaks)
     }
 
-    fn volume_at_frequency(&mut self, frequency: f32) -> Result<f32, Error> {
-        let callback = self.callback_lock()?;
-        if callback.spectrum_analyzer_enabled {
-            if let Some(fs) = callback.frequency_spectrum.as_ref() {
-                return Ok(fs.freq_val_exact(frequency).val());
-            };
+    fn value_at_frequency(&mut self, frequency: f32) -> Result<f32, Error> {
+        if let Ok(callback) = self.callback_lock() {
+            if callback.spectrum_analyzer_enabled {
+                return Ok(callback.spectrum.value_at_frequency(frequency));
+            }
         }
         Ok(0.0)
     }

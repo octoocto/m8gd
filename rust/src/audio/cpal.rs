@@ -1,17 +1,13 @@
 use std::collections::{HashSet, VecDeque};
 use std::sync::{Arc, Mutex};
 
+use super::AudioSpec;
 use crate::audio::AudioTrack;
+use crate::{Error, SpectrumAnalyzer};
 use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
 use cpal::{Device, Host, OutputCallbackInfo, StreamConfig};
 use enum_map::EnumMap;
 use ringbuf::traits::{Consumer, Producer, Split};
-use spectrum_analyzer::scaling::scale_to_zero_to_one;
-use spectrum_analyzer::windows::hann_window;
-use spectrum_analyzer::{FrequencyLimit, FrequencySpectrum, samples_fft_to_spectrum};
-
-use super::AudioSpec;
-use crate::Error;
 
 // use super::BUFFER_SIZE;
 use super::LATENCY_BUFFER_SIZE;
@@ -36,7 +32,7 @@ pub struct CpalAudioBackend {
     volume_peaks: Arc<Mutex<[f32; 2]>>,
 
     spectrum_analyzer_enabled: bool,
-    frequency_spectrum: Arc<Mutex<FrequencySpectrum>>,
+    spectrum: Arc<Mutex<SpectrumAnalyzer>>,
 }
 
 impl CpalAudioBackend {
@@ -54,7 +50,7 @@ impl CpalAudioBackend {
             volume_peaks: Arc::new(Mutex::new([0.0; 2])),
 
             spectrum_analyzer_enabled: true,
-            frequency_spectrum: Arc::new(Mutex::new(FrequencySpectrum::default())),
+            spectrum: Arc::new(Mutex::new(SpectrumAnalyzer::new(SAMPLE_RATE as u32))),
         })
     }
 }
@@ -199,21 +195,13 @@ impl super::AudioBackend for CpalAudioBackend {
         }
     }
 
-    fn volume_at_frequency(&mut self, frequency: f32) -> Result<f32, Error> {
+    fn value_at_frequency(&mut self, frequency: f32) -> Result<f32, Error> {
         if self.is_spectrum_analyzer_enabled()? {
-            match self.frequency_spectrum.lock() {
-                Ok(fs) => {
-                    if fs.samples_len() > 0 {
-                        Ok(fs.freq_val_exact(frequency).val())
-                    } else {
-                        Ok(0.0)
-                    }
-                }
-                Err(_) => Ok(0.0),
-            }
-        } else {
-            Ok(0.0)
+            if let Ok(spectrum) = self.spectrum.lock() {
+                return Ok(spectrum.value_at_frequency(frequency));
+            };
         }
+        Ok(0.0)
     }
 
     fn set_spectrum_analyzer_enabled(&mut self, enabled: bool) -> Result<(), Error> {
@@ -310,7 +298,7 @@ impl CpalAudioBackend {
     ) -> impl FnMut(&mut [f32], &OutputCallbackInfo) + Send + 'static {
         let volume = self.volume.clone();
         let volume_peaks = self.volume_peaks.clone();
-        let frequency_spectrum = self.frequency_spectrum.clone();
+        let spectrum = self.spectrum.clone();
 
         move |data, _| {
             let mut dropped_samples = false;
@@ -341,20 +329,8 @@ impl CpalAudioBackend {
                 };
             }
 
-            let mut fs = frequency_spectrum.lock().unwrap();
-
-            match samples_fft_to_spectrum(
-                hann_window(data).as_slice(),
-                44100,
-                FrequencyLimit::All,
-                Some(&scale_to_zero_to_one),
-            ) {
-                Ok(spectrum) => {
-                    *fs = spectrum;
-                }
-                Err(e) => {
-                    eprintln!("FFT error: {}", e);
-                }
+            if let Ok(mut spectrum) = spectrum.lock() {
+                spectrum.update_fft(data);
             }
 
             if dropped_samples {

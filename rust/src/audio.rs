@@ -56,7 +56,7 @@ pub trait AudioBackend {
     /// Returns the volume in linear scale for `frequency` in Hz.
     ///
     /// If the spectrum analyzer is disabled, returns [None].
-    fn volume_at_frequency(&mut self, frequency: f32) -> Result<f32, Error>;
+    fn value_at_frequency(&mut self, frequency: f32) -> Result<f32, Error>;
 
     fn set_spectrum_analyzer_enabled(&mut self, enabled: bool) -> Result<(), Error>;
 
