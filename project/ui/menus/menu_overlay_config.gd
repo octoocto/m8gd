@@ -20,11 +20,11 @@ func _disconnect_all(sig: Signal) -> void:
 
 
 func _on_menu_init() -> void:
-# 	button_finish.pressed.connect(
-# 		func() -> void:
-# 			menu_hide()
-# 			main.menu.menu_show()
-# 	)
+	# 	button_finish.pressed.connect(
+	# 		func() -> void:
+	# 			menu_hide()
+	# 			main.menu.menu_show()
+	# 	)
 	super()
 
 
@@ -61,21 +61,26 @@ func menu_show_for(overlay: OverlayBase) -> void:
 ##
 func _init_params_for(overlay: OverlayBase) -> void:
 	# these params are always present
-
 	s_position.uninit()
 	s_anchor.uninit()
 	s_size.uninit()
 
 	s_size.setting_connect_overlay(
-		overlay, "size", func(_value: Vector2) -> void: s_anchor.emit_value_changed()
+		overlay,
+		"size",
+		func(_value: Vector2) -> void:
+			s_size.set_value_no_signal(overlay.size)
+			s_anchor.emit_value_changed(),
 	)
 	s_anchor.setting_connect_overlay(
-		overlay, "anchors_preset", func(_value: int) -> void: s_position.value = Vector2i.ZERO
+		overlay,
+		"anchors_preset",
+		func(_value: int) -> void:
+			s_position.value = Vector2i.ZERO,
 	)
 	s_position.setting_connect_overlay(overlay, "_position_offset")
 
 	# load any additional params
-
 	for child in param_container.get_children():
 		param_container.remove_child(child)
 		child.queue_free()
@@ -83,11 +88,10 @@ func _init_params_for(overlay: OverlayBase) -> void:
 	var proplist: Array[Dictionary] = overlay.get_property_list().filter(
 		func(prop: Dictionary) -> bool:
 			return (
-				prop.usage & PROPERTY_USAGE_STORAGE
-				and prop.usage & PROPERTY_USAGE_EDITOR
+				prop.usage & PROPERTY_USAGE_STORAGE and prop.usage & PROPERTY_USAGE_EDITOR
 				and prop.usage & PROPERTY_USAGE_SCRIPT_VARIABLE
 				and not (prop.name as String).begins_with("_")
-			)
+			),
 	)
 
 	for prop: Dictionary in proplist:
