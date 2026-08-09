@@ -142,7 +142,7 @@ pub struct SerialBackend {
     read_thread_running: Arc<AtomicBool>,
 
     /// Receiver for read bytes.
-    read_receiver: Option<mpsc::Receiver<(Arc<[u8]>, usize)>>,
+    read_receiver: Option<mpsc::Receiver<([u8; SERIAL_BUFFER_SIZE], usize)>>,
     /// Receiver for incoming errors.
     error_receiver: Option<mpsc::Receiver<Error>>,
 
@@ -217,7 +217,7 @@ impl SerialBackend {
     fn start_read_thread(
         &mut self,
         mut port: Box<dyn serialport::SerialPort>,
-        read_sender: mpsc::SyncSender<(Arc<[u8]>, usize)>,
+        read_sender: mpsc::SyncSender<([u8; SERIAL_BUFFER_SIZE], usize)>,
         error_sender: mpsc::Sender<Error>,
         read_thread_running: Arc<AtomicBool>,
     ) -> Result<(), Error> {
@@ -230,7 +230,7 @@ impl SerialBackend {
                 }
                 match port.read(read_bytes.as_mut_slice()) {
                     Ok(bytes_read) => {
-                        let _ = read_sender.send((Arc::new(read_bytes), bytes_read));
+                        let _ = read_sender.send((read_bytes, bytes_read));
                     }
                     Err(e) if e.kind() == std::io::ErrorKind::TimedOut => {
                         continue;
