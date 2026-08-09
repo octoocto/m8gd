@@ -1,4 +1,4 @@
-[gd_resource type="StandardMaterial3D" load_steps=5 format=3 uid="uid://1qarqvu22e2"]
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://1qarqvu22e2"]
 
 [ext_resource type="Texture2D" uid="uid://dv11e5vjgmjl6" path="res://assets/ambientcg/asphalt010/Asphalt010_2K-JPG_Color.jpg" id="1_kam1q"]
 [ext_resource type="Texture2D" uid="uid://c2lmoussricp2" path="res://assets/ambientcg/asphalt010/Asphalt010_2K-JPG_Displacement.jpg" id="2_vx812"]

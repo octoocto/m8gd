@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://b8sdswwu5dtu5"]
+[gd_scene format=3 uid="uid://b8sdswwu5dtu5"]
 
 [ext_resource type="PackedScene" uid="uid://b1r8nehsgp111" path="res://ui/settings/setting_number.tscn" id="1_f030a"]
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_mcmtq"]
@@ -26,7 +26,7 @@ expand_margin_right = 1.0
 expand_margin_bottom = 1.0
 anti_aliasing = false
 
-[node name="Overlays" type="PanelContainer"]
+[node name="Overlays" type="PanelContainer" unique_id=554137022]
 texture_filter = 1
 offset_right = 244.0
 offset_bottom = 27.0
@@ -35,10 +35,10 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_1evne")
 script = ExtResource("1_ta51e")
 metadata/_tab_index = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1386506940]
 layout_mode = 2
 
-[node name="Setting_OverlayScale" parent="VBoxContainer" instance=ExtResource("1_f030a")]
+[node name="Setting_OverlayScale" parent="VBoxContainer" unique_id=1308516804 instance=ExtResource("1_f030a")]
 unique_name_in_owner = true
 layout_mode = 2
 min_value = 1.0
@@ -49,16 +49,16 @@ show_ticks = true
 format_string = "%dx"
 setting_name = "Integer Scale"
 
-[node name="Setting_OverlayFilters" parent="VBoxContainer" instance=ExtResource("2_ta51e")]
+[node name="Setting_OverlayFilters" parent="VBoxContainer" unique_id=245777105 instance=ExtResource("2_ta51e")]
 unique_name_in_owner = true
 layout_mode = 2
 value = true
 setting_name = "Show Above Shaders"
 
-[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer" unique_id=1026573654]
 layout_mode = 2
 
-[node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer" unique_id=467400040]
 unique_name_in_owner = true
 layout_mode = 2
 columns = 2

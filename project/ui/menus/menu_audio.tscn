@@ -52,7 +52,6 @@ layout_mode = 2
 
 [node name="Header" parent="VBoxContainer" unique_id=629636471 instance=ExtResource("1_h0xai")]
 layout_mode = 2
-theme_type_variation = &""
 text = "Output"
 
 [node name="Setting_AudioHandler" parent="VBoxContainer" unique_id=1518430034 instance=ExtResource("2_xth7c")]
@@ -75,7 +74,6 @@ setting_name = "Volume"
 
 [node name="Header2" parent="VBoxContainer" unique_id=1373047643 instance=ExtResource("1_h0xai")]
 layout_mode = 2
-theme_type_variation = &""
 text = "Driver Info"
 
 [node name="LabelAudioDriver" parent="VBoxContainer" unique_id=373097928 instance=ExtResource("6_lmmc1")]
@@ -116,7 +114,6 @@ text = "----"
 
 [node name="Header3" parent="VBoxContainer" unique_id=946137242 instance=ExtResource("1_h0xai")]
 layout_mode = 2
-theme_type_variation = &""
 text = "Spectrum Analyzer"
 
 [node name="Setting_SAEnable" parent="VBoxContainer" unique_id=1493584330 instance=ExtResource("4_xny6n")]

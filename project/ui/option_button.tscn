@@ -1,7 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://dqm2w5ummvxsm"]
+[gd_scene format=3 uid="uid://dqm2w5ummvxsm"]
 
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_kvux1"]
-[ext_resource type="Script" path="res://ui/option_button.gd" id="2_kvux1"]
+[ext_resource type="Script" uid="uid://cw2qmbmme86ek" path="res://ui/option_button.gd" id="2_kvux1"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kvux1"]
 content_margin_left = 2.0
@@ -39,16 +39,16 @@ bg_color = Color(0, 0, 0, 1)
 expand_margin_top = 1.0
 expand_margin_bottom = 1.0
 
-[node name="OptionButton" type="PanelContainer"]
+[node name="OptionButton" type="PanelContainer" unique_id=1388524424]
 texture_filter = 1
-offset_right = 13.0
+offset_right = 41.0
 offset_bottom = 3.0
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme = ExtResource("1_kvux1")
 script = ExtResource("2_kvux1")
 
-[node name="OptionButton" type="OptionButton" parent="."]
+[node name="OptionButton" type="OptionButton" parent="." unique_id=945449384]
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_kvux1")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_mbram")

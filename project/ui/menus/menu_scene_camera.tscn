@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://cm2dn40rnose6"]
+[gd_scene format=3 uid="uid://cm2dn40rnose6"]
 
 [ext_resource type="PackedScene" uid="uid://m4rgiakfy3m2" path="res://ui/menus/menu_frame.tscn" id="1_1rmaj"]
 [ext_resource type="Script" uid="uid://dqpc5hj803f5y" path="res://ui/menus/menu_scene_camera.gd" id="1_hvork"]
@@ -12,7 +12,7 @@ content_margin_left = 0.0
 content_margin_top = 0.0
 content_margin_right = 0.0
 content_margin_bottom = 0.0
-bg_color = Color(0, 0, 0, 1)
+bg_color = Color(0, 0, 0, 0.8)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
@@ -42,42 +42,40 @@ content_margin_right = 2.0
 content_margin_bottom = 2.0
 bg_color = Color(1, 0.12549, 0.25098, 1)
 
-[node name="MenuFrame" instance=ExtResource("1_1rmaj")]
+[node name="MenuFrame" unique_id=1387692763 instance=ExtResource("1_1rmaj")]
 offset_bottom = 120.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_y82ww")
 script = ExtResource("1_hvork")
 title = "Scene Camera"
 show_close_button = true
 
-[node name="Header" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" index="0"]
-text = "SCENE CAMERA"
+[node name="Header" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" parent_id_path=PackedInt32Array(440637378) index="0" unique_id=1584150139]
+text = "Scene Camera"
 
-[node name="ButtonClose" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" index="1"]
+[node name="ButtonClose" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" parent_id_path=PackedInt32Array(440637378) index="1" unique_id=958352411]
 visible = true
 theme_override_styles/panel = SubResource("StyleBoxFlat_xrfir")
 
-[node name="ButtonExit" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" index="2"]
+[node name="ButtonExit" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" parent_id_path=PackedInt32Array(440637378) index="2" unique_id=1874568191]
 theme_override_styles/panel = SubResource("StyleBoxFlat_0acor")
 
-[node name="ScrollContainer" parent="VBoxContainer" index="1"]
+[node name="ScrollContainer" parent="VBoxContainer" parent_id_path=PackedInt32Array(1672327764) index="1" unique_id=1194856077]
 custom_minimum_size = Vector2(320, 88)
 size_flags_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/ContentContainer" index="0"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/ContentContainer" parent_id_path=PackedInt32Array(306656590) index="0" unique_id=1819990123]
 layout_mode = 2
 
-[node name="Setting_Position" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="0" instance=ExtResource("3_ojeen")]
+[node name="Setting_Position" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="0" unique_id=2142868214 instance=ExtResource("3_ojeen")]
 unique_name_in_owner = true
-texture_filter = 1
 layout_mode = 2
-theme_type_variation = &""
 min_value = Vector3(-100, -100, -100)
 show_updown_arrows = true
 suffix = "m"
 setting_name = "Position"
 setting_name_min_width = 50
 
-[node name="Setting_Angle" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="1" instance=ExtResource("4_yma3h")]
+[node name="Setting_Angle" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="1" unique_id=1012538060 instance=ExtResource("4_yma3h")]
 unique_name_in_owner = true
 layout_mode = 2
 value = Vector2(3.35276e-07, 3.35276e-07)
@@ -90,7 +88,7 @@ suffix = "deg"
 setting_name = "Angle"
 setting_name_min_width = 50
 
-[node name="Setting_Focus" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="2" instance=ExtResource("4_yma3h")]
+[node name="Setting_Focus" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="2" unique_id=1108523843 instance=ExtResource("4_yma3h")]
 unique_name_in_owner = true
 layout_mode = 2
 value = Vector2(9.31323e-09, 4.65661e-10)
@@ -102,26 +100,24 @@ suffix = "m"
 setting_name = "Focus"
 setting_name_min_width = 50
 
-[node name="Setting_Blur" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="3" instance=ExtResource("5_e5j8b")]
+[node name="Setting_Blur" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="3" unique_id=749323716 instance=ExtResource("5_e5j8b")]
 unique_name_in_owner = true
 layout_mode = 2
 max_value = 4.0
-step = 0.01
 setting_name = "Blur"
 setting_name_min_width = 50
 
-[node name="HSeparator" type="HSeparator" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="4"]
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="4" unique_id=1026190769]
 layout_mode = 2
 size_flags_vertical = 0
 
-[node name="Label" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="5" instance=ExtResource("2_8buq4")]
+[node name="Label" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="5" unique_id=488000405 instance=ExtResource("2_8buq4")]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_type_variation = &""
 text = "Hold RIGHT CLICK to enable WASD/Mouse"
 color_override = 2
 
-[node name="Button_Finish" type="Button" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="6"]
+[node name="Button_Finish" type="Button" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="6" unique_id=1324374983]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2

@@ -1,45 +1,45 @@
-[gd_scene load_steps=4 format=3 uid="uid://bevoopcdq5dsh"]
+[gd_scene format=3 uid="uid://bevoopcdq5dsh"]
 
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_0vr4u"]
 [ext_resource type="Script" uid="uid://b5roa8aoyuy4" path="res://ui/settings/setting_vec2i.gd" id="1_uglar"]
 [ext_resource type="PackedScene" uid="uid://b1wsbkovx87xh" path="res://ui/label.tscn" id="3_t5bl5"]
 
-[node name="SettingVec2i" type="PanelContainer"]
+[node name="SettingVec2i" type="PanelContainer" unique_id=849000592]
 texture_filter = 1
-offset_right = 90.0
+offset_right = 86.0
 offset_bottom = 7.0
 size_flags_horizontal = 3
 size_flags_vertical = 4
 theme = ExtResource("1_0vr4u")
 script = ExtResource("1_uglar")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1307279406]
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="LabelName" parent="HBoxContainer" instance=ExtResource("3_t5bl5")]
+[node name="LabelName" parent="HBoxContainer" unique_id=64630192 instance=ExtResource("3_t5bl5")]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer" unique_id=1394365064]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 theme_type_variation = &"SettingControl"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/PanelContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/PanelContainer" unique_id=824760166]
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_constants/separation = 8
 
-[node name="LabelX" parent="HBoxContainer/PanelContainer/HBoxContainer" instance=ExtResource("3_t5bl5")]
+[node name="LabelX" parent="HBoxContainer/PanelContainer/HBoxContainer" unique_id=1896903522 instance=ExtResource("3_t5bl5")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "x"
 
-[node name="SpinBoxX" type="SpinBox" parent="HBoxContainer/PanelContainer/HBoxContainer"]
+[node name="SpinBoxX" type="SpinBox" parent="HBoxContainer/PanelContainer/HBoxContainer" unique_id=863930497]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -47,12 +47,12 @@ size_flags_vertical = 4
 theme_type_variation = &"SettingControlVec2SpinBox"
 select_all_on_focus = true
 
-[node name="LabelY" parent="HBoxContainer/PanelContainer/HBoxContainer" instance=ExtResource("3_t5bl5")]
+[node name="LabelY" parent="HBoxContainer/PanelContainer/HBoxContainer" unique_id=1367262210 instance=ExtResource("3_t5bl5")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "y"
 
-[node name="SpinBoxY" type="SpinBox" parent="HBoxContainer/PanelContainer/HBoxContainer"]
+[node name="SpinBoxY" type="SpinBox" parent="HBoxContainer/PanelContainer/HBoxContainer" unique_id=1386778575]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3

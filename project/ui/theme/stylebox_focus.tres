@@ -1,4 +1,4 @@
-[gd_resource type="StyleBoxTexture" load_steps=2 format=3 uid="uid://c21o4cguy3ohp"]
+[gd_resource type="StyleBoxTexture" format=3 uid="uid://c21o4cguy3ohp"]
 
 [ext_resource type="Texture2D" uid="uid://c8lf01vl0yo3a" path="res://assets/icon/cursor.png" id="1_1pbsj"]
 

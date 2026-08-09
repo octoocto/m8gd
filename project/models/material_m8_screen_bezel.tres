@@ -1,4 +1,4 @@
-[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://brl2lskfjpwxk"]
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://brl2lskfjpwxk"]
 
 [ext_resource type="Texture2D" uid="uid://dkl4iuf1hg2la" path="res://models/noise_normal.tres" id="1_bxwck"]
 

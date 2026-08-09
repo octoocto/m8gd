@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://da23gfk2abg5f"]
+[gd_scene format=3 uid="uid://da23gfk2abg5f"]
 
 [ext_resource type="Script" uid="uid://cnlm6xbshm60g" path="res://scenes/floating_scene.gd" id="1_ufbfg"]
 [ext_resource type="Texture2D" uid="uid://d01h4xbn66tpi" path="res://assets/texture_07.png" id="2_yqhq4"]
@@ -123,16 +123,16 @@ subdivide_depth = 18
 [sub_resource type="ViewportTexture" id="ViewportTexture_fk07f"]
 viewport_path = NodePath("SubViewport")
 
-[node name="M8Scene" type="Node3D"]
+[node name="M8Scene" type="Node3D" unique_id=1795070443]
 script = ExtResource("1_ufbfg")
 metadata/_edit_vertical_guides_ = [640.0]
 metadata/_edit_horizontal_guides_ = [480.0]
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1054609404]
 layer = -1
 follow_viewport_enabled = true
 
-[node name="BGVideoStreamPlayer" type="VideoStreamPlayer" parent="CanvasLayer"]
+[node name="BGVideoStreamPlayer" type="VideoStreamPlayer" parent="CanvasLayer" unique_id=957621217]
 unique_name_in_owner = true
 visible = false
 anchors_preset = 15
@@ -144,7 +144,7 @@ volume_db = -80.0
 expand = true
 loop = true
 
-[node name="BGTextureRect" type="TextureRect" parent="CanvasLayer"]
+[node name="BGTextureRect" type="TextureRect" parent="CanvasLayer" unique_id=1355400452]
 unique_name_in_owner = true
 visible = false
 anchors_preset = 15
@@ -156,7 +156,7 @@ texture = ExtResource("2_yqhq4")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="BGShader" type="ColorRect" parent="CanvasLayer"]
+[node name="BGShader" type="ColorRect" parent="CanvasLayer" unique_id=172962412]
 unique_name_in_owner = true
 visible = false
 material = SubResource("ShaderMaterial_fmvik")
@@ -166,11 +166,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=189724044]
 unique_name_in_owner = true
 environment = SubResource("Environment_dmk2d")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=579232979]
 unique_name_in_owner = true
 transform = Transform3D(-0.649448, 0.362834, 0.668258, -1.32698e-07, -0.878817, 0.477159, 0.760406, 0.30989, 0.570746, 0.087698, 1.97022, -16.5359)
 visible = false
@@ -180,7 +180,7 @@ shadow_bias = 0.01
 shadow_opacity = 0.83
 shadow_blur = 3.0
 
-[node name="LightLamp" type="SpotLight3D" parent="."]
+[node name="LightLamp" type="SpotLight3D" parent="." unique_id=1681891795]
 unique_name_in_owner = true
 transform = Transform3D(0.957214, 0.214455, -0.194293, -0.0293021, 0.73979, 0.6722, 0.287892, -0.637746, 0.714421, -1.21051, 5.27836, 6.0408)
 shadow_enabled = true
@@ -190,7 +190,7 @@ shadow_blur = 1.1
 spot_range = 20.0
 spot_attenuation = -0.5
 
-[node name="LightLeft" type="SpotLight3D" parent="."]
+[node name="LightLeft" type="SpotLight3D" parent="." unique_id=418504859]
 unique_name_in_owner = true
 transform = Transform3D(0.819152, 0.0559714, -0.570839, -1.74011e-07, 0.995227, 0.0975829, 0.573576, -0.0799351, 0.815243, -5.5, -1, 6)
 visible = false
@@ -201,7 +201,7 @@ shadow_enabled = true
 spot_range = 22.761
 spot_angle = 41.58
 
-[node name="LightRight" type="SpotLight3D" parent="."]
+[node name="LightRight" type="SpotLight3D" parent="." unique_id=128782413]
 unique_name_in_owner = true
 transform = Transform3D(0.819152, -0.0499905, 0.571394, 0, 0.996195, 0.0871557, -0.573576, -0.0713938, 0.816035, 5.5, 1, 6)
 visible = false
@@ -212,11 +212,11 @@ shadow_enabled = true
 spot_range = 47.214
 spot_angle = 36.8368
 
-[node name="M8Model" parent="." instance=ExtResource("4_xnq5h")]
+[node name="M8Model" parent="." unique_id=1197239004 instance=ExtResource("4_xnq5h")]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 0.173648, -0.984808, 0, 0.984808, 0.173648, 0, 0, 0)
 
-[node name="Camera3D" parent="." instance=ExtResource("4_8iar1")]
+[node name="Camera3D" parent="." unique_id=924342918 instance=ExtResource("4_8iar1")]
 unique_name_in_owner = true
 pan_range_zoomout = Vector2(10, 10)
 cam_pan_range_zoomin = Vector2(2, 7)
@@ -224,10 +224,10 @@ dof_zoomin = 0.0
 dof_focus_distance = 14.0
 arm_length = 14.0
 
-[node name="Camera3D" parent="Camera3D" index="0"]
+[node name="Camera3D" parent="Camera3D" index="0" unique_id=828345110]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 14)
 
-[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+[node name="GPUParticles3D" type="GPUParticles3D" parent="." unique_id=834704401]
 visible = false
 amount = 512
 lifetime = 10.0
@@ -235,14 +235,14 @@ visibility_aabb = AABB(-11.9327, -4, -13.8765, 23.8655, 8, 27.753)
 process_material = SubResource("ParticleProcessMaterial_oyruv")
 draw_pass_1 = SubResource("QuadMesh_5vrwp")
 
-[node name="DisplayMesh" type="MeshInstance3D" parent="."]
+[node name="DisplayMesh" type="MeshInstance3D" parent="." unique_id=1580206992]
 unique_name_in_owner = true
 transform = Transform3D(0.75, 0, 0, 0, -3.27835e-08, -0.75, 0, 0.75, -3.27835e-08, 0, 0, -20)
 visible = false
 material_override = SubResource("ShaderMaterial_nx6w6")
 mesh = SubResource("PlaneMesh_rbhh0")
 
-[node name="SpriteAudioSpectrum" type="Sprite3D" parent="."]
+[node name="SpriteAudioSpectrum" type="Sprite3D" parent="." unique_id=485006746]
 unique_name_in_owner = true
 transform = Transform3D(1.25, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, -4)
 visible = false
@@ -250,13 +250,13 @@ pixel_size = 0.035
 texture_filter = 0
 texture = SubResource("ViewportTexture_fk07f")
 
-[node name="SubViewport" type="SubViewport" parent="."]
+[node name="SubViewport" type="SubViewport" parent="." unique_id=68718980]
 disable_3d = true
 transparent_bg = true
 handle_input_locally = false
 size = Vector2i(640, 480)
 
-[node name="AudioSpectrum" parent="SubViewport" instance=ExtResource("5_ryr46")]
+[node name="AudioSpectrum" parent="SubViewport" unique_id=670950635 instance=ExtResource("5_ryr46")]
 unique_name_in_owner = true
 offset_left = -320.0
 offset_top = -120.0

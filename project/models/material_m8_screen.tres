@@ -1,4 +1,4 @@
-[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://catw8vnxgj5jg"]
+[gd_resource type="ShaderMaterial" format=3 uid="uid://catw8vnxgj5jg"]
 
 [ext_resource type="Shader" uid="uid://2u4wsevt0osc" path="res://shaders/device_screen.gdshader" id="1_7pb8s"]
 [ext_resource type="Texture2D" uid="uid://ras5y3yqijkx" path="res://assets/m8_screen_placeholder.png" id="2_imxx7"]

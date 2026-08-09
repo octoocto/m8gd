@@ -1,4 +1,4 @@
-[gd_scene load_steps=49 format=3 uid="uid://d13t756slc8b0"]
+[gd_scene format=3 uid="uid://d13t756slc8b0"]
 
 [ext_resource type="Script" uid="uid://c71kmxu2fv4im" path="res://ui/menus/main_menu.gd" id="1_7xjs6"]
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_qr6r4"]
@@ -226,7 +226,7 @@ expand_margin_top = 16.0
 expand_margin_right = 16.0
 expand_margin_bottom = 16.0
 
-[node name="MainMenuPanel" type="PanelContainer"]
+[node name="MainMenuPanel" type="PanelContainer" unique_id=1736094983]
 texture_filter = 1
 offset_right = 320.0
 offset_bottom = 240.0
@@ -234,29 +234,28 @@ theme = ExtResource("1_qr6r4")
 theme_override_styles/panel = SubResource("StyleBoxFlat_rsjqv")
 script = ExtResource("1_7xjs6")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=558558060]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer" unique_id=1048329476]
 custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_cn7hl")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/PanelContainer" unique_id=950230948]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer/VBoxContainer" unique_id=714162988]
 layout_mode = 2
 
-[node name="Header" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" instance=ExtResource("3_o1ovh")]
+[node name="Header" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" unique_id=608821787 instance=ExtResource("3_o1ovh")]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &""
 text = "Main Menu"
 color_override = 4
 
-[node name="ButtonClose" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" instance=ExtResource("12_10bvg")]
+[node name="ButtonClose" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" unique_id=1650116508 instance=ExtResource("12_10bvg")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 10
@@ -267,7 +266,7 @@ color_fg = 2
 text = "Close"
 hint_text = "Close the menu"
 
-[node name="ButtonExit" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" instance=ExtResource("12_10bvg")]
+[node name="ButtonExit" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" unique_id=1880772901 instance=ExtResource("12_10bvg")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
@@ -279,34 +278,34 @@ text = "Quit"
 horizontal_alignment = 0
 hint_text = "Quit to desktop"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer" unique_id=1499970379]
 custom_minimum_size = Vector2(320, 208)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/ScrollContainer" unique_id=1597176699]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="TabContainer" type="TabContainer" parent="VBoxContainer/ScrollContainer/MarginContainer"]
+[node name="TabContainer" type="TabContainer" parent="VBoxContainer/ScrollContainer/MarginContainer" unique_id=1735001834]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 current_tab = 0
 tabs_visible = false
 
-[node name="MenuRoot" type="PanelContainer" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer"]
+[node name="MenuRoot" type="PanelContainer" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer" unique_id=1290083891]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"MenuBase"
 metadata/_tab_index = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot" unique_id=1634889832]
 layout_mode = 2
 theme_override_constants/separation = 3
 
-[node name="LabelCurrentScene" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" instance=ExtResource("5_cn7hl")]
+[node name="LabelCurrentScene" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" unique_id=972119414 instance=ExtResource("5_cn7hl")]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_xv1rc")
@@ -314,16 +313,16 @@ no_padding = true
 text_left = "Current Scene"
 align_right_text_to_right = true
 
-[node name="OptionLoadScene" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" instance=ExtResource("5_w22xg")]
+[node name="OptionLoadScene" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" unique_id=1510054020 instance=ExtResource("5_w22xg")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 1
 theme_override_styles/panel = SubResource("StyleBoxEmpty_f72sp")
 
-[node name="HSeparator2" type="HSeparator" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" unique_id=693838542]
 layout_mode = 2
 
-[node name="ButtonGotoScene" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" instance=ExtResource("12_10bvg")]
+[node name="ButtonGotoScene" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" unique_id=977260883 instance=ExtResource("12_10bvg")]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_f72sp")
@@ -337,7 +336,7 @@ horizontal_alignment = 0
 inline = true
 hint_text = "Configure elements in the current scene"
 
-[node name="ButtonGotoOverlays" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" instance=ExtResource("12_10bvg")]
+[node name="ButtonGotoOverlays" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" unique_id=951253476 instance=ExtResource("12_10bvg")]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_cxjfc")
@@ -351,7 +350,7 @@ horizontal_alignment = 0
 inline = true
 hint_text = "Toggle and configure various overlays"
 
-[node name="ButtonGotoShaders" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" instance=ExtResource("12_10bvg")]
+[node name="ButtonGotoShaders" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" unique_id=788482506 instance=ExtResource("12_10bvg")]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_13y34")
@@ -365,7 +364,7 @@ horizontal_alignment = 0
 inline = true
 hint_text = "Toggle and configure various screen shaders"
 
-[node name="ButtonGotoColors" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" instance=ExtResource("12_10bvg")]
+[node name="ButtonGotoColors" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" unique_id=1417377907 instance=ExtResource("12_10bvg")]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_3j1g4")
@@ -379,10 +378,10 @@ horizontal_alignment = 0
 inline = true
 hint_text = "Change 3D part and highlight colors"
 
-[node name="HSeparator3" type="HSeparator" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer"]
+[node name="HSeparator3" type="HSeparator" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" unique_id=1823869327]
 layout_mode = 2
 
-[node name="ButtonGotoDevices" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" instance=ExtResource("12_10bvg")]
+[node name="ButtonGotoDevices" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" unique_id=1712827067 instance=ExtResource("12_10bvg")]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_4gg0h")
@@ -396,7 +395,7 @@ horizontal_alignment = 0
 inline = true
 hint_text = "Manage connections to M8 devices"
 
-[node name="ButtonGotoInput" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" instance=ExtResource("12_10bvg")]
+[node name="ButtonGotoInput" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" unique_id=1221969710 instance=ExtResource("12_10bvg")]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_8xhr7")
@@ -410,7 +409,7 @@ horizontal_alignment = 0
 inline = true
 hint_text = "Configure M8 keymaps and hotkeys"
 
-[node name="ButtonGotoVideo" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" instance=ExtResource("12_10bvg")]
+[node name="ButtonGotoVideo" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" unique_id=245314110 instance=ExtResource("12_10bvg")]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_skcmf")
@@ -424,7 +423,7 @@ horizontal_alignment = 0
 inline = true
 hint_text = "Configure UI, display, and graphics settings"
 
-[node name="ButtonGotoAudio" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" instance=ExtResource("12_10bvg")]
+[node name="ButtonGotoAudio" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" unique_id=1230689 instance=ExtResource("12_10bvg")]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_xo4y4")
@@ -438,10 +437,10 @@ horizontal_alignment = 0
 inline = true
 hint_text = "Configure audio settings and change handlers"
 
-[node name="HSeparator" type="HSeparator" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" unique_id=550219802]
 layout_mode = 2
 
-[node name="ButtonGotoDebug" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" instance=ExtResource("12_10bvg")]
+[node name="ButtonGotoDebug" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" unique_id=1611222419 instance=ExtResource("12_10bvg")]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_bkt3i")
@@ -454,7 +453,7 @@ text_right = "..."
 horizontal_alignment = 0
 inline = true
 
-[node name="ButtonGotoPresets" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" instance=ExtResource("12_10bvg")]
+[node name="ButtonGotoPresets" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" unique_id=1940363464 instance=ExtResource("12_10bvg")]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_k50mi")
@@ -468,11 +467,11 @@ horizontal_alignment = 0
 inline = true
 hint_text = "Save and load profiles"
 
-[node name="HSeparator4" type="HSeparator" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer"]
+[node name="HSeparator4" type="HSeparator" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" unique_id=393172675]
 visible = false
 layout_mode = 2
 
-[node name="MenuScene" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer" instance=ExtResource("3_0k4wn")]
+[node name="MenuScene" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer" unique_id=363400847 instance=ExtResource("3_0k4wn")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -480,7 +479,7 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_xmuii")
 is_inner_menu = true
 metadata/_tab_index = 1
 
-[node name="MenuPresets" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer" instance=ExtResource("4_buwx5")]
+[node name="MenuPresets" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer" unique_id=1677735174 instance=ExtResource("4_buwx5")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -488,7 +487,7 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_0lxgr")
 is_inner_menu = true
 metadata/_tab_index = 2
 
-[node name="MenuColors" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer" instance=ExtResource("4_w22xg")]
+[node name="MenuColors" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer" unique_id=244308768 instance=ExtResource("4_w22xg")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -496,7 +495,7 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_xok0b")
 is_inner_menu = true
 metadata/_tab_index = 3
 
-[node name="MenuOverlays" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer" instance=ExtResource("4_j5v2v")]
+[node name="MenuOverlays" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer" unique_id=961327554 instance=ExtResource("4_j5v2v")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -504,7 +503,7 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_8dpw5")
 is_inner_menu = true
 metadata/_tab_index = 4
 
-[node name="MenuShaders" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer" instance=ExtResource("5_iotk1")]
+[node name="MenuShaders" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer" unique_id=1384158475 instance=ExtResource("5_iotk1")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -512,7 +511,7 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_fpotr")
 is_inner_menu = true
 metadata/_tab_index = 5
 
-[node name="MenuDevices" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer" instance=ExtResource("6_w44g7")]
+[node name="MenuDevices" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer" unique_id=97915016 instance=ExtResource("6_w44g7")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -520,7 +519,7 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_63puf")
 is_inner_menu = true
 metadata/_tab_index = 6
 
-[node name="MenuInput" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer" instance=ExtResource("7_cm266")]
+[node name="MenuInput" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer" unique_id=2145698825 instance=ExtResource("7_cm266")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -528,7 +527,7 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_k7pwe")
 is_inner_menu = true
 metadata/_tab_index = 7
 
-[node name="MenuVideo" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer" instance=ExtResource("8_g8g3n")]
+[node name="MenuVideo" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer" unique_id=1744370523 instance=ExtResource("8_g8g3n")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -536,7 +535,7 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_pn4ol")
 is_inner_menu = true
 metadata/_tab_index = 8
 
-[node name="MenuAudio" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer" instance=ExtResource("9_0k4wn")]
+[node name="MenuAudio" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer" unique_id=1780799656 instance=ExtResource("9_0k4wn")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -544,29 +543,27 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_820nw")
 is_inner_menu = true
 metadata/_tab_index = 9
 
-[node name="MenuDebug" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer" instance=ExtResource("10_8u0te")]
+[node name="MenuDebug" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer" unique_id=1094171339 instance=ExtResource("10_8u0te")]
 unique_name_in_owner = true
 visible = false
-texture_filter = 1
 layout_mode = 2
-theme = ExtResource("1_qr6r4")
 theme_override_styles/panel = SubResource("StyleBoxEmpty_ovmky")
 is_inner_menu = true
 metadata/_tab_index = 10
 
-[node name="PanelContainer2" type="PanelContainer" parent="VBoxContainer"]
+[node name="PanelContainer2" type="PanelContainer" parent="VBoxContainer" unique_id=2095180522]
 custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_xv1rc")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/PanelContainer2"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/PanelContainer2" unique_id=594525748]
 layout_mode = 2
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/PanelContainer2/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/PanelContainer2/VBoxContainer" unique_id=1227159091]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="ButtonBack" parent="VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer2" instance=ExtResource("12_10bvg")]
+[node name="ButtonBack" parent="VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer2" unique_id=789714392 instance=ExtResource("12_10bvg")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -577,18 +574,18 @@ color_bg_pressed = 0
 text = "< Back"
 horizontal_alignment = 0
 
-[node name="LabelTooltip" parent="VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer2" instance=ExtResource("17_rsjqv")]
+[node name="LabelTooltip" parent="VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer2" unique_id=461734952 instance=ExtResource("17_rsjqv")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 color_override = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer2/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer2/VBoxContainer" unique_id=1195408297]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 
-[node name="DisplayRect" type="TextureRect" parent="VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer"]
+[node name="DisplayRect" type="TextureRect" parent="VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer" unique_id=1274480580]
 unique_name_in_owner = true
 visible = false
 texture_filter = 1
@@ -597,24 +594,24 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="VSeparator" type="VSeparator" parent="VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer"]
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer" unique_id=1691074742]
 layout_mode = 2
 theme_override_constants/separation = 16
 theme_override_styles/separator = SubResource("StyleBoxEmpty_7jqdk")
 
-[node name="BindActionPopup" type="PanelContainer" parent="."]
+[node name="BindActionPopup" type="PanelContainer" parent="." unique_id=857014585]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_8epsv")
 
-[node name="PanelContainer" type="PanelContainer" parent="BindActionPopup"]
+[node name="PanelContainer" type="PanelContainer" parent="BindActionPopup" unique_id=799784971]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_nhtyl")
 
-[node name="RichTextLabel" type="RichTextLabel" parent="BindActionPopup/PanelContainer"]
+[node name="RichTextLabel" type="RichTextLabel" parent="BindActionPopup/PanelContainer" unique_id=410753893]
 custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
 bbcode_enabled = true

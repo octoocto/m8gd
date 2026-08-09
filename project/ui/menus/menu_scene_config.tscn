@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://dv8crbibtrpck"]
+[gd_scene format=3 uid="uid://dv8crbibtrpck"]
 
 [ext_resource type="PackedScene" uid="uid://m4rgiakfy3m2" path="res://ui/menus/menu_frame.tscn" id="1_wthso"]
 [ext_resource type="Script" uid="uid://qrj2e6c68ovb" path="res://ui/menus/menu_scene_config.gd" id="1_x6k17"]
@@ -38,22 +38,22 @@ content_margin_right = 2.0
 content_margin_bottom = 2.0
 bg_color = Color(1, 0.12549, 0.25098, 1)
 
-[node name="MenuFrame" instance=ExtResource("1_wthso")]
+[node name="MenuFrame" unique_id=2091592890 instance=ExtResource("1_wthso")]
 theme_override_styles/panel = SubResource("StyleBoxFlat_icp2e")
 script = ExtResource("1_x6k17")
 title = "Scene Parameters"
 show_close_button = true
 
-[node name="Header" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" index="0"]
+[node name="Header" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" parent_id_path=PackedInt32Array(440637378) index="0" unique_id=1584150139]
 text = "Scene Parameters"
 
-[node name="ButtonClose" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" index="1"]
+[node name="ButtonClose" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" parent_id_path=PackedInt32Array(440637378) index="1" unique_id=958352411]
 visible = true
 theme_override_styles/panel = SubResource("StyleBoxFlat_wrh5w")
 
-[node name="ButtonExit" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" index="2"]
+[node name="ButtonExit" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" parent_id_path=PackedInt32Array(440637378) index="2" unique_id=1874568191]
 theme_override_styles/panel = SubResource("StyleBoxFlat_3fwrx")
 
-[node name="SceneParamsContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/ContentContainer" index="0"]
+[node name="SceneParamsContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/ContentContainer" parent_id_path=PackedInt32Array(306656590) index="0" unique_id=1051235051]
 unique_name_in_owner = true
 layout_mode = 2

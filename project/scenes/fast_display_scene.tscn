@@ -1,22 +1,22 @@
-[gd_scene load_steps=3 format=3 uid="uid://dh1klpvygnyuf"]
+[gd_scene format=3 uid="uid://dh1klpvygnyuf"]
 
 [ext_resource type="Script" uid="uid://cxekfeylprcwt" path="res://scenes/fast_display_scene.gd" id="1_edxk2"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_5kl75"]
 
-[node name="M8Scene" type="Node3D"]
+[node name="M8Scene" type="Node3D" unique_id=2043978100]
 script = ExtResource("1_edxk2")
 metadata/_edit_vertical_guides_ = [640.0]
 metadata/_edit_horizontal_guides_ = [480.0]
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=549877691]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="DisplayTextureRect" type="TextureRect" parent="CenterContainer"]
+[node name="DisplayTextureRect" type="TextureRect" parent="CenterContainer" unique_id=1599791031]
 unique_name_in_owner = true
 texture_filter = 1
 layout_mode = 2

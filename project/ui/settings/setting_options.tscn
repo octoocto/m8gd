@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bgsxagi62acni"]
+[gd_scene format=3 uid="uid://bgsxagi62acni"]
 
 [ext_resource type="Script" uid="uid://f8yecfgsagqd" path="res://ui/settings/setting_options.gd" id="1_62opn"]
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_wt44y"]
@@ -25,9 +25,9 @@ Button/styles/pressed = SubResource("StyleBoxEmpty_o323t")
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_leq1h"]
 
-[node name="SettingOptions" type="PanelContainer"]
+[node name="SettingOptions" type="PanelContainer" unique_id=1201523929]
 texture_filter = 1
-offset_right = 13.0
+offset_right = 41.0
 offset_bottom = 3.0
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -36,23 +36,23 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_3ai42")
 script = ExtResource("1_62opn")
 setting_type = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1244093260]
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="LabelName" parent="HBoxContainer" instance=ExtResource("3_6ucju")]
+[node name="LabelName" parent="HBoxContainer" unique_id=2122891130 instance=ExtResource("3_6ucju")]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer" unique_id=1053549842]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 theme_override_constants/separation = 8
 
-[node name="ButtonLeft" type="Button" parent="HBoxContainer/HBoxContainer"]
+[node name="ButtonLeft" type="Button" parent="HBoxContainer/HBoxContainer" unique_id=1075533280]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -62,14 +62,14 @@ theme_type_variation = &"ButtonLeft"
 disabled = true
 icon = ExtResource("4_leq1h")
 
-[node name="LabelValue" parent="HBoxContainer/HBoxContainer" instance=ExtResource("3_6ucju")]
+[node name="LabelValue" parent="HBoxContainer/HBoxContainer" unique_id=1673787236 instance=ExtResource("3_6ucju")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 horizontal_alignment = 1
 
-[node name="ButtonRight" type="Button" parent="HBoxContainer/HBoxContainer"]
+[node name="ButtonRight" type="Button" parent="HBoxContainer/HBoxContainer" unique_id=1396845096]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -79,7 +79,7 @@ theme_type_variation = &"ButtonRight"
 disabled = true
 icon = ExtResource("5_3ai42")
 
-[node name="OptionButton" parent="HBoxContainer/HBoxContainer" instance=ExtResource("4_wt44y")]
+[node name="OptionButton" parent="HBoxContainer/HBoxContainer" unique_id=1670131608 instance=ExtResource("4_wt44y")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3

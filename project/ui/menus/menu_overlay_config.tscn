@@ -1,6 +1,6 @@
-[gd_scene load_steps=10 format=3 uid="uid://bebvc2datqp85"]
+[gd_scene format=3 uid="uid://bebvc2datqp85"]
 
-[ext_resource type="Script" uid="uid://bhqthix3trq2c" path="res://ui/menus/menu_overlay_config.gd" id="1_biga6"]
+[ext_resource type="Script" uid="uid://c1rse01tkx3iy" path="res://ui/menus/menu_overlay_config.gd" id="1_biga6"]
 [ext_resource type="PackedScene" uid="uid://m4rgiakfy3m2" path="res://ui/menus/menu_frame.tscn" id="1_qowy2"]
 [ext_resource type="PackedScene" uid="uid://dsgvm3dda1kjp" path="res://ui/header.tscn" id="3_40ori"]
 [ext_resource type="PackedScene" uid="uid://bgsxagi62acni" path="res://ui/settings/setting_options.tscn" id="3_q4g74"]
@@ -43,27 +43,26 @@ bg_color = Color(1, 0.12549, 0.25098, 1)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ypwpy"]
 
-[node name="MenuFrame" instance=ExtResource("1_qowy2")]
+[node name="MenuFrame" unique_id=619516217 instance=ExtResource("1_qowy2")]
 theme_override_styles/panel = SubResource("StyleBoxFlat_qowy2")
 script = ExtResource("1_biga6")
 show_close_button = true
 
-[node name="ButtonClose" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" index="1"]
+[node name="ButtonClose" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" parent_id_path=PackedInt32Array(440637378) index="1" unique_id=958352411]
 visible = true
 theme_override_styles/panel = SubResource("StyleBoxFlat_0j0w0")
 
-[node name="ButtonExit" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" index="2"]
+[node name="ButtonExit" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" parent_id_path=PackedInt32Array(440637378) index="2" unique_id=1874568191]
 theme_override_styles/panel = SubResource("StyleBoxFlat_w705f")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/ContentContainer" index="0"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/ContentContainer" parent_id_path=PackedInt32Array(306656590) index="0" unique_id=1997921639]
 layout_mode = 2
 
-[node name="Header" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="0" instance=ExtResource("3_40ori")]
+[node name="Header" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="0" unique_id=1391576710 instance=ExtResource("3_40ori")]
 layout_mode = 2
-theme_type_variation = &""
 text = "Position / Size"
 
-[node name="Setting_Anchor" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="1" instance=ExtResource("3_q4g74")]
+[node name="Setting_Anchor" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="1" unique_id=1095810513 instance=ExtResource("3_q4g74")]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_ypwpy")
@@ -72,7 +71,7 @@ value = 0
 setting_name = "Anchor"
 setting_name_min_width = 50
 
-[node name="Setting_Position" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="2" instance=ExtResource("4_s6r0s")]
+[node name="Setting_Position" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="2" unique_id=2011171986 instance=ExtResource("4_s6r0s")]
 unique_name_in_owner = true
 layout_mode = 2
 min_value = Vector2i(-3000, -3000)
@@ -82,7 +81,7 @@ prefix_min_width = 10
 setting_name = "Position"
 setting_name_min_width = 50
 
-[node name="Setting_Size" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="3" instance=ExtResource("4_s6r0s")]
+[node name="Setting_Size" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="3" unique_id=199037585 instance=ExtResource("4_s6r0s")]
 unique_name_in_owner = true
 layout_mode = 2
 min_value = Vector2i(-3000, -3000)
@@ -94,11 +93,10 @@ prefix_min_width = 10
 setting_name = "Size"
 setting_name_min_width = 50
 
-[node name="Header2" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="4" instance=ExtResource("3_40ori")]
+[node name="Header2" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="4" unique_id=31422910 instance=ExtResource("3_40ori")]
 layout_mode = 2
-theme_type_variation = &""
 text = "Parameters"
 
-[node name="ParamContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="5"]
+[node name="ParamContainer" type="VBoxContainer" parent="VBoxContainer/ScrollContainer/ContentContainer/VBoxContainer" index="5" unique_id=590572512]
 unique_name_in_owner = true
 layout_mode = 2

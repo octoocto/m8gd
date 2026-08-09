@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://b42ev167pgdvl"]
+[gd_scene format=3 uid="uid://b42ev167pgdvl"]
 
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_nw4ou"]
 [ext_resource type="Script" uid="uid://4ojjsrt63c0i" path="res://ui/menus/menu_shaders.gd" id="1_q0qgx"]
@@ -24,7 +24,7 @@ expand_margin_right = 1.0
 expand_margin_bottom = 1.0
 anti_aliasing = false
 
-[node name="Filters" type="PanelContainer"]
+[node name="Filters" type="PanelContainer" unique_id=42950050]
 texture_filter = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -39,7 +39,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_nn34v")
 script = ExtResource("1_q0qgx")
 metadata/_tab_index = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1623975760]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3

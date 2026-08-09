@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://xgujtwkeeg3d"]
+[gd_scene format=3 uid="uid://xgujtwkeeg3d"]
 
 [ext_resource type="Script" uid="uid://paqabhb4tc8x" path="res://ui/menus/menu_colors.gd" id="1_47cbk"]
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_vgf3v"]
@@ -61,7 +61,7 @@ anti_aliasing = false
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2p6jd"]
 
-[node name="MenuColors" type="PanelContainer"]
+[node name="MenuColors" type="PanelContainer" unique_id=1710806046]
 texture_filter = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -74,24 +74,23 @@ theme = ExtResource("1_vgf3v")
 theme_override_styles/panel = SubResource("StyleBoxFlat_u1uey")
 script = ExtResource("1_47cbk")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=308577400]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=698712827]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer" unique_id=1321468673]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Header2" parent="VBoxContainer/HBoxContainer/VBoxContainer" instance=ExtResource("3_u1uey")]
+[node name="Header2" parent="VBoxContainer/HBoxContainer/VBoxContainer" unique_id=338956629 instance=ExtResource("3_u1uey")]
 layout_mode = 2
-theme_type_variation = &""
 text = "Model: Body"
 top_spacing = false
 
-[node name="SBodyFront" parent="VBoxContainer/HBoxContainer/VBoxContainer" instance=ExtResource("4_2wjjm")]
+[node name="SBodyFront" parent="VBoxContainer/HBoxContainer/VBoxContainer" unique_id=375018804 instance=ExtResource("4_2wjjm")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
@@ -103,7 +102,7 @@ setting_name_min_width = 40
 label_alignment = 2
 label_separation = 7
 
-[node name="SBodyBack" parent="VBoxContainer/HBoxContainer/VBoxContainer" instance=ExtResource("4_2wjjm")]
+[node name="SBodyBack" parent="VBoxContainer/HBoxContainer/VBoxContainer" unique_id=311156285 instance=ExtResource("4_2wjjm")]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(140, 0)
@@ -115,7 +114,7 @@ setting_name_min_width = 40
 label_alignment = 2
 label_separation = 7
 
-[node name="SBodyScrews" parent="VBoxContainer/HBoxContainer/VBoxContainer" instance=ExtResource("4_2wjjm")]
+[node name="SBodyScrews" parent="VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1166855497 instance=ExtResource("4_2wjjm")]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(140, 0)
@@ -127,7 +126,7 @@ setting_name_min_width = 40
 label_alignment = 2
 label_separation = 7
 
-[node name="SBodyBezel" parent="VBoxContainer/HBoxContainer/VBoxContainer" instance=ExtResource("4_2wjjm")]
+[node name="SBodyBezel" parent="VBoxContainer/HBoxContainer/VBoxContainer" unique_id=493580204 instance=ExtResource("4_2wjjm")]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(140, 0)
@@ -139,16 +138,15 @@ setting_name_min_width = 40
 label_alignment = 2
 label_separation = 7
 
-[node name="HSeparator" type="HSeparator" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1306725740]
 layout_mode = 2
 theme_override_constants/separation = 7
 
-[node name="Header3" parent="VBoxContainer/HBoxContainer/VBoxContainer" instance=ExtResource("3_u1uey")]
+[node name="Header3" parent="VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1541496967 instance=ExtResource("3_u1uey")]
 layout_mode = 2
-theme_type_variation = &""
 text = "Key Highlights"
 
-[node name="SHighDir" parent="VBoxContainer/HBoxContainer/VBoxContainer" instance=ExtResource("4_2wjjm")]
+[node name="SHighDir" parent="VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1846718303 instance=ExtResource("4_2wjjm")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
@@ -159,7 +157,7 @@ setting_name_min_width = 40
 label_alignment = 2
 label_separation = 7
 
-[node name="SHighOption" parent="VBoxContainer/HBoxContainer/VBoxContainer" instance=ExtResource("4_2wjjm")]
+[node name="SHighOption" parent="VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1270906537 instance=ExtResource("4_2wjjm")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
@@ -170,7 +168,7 @@ setting_name_min_width = 40
 label_alignment = 2
 label_separation = 7
 
-[node name="SHighEdit" parent="VBoxContainer/HBoxContainer/VBoxContainer" instance=ExtResource("4_2wjjm")]
+[node name="SHighEdit" parent="VBoxContainer/HBoxContainer/VBoxContainer" unique_id=172908612 instance=ExtResource("4_2wjjm")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
@@ -181,7 +179,7 @@ setting_name_min_width = 40
 label_alignment = 2
 label_separation = 7
 
-[node name="SHighShift" parent="VBoxContainer/HBoxContainer/VBoxContainer" instance=ExtResource("4_2wjjm")]
+[node name="SHighShift" parent="VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1566755154 instance=ExtResource("4_2wjjm")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
@@ -192,7 +190,7 @@ setting_name_min_width = 40
 label_alignment = 2
 label_separation = 7
 
-[node name="SHighPlay" parent="VBoxContainer/HBoxContainer/VBoxContainer" instance=ExtResource("4_2wjjm")]
+[node name="SHighPlay" parent="VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1509472405 instance=ExtResource("4_2wjjm")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
@@ -203,17 +201,16 @@ setting_name_min_width = 40
 label_alignment = 2
 label_separation = 7
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer" unique_id=1301921948]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Header" parent="VBoxContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("3_u1uey")]
+[node name="Header" parent="VBoxContainer/HBoxContainer/VBoxContainer2" unique_id=324783257 instance=ExtResource("3_u1uey")]
 layout_mode = 2
-theme_type_variation = &""
 text = "Model: Keycaps"
 top_spacing = false
 
-[node name="SKeyUp" parent="VBoxContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("4_2wjjm")]
+[node name="SKeyUp" parent="VBoxContainer/HBoxContainer/VBoxContainer2" unique_id=1657257136 instance=ExtResource("4_2wjjm")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
@@ -225,7 +222,7 @@ setting_name_min_width = 40
 label_alignment = 2
 label_separation = 7
 
-[node name="SKeyDown" parent="VBoxContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("4_2wjjm")]
+[node name="SKeyDown" parent="VBoxContainer/HBoxContainer/VBoxContainer2" unique_id=1502070362 instance=ExtResource("4_2wjjm")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
@@ -237,7 +234,7 @@ setting_name_min_width = 40
 label_alignment = 2
 label_separation = 7
 
-[node name="SKeyLeft" parent="VBoxContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("4_2wjjm")]
+[node name="SKeyLeft" parent="VBoxContainer/HBoxContainer/VBoxContainer2" unique_id=360751517 instance=ExtResource("4_2wjjm")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
@@ -249,7 +246,7 @@ setting_name_min_width = 40
 label_alignment = 2
 label_separation = 7
 
-[node name="SKeyRight" parent="VBoxContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("4_2wjjm")]
+[node name="SKeyRight" parent="VBoxContainer/HBoxContainer/VBoxContainer2" unique_id=1843403770 instance=ExtResource("4_2wjjm")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
@@ -261,7 +258,7 @@ setting_name_min_width = 40
 label_alignment = 2
 label_separation = 7
 
-[node name="SKeyOption" parent="VBoxContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("4_2wjjm")]
+[node name="SKeyOption" parent="VBoxContainer/HBoxContainer/VBoxContainer2" unique_id=64560270 instance=ExtResource("4_2wjjm")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
@@ -273,7 +270,7 @@ setting_name_min_width = 40
 label_alignment = 2
 label_separation = 7
 
-[node name="SKeyEdit" parent="VBoxContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("4_2wjjm")]
+[node name="SKeyEdit" parent="VBoxContainer/HBoxContainer/VBoxContainer2" unique_id=2063282444 instance=ExtResource("4_2wjjm")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
@@ -285,7 +282,7 @@ setting_name_min_width = 40
 label_alignment = 2
 label_separation = 7
 
-[node name="SKeyShift" parent="VBoxContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("4_2wjjm")]
+[node name="SKeyShift" parent="VBoxContainer/HBoxContainer/VBoxContainer2" unique_id=1069930529 instance=ExtResource("4_2wjjm")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
@@ -297,7 +294,7 @@ setting_name_min_width = 40
 label_alignment = 2
 label_separation = 7
 
-[node name="SKeyPlay" parent="VBoxContainer/HBoxContainer/VBoxContainer2" instance=ExtResource("4_2wjjm")]
+[node name="SKeyPlay" parent="VBoxContainer/HBoxContainer/VBoxContainer2" unique_id=1228116877 instance=ExtResource("4_2wjjm")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
@@ -309,18 +306,18 @@ setting_name_min_width = 40
 label_alignment = 2
 label_separation = 7
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=2092856368]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/HBoxContainer2" unique_id=32490108]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer" unique_id=110245711]
 layout_mode = 2
 
-[node name="Label" parent="VBoxContainer" instance=ExtResource("5_u1uey")]
+[node name="Label" parent="VBoxContainer" unique_id=817026883 instance=ExtResource("5_u1uey")]
 layout_mode = 2
 text = "HL colors will be shown 
 on the 3D model as well 

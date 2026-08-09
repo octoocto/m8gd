@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bkmg6tijdna2y"]
+[gd_scene format=3 uid="uid://bkmg6tijdna2y"]
 
 [ext_resource type="Shader" uid="uid://df8ql2iwe7kys" path="res://overlays/overlay_display_panel.tres" id="1_hikxj"]
 [ext_resource type="Texture2D" uid="uid://ras5y3yqijkx" path="res://assets/m8_screen_placeholder.png" id="2_dqr0t"]
@@ -25,12 +25,12 @@ anti_aliasing = false
 atlas = ExtResource("2_dqr0t")
 region = Rect2(0, 0, 320, 240)
 
-[node name="Display" type="Control"]
+[node name="Display" type="Control" unique_id=935975863]
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("2_yhulq")
 
-[node name="DisplayPanel" type="PanelContainer" parent="."]
+[node name="DisplayPanel" type="PanelContainer" parent="." unique_id=1419469488]
 unique_name_in_owner = true
 material = SubResource("ShaderMaterial_lw18t")
 layout_mode = 0
@@ -38,7 +38,7 @@ offset_right = 352.0
 offset_bottom = 272.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_hl16s")
 
-[node name="DisplayTextureRect" type="TextureRect" parent="DisplayPanel"]
+[node name="DisplayTextureRect" type="TextureRect" parent="DisplayPanel" unique_id=1712383868]
 unique_name_in_owner = true
 texture_filter = 1
 custom_minimum_size = Vector2(320, 240)

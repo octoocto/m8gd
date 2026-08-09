@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://dsgvm3dda1kjp"]
+[gd_scene format=3 uid="uid://dsgvm3dda1kjp"]
 
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_vptvj"]
 [ext_resource type="Script" path="res://ui/header.gd" id="2_fv3ui"]
@@ -6,7 +6,7 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fv3ui"]
 
-[node name="Header" type="PanelContainer"]
+[node name="Header" type="PanelContainer" unique_id=1635322611]
 texture_filter = 1
 custom_minimum_size = Vector2(120, 0)
 offset_right = 120.0
@@ -14,25 +14,24 @@ offset_bottom = 15.0
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme = ExtResource("1_vptvj")
-theme_type_variation = &"UIHeader"
 script = ExtResource("2_fv3ui")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1232811383]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 theme_override_constants/separation = 0
 
-[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer" unique_id=772443868]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Label" parent="VBoxContainer" instance=ExtResource("3_fv3ui")]
+[node name="Label" parent="VBoxContainer" unique_id=852220813 instance=ExtResource("3_fv3ui")]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_fv3ui")
 no_padding = true
 color_override = Color(1, 0.12549, 0.25098, 1)
 
-[node name="HSeparator2" type="HSeparator" parent="VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer" unique_id=1050916836]
 layout_mode = 2

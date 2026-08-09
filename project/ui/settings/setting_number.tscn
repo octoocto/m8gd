@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://b1r8nehsgp111"]
+[gd_scene format=3 uid="uid://b1r8nehsgp111"]
 
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_dl3x7"]
 [ext_resource type="Script" uid="uid://by8nuaed0yw7n" path="res://ui/settings/setting_number.gd" id="1_j8a44"]
@@ -25,7 +25,7 @@ bg_color = Color(0.564706, 0.690196, 0.721569, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ejlfe"]
 bg_color = Color(1, 1, 1, 1)
 
-[node name="SettingNumber" type="PanelContainer"]
+[node name="SettingNumber" type="PanelContainer" unique_id=1634839924]
 texture_filter = 1
 offset_right = 82.0
 offset_bottom = 7.0
@@ -36,11 +36,11 @@ script = ExtResource("1_j8a44")
 step = 0.01
 metadata/_custom_type_script = "uid://by8nuaed0yw7n"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1493479336]
 layout_mode = 2
 size_flags_vertical = 0
 
-[node name="Label" parent="HBoxContainer" instance=ExtResource("3_nk3kn")]
+[node name="Label" parent="HBoxContainer" unique_id=955620690 instance=ExtResource("3_nk3kn")]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(160, 0)
@@ -50,7 +50,7 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_nk3kn")
 no_padding = true
 text = "TEST"
 
-[node name="LineEdit" type="LineEdit" parent="HBoxContainer"]
+[node name="LineEdit" type="LineEdit" parent="HBoxContainer" unique_id=1316699582]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
@@ -65,7 +65,7 @@ alignment = 2
 select_all_on_focus = true
 caret_blink = true
 
-[node name="HSlider" type="HSlider" parent="HBoxContainer"]
+[node name="HSlider" type="HSlider" parent="HBoxContainer" unique_id=864651565]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
@@ -75,3 +75,4 @@ mouse_force_pass_scroll_events = false
 theme_override_styles/slider = SubResource("StyleBoxLine_s1vjd")
 theme_override_styles/grabber_area = SubResource("StyleBoxFlat_g7ixi")
 theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_ejlfe")
+step = 0.01

@@ -1,10 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://bx26oqvasqfha"]
+[gd_scene format=3 uid="uid://bx26oqvasqfha"]
 
 [ext_resource type="Script" uid="uid://2yvlafyfb0y8" path="res://overlays/overlay_input.gd" id="1_a4iwt"]
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_kxkeb"]
 [ext_resource type="Script" uid="uid://c1bdn3740c7n8" path="res://ui/aspect_ratio_control.gd" id="3_x53l1"]
 
-[node name="OverlayInputDisplay" type="Control"]
+[node name="OverlayInputDisplay" type="Control" unique_id=672485688]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 160.0
@@ -12,7 +12,7 @@ offset_bottom = 128.0
 theme = ExtResource("1_kxkeb")
 script = ExtResource("1_a4iwt")
 
-[node name="Control" type="Control" parent="."]
+[node name="Control" type="Control" parent="." unique_id=1907743852]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -23,7 +23,7 @@ grow_vertical = 2
 script = ExtResource("3_x53l1")
 ratio = 1.25
 
-[node name="RectUp" type="Panel" parent="Control"]
+[node name="RectUp" type="Panel" parent="Control" unique_id=2137184333]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1
@@ -34,7 +34,7 @@ anchor_bottom = 0.3125
 theme_type_variation = &"Key2D"
 metadata/_edit_use_anchors_ = true
 
-[node name="RectDown" type="Panel" parent="Control"]
+[node name="RectDown" type="Panel" parent="Control" unique_id=1091435886]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1
@@ -45,7 +45,7 @@ anchor_bottom = 0.625
 theme_type_variation = &"Key2D"
 metadata/_edit_use_anchors_ = true
 
-[node name="RectLeft" type="Panel" parent="Control"]
+[node name="RectLeft" type="Panel" parent="Control" unique_id=1437783246]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1
@@ -55,7 +55,7 @@ anchor_bottom = 0.625
 theme_type_variation = &"Key2D"
 metadata/_edit_use_anchors_ = true
 
-[node name="RectRight" type="Panel" parent="Control"]
+[node name="RectRight" type="Panel" parent="Control" unique_id=337779015]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1
@@ -66,7 +66,7 @@ anchor_bottom = 0.625
 theme_type_variation = &"Key2D"
 metadata/_edit_use_anchors_ = true
 
-[node name="RectOption" type="Panel" parent="Control"]
+[node name="RectOption" type="Panel" parent="Control" unique_id=174799768]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1
@@ -77,7 +77,7 @@ offset_right = 0.06399536
 theme_type_variation = &"Key2D"
 metadata/_edit_use_anchors_ = true
 
-[node name="RectEdit" type="Panel" parent="Control"]
+[node name="RectEdit" type="Panel" parent="Control" unique_id=1779333716]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1
@@ -87,7 +87,7 @@ anchor_bottom = 0.25
 theme_type_variation = &"Key2D"
 metadata/_edit_use_anchors_ = true
 
-[node name="RectShift" type="Panel" parent="Control"]
+[node name="RectShift" type="Panel" parent="Control" unique_id=755840969]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1
@@ -98,7 +98,7 @@ anchor_bottom = 1.0
 theme_type_variation = &"Key2D"
 metadata/_edit_use_anchors_ = true
 
-[node name="RectPlay" type="Panel" parent="Control"]
+[node name="RectPlay" type="Panel" parent="Control" unique_id=1744951441]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1

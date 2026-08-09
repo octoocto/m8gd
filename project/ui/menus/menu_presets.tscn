@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://cl0l1ahpak3yn"]
+[gd_scene format=3 uid="uid://cl0l1ahpak3yn"]
 
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_14jgw"]
 [ext_resource type="Script" uid="uid://b1jvv8rrh5swb" path="res://ui/menus/menu_presets.gd" id="1_racsg"]
@@ -70,13 +70,13 @@ content_margin_right = 2.0
 content_margin_bottom = 2.0
 bg_color = Color(0.12549, 0.156863, 0.188235, 1)
 
-[node name="MenuProfiles" type="PanelContainer"]
+[node name="MenuProfiles" type="PanelContainer" unique_id=1045166269]
 texture_filter = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_top = -54.0
-offset_right = -1105.0
+offset_right = -1107.0
 offset_bottom = -899.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -84,21 +84,21 @@ theme = ExtResource("1_14jgw")
 theme_override_styles/panel = SubResource("StyleBoxFlat_f5ywr")
 script = ExtResource("1_racsg")
 
-[node name="ConfigContainer" type="VBoxContainer" parent="."]
+[node name="ConfigContainer" type="VBoxContainer" parent="." unique_id=1240563821]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="SName" parent="ConfigContainer" instance=ExtResource("2_14jgw")]
+[node name="SName" parent="ConfigContainer" unique_id=648347081 instance=ExtResource("2_14jgw")]
 unique_name_in_owner = true
 layout_mode = 2
 validate = true
 setting_name = "Preset Name"
 setting_name_min_width = 100
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="ConfigContainer"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="ConfigContainer" unique_id=1891102192]
 layout_mode = 2
 
-[node name="ButtonSave" parent="ConfigContainer/HBoxContainer3" instance=ExtResource("4_fhu81")]
+[node name="ButtonSave" parent="ConfigContainer/HBoxContainer3" unique_id=685940475 instance=ExtResource("4_fhu81")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -108,7 +108,7 @@ icon = ExtResource("5_4fufk")
 enabled = false
 hint_text = "Save the current state as a preset"
 
-[node name="ButtonLoad" parent="ConfigContainer/HBoxContainer3" instance=ExtResource("4_fhu81")]
+[node name="ButtonLoad" parent="ConfigContainer/HBoxContainer3" unique_id=1287898647 instance=ExtResource("4_fhu81")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -117,7 +117,7 @@ text = "Load"
 icon = ExtResource("5_4fufk")
 hint_text = "Load a preset"
 
-[node name="ButtonNew" parent="ConfigContainer/HBoxContainer3" instance=ExtResource("4_fhu81")]
+[node name="ButtonNew" parent="ConfigContainer/HBoxContainer3" unique_id=1414833830 instance=ExtResource("4_fhu81")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -126,7 +126,7 @@ color_bg = 5
 text = "Reset"
 hint_text = "Reset to the default preset"
 
-[node name="ButtonDelete" parent="ConfigContainer/HBoxContainer3" instance=ExtResource("4_fhu81")]
+[node name="ButtonDelete" parent="ConfigContainer/HBoxContainer3" unique_id=59796458 instance=ExtResource("4_fhu81")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
@@ -134,7 +134,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_sd2qt")
 color_bg = 5
 text = "Delete"
 
-[node name="RichTextLabel" type="RichTextLabel" parent="ConfigContainer/HBoxContainer3"]
+[node name="RichTextLabel" type="RichTextLabel" parent="ConfigContainer/HBoxContainer3" unique_id=1619387495]
 visible = false
 custom_minimum_size = Vector2(80, 18)
 layout_mode = 2
@@ -143,15 +143,15 @@ bbcode_enabled = true
 text = "[b]Profile[/b]"
 scroll_active = false
 
-[node name="OptionProfiles2" type="OptionButton" parent="ConfigContainer/HBoxContainer3"]
+[node name="OptionProfiles2" type="OptionButton" parent="ConfigContainer/HBoxContainer3" unique_id=1045755394]
 visible = false
-clip_contents = true
 custom_minimum_size = Vector2(180, 0)
+clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
 
-[node name="ButtonPrint" parent="ConfigContainer" instance=ExtResource("4_fhu81")]
+[node name="ButtonPrint" parent="ConfigContainer" unique_id=1483541208 instance=ExtResource("4_fhu81")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -159,18 +159,18 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_85eid")
 color_bg = 2
 text = "Print .ini"
 
-[node name="HSeparator" type="HSeparator" parent="ConfigContainer"]
+[node name="HSeparator" type="HSeparator" parent="ConfigContainer" unique_id=1694000907]
 layout_mode = 2
 
-[node name="LabelStatus" parent="ConfigContainer" instance=ExtResource("6_f5ywr")]
+[node name="LabelStatus" parent="ConfigContainer" unique_id=791250102 instance=ExtResource("6_f5ywr")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 17)
 layout_mode = 2
 
-[node name="HSeparator2" type="HSeparator" parent="ConfigContainer"]
+[node name="HSeparator2" type="HSeparator" parent="ConfigContainer" unique_id=1748433367]
 layout_mode = 2
 
-[node name="Label" parent="ConfigContainer" instance=ExtResource("6_f5ywr")]
+[node name="Label" parent="ConfigContainer" unique_id=1039360452 instance=ExtResource("6_f5ywr")]
 layout_mode = 2
 text = "Presets contain info on:
 - the active scene
@@ -180,17 +180,17 @@ text = "Presets contain info on:
   overlay, and shader"
 color_override = 2
 
-[node name="LoaderContainer" type="VBoxContainer" parent="."]
+[node name="LoaderContainer" type="VBoxContainer" parent="." unique_id=825123566]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="LoaderListContainer" type="VBoxContainer" parent="LoaderContainer"]
+[node name="LoaderListContainer" type="VBoxContainer" parent="LoaderContainer" unique_id=357940286]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ButtonCancelLoader" parent="LoaderContainer" instance=ExtResource("4_fhu81")]
+[node name="ButtonCancelLoader" parent="LoaderContainer" unique_id=516345837 instance=ExtResource("4_fhu81")]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_4rc8y")

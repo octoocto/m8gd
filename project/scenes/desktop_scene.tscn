@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://f2tvhcv8kiuu"]
+[gd_scene format=3 uid="uid://f2tvhcv8kiuu"]
 
 [ext_resource type="Script" uid="uid://bwyvmb6tnim5s" path="res://scenes/desktop_scene.gd" id="1_0y3bn"]
 [ext_resource type="PackedScene" uid="uid://bckroenwlecqv" path="res://scene_camera_3d.tscn" id="5_d472a"]
@@ -27,7 +27,7 @@ interpolation_mode = 2
 offsets = PackedFloat32Array(0, 0.401914, 1)
 colors = PackedColorArray(0, 0.66, 0.363, 1, 0.0042, 0.21, 0.16884, 1, 0, 0.0158333, 0.05, 1)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_o6olw"]
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_snxmm"]
 resource_local_to_scene = true
 gradient = SubResource("Gradient_ful20")
 
@@ -64,18 +64,18 @@ metadata/_snap_enabled = true
 noise_type = 3
 frequency = 0.004
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_otixg"]
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_p8ipw"]
 resource_local_to_scene = true
 noise = SubResource("FastNoiseLite_3605e")
 color_ramp = SubResource("Gradient_mmq47")
 seamless = true
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_wnfn1"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_whvuc"]
 resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("9_wvtmw")
-shader_parameter/color_ramp = SubResource("GradientTexture1D_o6olw")
-shader_parameter/wind_noise = SubResource("NoiseTexture2D_otixg")
+shader_parameter/color_ramp = SubResource("GradientTexture1D_snxmm")
+shader_parameter/wind_noise = SubResource("NoiseTexture2D_p8ipw")
 shader_parameter/uv_offset = -0.1
 shader_parameter/heightmap_offset = Vector2(40.11, 40.015)
 shader_parameter/heightmap_scale = Vector2(1.65, 1.125)
@@ -106,12 +106,12 @@ section_length = 0.8
 section_segments = 1
 curve = SubResource("Curve_y7obg")
 
-[node name="M8Scene" type="Node3D"]
+[node name="M8Scene" type="Node3D" unique_id=1541261612]
 script = ExtResource("1_0y3bn")
 metadata/_edit_vertical_guides_ = [640.0]
 metadata/_edit_horizontal_guides_ = [480.0]
 
-[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="."]
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="." unique_id=1730005989]
 unique_name_in_owner = true
 visible = false
 anchors_preset = 15
@@ -123,7 +123,7 @@ volume_db = -80.0
 expand = true
 loop = true
 
-[node name="Camera3D" parent="." instance=ExtResource("5_d472a")]
+[node name="Camera3D" parent="." unique_id=1276526683 instance=ExtResource("5_d472a")]
 unique_name_in_owner = true
 transform = Transform3D(0.906308, -0.365998, 0.211309, 0, 0.5, 0.866025, -0.422618, -0.784885, 0.453154, 4.7, 13.5, 7)
 dof_zoomout = 3.0
@@ -131,10 +131,10 @@ dof_zoomin = 1.5
 dof_focus_distance = 14.4
 dof_focus_width = 3.0
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1680576731]
 environment = SubResource("Environment_ayqpk")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1089698132]
 unique_name_in_owner = true
 transform = Transform3D(0.5, -0.496732, -0.709407, 7.16125e-08, -0.819151, 0.573577, -0.866025, -0.286788, -0.409576, 0.087698, 4.97022, -16.5359)
 light_color = Color(1, 0.958, 0.91, 1)
@@ -143,7 +143,7 @@ shadow_enabled = true
 shadow_normal_bias = 4.0
 shadow_opacity = 0.9
 
-[node name="LightLamp" type="SpotLight3D" parent="."]
+[node name="LightLamp" type="SpotLight3D" parent="." unique_id=504463218]
 unique_name_in_owner = true
 transform = Transform3D(0.0908976, 0.974832, -0.20357, -0.491037, 0.221712, 0.842452, 0.866383, 0.0233833, 0.498832, -0.311, 13.482, 5.885)
 visible = false
@@ -155,7 +155,7 @@ spot_range = 43.892
 spot_attenuation = 0.3
 spot_angle = 30.0
 
-[node name="LightLeft" type="SpotLight3D" parent="."]
+[node name="LightLeft" type="SpotLight3D" parent="." unique_id=1108314516]
 unique_name_in_owner = true
 transform = Transform3D(0.720551, 0.383723, -0.577549, 0, 0.832921, 0.553392, 0.693402, -0.398747, 0.600162, -8.65174, 6.441, 6.68209)
 light_color = Color(1, 0.11, 0.11, 1)
@@ -167,7 +167,7 @@ shadow_bias = 0.04
 spot_range = 23.064
 spot_attenuation = 0.3
 
-[node name="LightRight" type="SpotLight3D" parent="."]
+[node name="LightRight" type="SpotLight3D" parent="." unique_id=643691785]
 unique_name_in_owner = true
 transform = Transform3D(0.711885, -0.460246, 0.530466, 0.0999514, 0.814039, 0.572146, -0.695147, -0.354281, 0.625504, 7.74783, 8.51745, 7.10884)
 light_color = Color(0.781815, 0, 0.294521, 1)
@@ -177,26 +177,26 @@ shadow_blur = 0.884
 spot_range = 50.0
 spot_attenuation = 0.5
 
-[node name="PlantModel" parent="." instance=ExtResource("9_c3a4o")]
+[node name="PlantModel" parent="." unique_id=1702604855 instance=ExtResource("9_c3a4o")]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.50338, 0, 0.251561)
 
-[node name="SurfaceMesh" type="MeshInstance3D" parent="."]
+[node name="SurfaceMesh" type="MeshInstance3D" parent="." unique_id=876035648]
 unique_name_in_owner = true
 material_overlay = ExtResource("7_7cg8p")
 cast_shadow = 0
 mesh = SubResource("PlaneMesh_4c1u1")
 
-[node name="GrassArea" parent="." instance=ExtResource("8_ophi6")]
+[node name="GrassArea" parent="." unique_id=1972361682 instance=ExtResource("8_ophi6")]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5, 0)
 visible = false
-material_override = SubResource("ShaderMaterial_wnfn1")
+material_override = SubResource("ShaderMaterial_whvuc")
 extents = Vector3(20, 0, 20)
 grass_mesh = SubResource("RibbonTrailMesh_xwsvd")
 num_meshes = 32000
 
-[node name="M8Model" parent="." instance=ExtResource("7_y135g")]
+[node name="M8Model" parent="." unique_id=1138004512 instance=ExtResource("7_y135g")]
 unique_name_in_owner = true
 
 [editable path="Camera3D"]

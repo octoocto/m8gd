@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://b265ke8cr3dgr"]
+[gd_scene format=3 uid="uid://b265ke8cr3dgr"]
 
 [ext_resource type="Script" uid="uid://d0olbd611iax7" path="res://main.gd" id="1_4g2n0"]
 [ext_resource type="PackedScene" uid="uid://bunbsbcuarpxe" path="res://ui/overlay_container.tscn" id="3_dg77c"]
@@ -114,19 +114,19 @@ expand_margin_right = 1.0
 expand_margin_bottom = 1.0
 anti_aliasing = false
 
-[node name="Main" type="Node"]
+[node name="Main" type="Node" unique_id=1324079992]
 script = ExtResource("1_4g2n0")
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=3262380]
 unique_name_in_owner = true
 stream = SubResource("AudioStreamMicrophone_c3wmn")
 
-[node name="SceneRoot" type="Node" parent="."]
+[node name="SceneRoot" type="Node" parent="." unique_id=414070384]
 unique_name_in_owner = true
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1440144156]
 
-[node name="UI" type="Control" parent="CanvasLayer"]
+[node name="UI" type="Control" parent="CanvasLayer" unique_id=156954603]
 unique_name_in_owner = true
 layout_mode = 3
 anchors_preset = 15
@@ -136,18 +136,18 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("13_e5i6c")
 
-[node name="OverlayContainer" parent="CanvasLayer/UI" instance=ExtResource("3_dg77c")]
+[node name="OverlayContainer" parent="CanvasLayer/UI" unique_id=125066673 instance=ExtResource("3_dg77c")]
 unique_name_in_owner = true
 layout_mode = 0
 anchors_preset = 0
 grow_horizontal = 1
 grow_vertical = 1
 
-[node name="ShaderContainer" parent="CanvasLayer/UI" instance=ExtResource("8_yaehf")]
+[node name="ShaderContainer" parent="CanvasLayer/UI" unique_id=1226903127 instance=ExtResource("8_yaehf")]
 unique_name_in_owner = true
 layout_mode = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI" unique_id=1943448876]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -157,7 +157,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="TextureButton" type="Button" parent="CanvasLayer/UI/HBoxContainer"]
+[node name="TextureButton" type="Button" parent="CanvasLayer/UI/HBoxContainer" unique_id=259004370]
 texture_filter = 1
 custom_minimum_size = Vector2(64, 63)
 layout_mode = 2
@@ -167,13 +167,13 @@ icon = ExtResource("13_gepng")
 alignment = 0
 expand_icon = true
 
-[node name="HSeparator" type="VSeparator" parent="CanvasLayer/UI/HBoxContainer"]
+[node name="HSeparator" type="VSeparator" parent="CanvasLayer/UI/HBoxContainer" unique_id=1138075564]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_0a764")
 
-[node name="TextureButton2" type="Button" parent="CanvasLayer/UI/HBoxContainer"]
+[node name="TextureButton2" type="Button" parent="CanvasLayer/UI/HBoxContainer" unique_id=1393373516]
 texture_filter = 1
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
@@ -184,7 +184,7 @@ icon = ExtResource("14_p46wh")
 icon_alignment = 2
 expand_icon = true
 
-[node name="SplashContainer" type="CenterContainer" parent="CanvasLayer/UI"]
+[node name="SplashContainer" type="CenterContainer" parent="CanvasLayer/UI" unique_id=1835852098]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1
@@ -194,28 +194,28 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/UI/SplashContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/UI/SplashContainer" unique_id=1201769773]
 custom_minimum_size = Vector2(320, 240)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_lbvov")
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/SplashContainer/PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/SplashContainer/PanelContainer" unique_id=417220496]
 layout_mode = 2
 theme_override_constants/margin_left = 64
 theme_override_constants/margin_top = 64
 theme_override_constants/margin_right = 64
 theme_override_constants/margin_bottom = 64
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer" unique_id=865006758]
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="Control" type="Control" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="Control" type="Control" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1739054398]
 visible = false
 custom_minimum_size = Vector2(320, 240)
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer/Control"]
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer/Control" unique_id=687054811]
 modulate = Color(1, 0.890196, 0.831373, 1)
 texture_filter = 1
 layout_mode = 0
@@ -225,7 +225,7 @@ offset_right = 159.0
 offset_bottom = 111.0
 scale = Vector2(2, 2)
 
-[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1388520572]
 custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
 bbcode_enabled = true
@@ -240,24 +240,24 @@ text = "[center][font size=72]m8gd[/font]
 "
 fit_content = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1918164914]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=368136057]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Do not show next time"
 
-[node name="Check_SplashDoNotShow" type="CheckButton" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="Check_SplashDoNotShow" type="CheckButton" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1584234226]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="ButtonSplashClose" type="Button" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="ButtonSplashClose" type="Button" parent="CanvasLayer/UI/SplashContainer/PanelContainer/MarginContainer/VBoxContainer" unique_id=1269594050]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Dismiss"
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI" unique_id=633728194]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -267,17 +267,17 @@ grow_vertical = 2
 theme = ExtResource("13_e5i6c")
 theme_type_variation = &"ZeroMarginContainer"
 
-[node name="GridContainer" type="GridContainer" parent="CanvasLayer/UI/MarginContainer"]
+[node name="GridContainer" type="GridContainer" parent="CanvasLayer/UI/MarginContainer" unique_id=897862034]
 layout_mode = 2
 columns = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/MarginContainer/GridContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/MarginContainer/GridContainer" unique_id=1143494022]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 alignment = 1
 
-[node name="CameraControls" type="RichTextLabel" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer"]
+[node name="CameraControls" type="RichTextLabel" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer" unique_id=645995572]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -291,23 +291,23 @@ MWheel 				Adjust focus distance
 Shift+MWheel 		Adjust focus width"
 fit_content = true
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/UI/MarginContainer/GridContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/UI/MarginContainer/GridContainer" unique_id=1115074524]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="VBoxContainer3" type="VBoxContainer" parent="CanvasLayer/UI/MarginContainer/GridContainer"]
+[node name="VBoxContainer3" type="VBoxContainer" parent="CanvasLayer/UI/MarginContainer/GridContainer" unique_id=1449181693]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 8
 
-[node name="LabelStatus" type="Label" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3"]
+[node name="LabelStatus" type="Label" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3" unique_id=616142789]
 unique_name_in_owner = true
 visible = false
 modulate = Color(1, 1, 1, -0.0066658477)
 layout_mode = 2
 
-[node name="CameraStatus" type="RichTextLabel" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3"]
+[node name="CameraStatus" type="RichTextLabel" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3" unique_id=348938349]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -319,102 +319,102 @@ LEN		%03.1f
 "
 fit_content = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3" unique_id=2074347649]
 visible = false
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="Color_Palette1" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+[node name="Color_Palette1" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer" unique_id=613087170]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
 color = Color(0, 0, 0, 1)
 
-[node name="Color_Palette2" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+[node name="Color_Palette2" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer" unique_id=966945276]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
 
-[node name="Color_Palette3" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+[node name="Color_Palette3" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer" unique_id=929212508]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
 
-[node name="Color_Palette4" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+[node name="Color_Palette4" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer" unique_id=773922209]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
 
-[node name="Color_Palette5" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+[node name="Color_Palette5" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer" unique_id=450158029]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
 
-[node name="Color_Palette6" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+[node name="Color_Palette6" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer" unique_id=1032332154]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
 
-[node name="Color_Palette7" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+[node name="Color_Palette7" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer" unique_id=552118654]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
 
-[node name="Color_Palette8" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+[node name="Color_Palette8" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer" unique_id=1248696526]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
 
-[node name="Color_Palette9" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+[node name="Color_Palette9" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer" unique_id=267063576]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
 
-[node name="Color_Palette10" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+[node name="Color_Palette10" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer" unique_id=147574317]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
 
-[node name="Color_Palette11" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+[node name="Color_Palette11" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer" unique_id=750479815]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
 
-[node name="Color_Palette12" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+[node name="Color_Palette12" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer" unique_id=1311566456]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
 
-[node name="Color_Palette13" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+[node name="Color_Palette13" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer" unique_id=332601919]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
 
-[node name="Color_Palette14" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 64)
-layout_mode = 2
-color = Color(0, 0, 0, 0)
-
-[node name="Color_Palette15" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+[node name="Color_Palette14" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer" unique_id=1223595971]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
 color = Color(0, 0, 0, 0)
 
-[node name="Color_Palette16" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer"]
+[node name="Color_Palette15" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer" unique_id=584627648]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
 color = Color(0, 0, 0, 0)
 
-[node name="VBoxContainer4" type="VBoxContainer" parent="CanvasLayer/UI/MarginContainer/GridContainer"]
+[node name="Color_Palette16" type="ColorRect" parent="CanvasLayer/UI/MarginContainer/GridContainer/VBoxContainer3/HBoxContainer" unique_id=276957034]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 64)
+layout_mode = 2
+color = Color(0, 0, 0, 0)
+
+[node name="VBoxContainer4" type="VBoxContainer" parent="CanvasLayer/UI/MarginContainer/GridContainer" unique_id=324089389]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="MenuContainer" type="Container" parent="CanvasLayer/UI"]
+[node name="MenuContainer" type="Container" parent="CanvasLayer/UI" unique_id=684420239]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1
@@ -425,22 +425,22 @@ grow_vertical = 2
 theme = ExtResource("13_e5i6c")
 script = ExtResource("18_d13ii")
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/MenuContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/MenuContainer" unique_id=1150107691]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/UI/MenuContainer/MarginContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/UI/MenuContainer/MarginContainer" unique_id=1678466815]
 layout_mode = 2
 theme_override_constants/separation = 3
 
-[node name="DebugLabels" type="Control" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2"]
+[node name="DebugLabels" type="Control" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2" unique_id=668623486]
 unique_name_in_owner = true
 visible = false
 texture_filter = 1
 custom_minimum_size = Vector2(0, 120)
 layout_mode = 2
 
-[node name="LabelFPS" type="Label" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+[node name="LabelFPS" type="Label" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels" unique_id=618239765]
 unique_name_in_owner = true
 layout_mode = 0
 offset_top = 4.0
@@ -450,7 +450,7 @@ size_flags_horizontal = 0
 size_flags_vertical = 2
 text = "145"
 
-[node name="LabelPort" type="Label" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+[node name="LabelPort" type="Label" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels" unique_id=1322148275]
 unique_name_in_owner = true
 layout_mode = 0
 offset_top = 32.0
@@ -460,7 +460,7 @@ size_flags_vertical = 10
 text = "serial port"
 vertical_alignment = 2
 
-[node name="LabelAudioDevice" type="Label" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+[node name="LabelAudioDevice" type="Label" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels" unique_id=1338455266]
 unique_name_in_owner = true
 layout_mode = 0
 offset_top = 48.0
@@ -470,7 +470,7 @@ size_flags_vertical = 10
 text = "audio device"
 vertical_alignment = 2
 
-[node name="LabelHardware" type="Label" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+[node name="LabelHardware" type="Label" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels" unique_id=377918255]
 unique_name_in_owner = true
 layout_mode = 0
 offset_top = 72.0
@@ -480,7 +480,7 @@ size_flags_vertical = 10
 text = "hardware"
 vertical_alignment = 2
 
-[node name="LabelFirmware" type="Label" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+[node name="LabelFirmware" type="Label" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels" unique_id=277023024]
 unique_name_in_owner = true
 layout_mode = 0
 offset_top = 88.0
@@ -490,7 +490,7 @@ size_flags_vertical = 10
 text = "firmware"
 vertical_alignment = 2
 
-[node name="LabelAudioPeak" type="Label" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+[node name="LabelAudioPeak" type="Label" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels" unique_id=863483409]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
@@ -501,7 +501,7 @@ size_flags_vertical = 10
 text = "0.0 dB"
 vertical_alignment = 2
 
-[node name="LabelAudioPeakAvg" type="Label" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+[node name="LabelAudioPeakAvg" type="Label" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels" unique_id=1839749395]
 unique_name_in_owner = true
 visible = false
 modulate = Color(0.75, 0.75, 1, 1)
@@ -513,7 +513,7 @@ size_flags_vertical = 10
 text = "0.0 dB"
 vertical_alignment = 2
 
-[node name="LabelAudioPeakMax" type="Label" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+[node name="LabelAudioPeakMax" type="Label" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels" unique_id=285463221]
 unique_name_in_owner = true
 visible = false
 modulate = Color(1, 0.75, 0.75, 1)
@@ -525,7 +525,7 @@ size_flags_vertical = 10
 text = "0.0 dB"
 vertical_alignment = 2
 
-[node name="LabelAudioLevel" type="Label" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+[node name="LabelAudioLevel" type="Label" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels" unique_id=1082874311]
 unique_name_in_owner = true
 visible = false
 modulate = Color(0.75, 1, 0.75, 1)
@@ -537,7 +537,7 @@ size_flags_vertical = 10
 text = "0.0 dB"
 vertical_alignment = 2
 
-[node name="RectAudioLevel" type="ColorRect" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+[node name="RectAudioLevel" type="ColorRect" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels" unique_id=1224251938]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
@@ -547,7 +547,7 @@ offset_right = 96.0
 offset_bottom = 172.0
 color = Color(0.5, 1, 0.5, 1)
 
-[node name="RectAudioLevelAvg" type="ColorRect" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels"]
+[node name="RectAudioLevelAvg" type="ColorRect" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2/DebugLabels" unique_id=104924517]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
@@ -556,19 +556,19 @@ offset_top = 156.0
 offset_right = 96.0
 offset_bottom = 172.0
 
-[node name="LabelConsole" type="RichTextLabel" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2"]
+[node name="LabelConsole" type="RichTextLabel" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer2" unique_id=204561441]
 unique_name_in_owner = true
 texture_filter = 1
 layout_mode = 2
 fit_content = true
 script = ExtResource("14_getpj")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/MenuContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UI/MenuContainer/MarginContainer" unique_id=2005719275]
 layout_mode = 2
 size_flags_vertical = 8
 mouse_filter = 2
 
-[node name="SceneCameraMenu" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer" instance=ExtResource("16_getpj")]
+[node name="SceneCameraMenu" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer" unique_id=1057435405 instance=ExtResource("16_getpj")]
 unique_name_in_owner = true
 visible = false
 z_index = 1
@@ -577,7 +577,7 @@ size_flags_horizontal = 0
 size_flags_vertical = 8
 theme_override_styles/panel = SubResource("StyleBoxFlat_dg77c")
 
-[node name="SceneConfigMenu" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer" instance=ExtResource("9_bisyb")]
+[node name="SceneConfigMenu" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer" unique_id=1320482178 instance=ExtResource("9_bisyb")]
 unique_name_in_owner = true
 visible = false
 z_index = 1
@@ -586,7 +586,7 @@ size_flags_horizontal = 0
 size_flags_vertical = 8
 theme_override_styles/panel = SubResource("StyleBoxFlat_ycdy4")
 
-[node name="MenuOverlay" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer" instance=ExtResource("16_4bi6d")]
+[node name="MenuOverlay" parent="CanvasLayer/UI/MenuContainer/MarginContainer/VBoxContainer" unique_id=17388171 instance=ExtResource("16_4bi6d")]
 unique_name_in_owner = true
 visible = false
 z_index = 1
@@ -595,19 +595,19 @@ size_flags_horizontal = 0
 size_flags_vertical = 8
 theme_override_styles/panel = SubResource("StyleBoxFlat_w48qg")
 
-[node name="MainMenuContainer" type="ScrollContainer" parent="CanvasLayer/UI/MenuContainer"]
+[node name="MainMenuContainer" type="ScrollContainer" parent="CanvasLayer/UI/MenuContainer" unique_id=136252200]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/UI/MenuContainer/MainMenuContainer"]
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/UI/MenuContainer/MainMenuContainer" unique_id=486914359]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="MainMenuPanel" parent="CanvasLayer/UI/MenuContainer/MainMenuContainer/CenterContainer" instance=ExtResource("7_k5oyo")]
+[node name="MainMenuPanel" parent="CanvasLayer/UI/MenuContainer/MainMenuContainer/CenterContainer" unique_id=1482988037 instance=ExtResource("7_k5oyo")]
 unique_name_in_owner = true
 visible = false
 z_index = 1

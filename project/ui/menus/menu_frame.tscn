@@ -1,7 +1,7 @@
-[gd_scene load_steps=11 format=3 uid="uid://m4rgiakfy3m2"]
+[gd_scene format=3 uid="uid://m4rgiakfy3m2"]
 
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_odqpv"]
-[ext_resource type="Script" uid="uid://dh6p0bf3lw2mb" path="res://ui/menus/menu_frame.gd" id="2_45chn"]
+[ext_resource type="Script" path="res://ui/menus/menu_frame.gd" id="2_45chn"]
 [ext_resource type="PackedScene" uid="uid://dsgvm3dda1kjp" path="res://ui/header.tscn" id="3_l0ky5"]
 [ext_resource type="PackedScene" uid="uid://jvyexp7mquoa" path="res://ui/button.tscn" id="4_locux"]
 [ext_resource type="PackedScene" uid="uid://b1wsbkovx87xh" path="res://ui/label.tscn" id="17_3nuys"]
@@ -53,7 +53,7 @@ content_margin_right = 6.0
 content_margin_bottom = 0.0
 draw_center = false
 
-[node name="MenuFrame" type="PanelContainer"]
+[node name="MenuFrame" type="PanelContainer" unique_id=85274185]
 texture_filter = 1
 offset_right = 320.0
 offset_bottom = 240.0
@@ -61,28 +61,27 @@ theme = ExtResource("1_odqpv")
 theme_override_styles/panel = SubResource("StyleBoxFlat_45chn")
 script = ExtResource("2_45chn")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1672327764]
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer" unique_id=337325852]
 custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_cn7hl")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/PanelContainer" unique_id=1012628695]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer/VBoxContainer" unique_id=440637378]
 layout_mode = 2
 
-[node name="Header" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" instance=ExtResource("3_l0ky5")]
+[node name="Header" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" unique_id=1584150139 instance=ExtResource("3_l0ky5")]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &""
 color_override = 4
 
-[node name="ButtonClose" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" instance=ExtResource("4_locux")]
+[node name="ButtonClose" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" unique_id=958352411 instance=ExtResource("4_locux")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -96,7 +95,7 @@ color_fg = 2
 text = "Close"
 hint_text = "Close the menu"
 
-[node name="ButtonExit" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" instance=ExtResource("4_locux")]
+[node name="ButtonExit" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" unique_id=1874568191 instance=ExtResource("4_locux")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -110,30 +109,30 @@ text = "Quit"
 horizontal_alignment = 0
 hint_text = "Quit to desktop"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer" unique_id=1194856077]
 custom_minimum_size = Vector2(320, 208)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ContentContainer" type="MarginContainer" parent="VBoxContainer/ScrollContainer"]
+[node name="ContentContainer" type="MarginContainer" parent="VBoxContainer/ScrollContainer" unique_id=306656590]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="PanelContainer2" type="PanelContainer" parent="VBoxContainer"]
+[node name="PanelContainer2" type="PanelContainer" parent="VBoxContainer" unique_id=1283435794]
 custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_iytvq")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/PanelContainer2"]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/PanelContainer2" unique_id=1610113210]
 layout_mode = 2
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/PanelContainer2/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/PanelContainer2/VBoxContainer" unique_id=46628939]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="LabelTooltip" parent="VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer2" instance=ExtResource("17_3nuys")]
+[node name="LabelTooltip" parent="VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer2" unique_id=460233264 instance=ExtResource("17_3nuys")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3

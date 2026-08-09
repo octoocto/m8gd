@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://c3lv6bqqi5wej"]
+[gd_scene format=3 uid="uid://c3lv6bqqi5wej"]
 
 [ext_resource type="PackedScene" uid="uid://dsgvm3dda1kjp" path="res://ui/header.tscn" id="1_aqk45"]
 [ext_resource type="Script" uid="uid://b8j8l0lr1k4w6" path="res://ui/menus/menu_input.gd" id="1_vdots"]
@@ -35,13 +35,13 @@ content_margin_right = 2.0
 content_margin_bottom = 2.0
 bg_color = Color(0.12549, 0.156863, 0.188235, 1)
 
-[node name="Input" type="PanelContainer"]
+[node name="Input" type="PanelContainer" unique_id=525406241]
 texture_filter = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = -3.5
-offset_right = -1039.5
+offset_right = -1068.5
 offset_bottom = -628.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -50,363 +50,328 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_vxsnp")
 script = ExtResource("1_vdots")
 metadata/_tab_index = 4
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1122687697]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Header" parent="VBoxContainer" instance=ExtResource("1_aqk45")]
+[node name="Header" parent="VBoxContainer" unique_id=1874012897 instance=ExtResource("1_aqk45")]
 layout_mode = 2
-theme_type_variation = &""
 text = "M8 Remote Input"
 top_spacing = false
-enabled = true
-hint_text = ""
 
-[node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer" unique_id=1295585670]
 layout_mode = 2
 columns = 3
 
-[node name="Label9" parent="VBoxContainer/GridContainer" instance=ExtResource("4_tnu4l")]
+[node name="Label9" parent="VBoxContainer/GridContainer" unique_id=481296264 instance=ExtResource("4_tnu4l")]
 layout_mode = 2
 text = "Key"
-enabled = true
-hint_text = ""
 
-[node name="Label10" parent="VBoxContainer/GridContainer" instance=ExtResource("4_tnu4l")]
+[node name="Label10" parent="VBoxContainer/GridContainer" unique_id=1765596569 instance=ExtResource("4_tnu4l")]
 layout_mode = 2
 text = "Primary"
-enabled = true
-hint_text = ""
 
-[node name="Label11" parent="VBoxContainer/GridContainer" instance=ExtResource("4_tnu4l")]
+[node name="Label11" parent="VBoxContainer/GridContainer" unique_id=1923791481 instance=ExtResource("4_tnu4l")]
 layout_mode = 2
 text = "Secondary"
-enabled = true
-hint_text = ""
 
-[node name="HSeparator" type="HSeparator" parent="VBoxContainer/GridContainer"]
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/GridContainer" unique_id=1254608693]
 layout_mode = 2
 
-[node name="HSeparator2" type="HSeparator" parent="VBoxContainer/GridContainer"]
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer/GridContainer" unique_id=1419037744]
 layout_mode = 2
 
-[node name="HSeparator3" type="HSeparator" parent="VBoxContainer/GridContainer"]
+[node name="HSeparator3" type="HSeparator" parent="VBoxContainer/GridContainer" unique_id=114166747]
 layout_mode = 2
 
-[node name="Label" parent="VBoxContainer/GridContainer" instance=ExtResource("4_tnu4l")]
+[node name="Label" parent="VBoxContainer/GridContainer" unique_id=534424354 instance=ExtResource("4_tnu4l")]
 layout_mode = 2
 min_width = 50
 text = "Up"
-enabled = true
-hint_text = ""
 
-[node name="ButtonBindUp1" type="Button" parent="VBoxContainer/GridContainer"]
+[node name="ButtonBindUp1" type="Button" parent="VBoxContainer/GridContainer" unique_id=1262899896]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="ButtonBindUp2" type="Button" parent="VBoxContainer/GridContainer"]
+[node name="ButtonBindUp2" type="Button" parent="VBoxContainer/GridContainer" unique_id=352615471]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="Label2" parent="VBoxContainer/GridContainer" instance=ExtResource("4_tnu4l")]
+[node name="Label2" parent="VBoxContainer/GridContainer" unique_id=2123727332 instance=ExtResource("4_tnu4l")]
 layout_mode = 2
 min_width = 50
 text = "Down"
-enabled = true
-hint_text = ""
 
-[node name="ButtonBindDown1" type="Button" parent="VBoxContainer/GridContainer"]
+[node name="ButtonBindDown1" type="Button" parent="VBoxContainer/GridContainer" unique_id=1148378491]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="ButtonBindDown2" type="Button" parent="VBoxContainer/GridContainer"]
+[node name="ButtonBindDown2" type="Button" parent="VBoxContainer/GridContainer" unique_id=1017443054]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="Label3" parent="VBoxContainer/GridContainer" instance=ExtResource("4_tnu4l")]
+[node name="Label3" parent="VBoxContainer/GridContainer" unique_id=1783477229 instance=ExtResource("4_tnu4l")]
 layout_mode = 2
 min_width = 50
 text = "Left"
-enabled = true
-hint_text = ""
 
-[node name="ButtonBindLeft1" type="Button" parent="VBoxContainer/GridContainer"]
+[node name="ButtonBindLeft1" type="Button" parent="VBoxContainer/GridContainer" unique_id=1443982031]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="ButtonBindLeft2" type="Button" parent="VBoxContainer/GridContainer"]
+[node name="ButtonBindLeft2" type="Button" parent="VBoxContainer/GridContainer" unique_id=248419316]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="Label4" parent="VBoxContainer/GridContainer" instance=ExtResource("4_tnu4l")]
+[node name="Label4" parent="VBoxContainer/GridContainer" unique_id=992255516 instance=ExtResource("4_tnu4l")]
 layout_mode = 2
 min_width = 50
 text = "Right"
-enabled = true
-hint_text = ""
 
-[node name="ButtonBindRight1" type="Button" parent="VBoxContainer/GridContainer"]
+[node name="ButtonBindRight1" type="Button" parent="VBoxContainer/GridContainer" unique_id=790381391]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="ButtonBindRight2" type="Button" parent="VBoxContainer/GridContainer"]
+[node name="ButtonBindRight2" type="Button" parent="VBoxContainer/GridContainer" unique_id=1527040019]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="Label5" parent="VBoxContainer/GridContainer" instance=ExtResource("4_tnu4l")]
+[node name="Label5" parent="VBoxContainer/GridContainer" unique_id=1778064059 instance=ExtResource("4_tnu4l")]
 layout_mode = 2
 min_width = 50
 text = "Option"
-enabled = true
-hint_text = ""
 
-[node name="ButtonBindOpt1" type="Button" parent="VBoxContainer/GridContainer"]
+[node name="ButtonBindOpt1" type="Button" parent="VBoxContainer/GridContainer" unique_id=1407616544]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="ButtonBindOpt2" type="Button" parent="VBoxContainer/GridContainer"]
+[node name="ButtonBindOpt2" type="Button" parent="VBoxContainer/GridContainer" unique_id=1439691406]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="Label6" parent="VBoxContainer/GridContainer" instance=ExtResource("4_tnu4l")]
+[node name="Label6" parent="VBoxContainer/GridContainer" unique_id=674567290 instance=ExtResource("4_tnu4l")]
 layout_mode = 2
 min_width = 50
 text = "Edit"
-enabled = true
-hint_text = ""
 
-[node name="ButtonBindEdit1" type="Button" parent="VBoxContainer/GridContainer"]
+[node name="ButtonBindEdit1" type="Button" parent="VBoxContainer/GridContainer" unique_id=1909818023]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="ButtonBindEdit2" type="Button" parent="VBoxContainer/GridContainer"]
+[node name="ButtonBindEdit2" type="Button" parent="VBoxContainer/GridContainer" unique_id=1711208875]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="Label7" parent="VBoxContainer/GridContainer" instance=ExtResource("4_tnu4l")]
+[node name="Label7" parent="VBoxContainer/GridContainer" unique_id=306616710 instance=ExtResource("4_tnu4l")]
 layout_mode = 2
 min_width = 50
 text = "Shift"
-enabled = true
-hint_text = ""
 
-[node name="ButtonBindShift1" type="Button" parent="VBoxContainer/GridContainer"]
+[node name="ButtonBindShift1" type="Button" parent="VBoxContainer/GridContainer" unique_id=2014758403]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="ButtonBindShift2" type="Button" parent="VBoxContainer/GridContainer"]
+[node name="ButtonBindShift2" type="Button" parent="VBoxContainer/GridContainer" unique_id=1687323943]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="Label8" parent="VBoxContainer/GridContainer" instance=ExtResource("4_tnu4l")]
+[node name="Label8" parent="VBoxContainer/GridContainer" unique_id=397483495 instance=ExtResource("4_tnu4l")]
 layout_mode = 2
 min_width = 50
 text = "Play"
-enabled = true
-hint_text = ""
 
-[node name="ButtonBindPlay1" type="Button" parent="VBoxContainer/GridContainer"]
+[node name="ButtonBindPlay1" type="Button" parent="VBoxContainer/GridContainer" unique_id=1270490461]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="ButtonBindPlay2" type="Button" parent="VBoxContainer/GridContainer"]
+[node name="ButtonBindPlay2" type="Button" parent="VBoxContainer/GridContainer" unique_id=1283469687]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="HSeparator3" type="HSeparator" parent="VBoxContainer"]
+[node name="HSeparator3" type="HSeparator" parent="VBoxContainer" unique_id=1140975226]
 layout_mode = 2
 
-[node name="ButtonResetBinds" parent="VBoxContainer" instance=ExtResource("5_tnu4l")]
+[node name="ButtonResetBinds" parent="VBoxContainer" unique_id=718798729 instance=ExtResource("5_tnu4l")]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_tnu4l")
 theme_override_styles/panel = SubResource("StyleBoxFlat_tnu4l")
 text = "RESET TO DEFAULT"
 
-[node name="LabelHeader2" parent="VBoxContainer" instance=ExtResource("1_aqk45")]
+[node name="LabelHeader2" parent="VBoxContainer" unique_id=1457641679 instance=ExtResource("1_aqk45")]
 layout_mode = 2
-theme_type_variation = &""
 text = "Virtual Keyboard"
-enabled = true
-hint_text = ""
 
-[node name="Setting_VirtualKeyboard" parent="VBoxContainer" instance=ExtResource("3_1p8ay")]
+[node name="Setting_VirtualKeyboard" parent="VBoxContainer" unique_id=1368951242 instance=ExtResource("3_1p8ay")]
 unique_name_in_owner = true
 layout_mode = 2
 setting_name = "Enable Virtual Keyboard"
 
-[node name="LabelHeader3" parent="VBoxContainer" instance=ExtResource("1_aqk45")]
+[node name="LabelHeader3" parent="VBoxContainer" unique_id=425160019 instance=ExtResource("1_aqk45")]
 layout_mode = 2
-theme_type_variation = &""
 text = "Preset Hotkeys"
-enabled = true
-hint_text = ""
 
-[node name="ProfileHotkeysContainer" type="VBoxContainer" parent="VBoxContainer"]
+[node name="ProfileHotkeysContainer" type="VBoxContainer" parent="VBoxContainer" unique_id=773204582]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 4
 
-[node name="ProfileHotkeyTemplate" type="HBoxContainer" parent="VBoxContainer/ProfileHotkeysContainer"]
+[node name="ProfileHotkeyTemplate" type="HBoxContainer" parent="VBoxContainer/ProfileHotkeysContainer" unique_id=1052986003]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Label" type="Label" parent="VBoxContainer/ProfileHotkeysContainer/ProfileHotkeyTemplate"]
+[node name="Label" type="Label" parent="VBoxContainer/ProfileHotkeysContainer/ProfileHotkeyTemplate" unique_id=1951641125]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 text = "placeholder"
 horizontal_alignment = 2
 
-[node name="ButtonBind" type="Button" parent="VBoxContainer/ProfileHotkeysContainer/ProfileHotkeyTemplate"]
+[node name="ButtonBind" type="Button" parent="VBoxContainer/ProfileHotkeysContainer/ProfileHotkeyTemplate" unique_id=1911270534]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="ButtonClear" type="Button" parent="VBoxContainer/ProfileHotkeysContainer/ProfileHotkeyTemplate"]
+[node name="ButtonClear" type="Button" parent="VBoxContainer/ProfileHotkeysContainer/ProfileHotkeyTemplate" unique_id=1279996144]
 layout_mode = 2
 text = "Clear"
 
-[node name="LabelHeader4" parent="VBoxContainer" instance=ExtResource("1_aqk45")]
+[node name="LabelHeader4" parent="VBoxContainer" unique_id=979252762 instance=ExtResource("1_aqk45")]
 layout_mode = 2
-theme_type_variation = &""
 text = "Overlay Hotkeys"
-enabled = true
-hint_text = ""
 
-[node name="OverlayHotkeyWaveform" type="HBoxContainer" parent="VBoxContainer"]
+[node name="OverlayHotkeyWaveform" type="HBoxContainer" parent="VBoxContainer" unique_id=1376208520]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Label" type="Label" parent="VBoxContainer/OverlayHotkeyWaveform"]
+[node name="Label" type="Label" parent="VBoxContainer/OverlayHotkeyWaveform" unique_id=1625074017]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 text = "Toggle Audio Waveform"
 horizontal_alignment = 2
 
-[node name="ButtonBind" type="Button" parent="VBoxContainer/OverlayHotkeyWaveform"]
+[node name="ButtonBind" type="Button" parent="VBoxContainer/OverlayHotkeyWaveform" unique_id=1610774996]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="ButtonClear" type="Button" parent="VBoxContainer/OverlayHotkeyWaveform"]
+[node name="ButtonClear" type="Button" parent="VBoxContainer/OverlayHotkeyWaveform" unique_id=86621359]
 layout_mode = 2
 text = "Clear"
 
-[node name="OverlayHotkeySpectrum" type="HBoxContainer" parent="VBoxContainer"]
+[node name="OverlayHotkeySpectrum" type="HBoxContainer" parent="VBoxContainer" unique_id=1290896039]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Label" type="Label" parent="VBoxContainer/OverlayHotkeySpectrum"]
+[node name="Label" type="Label" parent="VBoxContainer/OverlayHotkeySpectrum" unique_id=1385698752]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 text = "Toggle Audio Spectrum"
 horizontal_alignment = 2
 
-[node name="ButtonBind" type="Button" parent="VBoxContainer/OverlayHotkeySpectrum"]
+[node name="ButtonBind" type="Button" parent="VBoxContainer/OverlayHotkeySpectrum" unique_id=1499080612]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="ButtonClear" type="Button" parent="VBoxContainer/OverlayHotkeySpectrum"]
+[node name="ButtonClear" type="Button" parent="VBoxContainer/OverlayHotkeySpectrum" unique_id=1569454409]
 layout_mode = 2
 text = "Clear"
 
-[node name="OverlayHotkeyDisplay" type="HBoxContainer" parent="VBoxContainer"]
+[node name="OverlayHotkeyDisplay" type="HBoxContainer" parent="VBoxContainer" unique_id=1896669100]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Label" type="Label" parent="VBoxContainer/OverlayHotkeyDisplay"]
+[node name="Label" type="Label" parent="VBoxContainer/OverlayHotkeyDisplay" unique_id=926028885]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 text = "Toggle Screen Display"
 horizontal_alignment = 2
 
-[node name="ButtonBind" type="Button" parent="VBoxContainer/OverlayHotkeyDisplay"]
+[node name="ButtonBind" type="Button" parent="VBoxContainer/OverlayHotkeyDisplay" unique_id=914909430]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="ButtonClear" type="Button" parent="VBoxContainer/OverlayHotkeyDisplay"]
+[node name="ButtonClear" type="Button" parent="VBoxContainer/OverlayHotkeyDisplay" unique_id=968081113]
 layout_mode = 2
 text = "Clear"
 
-[node name="OverlayHotkeyKey" type="HBoxContainer" parent="VBoxContainer"]
+[node name="OverlayHotkeyKey" type="HBoxContainer" parent="VBoxContainer" unique_id=1845381203]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Label" type="Label" parent="VBoxContainer/OverlayHotkeyKey"]
+[node name="Label" type="Label" parent="VBoxContainer/OverlayHotkeyKey" unique_id=584333390]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 text = "Toggle Key Overlay"
 horizontal_alignment = 2
 
-[node name="ButtonBind" type="Button" parent="VBoxContainer/OverlayHotkeyKey"]
+[node name="ButtonBind" type="Button" parent="VBoxContainer/OverlayHotkeyKey" unique_id=1796641287]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "----"
 text_overrun_behavior = 4
 
-[node name="ButtonClear" type="Button" parent="VBoxContainer/OverlayHotkeyKey"]
+[node name="ButtonClear" type="Button" parent="VBoxContainer/OverlayHotkeyKey" unique_id=202911985]
 layout_mode = 2
 text = "Clear"

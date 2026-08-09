@@ -1,4 +1,4 @@
-[gd_resource type="StandardMaterial3D" load_steps=3 format=3 uid="uid://d2oyaa5lu3per"]
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://d2oyaa5lu3per"]
 
 [sub_resource type="Gradient" id="Gradient_bj3gf"]
 interpolation_color_space = 1

@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://s6vp0d8hhbfi"]
+[gd_scene format=3 uid="uid://s6vp0d8hhbfi"]
 
 [ext_resource type="Script" uid="uid://lcml4h8f48u0" path="res://main_rust.gd" id="1_fu1b4"]
 [ext_resource type="PackedScene" uid="uid://263mog4cxgwr" path="res://overlays/overlay_audio_spectrum.tscn" id="2_jftoq"]
@@ -16,7 +16,7 @@ draw_center = false
 border_width_top = 4
 border_color = Color(1, 1, 1, 1)
 
-[node name="CenterContainer" type="CenterContainer"]
+[node name="CenterContainer" type="CenterContainer" unique_id=415959531]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -24,77 +24,77 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_fu1b4")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1068571041]
 layout_mode = 2
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="HBoxContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="HBoxContainer" unique_id=825903704]
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="Osc1" type="Control" parent="HBoxContainer/VBoxContainer2"]
+[node name="Osc1" type="Control" parent="HBoxContainer/VBoxContainer2" unique_id=631439280]
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("2_t20vq")
 
-[node name="Osc2" type="Control" parent="HBoxContainer/VBoxContainer2"]
+[node name="Osc2" type="Control" parent="HBoxContainer/VBoxContainer2" unique_id=1779785975]
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("2_t20vq")
 
-[node name="Osc3" type="Control" parent="HBoxContainer/VBoxContainer2"]
+[node name="Osc3" type="Control" parent="HBoxContainer/VBoxContainer2" unique_id=1815819042]
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("2_t20vq")
 
-[node name="Osc4" type="Control" parent="HBoxContainer/VBoxContainer2"]
+[node name="Osc4" type="Control" parent="HBoxContainer/VBoxContainer2" unique_id=113100389]
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("2_t20vq")
 
-[node name="Osc5" type="Control" parent="HBoxContainer/VBoxContainer2"]
+[node name="Osc5" type="Control" parent="HBoxContainer/VBoxContainer2" unique_id=1083622798]
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("2_t20vq")
 
-[node name="Osc6" type="Control" parent="HBoxContainer/VBoxContainer2"]
+[node name="Osc6" type="Control" parent="HBoxContainer/VBoxContainer2" unique_id=537365863]
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("2_t20vq")
 
-[node name="Osc7" type="Control" parent="HBoxContainer/VBoxContainer2"]
+[node name="Osc7" type="Control" parent="HBoxContainer/VBoxContainer2" unique_id=1147759543]
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("2_t20vq")
 
-[node name="Osc8" type="Control" parent="HBoxContainer/VBoxContainer2"]
+[node name="Osc8" type="Control" parent="HBoxContainer/VBoxContainer2" unique_id=878366286]
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("2_t20vq")
 
-[node name="Osc9" type="Control" parent="HBoxContainer/VBoxContainer2"]
+[node name="Osc9" type="Control" parent="HBoxContainer/VBoxContainer2" unique_id=2106539705]
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("2_t20vq")
 
-[node name="Osc10" type="Control" parent="HBoxContainer/VBoxContainer2"]
+[node name="Osc10" type="Control" parent="HBoxContainer/VBoxContainer2" unique_id=644955222]
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("2_t20vq")
 
-[node name="Osc11" type="Control" parent="HBoxContainer/VBoxContainer2"]
+[node name="Osc11" type="Control" parent="HBoxContainer/VBoxContainer2" unique_id=1099173421]
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("2_t20vq")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer" unique_id=1290963460]
 layout_mode = 2
 
-[node name="LabelFPS" type="Label" parent="HBoxContainer/VBoxContainer"]
+[node name="LabelFPS" type="Label" parent="HBoxContainer/VBoxContainer" unique_id=965116183]
 unique_name_in_owner = true
 layout_mode = 2
 text = "FPS"
 
-[node name="AudioSpectrum" parent="HBoxContainer/VBoxContainer" instance=ExtResource("2_jftoq")]
+[node name="AudioSpectrum" parent="HBoxContainer/VBoxContainer" unique_id=454016291 instance=ExtResource("2_jftoq")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
@@ -106,11 +106,11 @@ style_peak_to_alpha_amount = 0.0
 style_bar_gap = 0
 style_bar_width = 2
 
-[node name="ColorRect" type="ColorRect" parent="HBoxContainer/VBoxContainer"]
+[node name="ColorRect" type="ColorRect" parent="HBoxContainer/VBoxContainer" unique_id=1683714731]
 custom_minimum_size = Vector2(960, 720)
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="HBoxContainer/VBoxContainer/ColorRect"]
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer/VBoxContainer/ColorRect" unique_id=348701000]
 unique_name_in_owner = true
 texture_filter = 1
 layout_mode = 1
@@ -120,7 +120,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="RectPeakL" type="ProgressBar" parent="HBoxContainer"]
+[node name="RectPeakL" type="ProgressBar" parent="HBoxContainer" unique_id=4674841]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(8, 0)
 layout_mode = 2
@@ -131,7 +131,7 @@ step = 0.0
 fill_mode = 3
 show_percentage = false
 
-[node name="RectPeakL2" type="ProgressBar" parent="HBoxContainer/RectPeakL"]
+[node name="RectPeakL2" type="ProgressBar" parent="HBoxContainer/RectPeakL" unique_id=391500426]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -146,7 +146,7 @@ step = 0.0
 fill_mode = 3
 show_percentage = false
 
-[node name="RectPeakR" type="ProgressBar" parent="HBoxContainer"]
+[node name="RectPeakR" type="ProgressBar" parent="HBoxContainer" unique_id=500432000]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(8, 0)
 layout_mode = 2
@@ -157,7 +157,7 @@ step = 0.0
 fill_mode = 3
 show_percentage = false
 
-[node name="RectPeakR2" type="ProgressBar" parent="HBoxContainer/RectPeakR"]
+[node name="RectPeakR2" type="ProgressBar" parent="HBoxContainer/RectPeakR" unique_id=1920390962]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15

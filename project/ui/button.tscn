@@ -1,61 +1,61 @@
-[gd_scene load_steps=8 format=3 uid="uid://jvyexp7mquoa"]
+[gd_scene format=3 uid="uid://jvyexp7mquoa"]
 
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_5mpwy"]
 [ext_resource type="Script" uid="uid://bs6bys170f1r0" path="res://ui/button.gd" id="1_6n1bi"]
 [ext_resource type="PackedScene" uid="uid://b1wsbkovx87xh" path="res://ui/label.tscn" id="3_fxfmk"]
 [ext_resource type="StyleBox" uid="uid://c21o4cguy3ohp" path="res://ui/theme/stylebox_focus.tres" id="4_gcioa"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uan0n"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gcioa"]
 content_margin_left = 2.0
 content_margin_top = 2.0
 content_margin_right = 2.0
 content_margin_bottom = 2.0
 bg_color = Color(0.12549, 0.156863, 0.188235, 1)
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_uan0n"]
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_p172q"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_b44ym"]
-
-[node name="Button" type="PanelContainer"]
+[node name="Button" type="PanelContainer" unique_id=1739753408]
 texture_filter = 1
 offset_right = 4.0
 offset_bottom = 4.0
 size_flags_vertical = 0
 focus_mode = 2
 theme = ExtResource("1_5mpwy")
-theme_override_styles/panel = SubResource("StyleBoxFlat_uan0n")
+theme_override_styles/panel = SubResource("StyleBoxFlat_gcioa")
 script = ExtResource("1_6n1bi")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1317917399]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 0
 
-[node name="Label" parent="HBoxContainer" instance=ExtResource("3_fxfmk")]
+[node name="Label" parent="HBoxContainer" unique_id=149517189 instance=ExtResource("3_fxfmk")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_horizontal = 6
 size_flags_vertical = 4
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_p172q")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_uan0n")
 no_padding = true
 color_override = Color(1, 1, 1, 1)
 
-[node name="LabelRight" parent="HBoxContainer" instance=ExtResource("3_fxfmk")]
+[node name="LabelRight" parent="HBoxContainer" unique_id=1037945616 instance=ExtResource("3_fxfmk")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 4
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_b44ym")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_p172q")
 no_padding = true
 color_override = null
 horizontal_alignment = 2
 
-[node name="PanelFocus" type="Panel" parent="."]
+[node name="PanelFocus" type="Panel" parent="." unique_id=1609485864]
 unique_name_in_owner = true
 visible = false
 z_index = 1

@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://t27ffaww12ff"]
+[gd_scene format=3 uid="uid://t27ffaww12ff"]
 
 [ext_resource type="Script" uid="uid://b4r3awfaamn14" path="res://ui/menus/menu_debug.gd" id="1_6rsfl"]
 [ext_resource type="PackedScene" uid="uid://dsgvm3dda1kjp" path="res://ui/header.tscn" id="1_imf32"]
@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bgsxagi62acni" path="res://ui/settings/setting_options.tscn" id="2_6rsfl"]
 [ext_resource type="PackedScene" uid="uid://dh6y5qxmki43x" path="res://ui/settings/setting_file.tscn" id="3_ly8fq"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jnpuj"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s7j2u"]
 content_margin_left = 0.0
 content_margin_top = 0.0
 content_margin_right = 0.0
@@ -29,6 +29,8 @@ anti_aliasing = false
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4w3sk"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jnpuj"]
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_p3em5"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bkfnt"]
@@ -37,226 +39,212 @@ anti_aliasing = false
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_veehm"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_o0ylh"]
-
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wlgng"]
 
-[node name="Debug" type="PanelContainer"]
+[node name="Debug" type="PanelContainer" unique_id=654516587]
 texture_filter = 1
-offset_right = 329.0
-offset_bottom = 389.0
+offset_right = 300.0
+offset_bottom = 333.0
 theme = ExtResource("1_s7j2u")
-theme_override_styles/panel = SubResource("StyleBoxFlat_jnpuj")
+theme_override_styles/panel = SubResource("StyleBoxFlat_s7j2u")
 script = ExtResource("1_6rsfl")
 metadata/_tab_index = 7
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=332044178]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 
-[node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer" unique_id=1752882795]
 layout_mode = 2
 columns = 3
 
-[node name="Label" type="Label" parent="VBoxContainer/GridContainer"]
+[node name="Label" type="Label" parent="VBoxContainer/GridContainer" unique_id=434991596]
 layout_mode = 2
 text = "Debug Info"
 
-[node name="VSeparator" type="VSeparator" parent="VBoxContainer/GridContainer"]
+[node name="VSeparator" type="VSeparator" parent="VBoxContainer/GridContainer" unique_id=1230335426]
 layout_mode = 2
 theme_override_constants/separation = 1
 theme_override_styles/separator = SubResource("StyleBoxEmpty_4w3sk")
 
-[node name="CheckButtonDebug" type="CheckButton" parent="VBoxContainer/GridContainer"]
+[node name="CheckButtonDebug" type="CheckButton" parent="VBoxContainer/GridContainer" unique_id=1767289671]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="LabelHeader" parent="VBoxContainer" instance=ExtResource("1_imf32")]
+[node name="LabelHeader" parent="VBoxContainer" unique_id=1137162787 instance=ExtResource("1_imf32")]
 layout_mode = 2
-theme_type_variation = &""
 text = "M8 Fonts"
 
-[node name="Font01Normal" type="HBoxContainer" parent="VBoxContainer"]
+[node name="Font01Normal" type="HBoxContainer" parent="VBoxContainer" unique_id=57325545]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="SettingOptions" parent="VBoxContainer/Font01Normal" instance=ExtResource("2_6rsfl")]
+[node name="SettingOptions" parent="VBoxContainer/Font01Normal" unique_id=1040313409 instance=ExtResource("2_6rsfl")]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_p3em5")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_jnpuj")
 items = PackedStringArray("M:01 Normal Font", "M:01 Big Font", "M:02 Normal Font", "M:02 Bold Font", "M:02 Huge Font", "Custom")
 value = 0
 setting_name = "M:01 Normal Font"
 setting_name_min_width = 120
 
-[node name="SettingFile" parent="VBoxContainer/Font01Normal" instance=ExtResource("3_ly8fq")]
-texture_filter = 1
+[node name="SettingFile" parent="VBoxContainer/Font01Normal" unique_id=945259629 instance=ExtResource("3_ly8fq")]
 layout_mode = 2
-theme_type_variation = &""
 empty_text = "Load Font Spritesheet..."
 filters = "*.bmp; Font Bitmap"
 setting_name_min_width = 75
 
-[node name="Font01Big" type="HBoxContainer" parent="VBoxContainer"]
+[node name="Font01Big" type="HBoxContainer" parent="VBoxContainer" unique_id=908211320]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="SettingOptions" parent="VBoxContainer/Font01Big" instance=ExtResource("2_6rsfl")]
+[node name="SettingOptions" parent="VBoxContainer/Font01Big" unique_id=1497588037 instance=ExtResource("2_6rsfl")]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_bkfnt")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_p3em5")
 items = PackedStringArray("M:01 Normal Font", "M:01 Big Font", "M:02 Normal Font", "M:02 Bold Font", "M:02 Huge Font", "Custom")
 value = 1
 setting_name = "M:01 Big Font"
 setting_name_min_width = 120
 
-[node name="SettingFile" parent="VBoxContainer/Font01Big" instance=ExtResource("3_ly8fq")]
-texture_filter = 1
+[node name="SettingFile" parent="VBoxContainer/Font01Big" unique_id=1579768588 instance=ExtResource("3_ly8fq")]
 layout_mode = 2
-theme_type_variation = &""
 empty_text = "Load Font Spritesheet..."
 filters = "*.bmp; Font Bitmap"
 setting_name_min_width = 75
 
-[node name="Font02Normal" type="HBoxContainer" parent="VBoxContainer"]
+[node name="Font02Normal" type="HBoxContainer" parent="VBoxContainer" unique_id=972705400]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="SettingOptions" parent="VBoxContainer/Font02Normal" instance=ExtResource("2_6rsfl")]
+[node name="SettingOptions" parent="VBoxContainer/Font02Normal" unique_id=1876792980 instance=ExtResource("2_6rsfl")]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_h8bu0")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_bkfnt")
 items = PackedStringArray("M:01 Normal Font", "M:01 Big Font", "M:02 Normal Font", "M:02 Bold Font", "M:02 Huge Font", "Custom")
 value = 2
 setting_name = "M:02 Normal Font"
 setting_name_min_width = 120
 
-[node name="SettingFile" parent="VBoxContainer/Font02Normal" instance=ExtResource("3_ly8fq")]
-texture_filter = 1
+[node name="SettingFile" parent="VBoxContainer/Font02Normal" unique_id=1622262956 instance=ExtResource("3_ly8fq")]
 layout_mode = 2
-theme_type_variation = &""
 empty_text = "Load Font Spritesheet..."
 filters = "*.bmp; Font Bitmap"
 setting_name_min_width = 75
 
-[node name="Font02Bold" type="HBoxContainer" parent="VBoxContainer"]
+[node name="Font02Bold" type="HBoxContainer" parent="VBoxContainer" unique_id=308684184]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="SettingOptions" parent="VBoxContainer/Font02Bold" instance=ExtResource("2_6rsfl")]
+[node name="SettingOptions" parent="VBoxContainer/Font02Bold" unique_id=1464726964 instance=ExtResource("2_6rsfl")]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_veehm")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_h8bu0")
 items = PackedStringArray("M:01 Normal Font", "M:01 Big Font", "M:02 Normal Font", "M:02 Bold Font", "M:02 Huge Font", "Custom")
 value = 3
 setting_name = "M:02 Bold Font"
 setting_name_min_width = 120
 
-[node name="SettingFile" parent="VBoxContainer/Font02Bold" instance=ExtResource("3_ly8fq")]
-texture_filter = 1
+[node name="SettingFile" parent="VBoxContainer/Font02Bold" unique_id=254785148 instance=ExtResource("3_ly8fq")]
 layout_mode = 2
-theme_type_variation = &""
 empty_text = "Load Font Spritesheet..."
 filters = "*.bmp; Font Bitmap"
 setting_name_min_width = 75
 
-[node name="Font02Huge" type="HBoxContainer" parent="VBoxContainer"]
+[node name="Font02Huge" type="HBoxContainer" parent="VBoxContainer" unique_id=111714383]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="SettingOptions" parent="VBoxContainer/Font02Huge" instance=ExtResource("2_6rsfl")]
+[node name="SettingOptions" parent="VBoxContainer/Font02Huge" unique_id=1541072560 instance=ExtResource("2_6rsfl")]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_o0ylh")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_veehm")
 items = PackedStringArray("M:01 Normal Font", "M:01 Big Font", "M:02 Normal Font", "M:02 Bold Font", "M:02 Huge Font", "Custom")
 value = 4
 setting_name = "M:02 Huge Font"
 setting_name_min_width = 120
 
-[node name="SettingFile" parent="VBoxContainer/Font02Huge" instance=ExtResource("3_ly8fq")]
-texture_filter = 1
+[node name="SettingFile" parent="VBoxContainer/Font02Huge" unique_id=1582336845 instance=ExtResource("3_ly8fq")]
 layout_mode = 2
-theme_type_variation = &""
 empty_text = "Load Font Spritesheet..."
 filters = "*.bmp; Font Bitmap"
 setting_name_min_width = 75
 
-[node name="LabelHeader2" parent="VBoxContainer" instance=ExtResource("1_imf32")]
+[node name="LabelHeader2" parent="VBoxContainer" unique_id=1808529711 instance=ExtResource("1_imf32")]
 layout_mode = 2
-theme_type_variation = &""
 text = "M8 Remote Commands"
 
-[node name="ButtonM8Reset" type="Button" parent="VBoxContainer"]
+[node name="ButtonM8Reset" type="Button" parent="VBoxContainer" unique_id=346518459]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Send Reset Display Command"
 
-[node name="HSeparator5" type="HSeparator" parent="VBoxContainer"]
+[node name="HSeparator5" type="HSeparator" parent="VBoxContainer" unique_id=125122104]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_wlgng")
 
-[node name="ButtonM8Enable" type="Button" parent="VBoxContainer"]
+[node name="ButtonM8Enable" type="Button" parent="VBoxContainer" unique_id=886442811]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Send Enable Display Command"
 
-[node name="HSeparator4" type="HSeparator" parent="VBoxContainer"]
+[node name="HSeparator4" type="HSeparator" parent="VBoxContainer" unique_id=948510731]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_wlgng")
 
-[node name="ButtonM8Disable" type="Button" parent="VBoxContainer"]
+[node name="ButtonM8Disable" type="Button" parent="VBoxContainer" unique_id=412184141]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Send Disable Display Command"
 
-[node name="HSeparator6" type="HSeparator" parent="VBoxContainer"]
+[node name="HSeparator6" type="HSeparator" parent="VBoxContainer" unique_id=422783421]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_wlgng")
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer" unique_id=965086464]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer3"]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer3" unique_id=876843261]
 layout_mode = 2
 text = "Note"
 
-[node name="SpinBoxM8Note" type="SpinBox" parent="VBoxContainer/HBoxContainer3"]
+[node name="SpinBoxM8Note" type="SpinBox" parent="VBoxContainer/HBoxContainer3" unique_id=1080203584]
 unique_name_in_owner = true
 layout_mode = 2
 max_value = 255.0
 
-[node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer3"]
+[node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer3" unique_id=1406282562]
 layout_mode = 2
 text = "Velocity
 "
 
-[node name="SpinBoxM8Vel" type="SpinBox" parent="VBoxContainer/HBoxContainer3"]
+[node name="SpinBoxM8Vel" type="SpinBox" parent="VBoxContainer/HBoxContainer3" unique_id=1050661590]
 unique_name_in_owner = true
 layout_mode = 2
 max_value = 255.0
 
-[node name="ButtonM8KeyJazz" type="Button" parent="VBoxContainer/HBoxContainer3"]
+[node name="ButtonM8KeyJazz" type="Button" parent="VBoxContainer/HBoxContainer3" unique_id=1385305914]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Send Keyjazz Command"
 
-[node name="HSeparator7" type="HSeparator" parent="VBoxContainer"]
+[node name="HSeparator7" type="HSeparator" parent="VBoxContainer" unique_id=1240816549]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_wlgng")
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer4" type="HBoxContainer" parent="VBoxContainer" unique_id=1275946265]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer4"]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer4" unique_id=1851626530]
 layout_mode = 2
 text = "Keys"
 
-[node name="SpinBoxM8Keys" type="SpinBox" parent="VBoxContainer/HBoxContainer4"]
+[node name="SpinBoxM8Keys" type="SpinBox" parent="VBoxContainer/HBoxContainer4" unique_id=774299299]
 unique_name_in_owner = true
 layout_mode = 2
 max_value = 255.0
 
-[node name="LabelM8KeysBinary" type="LineEdit" parent="VBoxContainer/HBoxContainer4"]
+[node name="LabelM8KeysBinary" type="LineEdit" parent="VBoxContainer/HBoxContainer4" unique_id=975812360]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(70, 0)
 layout_mode = 2
@@ -264,128 +252,128 @@ text = "00000000"
 alignment = 1
 editable = false
 
-[node name="ButtonM8Control" type="Button" parent="VBoxContainer/HBoxContainer4"]
+[node name="ButtonM8Control" type="Button" parent="VBoxContainer/HBoxContainer4" unique_id=2051678868]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Send Control Command"
 
-[node name="HSeparator2" type="HSeparator" parent="VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer" unique_id=1928553658]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_wlgng")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=713255873]
 layout_mode = 2
 
-[node name="ColorM8T0" type="ColorPickerButton" parent="VBoxContainer/HBoxContainer"]
+[node name="ColorM8T0" type="ColorPickerButton" parent="VBoxContainer/HBoxContainer" unique_id=599387018]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ColorM8T1" type="ColorPickerButton" parent="VBoxContainer/HBoxContainer"]
+[node name="ColorM8T1" type="ColorPickerButton" parent="VBoxContainer/HBoxContainer" unique_id=1596829495]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 3
 color = Color(0.12549, 0.156863, 0.188235, 1)
 
-[node name="ColorM8T2" type="ColorPickerButton" parent="VBoxContainer/HBoxContainer"]
+[node name="ColorM8T2" type="ColorPickerButton" parent="VBoxContainer/HBoxContainer" unique_id=1466991044]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 3
 color = Color(0.282353, 0.313726, 0.376471, 1)
 
-[node name="ColorM8T3" type="ColorPickerButton" parent="VBoxContainer/HBoxContainer"]
+[node name="ColorM8T3" type="ColorPickerButton" parent="VBoxContainer/HBoxContainer" unique_id=1901912698]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 3
 color = Color(0.564706, 0.690196, 0.721569, 1)
 
-[node name="ColorM8T4" type="ColorPickerButton" parent="VBoxContainer/HBoxContainer"]
+[node name="ColorM8T4" type="ColorPickerButton" parent="VBoxContainer/HBoxContainer" unique_id=1699917161]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 3
 color = Color(1, 1, 1, 1)
 
-[node name="ColorM8T5" type="ColorPickerButton" parent="VBoxContainer/HBoxContainer"]
+[node name="ColorM8T5" type="ColorPickerButton" parent="VBoxContainer/HBoxContainer" unique_id=1954729925]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 3
 color = Color(1, 0.12549, 0.25098, 1)
 
-[node name="ColorM8T6" type="ColorPickerButton" parent="VBoxContainer/HBoxContainer"]
+[node name="ColorM8T6" type="ColorPickerButton" parent="VBoxContainer/HBoxContainer" unique_id=147254944]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 3
 color = Color(0, 1, 0.376471, 1)
 
-[node name="ColorM8T7" type="ColorPickerButton" parent="VBoxContainer/HBoxContainer"]
+[node name="ColorM8T7" type="ColorPickerButton" parent="VBoxContainer/HBoxContainer" unique_id=1806888600]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 3
 color = Color(0, 1, 1, 1)
 
-[node name="ColorM8T8" type="ColorPickerButton" parent="VBoxContainer/HBoxContainer"]
+[node name="ColorM8T8" type="ColorPickerButton" parent="VBoxContainer/HBoxContainer" unique_id=1529495437]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 3
 color = Color(0, 1, 0.501961, 1)
 
-[node name="ColorM8T9" type="ColorPickerButton" parent="VBoxContainer/HBoxContainer"]
+[node name="ColorM8T9" type="ColorPickerButton" parent="VBoxContainer/HBoxContainer" unique_id=1201106640]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 3
 color = Color(0.564706, 0.721569, 0.721569, 1)
 
-[node name="ColorM8T10" type="ColorPickerButton" parent="VBoxContainer/HBoxContainer"]
+[node name="ColorM8T10" type="ColorPickerButton" parent="VBoxContainer/HBoxContainer" unique_id=1726115823]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 3
 color = Color(0, 1, 0.878431, 1)
 
-[node name="ColorM8T11" type="ColorPickerButton" parent="VBoxContainer/HBoxContainer"]
+[node name="ColorM8T11" type="ColorPickerButton" parent="VBoxContainer/HBoxContainer" unique_id=1125588684]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 3
 color = Color(1, 1, 0.313726, 1)
 
-[node name="ColorM8T12" type="ColorPickerButton" parent="VBoxContainer/HBoxContainer"]
+[node name="ColorM8T12" type="ColorPickerButton" parent="VBoxContainer/HBoxContainer" unique_id=1618615817]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 3
 color = Color(1, 0, 0.501961, 1)
 
-[node name="HSeparator3" type="HSeparator" parent="VBoxContainer"]
+[node name="HSeparator3" type="HSeparator" parent="VBoxContainer" unique_id=125610901]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_wlgng")
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=27590716]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2"]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer2" unique_id=1016100635]
 layout_mode = 2
 text = "Delay"
 
-[node name="SpinBoxM8ThemeDelay" type="SpinBox" parent="VBoxContainer/HBoxContainer2"]
+[node name="SpinBoxM8ThemeDelay" type="SpinBox" parent="VBoxContainer/HBoxContainer2" unique_id=52999113]
 unique_name_in_owner = true
 layout_mode = 2
 max_value = 10.0
 value = 2.0
 suffix = "f"
 
-[node name="LabelM8ThemeDelayMS" type="LineEdit" parent="VBoxContainer/HBoxContainer2"]
+[node name="LabelM8ThemeDelayMS" type="LineEdit" parent="VBoxContainer/HBoxContainer2" unique_id=1900519968]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
@@ -393,7 +381,7 @@ text = "33.3ms"
 alignment = 1
 editable = false
 
-[node name="ButtonM8Theme" type="Button" parent="VBoxContainer/HBoxContainer2"]
+[node name="ButtonM8Theme" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=1888280940]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3

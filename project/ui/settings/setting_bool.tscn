@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://c5kj1uj0ohnmm"]
+[gd_scene format=3 uid="uid://c5kj1uj0ohnmm"]
 
 [ext_resource type="Script" uid="uid://r5juyuukwrew" path="res://ui/settings/setting_bool.gd" id="1_0smb8"]
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_b6avg"]
@@ -18,9 +18,9 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_skb08"]
 
-[node name="SettingBool" type="PanelContainer"]
+[node name="SettingBool" type="PanelContainer" unique_id=1206916531]
 texture_filter = 1
-offset_right = 204.0
+offset_right = 202.0
 offset_bottom = 7.0
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -28,11 +28,11 @@ theme = ExtResource("1_b6avg")
 script = ExtResource("1_0smb8")
 setting_name = "test"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=884196299]
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="LabelName" parent="HBoxContainer" instance=ExtResource("3_ejw1u")]
+[node name="LabelName" parent="HBoxContainer" unique_id=1469870212 instance=ExtResource("3_ejw1u")]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(160, 0)
 layout_mode = 2
@@ -41,24 +41,24 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_ejw1u")
 no_padding = true
 text = "test"
 
-[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer" unique_id=1785608183]
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 4
 theme_type_variation = &"SettingControl"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/PanelContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/PanelContainer" unique_id=500454265]
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_constants/separation = 4
 
-[node name="LabelValue" parent="HBoxContainer/PanelContainer/HBoxContainer" instance=ExtResource("3_ejw1u")]
+[node name="LabelValue" parent="HBoxContainer/PanelContainer/HBoxContainer" unique_id=1590567450 instance=ExtResource("3_ejw1u")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Off"
 color_override = 4
 
-[node name="CheckButton" type="CheckButton" parent="HBoxContainer/PanelContainer/HBoxContainer"]
+[node name="CheckButton" type="CheckButton" parent="HBoxContainer/PanelContainer/HBoxContainer" unique_id=1667284885]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4

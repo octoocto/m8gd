@@ -1,4 +1,4 @@
-[gd_resource type="StandardMaterial3D" load_steps=5 format=3 uid="uid://fw3dc6yci24n"]
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://fw3dc6yci24n"]
 
 [ext_resource type="Texture2D" uid="uid://dx1tsgvprh32b" path="res://assets/ambientcg/wood026/Wood026_2K-PNG_Color.png" id="1_pvm8u"]
 [ext_resource type="Texture2D" uid="uid://dvja6xjn0kmb7" path="res://assets/ambientcg/wood026/Wood026_2K-PNG_Displacement.png" id="2_vovhs"]

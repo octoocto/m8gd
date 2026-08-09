@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://disepgw6epns6"]
+[gd_scene format=3 uid="uid://disepgw6epns6"]
 
 [ext_resource type="PackedScene" uid="uid://dsgvm3dda1kjp" path="res://ui/header.tscn" id="1_2ypbp"]
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="1_ipe3s"]
@@ -60,13 +60,13 @@ expand_margin_bottom = 2.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dl2ue"]
 
-[node name="Scene" type="PanelContainer"]
+[node name="Scene" type="PanelContainer" unique_id=208588960]
 texture_filter = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -12.5
-offset_right = -1048.5
+offset_left = -29.5
+offset_right = -1031.5
 offset_bottom = -817.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -75,23 +75,23 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_dpltf")
 script = ExtResource("1_uybnw")
 metadata/_tab_index = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1844228153]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="LabelCurrentScene" parent="VBoxContainer" instance=ExtResource("3_gt4ph")]
+[node name="LabelCurrentScene" parent="VBoxContainer" unique_id=802422301 instance=ExtResource("3_gt4ph")]
 unique_name_in_owner = true
 layout_mode = 2
 text_left = "Current Scene"
 align_right_text_to_right = true
 
-[node name="Option_LoadScene" parent="VBoxContainer" instance=ExtResource("4_gt4ph")]
+[node name="Option_LoadScene" parent="VBoxContainer" unique_id=970514784 instance=ExtResource("4_gt4ph")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_ef7k1")
 
-[node name="Option_LoadScene2" type="OptionButton" parent="VBoxContainer"]
+[node name="Option_LoadScene2" type="OptionButton" parent="VBoxContainer" unique_id=1660183925]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
@@ -103,7 +103,7 @@ popup/item_0/text = "Change Scene..."
 popup/item_0/icon = ExtResource("4_ef7k1")
 popup/item_0/id = 0
 
-[node name="ButtonOpenSceneConfig" parent="VBoxContainer" instance=ExtResource("6_dpltf")]
+[node name="ButtonOpenSceneConfig" parent="VBoxContainer" unique_id=354309068 instance=ExtResource("6_dpltf")]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_et8l8")
@@ -111,23 +111,22 @@ text = "Configure scene"
 text_right = "..."
 inline = true
 
-[node name="LabelHeader" parent="VBoxContainer" instance=ExtResource("1_2ypbp")]
+[node name="LabelHeader" parent="VBoxContainer" unique_id=1419806063 instance=ExtResource("1_2ypbp")]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_type_variation = &""
 text = "Camera"
 
-[node name="Setting_MouseCamera" parent="VBoxContainer" instance=ExtResource("2_uybnw")]
+[node name="Setting_MouseCamera" parent="VBoxContainer" unique_id=1039602538 instance=ExtResource("2_uybnw")]
 unique_name_in_owner = true
 layout_mode = 2
 setting_name = "Mouse Pan & Zoom Control"
 
-[node name="Setting_HumanCamera" parent="VBoxContainer" instance=ExtResource("2_uybnw")]
+[node name="Setting_HumanCamera" parent="VBoxContainer" unique_id=418734635 instance=ExtResource("2_uybnw")]
 unique_name_in_owner = true
 layout_mode = 2
 setting_name = "Humanize Camera Movements"
 
-[node name="Setting_HumanCameraStrength" parent="VBoxContainer" instance=ExtResource("3_sgkbc")]
+[node name="Setting_HumanCameraStrength" parent="VBoxContainer" unique_id=46894028 instance=ExtResource("3_sgkbc")]
 unique_name_in_owner = true
 modulate = Color(0.25, 0.25, 0.25, 1)
 layout_mode = 2
@@ -140,7 +139,7 @@ setting_name = "Noise Strength"
 setting_name_indent = 32
 enabled = false
 
-[node name="Setting_HumanCameraFrequency" parent="VBoxContainer" instance=ExtResource("3_sgkbc")]
+[node name="Setting_HumanCameraFrequency" parent="VBoxContainer" unique_id=1789715495 instance=ExtResource("3_sgkbc")]
 unique_name_in_owner = true
 modulate = Color(0.25, 0.25, 0.25, 1)
 layout_mode = 2
@@ -153,7 +152,7 @@ setting_name = "Noise Frequency"
 setting_name_indent = 32
 enabled = false
 
-[node name="ButtonOpenCameraConfig" parent="VBoxContainer" instance=ExtResource("6_dpltf")]
+[node name="ButtonOpenCameraConfig" parent="VBoxContainer" unique_id=2003447626 instance=ExtResource("6_dpltf")]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_01kw3")
@@ -161,16 +160,15 @@ text = "Configure camera"
 text_right = "..."
 inline = true
 
-[node name="LabelHeader2" parent="VBoxContainer" instance=ExtResource("1_2ypbp")]
+[node name="LabelHeader2" parent="VBoxContainer" unique_id=246755017 instance=ExtResource("1_2ypbp")]
 layout_mode = 2
-theme_type_variation = &""
 text = "3D Model"
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer" unique_id=1285962086]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Setting_ModelType" parent="VBoxContainer/VBoxContainer2" instance=ExtResource("5_gms2o")]
+[node name="Setting_ModelType" parent="VBoxContainer/VBoxContainer2" unique_id=1288321805 instance=ExtResource("5_gms2o")]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_h84ix")
@@ -178,7 +176,7 @@ items = PackedStringArray("Auto", "M8 Model:01", "M8 Model:02")
 value = 0
 setting_name = "Device Model"
 
-[node name="Setting_ModelHighlightOpacity" parent="VBoxContainer/VBoxContainer2" instance=ExtResource("3_sgkbc")]
+[node name="Setting_ModelHighlightOpacity" parent="VBoxContainer/VBoxContainer2" unique_id=77673838 instance=ExtResource("3_sgkbc")]
 unique_name_in_owner = true
 layout_mode = 2
 setting_value_min_width = 32
@@ -188,7 +186,7 @@ as_percent = true
 format_string = "%d%%"
 setting_name = "Highlight Opacity"
 
-[node name="Setting_ModelScreenFilter" parent="VBoxContainer/VBoxContainer2" instance=ExtResource("5_gms2o")]
+[node name="Setting_ModelScreenFilter" parent="VBoxContainer/VBoxContainer2" unique_id=869521125 instance=ExtResource("5_gms2o")]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_dl2ue")
@@ -196,7 +194,7 @@ items = PackedStringArray("Nearest", "Linear")
 value = 0
 setting_name = "Screen Filter"
 
-[node name="Setting_ModelScreenEmission" parent="VBoxContainer/VBoxContainer2" instance=ExtResource("3_sgkbc")]
+[node name="Setting_ModelScreenEmission" parent="VBoxContainer/VBoxContainer2" unique_id=377610387 instance=ExtResource("3_sgkbc")]
 unique_name_in_owner = true
 layout_mode = 2
 setting_value_min_width = 32

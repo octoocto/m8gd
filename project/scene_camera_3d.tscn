@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://bckroenwlecqv"]
+[gd_scene format=3 uid="uid://bckroenwlecqv"]
 
 [ext_resource type="Script" uid="uid://cki43uor5p6oe" path="res://scene_camera_3d.gd" id="1_idfgn"]
 
@@ -12,10 +12,10 @@ dof_blur_near_distance = 12.5
 dof_blur_near_transition = 2.25
 dof_blur_amount = 0.18
 
-[node name="Camera3D" type="Node3D"]
+[node name="Camera3D" type="Node3D" unique_id=965130005]
 script = ExtResource("1_idfgn")
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="Camera3D" type="Camera3D" parent="." unique_id=828345110]
 unique_name_in_owner = true
 attributes = SubResource("CameraAttributesPractical_wopxj")
 current = true

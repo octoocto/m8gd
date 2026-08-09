@@ -15,9 +15,13 @@ dest_files=["res://.godot/imported/scene.gltf-1c5603917938f1e11041ec6a17213767.s
 
 nodes/root_type=""
 nodes/root_name=""
+nodes/root_script=null
+mesh_library/use_node_names_as_mesh_names=false
+array_mesh/deduplicate_surfaces=true
 nodes/apply_root_scale=true
 nodes/root_scale=1.0
 nodes/import_as_skeleton_bones=false
+nodes/use_name_suffixes=true
 nodes/use_node_type_suffixes=true
 meshes/ensure_tangents=true
 meshes/generate_lods=true
@@ -32,35 +36,45 @@ animation/trimming=false
 animation/remove_immutable_tracks=true
 animation/import_rest_as_RESET=false
 import_script/path=""
+materials/extract=0
+materials/extract_format=0
+materials/extract_path=""
 _subresources={
 "materials": {
 "green-eda": {
 "use_external/enabled": true,
-"use_external/path": "res://assets/succulent_plants/green-eda.tres"
+"use_external/fallback_path": "res://assets/succulent_plants/green-eda.tres",
+"use_external/path": "uid://cvxgd6fhsw2a5"
 },
 "green_dram_kuki": {
 "use_external/enabled": true,
-"use_external/path": "res://assets/succulent_plants/green_dram_kuki.tres"
+"use_external/fallback_path": "res://assets/succulent_plants/green_dram_kuki.tres",
+"use_external/path": "uid://nqslr6d6ha2f"
 },
 "material": {
 "use_external/enabled": true,
-"use_external/path": "res://assets/succulent_plants/material.tres"
+"use_external/fallback_path": "res://assets/succulent_plants/material.tres",
+"use_external/path": "uid://phjkra7mlyxk"
 },
 "syna": {
 "use_external/enabled": true,
-"use_external/path": "res://assets/succulent_plants/syna.tres"
+"use_external/fallback_path": "res://assets/succulent_plants/syna.tres",
+"use_external/path": "uid://d2oyaa5lu3per"
 },
 "taniku01-tex": {
 "use_external/enabled": true,
-"use_external/path": "res://assets/succulent_plants/taniku01-tex.tres"
+"use_external/fallback_path": "res://assets/succulent_plants/taniku01-tex.tres",
+"use_external/path": "uid://veb2g6vptu67"
 },
 "taniku01-tex.005": {
 "use_external/enabled": true,
-"use_external/path": "res://assets/succulent_plants/taniku01-tex.005.tres"
+"use_external/fallback_path": "res://assets/succulent_plants/taniku01-tex.005.tres",
+"use_external/path": "uid://1dv2wtsflstw"
 },
 "taniku01-tex.007": {
 "use_external/enabled": true,
-"use_external/path": "res://assets/succulent_plants/taniku01-tex.007.tres"
+"use_external/fallback_path": "res://assets/succulent_plants/taniku01-tex.007.tres",
+"use_external/path": "uid://dkdc34hs8mjw5"
 }
 },
 "nodes": {
@@ -125,3 +139,4 @@ _subresources={
 }
 gltf/naming_version=1
 gltf/embedded_image_handling=1
+gltf/texture_map_mode=0

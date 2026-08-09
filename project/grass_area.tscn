@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://ceqlf8kgdxjeb"]
+[gd_scene format=3 uid="uid://ceqlf8kgdxjeb"]
 
 [ext_resource type="Shader" uid="uid://dgk5yk5qsu2d8" path="res://grass_area.gdshader" id="1_hbdoa"]
 [ext_resource type="Script" uid="uid://cmoiixyatv1mq" path="res://grass_area.gd" id="2_xcclk"]
@@ -30,9 +30,9 @@ noise_type = 3
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_fge5u"]
 resource_local_to_scene = true
 width = 1
-seamless = true
-color_ramp = SubResource("Gradient_ch8sw")
 noise = SubResource("FastNoiseLite_vibqe")
+color_ramp = SubResource("Gradient_ch8sw")
+seamless = true
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_p5pab"]
 resource_local_to_scene = true
@@ -84,18 +84,18 @@ radial_segments = 4
 cap_top = false
 cap_bottom = false
 
-[node name="GrassArea" type="MultiMeshInstance3D"]
+[node name="GrassArea" type="MultiMeshInstance3D" unique_id=1765012983]
 material_override = SubResource("ShaderMaterial_p5pab")
 multimesh = SubResource("MultiMesh_esiro")
 script = ExtResource("2_xcclk")
 grass_mesh = SubResource("RibbonTrailMesh_qnamn")
 
-[node name="surface_mesh" type="MeshInstance3D" parent="."]
+[node name="surface_mesh" type="MeshInstance3D" parent="." unique_id=124154030]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0)
 visible = false
 mesh = SubResource("PlaneMesh_77b43")
 
-[node name="grass_blade_mesh" type="MeshInstance3D" parent="."]
+[node name="grass_blade_mesh" type="MeshInstance3D" parent="." unique_id=13196492]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
 visible = false
 mesh = SubResource("CylinderMesh_nvivv")
