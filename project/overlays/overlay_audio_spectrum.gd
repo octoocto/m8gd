@@ -2,8 +2,15 @@
 class_name OverlayAudioSpectrum
 extends OverlayBase
 
-enum Type { PIXEL, BAR, LINE }
-enum ColorStyle { SCOPE, METER }
+enum Type {
+	PIXEL,
+	BAR,
+	LINE,
+}
+enum ColorStyle {
+	SCOPE,
+	METER,
+}
 
 @export var type: Type = Type.BAR
 
@@ -34,6 +41,8 @@ var last_peaks := []
 
 
 func _overlay_init() -> void:
+	self.custom_minimum_size = Vector2(16, 16)
+
 	last_peaks.resize(int(size.x * style_rows))
 	last_peaks.fill(0.0)
 
@@ -70,7 +79,6 @@ func _draw() -> void:
 		var freq := analyzer_freq_min + i * d
 		# var db_from := i * d
 		# var db_to := (i + 1) * d
-
 		if i >= last_peaks.size():
 			last_peaks.resize(int(res))
 			last_peaks.fill(0.0)
@@ -105,9 +113,9 @@ func _draw() -> void:
 	if style_mirror:
 		var mirrored := magnitudes.duplicate()
 		mirrored.reverse()
-		if magnitudes.size() % 2 == 0:  # even elements
+		if magnitudes.size() % 2 == 0: # even elements
 			magnitudes.append_array(mirrored)
-		else:  # odd elements
+		else: # odd elements
 			magnitudes.append_array(mirrored.slice(1))
 
 	var row_spacing: float = floor(size.y / float(style_rows))
@@ -131,7 +139,8 @@ func _draw() -> void:
 
 		var offset := (
 			Vector2(
-				floorf(i / size.x) * int(-size.x), floorf(i / size.x) * row_spacing + row_spacing
+				floorf(i / size.x) * int(-size.x),
+				floorf(i / size.x) * row_spacing + row_spacing,
 			)
 			+ Vector2(position_offset)
 		)
@@ -207,8 +216,8 @@ func _draw() -> void:
 
 
 func logrange(a: float, b: float, step: float) -> Array:
-	var pow_a := log(a) / log(10)  # convert to 10^a form
-	var pow_b := log(b) / log(10)  # convert to 10^b form
+	var pow_a := log(a) / log(10) # convert to 10^a form
+	var pow_b := log(b) / log(10) # convert to 10^b form
 	var d := (pow_b - pow_a) / float(step)
 
 	var logspace := []
