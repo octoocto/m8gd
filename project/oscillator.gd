@@ -36,17 +36,18 @@ func _physics_process(_delta: float) -> void:
 	if not visible or not is_instance_valid(self.m8c):
 		return
 
+	self.custom_minimum_size = Vector2(self.width, self.height)
+
 	self.buffer = self.m8c.get_audio_track_buffer(self.track_index)
-	custom_minimum_size = Vector2(self.width, self.height)
-	if self.buffer.size() >= self.width:
-		queue_redraw()
+	self.buffer.resize(int(self.size.x))
+	queue_redraw()
 
 
 func _draw() -> void:
 	if self.buffer.size() == 0:
 		return
 
-	for i in range(self.width):
+	for i in len(self.buffer):
 		var pos := Vector2(
 			i,
 			clampf((self.buffer[i] * -self.height_multiplier + 0.5) * self.size.y, 0, self.size.y),

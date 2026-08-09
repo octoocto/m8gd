@@ -15,6 +15,8 @@ extends OverlayBase
 @export var delay_fx_enabled := false
 @export var reverb_fx_enabled := false
 
+var vp: SubViewport
+var vp_container: SubViewportContainer
 var vbox: VBoxContainer
 
 # FIXME: oscillators not scaling properly when overlays are integer scaled
@@ -26,11 +28,27 @@ func _overlay_init() -> void:
 
 
 func _overlay_update() -> void:
+	if is_instance_valid(self.vp):
+		self.vp.queue_free()
+	if is_instance_valid(self.vp_container):
+		self.vp_container.queue_free()
 	if is_instance_valid(self.vbox):
 		self.vbox.queue_free()
+
+	self.vp_container = SubViewportContainer.new()
+	self.vp_container.size = self.size
+	self.vp_container.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	add_child(self.vp_container)
+
+	self.vp = SubViewport.new()
+	self.vp.size = self.size
+	self.vp.transparent_bg = true
+	self.vp_container.add_child(self.vp)
+
 	self.vbox = VBoxContainer.new()
+	self.vbox.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
 	self.vbox.add_theme_constant_override("separation", 6)
-	add_child(self.vbox)
+	self.vp.add_child(self.vbox)
 
 	if self.mix_enabled:
 		_add_osc(0)
