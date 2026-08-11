@@ -266,7 +266,8 @@ impl GodotM8Client {
             godot_warn!("Invalid key value: {}", key);
             return false;
         };
-        self.keystate.is_pressed(&key)
+        let pressed = self.keystate.is_pressed(&key);
+        pressed
     }
 
     /// Returns the current key state as a bitfield integer.
@@ -907,13 +908,19 @@ impl GodotM8Client {
 
     fn on_key_pressed(&mut self, keystate: crate::KeyState) {
         if keystate != self.keystate {
+            // println!("on_key_pressed: {keystate}");
+            let old_keystate = self.keystate.clone();
+            self.keystate = keystate;
             for key in crate::Key::ALL_KEYS {
-                let pressed = keystate.is_pressed(key);
-                if pressed != self.keystate.is_pressed(key) {
+                let pressed = self.keystate.is_pressed(key);
+                // println!("is_key_pressed({key:?}) = {pressed}");
+                if pressed != old_keystate.is_pressed(key) {
+                    // println!(
+                    //     "on_key_pressed: emitting signal {{ key={key:?}, pressed={pressed} }}"
+                    // );
                     self.signals().key_pressed().emit(key.to_byte(), pressed);
                 }
             }
-            self.keystate = keystate;
         }
     }
 

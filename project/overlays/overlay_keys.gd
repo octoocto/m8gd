@@ -35,33 +35,19 @@ func _overlay_init() -> void:
 	visibility_changed.connect(
 		func() -> void:
 			if not visible:
-				clear()
+				clear(),
 	)
 	Events.device_key_pressed.connect(
 		func(key: int, pressed: bool) -> void:
 			if not pressed:
 				return
 
-			if is_instance_valid(current_item):
-				if main.m8c.get_key_state() == current_keystate:
-					inc_current_item()
-					return
-				elif key in [LibM8.KEY_UP, LibM8.KEY_DOWN, LibM8.KEY_LEFT, LibM8.KEY_RIGHT]:
-					if (
-						main.m8_is_key_pressed(LibM8.KEY_SHIFT)
-						and current_item.pressed_times == 1
-						and current_item.keys_pressed == 1
-					):
-						update_current_item()
-						return
-
-			# add a new item
-			add_item()
+			self._on_key_pressed(key),
 	)
 	Events.config_preset_value_changed.connect(
 		func(_profile_name: String, section: String, _property: String, _value: Variant) -> void:
 			if section == main.config.SECTION_COLORS:
-				_overlay_update()
+				_overlay_update(),
 	)
 	_overlay_update()
 
@@ -73,6 +59,25 @@ func _process(delta: float) -> void:
 	(%ItemSample1 as OverlayKeysItem).visible = _draw_bounds
 	(%ItemSample2 as OverlayKeysItem).visible = _draw_bounds
 	(%ItemSample3 as OverlayKeysItem).visible = _draw_bounds
+
+
+func _on_key_pressed(key: int) -> void:
+	# print("keycast: pressed key = %s" % key)
+	if is_instance_valid(self.current_item):
+		if main.m8c.get_key_state() == current_keystate:
+			# print("keycast: add multiplier to current item")
+			inc_current_item()
+			return
+		elif key in [LibM8.KEY_UP, LibM8.KEY_DOWN, LibM8.KEY_LEFT, LibM8.KEY_RIGHT]:
+			if (
+				main.m8_is_key_pressed(LibM8.KEY_SHIFT) and self.current_item.pressed_times == 1
+				and self.current_item.keys_pressed == 1
+			):
+				update_current_item()
+				return
+
+	# add a new item
+	add_item()
 
 
 ##
@@ -89,6 +94,8 @@ func clear() -> void:
 ## Add a new item to the key overlay list. Sets the current item to the added item.
 ##
 func add_item() -> void:
+	# print("keycast: adding new item")
+
 	# fade out the last item
 	if is_instance_valid(current_item):
 		var last_item := current_item
@@ -100,6 +107,7 @@ func add_item() -> void:
 					last_item.queue_free()
 
 		var fade_tween := create_tween()
+		fade_tween.bind_node(current_item)
 		fade_tween.tween_method(fade_callback, 0.5, 0.0, 5.0)
 
 	current_item = KEY_ITEM.instantiate()
@@ -123,7 +131,7 @@ func _restart_fade_tween() -> void:
 	current_fade_tween.tween_callback(
 		func() -> void:
 			if is_instance_valid(current_item):
-				current_item.queue_free()
+				current_item.queue_free(),
 	)
 
 
@@ -134,6 +142,7 @@ func update_current_item() -> void:
 	if not is_inside_tree() or not is_instance_valid(current_item):
 		return
 
+	# print("keycast: updating current item")
 	current_keystate = main.m8c.get_key_state()
 	update_item(current_item)
 	current_item.pressed_u = main.m8_is_key_pressed(LibM8.KEY_UP)

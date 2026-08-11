@@ -4,6 +4,7 @@ pub mod font;
 use core::default::Default;
 use enum_map::Enum;
 pub use font::*;
+use std::fmt;
 
 pub const M8_VID: u16 = 0x16C0;
 pub const M8_PID_STEREO: u16 = 0x048A;
@@ -209,7 +210,16 @@ impl Key {
     ];
 
     pub fn to_byte(&self) -> u8 {
-        *self as u8
+        match self {
+            Key::Up => 1 << 6,
+            Key::Down => 1 << 5,
+            Key::Left => 1 << 7,
+            Key::Right => 1 << 2,
+            Key::Shift => 1 << 4,
+            Key::Play => 1 << 3,
+            Key::Option => 1 << 1,
+            Key::Edit => 1 << 0,
+        }
     }
 
     pub fn from_byte(byte: u8) -> Option<Key> {
@@ -285,6 +295,23 @@ impl KeyState {
         } else {
             self.bitfield &= !key.to_byte();
         }
+    }
+}
+
+impl fmt::Display for KeyState {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "UP={}, DOWN={}, LEFT={}, RIGHT={}, OPTION={}, EDIT={}, SHIFT={}, PLAY={}",
+            self.is_pressed(&Key::Up),
+            self.is_pressed(&Key::Down),
+            self.is_pressed(&Key::Left),
+            self.is_pressed(&Key::Right),
+            self.is_pressed(&Key::Option),
+            self.is_pressed(&Key::Edit),
+            self.is_pressed(&Key::Shift),
+            self.is_pressed(&Key::Play)
+        )
     }
 }
 
