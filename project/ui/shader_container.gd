@@ -52,13 +52,15 @@ func get_shader_parameter(shader_rect: ShaderRect, shader_parameter: String) -> 
 		(
 			"shader parameter does not exist in %s: %s"
 			% [shader_mat.shader.resource_path, shader_parameter]
-		)
+		),
 	)
 	return shader_mat.get_shader_parameter(shader_parameter)
 
 
 func set_shader_parameter(
-	shader_rect: ShaderRect, shader_parameter: String, value: Variant
+	shader_rect: ShaderRect,
+	shader_parameter: String,
+	value: Variant,
 ) -> void:
 	var shader_mat: ShaderMaterial = shader_rect.shader_material
 	assert(
@@ -66,7 +68,7 @@ func set_shader_parameter(
 		(
 			"shader parameter does not exist in %s: %s"
 			% [shader_mat.shader.resource_path, shader_parameter]
-		)
+		),
 	)
 	shader_mat.set_shader_parameter(shader_parameter, value)
 

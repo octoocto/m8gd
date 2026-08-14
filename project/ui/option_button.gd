@@ -7,11 +7,11 @@ signal item_selected(index: int)
 signal item_focused(index: int)
 
 var item_count: int:
-	get():
+	get ():
 		return option_button.item_count
 
 var selected: int:
-	get():
+	get ():
 		return option_button.selected
 	set(value):
 		option_button.selected = value

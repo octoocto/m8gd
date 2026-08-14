@@ -111,7 +111,10 @@ func init(p_main: Main) -> void:
 func init_menu(menu: SceneConfigMenu) -> void:
 	menu.add_section("Surface")
 	var setting_surface_mode := menu.add_option_custom(
-		"surface_mode", 0, ["Wood", "Stone", "M8 Display", "Custom"], set_surface_mode
+		"surface_mode",
+		0,
+		["Wood", "Stone", "M8 Display", "Custom"],
+		set_surface_mode,
 	)
 
 	var setting_surface_tex := menu.add_file_custom(
@@ -123,10 +126,14 @@ func init_menu(menu: SceneConfigMenu) -> void:
 				var material := StandardMaterial3D.new()
 				material.albedo_texture = texture
 				surface_material_custom = material
-				load_custom_texture()
+				load_custom_texture(),
 	)
 
-	setting_surface_tex.show_if(setting_surface_mode, func(value: int) -> bool: return value == 3)
+	setting_surface_tex.show_if(
+		setting_surface_mode,
+		func(value: int) -> bool:
+			return value == 3,
+	)
 
 	menu.add_auto("surface_color")
 
@@ -167,18 +174,18 @@ func set_surface_mode(index: int) -> void:
 	print("Setting surface mode to ", index)
 	var material := StandardMaterial3D.new()
 	match index:
-		0:  # wood
+		0: # wood
 			material = load("res://assets/ambientcg/wood051.tres")
 			material.albedo_color = surface_color
-		1:  # stone
+		1: # stone
 			material = load("res://assets/ambientcg/asphalt010.tres")
 			material.albedo_color = surface_color
-		2:  # display
+		2: # display
 			material.albedo_texture = main.m8c.get_display_texture()
 			material.albedo_color = surface_color
 			material.uv1_triplanar = true
 			material.uv1_scale = Vector3(0.125, 0.125, 0.125)
-		3:  # custom
+		3: # custom
 			material = load_custom_texture()
 	surface_mesh.material_override = material
 

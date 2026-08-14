@@ -26,16 +26,22 @@ extends MenuBase
 
 
 func _on_menu_init() -> void:
-	button_exit.pressed.connect(func() -> void: main.quit())
+	button_exit.pressed.connect(
+		func() -> void:
+			main.quit(),
+	)
 	button_close.pressed.connect(main.main_menu_show)
 
 	Events.gui_mouse_entered.connect(
 		func(ui_element: UIBase) -> void:
 			if ui_element.hint_text != "":
-				label_tooltip.text = ui_element.hint_text
+				label_tooltip.text = ui_element.hint_text,
 	)
 
-	Events.gui_mouse_exited.connect(func(_ui_element: UIBase) -> void: label_tooltip.text = "")
+	Events.gui_mouse_exited.connect(
+		func(_ui_element: UIBase) -> void:
+			label_tooltip.text = "",
+	)
 
 
 func _on_changed() -> void:

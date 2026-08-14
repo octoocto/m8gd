@@ -21,7 +21,14 @@ const FONT_02_BOLD: BitMap = preload("res://assets/m8_fonts/10_10.bmp")
 const FONT_02_HUGE: BitMap = preload("res://assets/m8_fonts/12_12.bmp")
 
 const M8_ACTIONS := [
-	"key_up", "key_down", "key_left", "key_right", "key_shift", "key_play", "key_option", "key_edit"
+	"key_up",
+	"key_down",
+	"key_left",
+	"key_right",
+	"key_shift",
+	"key_play",
+	"key_option",
+	"key_edit",
 ]
 
 const M8_KEYS: Array[int] = [
@@ -32,7 +39,7 @@ const M8_KEYS: Array[int] = [
 	LibM8.KEY_SHIFT,
 	LibM8.KEY_PLAY,
 	LibM8.KEY_OPTION,
-	LibM8.KEY_EDIT
+	LibM8.KEY_EDIT,
 ]
 
 static var instance: Main = null
@@ -79,10 +86,10 @@ var m8_virtual_keyboard_velocity := 127
 
 var device_manager := DeviceManager.new()
 
-var audio_peak := 0.0  # audio peak (in dB)
+var audio_peak := 0.0 # audio peak (in dB)
 var audio_peak_max := 0.0
-var audio_level_raw := 0.0  # audio peak (in linear from 0.0 to 1.0)
-var audio_level := 0.0  # audio peak (in linear from 0.0 to 1.0)
+var audio_level_raw := 0.0 # audio peak (in linear from 0.0 to 1.0)
+var audio_level := 0.0 # audio peak (in linear from 0.0 to 1.0)
 var last_peak := 0.0
 var last_peak_max := 0.0
 var last_audio_level := 0.0
@@ -118,7 +125,7 @@ func _ready() -> void:
 			m8c.disconnected.connect(on_m8_device_disconnect)
 			m8c.theme_colors_updated.connect(on_m8_theme_changed)
 			m8c.key_pressed.connect(Events.device_key_pressed.emit),
-		"init devices"
+		"init devices",
 	)
 
 	get_window().size_changed.connect(Events.window_modified.emit)
@@ -130,7 +137,6 @@ func _ready() -> void:
 	# )
 	# %ButtonSplashClose.pressed.connect(func() -> void: %SplashContainer.visible = false)
 	# %SplashContainer.visible = config.splash_show
-
 	instance = self
 	Log.call_task(Events.preinitialized.emit.bind(self), "emit preinitialized signal")
 	Log.call_task(Events.initialized.emit.bind(self), "emit initialized signal")
@@ -163,10 +169,11 @@ func _physics_process(delta: float) -> void:
 	# %BGShader.material.set_shader_parameter("brightness", 1.0 + (audio_level * visualizer_brightness_amount))
 
 	# fade out status message
-
 	if label_status.modulate.a > 0:
 		label_status.modulate.a = lerp(
-			label_status.modulate.a, label_status.modulate.a - delta * 2.0, 0.2
+			label_status.modulate.a,
+			label_status.modulate.a - delta * 2.0,
+			0.2,
 		)
 
 
@@ -329,7 +336,7 @@ func load_scene(scene_path: String) -> bool:
 			print("load_scene(): scene loaded!")
 
 			return true,
-		'load scene "%s"' % scene_path
+		'load scene "%s"' % scene_path,
 	)
 
 
@@ -417,7 +424,6 @@ func get_scene_m8_model() -> DeviceModel:
 		return current_scene.get_device_model()
 	else:
 		return null
-
 
 # M8 client methods
 ################################################################################
@@ -571,7 +577,6 @@ func update_audio_analyzer() -> void:
 	# 	audio_level_raw = 0.0
 	# audio_level = max(audio_level_raw, lerp(audio_level_raw, last_audio_level, 0.95))
 	# last_audio_level = audio_level
-
 	var peak := db_to_linear((audio_get_peak_volume().x + audio_get_peak_volume().y) / 2.0)
 	audio_level = lerp(audio_level, peak, 0.2)
 	audio_level = max(audio_level, peak)
@@ -634,7 +639,8 @@ func display_get_auto_scale() -> float:
 
 		# guess scale based on DPI
 		var screen_min: int = min(
-			DisplayServer.screen_get_size(screen).x, DisplayServer.screen_get_size(screen).y
+			DisplayServer.screen_get_size(screen).x,
+			DisplayServer.screen_get_size(screen).y,
 		)
 		if screen_dpi >= 192 and screen_min >= 1400:
 			return 2.0
@@ -679,10 +685,8 @@ func _handle_input_keys(event: InputEvent) -> bool:
 
 func _handle_input_hotkeys_presets(event: InputEvent) -> bool:
 	if (
-		is_any_menu_open()
-		or (event is not InputEventKey and event is not InputEventJoypadButton)
-		or !event.is_pressed()
-		or event.is_echo()
+		is_any_menu_open() or (event is not InputEventKey and event is not InputEventJoypadButton)
+		or !event.is_pressed() or event.is_echo()
 	):
 		return false
 
@@ -697,10 +701,8 @@ func _handle_input_hotkeys_presets(event: InputEvent) -> bool:
 
 func _handle_input_hotkeys_overlays(event: InputEvent) -> bool:
 	if (
-		is_any_menu_open()
-		or (event is not InputEventKey and event is not InputEventJoypadButton)
-		or !event.is_pressed()
-		or event.is_echo()
+		is_any_menu_open() or (event is not InputEventKey and event is not InputEventJoypadButton)
+		or !event.is_pressed() or event.is_echo()
 	):
 		return false
 

@@ -30,7 +30,8 @@ enum Type {
 @export var type := Type.TYPE_C:
 	set(value):
 		type = value
-		if not is_inside_tree(): return
+		if not is_inside_tree():
+			return
 		for node in plant_nodes:
 			node.visible = false
 		plant_nodes[type].visible = true

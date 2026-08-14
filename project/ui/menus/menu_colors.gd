@@ -34,16 +34,20 @@ func _on_menu_init() -> void:
 		var key_name: String = arr[2]
 
 		setting.setting_connect_colors(
-			conf_property, func(value: Color) -> void: _model_set_keycap_color(key_name, value)
+			conf_property,
+			func(value: Color) -> void:
+				_model_set_keycap_color(key_name, value),
 		)
 
 	for arr: Array in s_highlights:
 		var setting: SettingColor = arr[0]
 		var conf_property: String = arr[1]
 
-		if arr.size() == 2:  # directional color
+		if arr.size() == 2: # directional color
 			setting.setting_connect_colors(
-				conf_property, func(value: Color) -> void: _model_set_dir_key_highlight_color(value)
+				conf_property,
+				func(value: Color) -> void:
+					_model_set_dir_key_highlight_color(value),
 			)
 			continue
 
@@ -51,7 +55,8 @@ func _on_menu_init() -> void:
 
 		setting.setting_connect_colors(
 			conf_property,
-			func(value: Color) -> void: _model_set_key_highlight_color(key_name, value)
+			func(value: Color) -> void:
+				_model_set_key_highlight_color(key_name, value),
 		)
 
 	for arr: Array in s_body:
@@ -60,25 +65,27 @@ func _on_menu_init() -> void:
 		var part_name: String = arr[2]
 
 		setting.setting_connect_colors(
-			conf_property, func(value: Color) -> void: _model_set_part_color(part_name, value)
+			conf_property,
+			func(value: Color) -> void:
+				_model_set_part_color(part_name, value),
 		)
 
 	for setting: SettingColor in all_settings:
 		setting.get_color_picker().preset_added.connect(
 			func(color: Color) -> void:
 				for s: SettingColor in all_settings:
-					s.get_color_picker().add_preset(color)
+					s.get_color_picker().add_preset(color),
 		)
 		setting.get_color_picker().preset_removed.connect(
 			func(color: Color) -> void:
 				for s: SettingColor in all_settings:
-					s.get_color_picker().erase_preset(color)
+					s.get_color_picker().erase_preset(color),
 		)
 
 	Events.preset_loaded.connect(
 		func(_profile_name: String) -> void:
 			for setting: SettingColor in all_settings:
-				setting.reload()
+				setting.reload(),
 	)
 
 	Events.scene_loaded.connect(
@@ -87,7 +94,7 @@ func _on_menu_init() -> void:
 			for arr: Array in s_keycaps:
 				arr[0].enabled = is_3d_scene
 			for arr: Array in s_body:
-				arr[0].enabled = is_3d_scene
+				arr[0].enabled = is_3d_scene,
 	)
 
 

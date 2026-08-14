@@ -53,8 +53,9 @@ func _initialize_m8c() -> void:
 	if serial_ports.size() == 0:
 		return
 
-	m8c.background_color_changed.connect(func(color: Color) -> void:
-		RenderingServer.set_default_clear_color(color)
+	m8c.background_color_changed.connect(
+		func(color: Color) -> void:
+			RenderingServer.set_default_clear_color(color),
 	)
 
 	m8c.connect_with_serial(serial_ports[0], true)
@@ -69,7 +70,7 @@ func _initialize_m8c() -> void:
 		func(colors: PackedColorArray) -> void:
 			print("received theme colors:")
 			for color in colors:
-				print("%s" % color.to_html(false).to_upper())
+				print("%s" % color.to_html(false).to_upper()),
 	)
 	print("connected to serial port: %s" % serial_ports[0])
 	audio_spectrum.m8c = m8c
@@ -88,7 +89,7 @@ func _initialize_m8c() -> void:
 	texture_rect.visibility_changed.connect(
 		func(visible: bool) -> void:
 			if is_instance_valid(m8c):
-				m8c.set_display_enabled(visible)
+				m8c.set_display_enabled(visible),
 	)
 
 

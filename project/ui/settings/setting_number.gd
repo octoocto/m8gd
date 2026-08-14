@@ -63,7 +63,10 @@ var format_fn: Callable
 
 
 func _on_ready() -> void:
-	slider.value_changed.connect(func(p_value: float) -> void: value = p_value)
+	slider.value_changed.connect(
+		func(p_value: float) -> void:
+			value = p_value,
+	)
 	line_edit.gui_input.connect(
 		func(event: InputEvent) -> void:
 			if event is InputEventMouseButton:
@@ -76,14 +79,14 @@ func _on_ready() -> void:
 						line_edit.text = "%d" % slider.value
 					else:
 						line_edit.text = "%.2f" % slider.value
-					line_edit.select_all()
+					line_edit.select_all(),
 	)
 
 	line_edit.text_submitted.connect(
 		func(text: String) -> void:
 			line_edit.deselect()
 			line_edit.release_focus()
-			_set_value_from_text(text)
+			_set_value_from_text(text),
 	)
 
 	_connect_mouse_events(slider)
@@ -159,7 +162,6 @@ func _on_changed() -> void:
 
 	label.custom_minimum_size.x = setting_name_min_width
 	# %HBoxContainer.set("theme_override_constants/separation", setting_name_indent)
-
 	_update_text()
 	line_edit.custom_minimum_size.x = setting_value_min_width
 

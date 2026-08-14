@@ -54,10 +54,12 @@ func _on_ready() -> void:
 	spin_box_y.get_line_edit().theme_type_variation = "SettingControlVec2LineEdit"
 
 	spin_box_x.value_changed.connect(
-		func(p_value: float) -> void: value = Vector2(p_value, value.y)
+		func(p_value: float) -> void:
+			value = Vector2(p_value, value.y),
 	)
 	spin_box_y.value_changed.connect(
-		func(p_value: float) -> void: value = Vector2(value.x, p_value)
+		func(p_value: float) -> void:
+			value = Vector2(value.x, p_value),
 	)
 	spin_box_x.get_line_edit().focus_exited.connect(_update_format)
 	spin_box_y.get_line_edit().focus_exited.connect(_update_format)
@@ -124,7 +126,7 @@ func setting_connect_camera_2(property_x: String, property_y: String) -> void:
 				var default_y: Variant = camera.get(property_y)
 				return Vector2(
 					main.config.get_value_scene(scene, property_x, default_x) as float,
-					main.config.get_value_scene(scene, property_y, default_y) as float
+					main.config.get_value_scene(scene, property_y, default_y) as float,
 				)
 			else:
 				return null,
@@ -135,5 +137,5 @@ func setting_connect_camera_2(property_x: String, property_y: String) -> void:
 				main.get_scene_camera().set(property_x, p_value.x)
 				main.get_scene_camera().set(property_y, p_value.y)
 				main.config.set_value_scene(scene, property_x, p_value.x)
-				main.config.set_value_scene(scene, property_y, p_value.y)
+				main.config.set_value_scene(scene, property_y, p_value.y),
 	)

@@ -22,10 +22,19 @@ extends SettingBase
 
 
 func _on_ready() -> void:
-	button_left.pressed.connect(func() -> void: value -= 1)
-	button_right.pressed.connect(func() -> void: value += 1)
+	button_left.pressed.connect(
+		func() -> void:
+			value -= 1,
+	)
+	button_right.pressed.connect(
+		func() -> void:
+			value += 1,
+	)
 
-	option_button.item_selected.connect(func(p_value: int) -> void: value = p_value)
+	option_button.item_selected.connect(
+		func(p_value: int) -> void:
+			value = p_value,
+	)
 	option_button.get_popup().canvas_item_default_texture_filter = (
 		Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_NEAREST
 	)
@@ -52,7 +61,7 @@ func _on_changed() -> void:
 	option_button.visible = false
 
 	match setting_type:
-		0:  # arrows
+		0: # arrows
 			button_left.visible = true
 			button_left.disabled = !enabled or value <= 0
 
@@ -61,7 +70,7 @@ func _on_changed() -> void:
 
 			label_value.visible = true
 			label_value.text = _format_text(items[value]) if items.size() > 0 else ""
-		1:  # dropdown
+		1: # dropdown
 			option_button.visible = true
 			if items.size():
 				option_button.clear()

@@ -24,7 +24,10 @@ func _ready() -> void:
 	if self.main:
 		Log.call_task(_overlay_init, "init overlay '%s'" % name)
 
-	Events.preset_loaded.connect(func(_profile_name: String) -> void: reload())
+	Events.preset_loaded.connect(
+		func(_profile_name: String) -> void:
+			reload(),
+	)
 	reload()
 
 
@@ -45,11 +48,10 @@ func get_overlay_property_list() -> Array[Dictionary]:
 	return get_property_list().filter(
 		func(prop: Dictionary) -> bool:
 			return (
-				prop.usage & PROPERTY_USAGE_STORAGE
-				and prop.usage & PROPERTY_USAGE_EDITOR
+				prop.usage & PROPERTY_USAGE_STORAGE and prop.usage & PROPERTY_USAGE_EDITOR
 				and prop.usage & PROPERTY_USAGE_SCRIPT_VARIABLE
 				and not (prop.name as String).begins_with("_")
-			)
+			),
 	)
 
 
@@ -57,7 +59,10 @@ func get_overlay_property_list() -> Array[Dictionary]:
 func get_overlay_property_names() -> Array[String]:
 	var array: Array[String] = []
 	array.assign(
-		get_overlay_property_list().map(func(prop: Dictionary) -> String: return prop.name),
+		get_overlay_property_list().map(
+			func(prop: Dictionary) -> String:
+				return prop.name,
+		),
 	)
 	return array
 

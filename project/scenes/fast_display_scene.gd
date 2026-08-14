@@ -14,12 +14,16 @@ func init(p_main: Main) -> void:
 
 	RenderingServer.set_default_clear_color(main.m8c.get_background_color())
 	main.m8c.background_color_changed.connect(
-		func(color: Color) -> void: RenderingServer.set_default_clear_color(color)
+		func(color: Color) -> void:
+			RenderingServer.set_default_clear_color(color),
 	)
 
 	_update_integer_scale()
 	get_window().size_changed.connect(_update_integer_scale)
-	main.m8c.system_info_received.connect(func(..._args: Array) -> void: _update_integer_scale())
+	main.m8c.system_info_received.connect(
+		func(... _args: Array) -> void:
+			_update_integer_scale(),
+	)
 
 
 func init_menu(menu: SceneConfigMenu) -> void:

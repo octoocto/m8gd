@@ -4,7 +4,7 @@ extends MenuBase
 
 signal keybinds_saved
 
-const REBIND_COOLDOWN := 100  # ms until can rebind again
+const REBIND_COOLDOWN := 100 # ms until can rebind again
 
 @onready var s_virtual_keyboard: SettingBool = %Setting_VirtualKeyboard
 
@@ -44,7 +44,8 @@ func get_tab_title() -> String:
 func _on_menu_init() -> void:
 	s_virtual_keyboard.setting_connect_global(
 		"virtual_keyboard_enabled",
-		func(value: bool) -> void: main.m8_virtual_keyboard_enabled = value
+		func(value: bool) -> void:
+			main.m8_virtual_keyboard_enabled = value,
 	)
 
 	keybinds_saved.connect(
@@ -56,7 +57,7 @@ func _on_menu_init() -> void:
 			_update_keybind_buttons("key_option", bind_opt_1, bind_opt_2)
 			_update_keybind_buttons("key_edit", bind_edit_1, bind_edit_2)
 			_update_keybind_buttons("key_shift", bind_shift_1, bind_shift_2)
-			_update_keybind_buttons("key_play", bind_play_1, bind_play_2)
+			_update_keybind_buttons("key_play", bind_play_1, bind_play_2),
 	)
 	keybinds_saved.emit()
 
@@ -84,8 +85,10 @@ func _on_menu_init() -> void:
 		var node_path: String = tuple[1]
 		_init_hotkey_node(
 			control,
-			func(event: InputEvent) -> void: main.config.set_overlay_hotkey(node_path, event),
-			func() -> void: main.config.clear_overlay_hotkey(node_path)
+			func(event: InputEvent) -> void:
+				main.config.set_overlay_hotkey(node_path, event),
+			func() -> void:
+				main.config.clear_overlay_hotkey(node_path),
 		)
 		_update_hotkey_node(control, main.config.get_overlay_hotkey(node_path) as InputEvent)
 
@@ -109,11 +112,12 @@ func reset_key_rebinds() -> void:
 		"key_shift",
 		"key_play",
 		"key_option",
-		"key_edit"
+		"key_edit",
 	]:
 		InputMap.action_erase_events(action)
 		InputMap.action_add_event(
-			action, ProjectSettings.get_setting("input/" + action).events[0] as InputEvent
+			action,
+			ProjectSettings.get_setting("input/" + action).events[0] as InputEvent,
 		)
 	save_key_rebinds()
 	Log.ln("keybinds reset to default")
@@ -126,7 +130,7 @@ func load_key_rebinds() -> void:
 		for event: InputEvent in events:
 			assert(
 				event is InputEvent,
-				"event is not InputEvent, found %s" % type_string(typeof(event))
+				"event is not InputEvent, found %s" % type_string(typeof(event)),
 			)
 			InputMap.action_add_event(action, event)
 	Log.ln("keybinds loaded from config")
@@ -231,13 +235,13 @@ func _init_hotkey_node(hotkey_node: Control, rebind_fn: Callable, clear_fn: Call
 			start_rebind(
 				func(e: InputEvent) -> void:
 					rebind_fn.call(e)
-					_update_hotkey_node(hotkey_node, e)
-			)
+					_update_hotkey_node(hotkey_node, e),
+			),
 	)
 	button_clear.pressed.connect(
 		func() -> void:
 			clear_fn.call()
-			_update_hotkey_node(hotkey_node, null)
+			_update_hotkey_node(hotkey_node, null),
 	)
 
 
@@ -276,5 +280,5 @@ func refresh_hotkeys_presets() -> void:
 				refresh_hotkeys_presets(),
 			func() -> void:
 				main.config.preset_delete_hotkey(profile_name)
-				refresh_hotkeys_presets()
+				refresh_hotkeys_presets(),
 		)

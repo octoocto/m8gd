@@ -97,13 +97,19 @@ func _on_ready() -> void:
 						pressed.emit()
 
 					mouse_down = false
-					emit_ui_changed()
+					emit_ui_changed(),
 	)
 
 	panel_focus.remove_theme_stylebox_override("panel")
 	panel_focus.add_theme_stylebox_override("panel", get_theme_stylebox("focus"))
-	focus_entered.connect(func() -> void: panel_focus.visible = true)
-	focus_exited.connect(func() -> void: panel_focus.visible = false)
+	focus_entered.connect(
+		func() -> void:
+			panel_focus.visible = true,
+	)
+	focus_exited.connect(
+		func() -> void:
+			panel_focus.visible = false,
+	)
 
 
 func _on_changed() -> void:

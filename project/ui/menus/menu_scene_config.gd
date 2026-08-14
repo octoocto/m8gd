@@ -13,7 +13,7 @@ func _on_menu_init() -> void:
 			assert(main.current_scene, "There is no M8 scene loaded!")
 			_clear_params()
 			main.current_scene.init_menu(self)
-			Log.ln("initialized %d param(s) from scene: %s" % [_num_params(), scene_path])
+			Log.ln("initialized %d param(s) from scene: %s" % [_num_params(), scene_path]),
 	)
 
 
@@ -37,8 +37,8 @@ func add_auto(property: String, setting_name: String = "") -> SettingBase:
 	var regex_int_range := RegEx.new()
 	var regex_float_range := RegEx.new()
 
-	regex_int_range.compile("^-?\\d+,-?\\d+$")  # match "#,#" export_range patterns
-	regex_float_range.compile("^-?\\d+[.]?\\d*,-?\\d+[.]?\\d*,-?\\d+[.]?\\d*$")  # match "#,#,#" export_range patterns
+	regex_int_range.compile("^-?\\d+,-?\\d+$") # match "#,#" export_range patterns
+	regex_float_range.compile("^-?\\d+[.]?\\d*,-?\\d+[.]?\\d*,-?\\d+[.]?\\d*$") # match "#,#,#" export_range patterns
 
 	# add menu items
 	var scene := main.current_scene
@@ -68,7 +68,10 @@ func add_auto(property: String, setting_name: String = "") -> SettingBase:
 ## This creates a drop-down list of items.
 ##
 func add_option_custom(
-	property: String, default: int, items: Array[String], value_changed_fn := Callable()
+	property: String,
+	default: int,
+	items: Array[String],
+	value_changed_fn := Callable(),
 ) -> SettingBase:
 	assert(property not in main.current_scene)
 
@@ -84,7 +87,9 @@ func add_option_custom(
 
 
 func add_file_custom(
-	property: String, default: String, value_changed_fn := Callable()
+	property: String,
+	default: String,
+	value_changed_fn := Callable(),
 ) -> SettingBase:
 	assert(property not in main.current_scene)
 

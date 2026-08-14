@@ -43,20 +43,20 @@ func _init_menu_scene() -> void:
 		func(idx: int) -> void:
 			if idx != -1:
 				main.load_scene(option_load_scene.get_item_metadata(idx) as String)
-			_setup_as_button.call()
+			_setup_as_button.call(),
 	)
 	_setup_as_button.call()
 
 	button_open_scene_config.pressed.connect(
 		func() -> void:
 			main.menu.menu_hide()
-			main.menu_scene.menu_show()
+			main.menu_scene.menu_show(),
 	)
 
 	Events.scene_loaded.connect(
 		func(scene_path: String, _scene: M8Scene) -> void:
 			var scene_name := main.get_scene_name(scene_path)
-			label_current_scene.text = "%s" % scene_name
+			label_current_scene.text = "%s" % scene_name,
 	)
 
 
@@ -70,7 +70,7 @@ func _init_menu_camera() -> void:
 	button_open_camera_config.pressed.connect(
 		func() -> void:
 			main.menu.menu_hide()
-			main.menu_camera.menu_show()
+			main.menu_camera.menu_show(),
 	)
 
 	s_mouse_camera.setting_connect_camera(
@@ -78,12 +78,13 @@ func _init_menu_camera() -> void:
 		func(value: bool) -> void:
 			main.current_scene.get_3d_camera().mouse_controlled_pan_zoom = value
 			if !value:
-				main.current_scene.get_3d_camera().reset_transform()
+				main.current_scene.get_3d_camera().reset_transform(),
 	)
 
 	s_human_camera.setting_connect_camera(
 		"humanized_movement",
-		func(value: bool) -> void: main.current_scene.get_3d_camera().humanized_movement = value
+		func(value: bool) -> void:
+			main.current_scene.get_3d_camera().humanized_movement = value,
 	)
 	s_human_camera_strength.setting_connect_camera("humanize_amount")
 	s_human_camera_strength.enable_if(s_human_camera)
@@ -105,13 +106,12 @@ func _init_menu_camera() -> void:
 			s_mouse_camera.reload()
 			s_human_camera.reload()
 			s_human_camera_strength.reload()
-			s_human_camera_frequency.reload()
+			s_human_camera_frequency.reload(),
 	)
 
 
 func _init_menu_model() -> void:
 	# Model settings
-
 	s_model_type.setting_connect_model(
 		"model_type",
 		func(value: int) -> void:
@@ -121,25 +121,25 @@ func _init_menu_model() -> void:
 			if value == 1:
 				_model().model = 0
 			elif value == 2:
-				_model().model = 1
+				_model().model = 1,
 	)
 	s_model_hl_opacity.setting_connect_model(
 		"model_hl_opacity",
 		func(value: float) -> void:
 			if _model():
-				_model().highlight_opacity = value
+				_model().highlight_opacity = value,
 	)
 	s_model_screen_filter.setting_connect_model(
 		"model_screen_linear_filter",
 		func(value: int) -> void:
 			if _model():
-				_model().set_screen_filter(true if value == 1 else false)
+				_model().set_screen_filter(true if value == 1 else false),
 	)
 	s_model_screen_emission.setting_connect_model(
 		"model_screen_emission",
 		func(value: float) -> void:
 			if _model():
-				_model().set_screen_emission(value)
+				_model().set_screen_emission(value),
 	)
 
 	Events.preset_loaded.connect(
@@ -147,7 +147,7 @@ func _init_menu_model() -> void:
 			s_model_type.reload()
 			s_model_hl_opacity.reload()
 			s_model_screen_filter.reload()
-			s_model_screen_emission.reload()
+			s_model_screen_emission.reload(),
 	)
 
 	Events.scene_loaded.connect(
@@ -157,7 +157,7 @@ func _init_menu_model() -> void:
 			s_model_type.enabled = is_3d_scene
 			s_model_hl_opacity.enabled = is_3d_scene
 			s_model_screen_filter.enabled = is_3d_scene
-			s_model_screen_emission.enabled = is_3d_scene
+			s_model_screen_emission.enabled = is_3d_scene,
 	)
 
 

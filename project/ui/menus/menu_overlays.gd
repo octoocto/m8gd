@@ -11,11 +11,15 @@ func _on_menu_init() -> void:
 	var overlays: OverlayContainer = main.overlays
 
 	s_scale.setting_connect_overlay_global(
-		"overlay_scale", func(value: int) -> void: overlays.content_scale = value
+		"overlay_scale",
+		func(value: int) -> void:
+			overlays.content_scale = value,
 	)
 
 	s_apply_filters.setting_connect_overlay_global(
-		"overlay_above_shaders", func(value: bool) -> void: overlays.z_index = 1 if value else 0
+		"overlay_above_shaders",
+		func(value: bool) -> void:
+			overlays.z_index = 1 if value else 0,
 	)
 
 	for overlay: OverlayBase in overlays.get_overlays():
@@ -34,15 +38,18 @@ func _on_menu_init() -> void:
 		button_open_config.pressed.connect(
 			func() -> void:
 				main.menu.menu_hide()
-				main.menu_overlay.menu_show_for(overlay)
+				main.menu_overlay.menu_show_for(overlay),
 		)
 
-		overlay.visibility_changed.connect(func() -> void: s_enable.set_value(overlay.visible))
+		overlay.visibility_changed.connect(
+			func() -> void:
+				s_enable.set_value(overlay.visible),
+		)
 
 	Log.ln("added %d overlay settings" % overlays.get_overlays().size())
 
 	Events.preset_loaded.connect(
 		func(_profile_name: String) -> void:
 			s_scale.reload()
-			s_apply_filters.reload()
+			s_apply_filters.reload(),
 	)

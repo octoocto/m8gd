@@ -24,6 +24,6 @@ func call_task(fn: Callable, task_name: String = "") -> Variant:
 			'[color=aqua]^^ finished task "%s" in %.3fs ^^[/color]'
 			% [task_name, (Time.get_ticks_msec() - time) / 1000.0]
 		),
-		2
+		2,
 	)
 	return ret

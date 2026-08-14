@@ -5,18 +5,20 @@ extends OmniLight3D
 const COLOR_SAMPLE_POINT_1 := Vector2i(0, 0)
 const COLOR_SAMPLE_POINT_2 := Vector2i(19, 66)
 
+
 func _ready() -> void:
 	_update()
 
+
 func _physics_process(_delta: float) -> void:
 	_update()
-	
+
+
 func _update() -> void:
 	#var texture = light_projector
 	#light_projector = null
 	#light_projector = texture
 	if viewport_texture != null:
-			
 		var image := viewport_texture.get_image()
 		if image != null:
 			var color_1 := image.get_pixelv(COLOR_SAMPLE_POINT_1)

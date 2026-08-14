@@ -29,7 +29,7 @@ var main: Main
 
 var _node_prefix := "M01_"
 
-var _node_origin_positions := {}
+var _node_origin_positions := { }
 
 @onready var screen_material: ShaderMaterial = m01_screen.material_override
 
@@ -51,7 +51,7 @@ func _ready() -> void:
 		%M02_KeyOptionCap,
 		%M02_KeyEditCap,
 		%M02_KeyShiftCap,
-		%M02_KeyPlayCap
+		%M02_KeyPlayCap,
 	]
 	for keycap: MeshInstance3D in keycaps:
 		keycap.material_override = keycap.material_override.duplicate()
@@ -86,28 +86,44 @@ func _physics_process(_delta: float) -> void:
 
 	# animate keycap positions if pressed/unpressed
 	key_u.position = lerp(
-		key_u.position, _node_origin_positions[key_u] + int(key_up) * pressed_trans, press_speed
+		key_u.position,
+		_node_origin_positions[key_u] + int(key_up) * pressed_trans,
+		press_speed,
 	)
 	key_d.position = lerp(
-		key_d.position, _node_origin_positions[key_d] + int(key_down) * pressed_trans, press_speed
+		key_d.position,
+		_node_origin_positions[key_d] + int(key_down) * pressed_trans,
+		press_speed,
 	)
 	key_l.position = lerp(
-		key_l.position, _node_origin_positions[key_l] + int(key_left) * pressed_trans, press_speed
+		key_l.position,
+		_node_origin_positions[key_l] + int(key_left) * pressed_trans,
+		press_speed,
 	)
 	key_r.position = lerp(
-		key_r.position, _node_origin_positions[key_r] + int(key_right) * pressed_trans, press_speed
+		key_r.position,
+		_node_origin_positions[key_r] + int(key_right) * pressed_trans,
+		press_speed,
 	)
 	key_o.position = lerp(
-		key_o.position, _node_origin_positions[key_o] + int(key_option) * pressed_trans, press_speed
+		key_o.position,
+		_node_origin_positions[key_o] + int(key_option) * pressed_trans,
+		press_speed,
 	)
 	key_e.position = lerp(
-		key_e.position, _node_origin_positions[key_e] + int(key_edit) * pressed_trans, press_speed
+		key_e.position,
+		_node_origin_positions[key_e] + int(key_edit) * pressed_trans,
+		press_speed,
 	)
 	key_s.position = lerp(
-		key_s.position, _node_origin_positions[key_s] + int(key_shift) * pressed_trans, press_speed
+		key_s.position,
+		_node_origin_positions[key_s] + int(key_shift) * pressed_trans,
+		press_speed,
 	)
 	key_p.position = lerp(
-		key_p.position, _node_origin_positions[key_p] + int(key_play) * pressed_trans, press_speed
+		key_p.position,
+		_node_origin_positions[key_p] + int(key_play) * pressed_trans,
+		press_speed,
 	)
 
 	# animate keycap colors if pressed/unpressed
@@ -128,11 +144,13 @@ func init(p_main: Main) -> void:
 	screen_material.set_shader_parameter("texture_nearest", main.m8c.get_display_texture())
 
 	main.m8_connected.connect(
-		func() -> void: screen_material.set_shader_parameter("backlight", true)
+		func() -> void:
+			screen_material.set_shader_parameter("backlight", true),
 	)
 
 	main.m8_disconnected.connect(
-		func() -> void: screen_material.set_shader_parameter("backlight", false)
+		func() -> void:
+			screen_material.set_shader_parameter("backlight", false),
 	)
 
 	screen_material.set_shader_parameter("backlight", false)
@@ -159,7 +177,8 @@ func init(p_main: Main) -> void:
 	)
 
 	main.m8c.system_info_received.connect(
-		func(_hw: String, _fw: String) -> void: _auto_model_type()
+		func(_hw: String, _fw: String) -> void:
+			_auto_model_type(),
 	)
 
 	_update_model()
@@ -208,7 +227,7 @@ func set_dir_key_highlight_color(color: Color) -> void:
 		%M02_KeyUpCap,
 		%M02_KeyDownCap,
 		%M02_KeyLeftCap,
-		%M02_KeyRightCap
+		%M02_KeyRightCap,
 	]
 	for keycap: MeshInstance3D in keycaps:
 		var material: StandardMaterial3D = keycap.material_overlay
@@ -261,7 +280,7 @@ func _update_model() -> void:
 		if child is MeshInstance3D:
 			var mesh := child as MeshInstance3D
 			mesh.visible = mesh.name.begins_with(_node_prefix)
-			if mesh.name.ends_with("Stem"):  # hide switch stems
+			if mesh.name.ends_with("Stem"): # hide switch stems
 				mesh.visible = false
 
 	set_part_color("Body", main.config.get_color(&"model_color_body"))

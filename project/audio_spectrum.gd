@@ -2,8 +2,15 @@
 class_name AudioSpectrum
 extends Control
 
-enum Type { PIXEL, BAR, LINE }
-enum ColorStyle { SCOPE, METER }
+enum Type {
+	PIXEL,
+	BAR,
+	LINE,
+}
+enum ColorStyle {
+	SCOPE,
+	METER,
+}
 
 @export var type: Type = Type.BAR
 
@@ -93,7 +100,8 @@ func _magnitudes_to_colors(magnitudes: PackedFloat32Array) -> PackedColorArray:
 
 
 func _position_magnitudes_to_points(
-	magnitudes: PackedFloat32Array, x_positions: PackedFloat32Array
+	magnitudes: PackedFloat32Array,
+	x_positions: PackedFloat32Array,
 ) -> PackedVector2Array:
 	var row_height: float = floor(size.y / float(style_rows))
 	var points := PackedVector2Array()
@@ -145,7 +153,6 @@ func _draw() -> void:
 		magnitude = clamp(magnitude, 0.0, 1.0)
 		var width: float = self.style_bar_width
 		# var height: float = magnitude * size.y
-
 		magnitudes.append(magnitude)
 		positions.append(x)
 
@@ -157,9 +164,9 @@ func _draw() -> void:
 	if style_mirror:
 		var mirrored := magnitudes.duplicate()
 		mirrored.reverse()
-		if magnitudes.size() % 2 == 0:  # even elements
+		if magnitudes.size() % 2 == 0: # even elements
 			magnitudes.append_array(mirrored)
-		else:  # odd elements
+		else: # odd elements
 			magnitudes.append_array(mirrored.slice(1))
 
 	assert(magnitudes.size() == positions.size())
@@ -180,7 +187,8 @@ func _draw() -> void:
 
 			if i > 0:
 				var prev_point := Vector2(
-					positions[i - 1], -magnitudes[i - 1] * style_magnitude_multiplier
+					positions[i - 1],
+					-magnitudes[i - 1] * style_magnitude_multiplier,
 				)
 				draw_line(prev_point, point, color, style_line_width)
 
@@ -189,8 +197,8 @@ func _draw() -> void:
 
 
 func logrange(a: float, b: float, step: float) -> Array:
-	var pow_a := log(a) / log(10)  # convert to 10^a form
-	var pow_b := log(b) / log(10)  # convert to 10^b form
+	var pow_a := log(a) / log(10) # convert to 10^a form
+	var pow_b := log(b) / log(10) # convert to 10^b form
 	var d := (pow_b - pow_a) / float(step)
 
 	var logspace := []

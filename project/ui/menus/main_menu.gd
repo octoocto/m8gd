@@ -49,8 +49,14 @@ var menu_stack: Array[MenuBase] = []
 func _on_menu_init() -> void:
 	custom_minimum_size = Vector2i(320, 240)
 
-	button_exit.pressed.connect(func() -> void: main.quit())
-	button_close.pressed.connect(func() -> void: visible = false)
+	button_exit.pressed.connect(
+		func() -> void:
+			main.quit(),
+	)
+	button_close.pressed.connect(
+		func() -> void:
+			visible = false,
+	)
 	# for i in tab_container.get_tab_count():
 	# 	var tab := tab_container.get_tab_control(i)
 	# 	if tab.has_method("get_tab_title"):
@@ -76,16 +82,19 @@ func _on_menu_init() -> void:
 		func(scene_path: String, _scene: M8Scene) -> void:
 			var scene_name := main.get_scene_name(scene_path)
 			label_current_scene.text = scene_name
-			label_current_scene.hint_text = scene_path.replace("res://", "(builtin) ")
+			label_current_scene.hint_text = scene_path.replace("res://", "(builtin) "),
 	)
 
 	Events.gui_mouse_entered.connect(
 		func(ui_element: UIBase) -> void:
 			if ui_element.hint_text != "":
-				label_tooltip.text = ui_element.hint_text
+				label_tooltip.text = ui_element.hint_text,
 	)
 
-	Events.gui_mouse_exited.connect(func(_ui_element: UIBase) -> void: label_tooltip.text = "")
+	Events.gui_mouse_exited.connect(
+		func(_ui_element: UIBase) -> void:
+			label_tooltip.text = "",
+	)
 
 
 func menu_show() -> void:
@@ -100,7 +109,7 @@ func _connect_goto(button: UIButton, menu: Control) -> void:
 		func() -> void:
 			menu.show()
 			menu_stack.append(menu)
-			_on_changed()
+			_on_changed(),
 	)
 
 
@@ -120,7 +129,8 @@ func _back() -> void:
 
 func _on_changed() -> void:
 	var menu_stack_names: Array = menu_stack.map(
-		func(m: MenuBase) -> String: return m.name.trim_prefix("Menu")
+		func(m: MenuBase) -> String:
+			return m.name.trim_prefix("Menu"),
 	)
 	menu_stack_names.push_front("Main Menu")
 	header.text = " > ".join(menu_stack_names)
@@ -153,6 +163,6 @@ func _init_scene_loader() -> void:
 		func(idx: int) -> void:
 			if idx != -1:
 				main.load_scene(opt_load_scene.get_item_metadata(idx) as String)
-			_setup_as_button.call()
+			_setup_as_button.call(),
 	)
 	_setup_as_button.call()

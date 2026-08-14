@@ -25,7 +25,7 @@ static func create_setting_from_property(prop: Dictionary, accept_no_hints := tr
 
 	# print("creating setting: found prop %s, hint = %s, hint_string = %s" % [prop.name, prop.hint, prop.hint_string])
 	match hint:
-		PropertyHint.PROPERTY_HINT_NONE:  # prop only has a type
+		PropertyHint.PROPERTY_HINT_NONE: # prop only has a type
 			if type != TYPE_BOOL and not accept_no_hints:
 				return null
 
@@ -56,10 +56,10 @@ static func create_setting_from_property(prop: Dictionary, accept_no_hints := tr
 						(
 							"Unrecognized property type when populating menu: name=%s, hint=%s, hint_string=%s, %s"
 							% [property, hint, x, prop]
-						)
+						),
 					)
 
-		PropertyHint.PROPERTY_HINT_RANGE:  # prop using @export_range
+		PropertyHint.PROPERTY_HINT_RANGE: # prop using @export_range
 			var split := hint_string.split(",")
 			var s: SettingNumber = SETTING_NUMBER.instantiate()
 
@@ -82,7 +82,7 @@ static func create_setting_from_property(prop: Dictionary, accept_no_hints := tr
 
 			setting = s
 
-		PropertyHint.PROPERTY_HINT_ENUM:  # prop is an enum
+		PropertyHint.PROPERTY_HINT_ENUM: # prop is an enum
 			var s: SettingOptions = SETTING_OPTIONS.instantiate()
 			for part in hint_string.split(","):
 				s.items.append(part.split(":")[0])

@@ -2,8 +2,10 @@ class_name M8Scene extends Node3D
 
 var main: Main
 
+
 func init(p_main: Main) -> void:
 	main = p_main
+
 
 ##
 ## Called by the scene menu when it is first opened.
@@ -12,11 +14,13 @@ func init(p_main: Main) -> void:
 func init_menu(_menu: SceneConfigMenu) -> void:
 	pass
 
+
 ##
 ## Returns true if this scene contains a DeviceModel.
 ##
 func has_device_model() -> bool:
 	return has_node("%M8Model") and %M8Model is DeviceModel
+
 
 ##
 ## Returns the DeviceModel in this scene is there is one. Returns null if not.
@@ -24,11 +28,13 @@ func has_device_model() -> bool:
 func get_device_model() -> DeviceModel:
 	return %M8Model
 
+
 ##
 ## Returns true if this scene contains a Camera3D.
 ##
 func has_3d_camera() -> bool:
 	return has_node("%Camera3D") and %Camera3D is M8SceneCamera3D
+
 
 ##
 ## Returns the Camera3D in this scene is there is one. Returns null if not.
@@ -36,11 +42,11 @@ func has_3d_camera() -> bool:
 func get_3d_camera() -> M8SceneCamera3D:
 	return %Camera3D if has_node("%Camera3D") else null
 
+
 ##
 ## Load an image or video and apply its texture to a texture rect, if possible.
 ##
 func load_media_to_texture_rect(path: String, vsp: VideoStreamPlayer = null) -> Texture2D:
-
 	if is_instance_valid(vsp):
 		vsp.stop()
 
@@ -60,15 +66,18 @@ func load_media_to_texture_rect(path: String, vsp: VideoStreamPlayer = null) -> 
 
 	return null
 
+
 func get_auto_display_integer_scale() -> int:
 	var window_size: Vector2i = get_window().size
 	var display_size: Vector2i = main.m8c.get_display_size()
 	var intscale := 1
 
-	while ((intscale + 1) * display_size.x <= window_size.x and (intscale + 1) * display_size.y <= window_size.y):
+	while ((intscale + 1) * display_size.x <= window_size.x
+	and (intscale + 1) * display_size.y <= window_size.y):
 		intscale += 1
 
-	return (int)(intscale / main.display_get_scale())
+	return (int) (intscale / main.display_get_scale())
+
 
 func get_value(setting: String) -> Variant:
 	return main.config.get_value_scene(self, setting, get(setting))

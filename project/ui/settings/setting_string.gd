@@ -20,7 +20,10 @@ extends SettingBase
 
 
 func _on_ready() -> void:
-	line_edit.text_changed.connect(func(p_value: String) -> void: value = p_value)
+	line_edit.text_changed.connect(
+		func(p_value: String) -> void:
+			value = p_value,
+	)
 
 
 func _on_changed() -> void:
@@ -35,6 +38,5 @@ func _on_changed() -> void:
 
 	label_name.custom_minimum_size.x = setting_name_min_width
 	# %HBoxContainer.set("theme_override_constants/separation", setting_name_indent)
-
 	if not line_edit.has_focus():
 		line_edit.text = value

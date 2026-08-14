@@ -16,14 +16,16 @@ extends MenuBase
 
 func _on_menu_init() -> void:
 	s_audio_handler.setting_connect_global(
-		"audio_handler", func(value: int) -> void: main.audio_set_handler(value)
+		"audio_handler",
+		func(value: int) -> void:
+			main.audio_set_handler(value),
 	)
 
 	s_volume.setting_connect_global(
 		"volume",
 		func(value: float) -> void:
 			var volume: float = pow(value, 2)
-			main.audio_set_volume(volume)
+			main.audio_set_volume(volume),
 	)
 
 	var audio_latency_update_timer := Timer.new()
@@ -37,16 +39,21 @@ func _on_menu_init() -> void:
 				l_audio_channels.text = "%d" % main.device_manager.audio_get_num_channels()
 				l_audio_rate.text = "%d Hz" % main.device_manager.audio_get_mix_rate()
 				l_audio_buffer.text = "%d" % main.device_manager.audio_get_buffer_size()
-				l_audio_latency.text = "%.2f ms" % main.device_manager.audio_get_latency()
+				l_audio_latency.text = "%.2f ms" % main.device_manager.audio_get_latency(),
 	)
 
 	s_sa_enable.setting_connect_global(
 		"audio_analyzer_enabled",
-		func(value: bool) -> void: main.audio_set_spectrum_analyzer_enabled(value)
+		func(value: bool) -> void:
+			main.audio_set_spectrum_analyzer_enabled(value),
 	)
 	s_sa_min.setting_connect_global(
-		"audio_analyzer_min_freq", func(value: int) -> void: main.visualizer_frequency_min = value
+		"audio_analyzer_min_freq",
+		func(value: int) -> void:
+			main.visualizer_frequency_min = value,
 	)
 	s_sa_max.setting_connect_global(
-		"audio_analyzer_max_freq", func(value: int) -> void: main.visualizer_frequency_max = value
+		"audio_analyzer_max_freq",
+		func(value: int) -> void:
+			main.visualizer_frequency_max = value,
 	)

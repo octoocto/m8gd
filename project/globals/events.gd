@@ -42,5 +42,8 @@ signal device_key_pressed(key: int, pressed: bool)
 ## Emitted when a property in the config for a profile changes.
 @warning_ignore("UNUSED_SIGNAL")
 signal config_preset_value_changed(
-	profile_name: String, section: String, key: String, value: Variant
+	profile_name: String,
+	section: String,
+	key: String,
+	value: Variant,
 )

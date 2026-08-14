@@ -23,7 +23,10 @@ extends SettingBase
 
 
 func _on_ready() -> void:
-	check_button.toggled.connect(func(p_value: bool) -> void: value = p_value)
+	check_button.toggled.connect(
+		func(p_value: bool) -> void:
+			value = p_value,
+	)
 
 
 func _on_changed() -> void:
@@ -41,6 +44,5 @@ func _on_changed() -> void:
 
 	label_name.custom_minimum_size.x = setting_name_min_width
 	# %HBoxContainer.set("theme_override_constants/separation", setting_name_indent)
-
 	check_button.set_pressed_no_signal(value)
 	label_value.text = _format_text(text_true if value else text_false)

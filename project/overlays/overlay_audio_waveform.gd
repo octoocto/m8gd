@@ -1,7 +1,11 @@
 @tool
 extends OverlayBase
 
-enum Type { PIXEL, BAR, LINE }
+enum Type {
+	PIXEL,
+	BAR,
+	LINE,
+}
 
 @export var type: Type = Type.BAR
 
@@ -60,7 +64,9 @@ func _process(delta: float) -> void:
 		if visible:
 			var peak_raw := main.audio_get_peak_volume()
 			var peak: float = clamp(
-				(((peak_raw.x + peak_raw.y) / 2.0) + analyzer_min_db) / analyzer_min_db, 0.0, 1.0
+				(((peak_raw.x + peak_raw.y) / 2.0) + analyzer_min_db) / analyzer_min_db,
+				0.0,
+				1.0,
 			)
 			peaks.push_front(peak)
 
@@ -86,9 +92,9 @@ func _draw() -> void:
 	if style_mirror:
 		var mirrored := magnitudes.duplicate()
 		mirrored.reverse()
-		if magnitudes.size() % 2 == 0:  # even elements
+		if magnitudes.size() % 2 == 0: # even elements
 			magnitudes.append_array(mirrored)
-		else:  # odd elements
+		else: # odd elements
 			magnitudes.append_array(mirrored.slice(1))
 
 	var row_spacing: float = floor(size.y / float(style_rows))
@@ -102,14 +108,16 @@ func _draw() -> void:
 			color = lerp(_colors()[0], _colors()[1], m / analyzer_high_cutoff)
 		else:
 			color = lerp(
-				_colors()[1], _colors()[2], (m - analyzer_high_cutoff) / analyzer_high_cutoff
+				_colors()[1],
+				_colors()[2],
+				(m - analyzer_high_cutoff) / analyzer_high_cutoff,
 			)
 		color.a = lerp(1.0, m, style_peak_to_alpha_amount)
 
 		var offset := (
 			Vector2(
 				floorf(i / float(size.x)) * -int(size.x),
-				floorf(i / float(size.x)) * row_spacing + row_spacing
+				floorf(i / float(size.x)) * row_spacing + row_spacing,
 			)
 			+ Vector2(position_offset)
 		)
@@ -185,8 +193,8 @@ func _draw() -> void:
 
 
 func logrange(a: float, b: float, step: float) -> Array:
-	var pow_a := log(a) / log(10)  # convert to 10^a form
-	var pow_b := log(b) / log(10)  # convert to 10^b form
+	var pow_a := log(a) / log(10) # convert to 10^a form
+	var pow_b := log(b) / log(10) # convert to 10^b form
 	var d := (pow_b - pow_a) / float(step)
 
 	var logspace := []

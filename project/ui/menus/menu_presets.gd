@@ -32,16 +32,19 @@ func _on_menu_init() -> void:
 	Events.preset_loaded.connect(
 		func(_profile_name: String) -> void:
 			s_name.set_value_no_signal(config.current_preset_name)
-			_on_changed()
+			_on_changed(),
 	)
-	s_name.value_changed.connect(func(_name: String) -> void: _on_changed())
+	s_name.value_changed.connect(
+		func(_name: String) -> void:
+			_on_changed(),
+	)
 
 	_on_changed()
 
 	button_new.pressed.connect(
 		func() -> void:
 			config.preset_load_new()
-			label_status.text = "Loaded default preset."
+			label_status.text = "Loaded default preset.",
 	)
 	button_save.pressed.connect(
 		func() -> void:
@@ -57,7 +60,7 @@ func _on_menu_init() -> void:
 				return
 			var path := config.preset_save(s_name.value, true)
 			label_status.text = "Preset saved to:\n%s" % path
-			_on_changed()
+			_on_changed(),
 	)
 	button_delete.pressed.connect(
 		func() -> void:
@@ -74,19 +77,25 @@ func _on_menu_init() -> void:
 			var path := config._preset_get_path(config.current_preset_name)
 			label_status.text = "Preset deleted:\n%s" % path
 			config.preset_delete_current()
-			_on_changed()
+			_on_changed(),
 	)
 	button_load.pressed.connect(
 		func() -> void:
 			_refresh_loader_list()
-			_show_loader()
+			_show_loader(),
 	)
-	button_cancel_loader.pressed.connect(func() -> void: _show_config())
-	button_print.pressed.connect(func() -> void: print(config.current_preset.encode_to_text()))
+	button_cancel_loader.pressed.connect(
+		func() -> void:
+			_show_config(),
+	)
+	button_print.pressed.connect(
+		func() -> void:
+			print(config.current_preset.encode_to_text()),
+	)
 	visibility_changed.connect(
 		func() -> void:
 			if visible:
-				_show_config()
+				_show_config(),
 	)
 
 
@@ -128,6 +137,6 @@ func _refresh_loader_list() -> void:
 				config.preset_load(preset_name)
 				s_name.value = preset_name
 				label_status.text = "Loaded preset:\n%s" % preset_path
-				_show_config()
+				_show_config(),
 		)
 		cont_loader_list.add_child(button)

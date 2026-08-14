@@ -100,12 +100,12 @@ func _connect_mouse_events(control: Control = self) -> void:
 	control.mouse_entered.connect(
 		func() -> void:
 			_is_mouse_inside = true
-			emit_ui_changed()
+			emit_ui_changed(),
 	)
 	control.mouse_exited.connect(
 		func() -> void:
 			_is_mouse_inside = false
-			emit_ui_changed()
+			emit_ui_changed(),
 	)
 
 

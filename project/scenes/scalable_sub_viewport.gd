@@ -17,4 +17,3 @@ extends SubViewport
 		integer_size = value
 		size_2d_override = integer_size
 		integer_scale = integer_scale
-

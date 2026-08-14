@@ -36,7 +36,10 @@ class_name SettingColor extends SettingBase
 
 
 func _on_ready() -> void:
-	button.color_changed.connect(func(p_value: Color) -> void: value = p_value)
+	button.color_changed.connect(
+		func(p_value: Color) -> void:
+			value = p_value,
+	)
 	# reset to default handler
 	button.gui_input.connect(
 		func(event: InputEvent) -> void:
@@ -46,7 +49,7 @@ func _on_ready() -> void:
 				and event.is_pressed()
 			):
 				button.accept_event()
-				value = reset_value
+				value = reset_value,
 	)
 
 	add_theme_stylebox_override("panel", StyleBoxEmpty.new())
@@ -79,7 +82,6 @@ func _on_changed() -> void:
 	spacer_r.custom_minimum_size.x = label_separation
 
 	# %PanelContainer.set("theme_override_styles/panel", panel_style_value)
-
 	label_name.horizontal_alignment = label_alignment
 	label_name.custom_minimum_size.x = setting_name_min_width
 	label_name.color_override = _pal("text")

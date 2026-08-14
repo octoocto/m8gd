@@ -23,7 +23,7 @@ func _on_menu_init() -> void:
 			main.get_scene_camera().rotation_degrees = Vector3(value.x, value.y, 0),
 		func() -> Vector2:
 			var rot := main.get_scene_camera().rotation_degrees
-			return Vector2(rot.x, rot.y)
+			return Vector2(rot.x, rot.y),
 	)
 	s_focus.setting_connect_camera_2("dof_focus_distance", "dof_focus_width")
 	s_blur.setting_connect_camera("dof_blur_amount")
@@ -36,7 +36,7 @@ func _on_menu_init() -> void:
 				if !camera.camera_updated.is_connected(on_camera_updated):
 					camera.camera_updated.connect(on_camera_updated)
 				if !camera.reposition_stopped.is_connected(on_camera_reposition_stopped):
-					camera.reposition_stopped.connect(on_camera_reposition_stopped)
+					camera.reposition_stopped.connect(on_camera_reposition_stopped),
 	)
 
 

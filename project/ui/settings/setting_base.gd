@@ -47,7 +47,7 @@ var main: Main
 var config: M8Config
 
 var is_initialized: bool:
-	get():
+	get ():
 		return _is_initialized
 
 ## If true, one of the [connect] methods has been called.
@@ -100,7 +100,10 @@ func emit_value_changed() -> void:
 ## the initial value could be different.
 ##
 func reload(emit_value_changed_signal := true) -> void:
-	assert(_is_initialized and _value_read_fn, "This setting has not been initialized yet: %s" % name)
+	assert(
+		_is_initialized and _value_read_fn,
+		"This setting has not been initialized yet: %s" % name,
+	)
 	if emit_value_changed_signal:
 		set("value", _value_read_fn.call())
 	else:
@@ -115,7 +118,8 @@ func reload(emit_value_changed_signal := true) -> void:
 func uninit() -> void:
 	if _is_initialized:
 		_clear_signals()
-		_value_read_fn = func() -> void: return
+		_value_read_fn = func() -> void:
+			return
 		_is_initialized = false
 
 
@@ -127,15 +131,22 @@ func uninit() -> void:
 ##
 func setting_connect(value_read_fn: Variant, value_changed_fn: Callable) -> void:
 	assert(!_is_initialized, "This setting has already been initialized: %s" % name)
-	assert(is_instance_valid(self.main), "Tried to initialize setting, but main has not finished initializing")
+	assert(
+		is_instance_valid(self.main),
+		"Tried to initialize setting, but main has not finished initializing",
+	)
 	assert(is_instance_valid(self.config), "Tried to initialize setting, but config is not loaded")
-	assert(value_changed_fn is Callable and value_changed_fn.is_valid(), "value_changed_fn must be a valid Callable")
+	assert(
+		value_changed_fn is Callable and value_changed_fn.is_valid(),
+		"value_changed_fn must be a valid Callable",
+	)
 	assert("value" in self, "SettingBase subclass %s must have a 'value' property" % name)
 
 	if value_read_fn is Callable:
 		_value_read_fn = value_read_fn
 	else:
-		_value_read_fn = func() -> Variant: return value_read_fn
+		_value_read_fn = func() -> Variant:
+			return value_read_fn
 
 	value_changed.connect(value_changed_fn)
 	set("value", _value_read_fn.call())
@@ -155,13 +166,14 @@ func setting_connect(value_read_fn: Variant, value_changed_fn: Callable) -> void
 func setting_connect_global(property: String, value_changed_fn := Callable()) -> void:
 	setting_connect(
 		# on read
-		func() -> Variant: return main.config.get_global_value(property),
+		func() -> Variant:
+			return main.config.get_global_value(property),
 		# on write
 		func(value: Variant) -> void:
 			main.config.set_global_value(property, value)
 			if value_changed_fn.is_valid():
 				value_changed_fn.call(value)
-			Events.setting_changed.emit(self, value)
+			Events.setting_changed.emit(self, value),
 	)
 
 
@@ -173,13 +185,12 @@ func setting_connect_profile(section: String, key: String, value_changed_fn := C
 		# on read
 		func() -> Variant:
 			return main.config.get_value(section, key, _default_value),
-
 		# on write
 		func(value: Variant) -> void:
 			main.config.set_value(section, key, value)
 			if value_changed_fn.is_valid():
 				value_changed_fn.call(value)
-			Events.setting_changed.emit(self, value)
+			Events.setting_changed.emit(self, value),
 	)
 
 
@@ -222,7 +233,7 @@ func setting_connect_scene(property: String, value_changed_fn := Callable()) -> 
 			config.set_value_scene(scene, property, value)
 			if value_changed_fn.is_valid():
 				value_changed_fn.call(value)
-			Events.setting_changed.emit(self, value)
+			Events.setting_changed.emit(self, value),
 	)
 
 
@@ -235,17 +246,21 @@ func setting_connect_scene(property: String, value_changed_fn := Callable()) -> 
 ## Changing this setting's value will write the value to the config,
 ## set the property in [overlay], and call [value_changed_fn] if defined.
 ##
-func setting_connect_overlay(overlay: OverlayBase, property: String, value_changed_fn := Callable()) -> void:
+func setting_connect_overlay(
+	overlay: OverlayBase,
+	property: String,
+	value_changed_fn := Callable(),
+) -> void:
 	setting_connect(
 		# on read
-		func() -> Variant: return config.get_value_overlay(overlay, property, overlay.get(property)),
-
+		func() -> Variant:
+			return config.get_value_overlay(overlay, property, overlay.get(property)),
 		# on write
 		func(value: Variant) -> void:
 			config.set_value_overlay(overlay, property, value)
 			if value_changed_fn.is_valid():
 				value_changed_fn.call(value)
-			Events.setting_changed.emit(self, value)
+			Events.setting_changed.emit(self, value),
 	)
 
 
@@ -260,7 +275,11 @@ func setting_connect_overlay(overlay: OverlayBase, property: String, value_chang
 ## set the property in the current scene's camera, and
 ## call [value_changed_fn] if defined.
 ##
-func setting_connect_camera(property: String, value_changed_fn: Variant = null, value_init_fn: Variant = null) -> void:
+func setting_connect_camera(
+	property: String,
+	value_changed_fn: Variant = null,
+	value_init_fn: Variant = null,
+) -> void:
 	setting_connect(
 		# on read
 		func() -> Variant:
@@ -285,7 +304,7 @@ func setting_connect_camera(property: String, value_changed_fn: Variant = null, 
 					(value_changed_fn as Callable).call(value)
 				else:
 					main.get_scene_camera().set(property, value)
-				Events.setting_changed.emit(self, value)
+				Events.setting_changed.emit(self, value),
 	)
 
 
@@ -304,7 +323,7 @@ func conf_shader_parameter(shader_rect: ShaderRect, parameter: String) -> void:
 		func(value: Variant) -> void:
 			main.shaders.set_shader_parameter(shader_rect, parameter, value)
 			main.config.set_value_shader(shader_rect, parameter, value)
-			Events.setting_changed.emit(self, value)
+			Events.setting_changed.emit(self, value),
 	)
 
 

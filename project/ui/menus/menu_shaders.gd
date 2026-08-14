@@ -14,7 +14,7 @@ func _on_menu_init() -> void:
 		func(_profile_name: String) -> void:
 			for c in vbox.get_children():
 				if c is SettingBase and (c as SettingBase).is_initialized:
-					(c as SettingBase).reload()
+					(c as SettingBase).reload(),
 	)
 
 
@@ -24,7 +24,11 @@ func _create_enable_setting(shader_rect: ShaderRect) -> SettingBool:
 
 	var key: String = ("enable_%s" % shader_rect.name).to_snake_case()
 	s.setting_name = "Enable %s" % shader_rect.name.capitalize()
-	s.setting_connect_shader_global(key, func(value: bool) -> void: shader_rect.visible = value)
+	s.setting_connect_shader_global(
+		key,
+		func(value: bool) -> void:
+			shader_rect.visible = value,
+	)
 	print("connected setting to key: %s" % key)
 	return s
 

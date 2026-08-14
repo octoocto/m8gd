@@ -49,10 +49,12 @@ func _on_ready() -> void:
 	spin_box_y.get_line_edit().theme_type_variation = "SettingControlVec2LineEdit"
 
 	spin_box_x.value_changed.connect(
-		func(p_value: float) -> void: value = Vector2i(int(p_value), value.y)
+		func(p_value: float) -> void:
+			value = Vector2i(int(p_value), value.y),
 	)
 	spin_box_y.value_changed.connect(
-		func(p_value: float) -> void: value = Vector2i(value.x, int(p_value))
+		func(p_value: float) -> void:
+			value = Vector2i(value.x, int(p_value)),
 	)
 
 

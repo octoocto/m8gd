@@ -238,14 +238,8 @@ func _update() -> void:
 	label_times.label_settings = _label_settings.duplicate()
 
 	var num_pressed := (
-		int(pressed_u)
-		+ int(pressed_d)
-		+ int(pressed_l)
-		+ int(pressed_r)
-		+ int(pressed_o)
-		+ int(pressed_e)
-		+ int(pressed_s)
-		+ int(pressed_p)
+		int(pressed_u) + int(pressed_d) + int(pressed_l) + int(pressed_r)
+		+ int(pressed_o) + int(pressed_e) + int(pressed_s) + int(pressed_p)
 	)
 
 	keys_pressed = num_pressed
@@ -295,4 +289,3 @@ func _update() -> void:
 func _color_clamp_brightness(color: Color) -> Color:
 	color.v = max(color.v, 0.7)
 	return color
-

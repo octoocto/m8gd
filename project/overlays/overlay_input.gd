@@ -28,7 +28,7 @@ func _overlay_init() -> void:
 	Events.config_preset_value_changed.connect(
 		func(_profile_name: String, section: String, _property: String, _value: Variant) -> void:
 			if section == main.config.SECTION_COLORS:
-				self._overlay_update()
+				self._overlay_update(),
 	)
 
 

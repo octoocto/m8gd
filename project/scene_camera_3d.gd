@@ -164,7 +164,9 @@ func _new_cam_rotation(mouse_position: Vector2, mouse_clicked: bool) -> Vector3:
 	)
 
 	var target_rotation := Vector3(
-		-mouse_position.y * pan_range.y, -mouse_position.x * pan_range.x, 0
+		-mouse_position.y * pan_range.y,
+		-mouse_position.x * pan_range.x,
+		0,
 	)
 
 	return lerp(cam.rotation, target_rotation, 0.1)

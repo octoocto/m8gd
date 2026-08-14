@@ -2,7 +2,11 @@
 class_name MenuDevices
 extends MenuBase
 
-enum ConnectAction { CONNECT, DISCONNECT, RECONNECT }
+enum ConnectAction {
+	CONNECT,
+	DISCONNECT,
+	RECONNECT,
+}
 
 @onready var label_serial_status: UILabel2 = %LabelSerialStatus
 @onready var label_audio_status: UILabel2 = %LabelAudioStatus
@@ -20,7 +24,7 @@ var dm: DeviceManager
 var selected_serial_port: String = ""
 var selected_audio_device: String = ""
 var show_all_devices: bool:
-	get():
+	get ():
 		return s_show_all_devices.value
 var connect_action := ConnectAction.CONNECT
 
@@ -39,11 +43,23 @@ func _on_refresh() -> void:
 func _on_menu_init() -> void:
 	dm = main.device_manager
 
-	Events.serial_device_connected.connect(func() -> void: _on_changed())
-	Events.audio_device_connected.connect(func() -> void: _on_changed())
+	Events.serial_device_connected.connect(
+		func() -> void:
+			_on_changed(),
+	)
+	Events.audio_device_connected.connect(
+		func() -> void:
+			_on_changed(),
+	)
 
-	list_serial_ports.item_selected.connect(func(_index: int) -> void: _on_changed())
-	list_audio_devices.item_selected.connect(func(_index: int) -> void: _on_changed())
+	list_serial_ports.item_selected.connect(
+		func(_index: int) -> void:
+			_on_changed(),
+	)
+	list_audio_devices.item_selected.connect(
+		func(_index: int) -> void:
+			_on_changed(),
+	)
 
 	button_connect.pressed.connect(
 		func() -> void:
@@ -64,19 +80,19 @@ func _on_menu_init() -> void:
 					dm.disconnect_audio_device()
 				dm.connect_audio_device(selected_audio_device, show_all_devices)
 
-			_on_changed()
+			_on_changed(),
 	)
 
 	button_refresh.pressed.connect(
 		func() -> void:
 			_on_refresh()
-			_on_changed()
+			_on_changed(),
 	)
 
 	s_show_all_devices.value_changed.connect(
 		func(_value: bool) -> void:
 			_on_refresh()
-			_on_changed()
+			_on_changed(),
 	)
 
 	_on_refresh()
@@ -87,7 +103,7 @@ func _on_menu_init() -> void:
 			if main and main.is_menu_open():
 				var volume := main.audio_get_peak_volume()
 				bar_audio_level_l.value = max(-1000, volume.x)
-				bar_audio_level_r.value = max(-1000, volume.y)
+				bar_audio_level_r.value = max(-1000, volume.y),
 	)
 
 	# auto refresh list
@@ -95,11 +111,11 @@ func _on_menu_init() -> void:
 		func() -> void:
 			_on_refresh()
 			_on_changed()
-			# if visible:
-			# 	for item: int in list_audio_devices.get_selected_items():
-			# 		list_audio_devices.item_selected.emit(item)
-			# 	for item: int in list_serial_ports.get_selected_items():
-			# 		list_serial_ports.item_selected.emit(item)
+		# if visible:
+		# 	for item: int in list_audio_devices.get_selected_items():
+		# 		list_audio_devices.item_selected.emit(item)
+		# 	for item: int in list_serial_ports.get_selected_items():
+		# 		list_serial_ports.item_selected.emit(item)
 	)
 
 
@@ -111,8 +127,7 @@ func _on_changed() -> void:
 	var selected_audio_devices := list_audio_devices.get_selected_items()
 
 	if (
-		connect_action == ConnectAction.CONNECT
-		and selected_serial_ports.size() == 0
+		connect_action == ConnectAction.CONNECT and selected_serial_ports.size() == 0
 		and selected_audio_devices.size() == 0
 	):
 		button_connect.enabled = false

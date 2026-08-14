@@ -154,7 +154,15 @@ func list_preset_names() -> PackedStringArray:
 		return PackedStringArray()
 
 	var array := (
-		Array(dir.get_files()).filter(func(f: String) -> bool: return f.get_extension().to_lower() == "ini").map(func(f: String) -> String: return f.get_file().get_basename())
+		Array(dir.get_files())
+		.filter(
+			func(f: String) -> bool:
+				return f.get_extension().to_lower() == "ini",
+		)
+		.map(
+			func(f: String) -> String:
+				return f.get_file().get_basename(),
+		)
 	)
 
 	_print("found %d presets" % array.size(), 3)
