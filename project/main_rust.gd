@@ -110,15 +110,15 @@ func _process(delta: float) -> void:
 	if not is_instance_valid(m8c):
 		return
 
-	var peaks := m8c.get_audio_peak_volume()
-	peaks.x = remap(linear_to_db(peaks.x), -60.0, 0.0, 0.0, 1.0)
-	peaks.y = remap(linear_to_db(peaks.y), -60.0, 0.0, 0.0, 1.0)
+	var peaks := m8c.get_audio_peaks_linear()
+	peaks[0] = remap(linear_to_db(peaks[0]), -60.0, 0.0, 0.0, 1.0)
+	peaks[1] = remap(linear_to_db(peaks[1]), -60.0, 0.0, 0.0, 1.0)
 
 	var smoothing := 0.8
 	var smoothing_2 := 0.1
 
-	rect_peak_l.value = max(peaks.x, lerp(peaks.x, rect_peak_l.value, smoothing))
-	rect_peak_r.value = max(peaks.y, lerp(peaks.y, rect_peak_r.value, smoothing))
+	rect_peak_l.value = max(peaks[0], lerp(peaks[0], rect_peak_l.value, smoothing))
+	rect_peak_r.value = max(peaks[1], lerp(peaks[1], rect_peak_r.value, smoothing))
 
 	rect_peak_l2.value = max(rect_peak_l.value, rect_peak_l2.value - (smoothing_2 * delta))
 	rect_peak_r2.value = max(rect_peak_r.value, rect_peak_r2.value - (smoothing_2 * delta))

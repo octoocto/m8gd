@@ -53,7 +53,7 @@ pub trait AudioBackend {
 
     /// Returns the peak volume in linear scale for the left and right channels.
     /// TODO: Support more than 2 channels?
-    fn volume_peaks(&mut self) -> Result<[f32; 2], Error>;
+    fn peaks_linear(&mut self) -> Result<[f32; 2], Error>;
 
     /// Returns the volume in linear scale for `frequency` in Hz.
     ///
@@ -68,6 +68,16 @@ pub trait AudioBackend {
     // fn output_spec(&self) -> Result<AudioSpec, Error>;
 
     fn track_buffer(&self, track: m8::Track) -> Result<Vec<f32>, Error>;
+
+    fn peaks_db(&mut self) -> Result<[f32; 2], Error> {
+        Ok(self.peaks_linear()?.map(|f| {
+            if f <= 0.0 {
+                f32::NEG_INFINITY
+            } else {
+                20.0 * f.log10()
+            }
+        }))
+    }
 }
 
 pub struct AudioSpec {

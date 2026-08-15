@@ -533,13 +533,27 @@ impl GodotM8Client {
     ///
     /// If the audio is disabled, returns `[0.0, 0.0]`.
     #[func]
-    fn get_audio_peak_volume(&mut self) -> Vector2 {
+    fn get_audio_peaks_linear(&mut self) -> PackedFloat32Array {
         if let Some(audio_backend) = self.audio_backend.as_mut() {
-            if let Ok(peaks) = audio_backend.volume_peaks() {
-                return Vector2::new(peaks[0], peaks[1]);
+            if let Ok(peaks) = audio_backend.peaks_linear() {
+                return PackedFloat32Array::from(&peaks);
             }
         }
-        Vector2::ZERO
+        PackedFloat32Array::from(&[0.0, 0.0])
+    }
+
+    /// Returns the peak volumes for the left and right audio channels,
+    /// in linear scale.
+    ///
+    /// If the audio is disabled, returns `[0.0, 0.0]`.
+    #[func]
+    fn get_audio_peaks_db(&mut self) -> PackedFloat32Array {
+        if let Some(audio_backend) = self.audio_backend.as_mut() {
+            if let Ok(peaks) = audio_backend.peaks_db() {
+                return PackedFloat32Array::from(&peaks);
+            }
+        }
+        PackedFloat32Array::from(&[f32::NEG_INFINITY, f32::NEG_INFINITY])
     }
 
     #[func]

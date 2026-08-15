@@ -522,7 +522,7 @@ func audio_set_handler(handler: DeviceManager.AudioHandler) -> void:
 ##
 ## Get the peak volume of the "Analyzer" bus.
 ##
-func audio_get_peak_volume() -> Vector2:
+func audio_get_peak_volume() -> PackedFloat32Array:
 	return device_manager.audio_get_peak_volume()
 
 
@@ -577,7 +577,7 @@ func update_audio_analyzer() -> void:
 	# 	audio_level_raw = 0.0
 	# audio_level = max(audio_level_raw, lerp(audio_level_raw, last_audio_level, 0.95))
 	# last_audio_level = audio_level
-	var peak := db_to_linear((audio_get_peak_volume().x + audio_get_peak_volume().y) / 2.0)
+	var peak := (audio_get_peak_volume()[0] + audio_get_peak_volume()[1]) / 2.0
 	audio_level = lerp(audio_level, peak, 0.2)
 	audio_level = max(audio_level, peak)
 	last_audio_level = audio_level

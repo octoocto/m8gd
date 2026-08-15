@@ -181,8 +181,8 @@ impl super::AudioBackend for CpalAudioBackend {
         Ok(())
     }
 
-    fn volume_peaks(&mut self) -> Result<[f32; 2], Error> {
-        match self.volume_peaks.lock().as_deref() {
+    fn peaks_linear(&mut self) -> Result<[f32; 2], Error> {
+        match self.volume_peaks.lock() {
             Ok(peaks) => Ok(*peaks),
             Err(_) => Ok([0.0, 0.0]),
         }

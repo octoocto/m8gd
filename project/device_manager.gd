@@ -306,15 +306,15 @@ func audio_is_spectrum_analyzer_enabled() -> bool:
 			return main.m8c.is_spectrum_analyzer_enabled()
 
 
-func audio_get_peak_volume() -> Vector2:
+func audio_get_peak_volume() -> PackedFloat32Array:
 	match audio_handler:
 		AudioHandler.GODOT:
-			return Vector2(
+			return PackedFloat32Array([
 				AudioServer.get_bus_peak_volume_left_db(0, 0),
 				AudioServer.get_bus_peak_volume_right_db(0, 0),
-			)
+			])
 		_:
-			return main.m8c.get_audio_peak_volume()
+			return main.m8c.get_audio_peaks_linear()
 
 
 func audio_get_magnitude_at_freq(frequency: float) -> float:

@@ -234,7 +234,7 @@ impl super::AudioBackend for SdlAudioBackend {
         Ok(self.callback_lock()?.volume = self.volume)
     }
 
-    fn volume_peaks(&mut self) -> Result<[f32; 2], Error> {
+    fn peaks_linear(&mut self) -> Result<[f32; 2], Error> {
         Ok(self.callback_lock()?.peaks)
     }
 

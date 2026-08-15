@@ -62,12 +62,9 @@ func _process(delta: float) -> void:
 		delta_left -= sample_rate
 
 		if visible:
-			var peak_raw := main.audio_get_peak_volume()
-			var peak: float = clamp(
-				(((peak_raw.x + peak_raw.y) / 2.0) + analyzer_min_db) / analyzer_min_db,
-				0.0,
-				1.0,
-			)
+			var peaks_db := main.m8c.get_audio_peaks_db()
+			var peak_raw: float = clamp((peaks_db[0] + peaks_db[1]) / 2.0, -analyzer_min_db, 0.0)
+			var peak := remap(peak_raw, -analyzer_min_db, 0.0, 0.0, 1.0)
 			peaks.push_front(peak)
 
 	while peaks.size() > waveform_size:

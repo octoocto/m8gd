@@ -101,9 +101,9 @@ func _on_menu_init() -> void:
 	get_tree().process_frame.connect(
 		func() -> void:
 			if main and main.is_menu_open():
-				var volume := main.audio_get_peak_volume()
-				bar_audio_level_l.value = max(-1000, volume.x)
-				bar_audio_level_r.value = max(-1000, volume.y),
+				var peaks_db := main.m8c.get_audio_peaks_db()
+				bar_audio_level_l.value = peaks_db[0]
+				bar_audio_level_r.value = peaks_db[1]
 	)
 
 	# auto refresh list
