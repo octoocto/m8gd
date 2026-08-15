@@ -14,7 +14,8 @@ import zipfile
 from pathlib import Path
 from typing import Literal
 
-PROJ_NAME = "m8"
+PROJ_NAME = "m8gd"
+LIB_NAME = "m8"
 BUILD_DIR = "build"
 GODOT_VERSION = "4.7"
 GODOT_BRANCH = "stable"
@@ -188,6 +189,7 @@ def main() -> None:
     # export the Godot project
 
     println(f"Exporting Godot project for {build_platform} platform...")
+    exec("ls -l ./build/")
     Path(f"{BUILD_DIR}/gui").mkdir(parents=True, exist_ok=True)
     exec(
         f"{godot_path} --headless --path godot {godot_target} {build_platform} ../{BUILD_DIR}/gui/{PROJ_NAME}{app_extension}"
@@ -277,15 +279,7 @@ def find_command_or_exit(cmd: str) -> str:
 
 
 def which(path: str) -> str | None:
-    if not is_using_cygwin():
-        return shutil.which(path)
-    else:
-        which_path = shutil.which("which")
-        if which_path != None:
-            try:
-                return subprocess.check_output([which_path, path]).decode().strip()
-            except subprocess.CalledProcessError:
-                pass
+    return shutil.which(path)
 
 
 def exec_and_capture(
@@ -302,16 +296,15 @@ def exec_and_capture(
 
     printinfo(command)
 
-    args = []
-    result = None
-    if not is_using_cygwin():
-        args = shlex.split(command)
-    else:
-        bash_path = find_command_or_exit("bash")
-        if bash_path:
-            args = [bash_path, "--login", "-c", command]
-
-    result = subprocess.run(args, check=False, env=env, capture_output=capture_output)
+    # args = shlex.split(command)
+    result = subprocess.run(
+        command,
+        shell=True,
+        check=True,
+        text=True,
+        env=env,
+        capture_output=capture_output,
+    )
 
     returncode = result.returncode
 
@@ -381,19 +374,21 @@ def exec_cargo_build(
 
     is_lib: bool = cargo_flags.find("--lib") != -1
 
-    exec(f"{cargo} --version")
-    exec(f"{rustup} --version")
+    print(f"cargo path: {cargo}")
+
+    exec("cargo --version")
+    exec("rustup --version")
 
     for target in cargo_targets:
-        exec(f"{rustup} target add {target}")
-        exec(f"{cargo} build {cargo_flags} --target {target}", cwd)
+        exec(f"rustup target add {target}")
+        exec(f"cargo build {cargo_flags} --target {target}", cwd)
 
     match platform:
         case "macos":
             if is_lib:
-                filename = f"lib{PROJ_NAME}.dylib"
+                filename = f"lib{LIB_NAME}.dylib"
             else:
-                filename = f"{PROJ_NAME}"
+                filename = f"{LIB_NAME}"
 
             println("Creating universal binary for macOS...")
             file_x86 = f"{cwd}/target/x86_64-apple-darwin/{release_or_debug}/{filename}"
@@ -404,15 +399,15 @@ def exec_cargo_build(
             exec(f"lipo -create {file_x86} {file_arm} -output {file_uni}")
 
             if is_lib:
-                move(file_uni, f"project/addons/libm8gd/{release_or_debug}/{filename}")
+                move(file_uni, f"godot/addons/libm8/{release_or_debug}/{filename}")
             else:
                 copy_to_build_dir(file_uni, "cli")
 
         case "windows":
             if is_lib:
-                filename = f"{PROJ_NAME}.dll"
+                filename = f"{LIB_NAME}.dll"
             else:
-                filename = f"{PROJ_NAME}.exe"
+                filename = f"{LIB_NAME}.exe"
 
             filepath = (
                 f"{cwd}/target/x86_64-pc-windows-gnu/{release_or_debug}/{filename}"
@@ -420,15 +415,15 @@ def exec_cargo_build(
 
             if is_lib:
                 copy(filepath, f"{cwd}/target/{release_or_debug}/{filename}")
-                move(filepath, f"project/addons/libm8gd/{release_or_debug}/{filename}")
+                move(filepath, f"godot/addons/libm8/{release_or_debug}/{filename}")
             else:
                 copy_to_build_dir(filepath, "cli")
 
         case "linux":
             if is_lib:
-                filename = f"lib{PROJ_NAME}.so"
+                filename = f"lib{LIB_NAME}.so"
             else:
-                filename = f"{PROJ_NAME}"
+                filename = f"{LIB_NAME}"
 
             filepath = (
                 f"{cwd}/target/x86_64-unknown-linux-gnu/{release_or_debug}/{filename}"
@@ -436,7 +431,7 @@ def exec_cargo_build(
 
             if is_lib:
                 copy(filepath, f"{cwd}/target/{release_or_debug}/{filename}")
-                move(filepath, f"project/addons/libm8gd/{release_or_debug}/{filename}")
+                move(filepath, f"godot/addons/libm8/{release_or_debug}/{filename}")
             else:
                 copy_to_build_dir(filepath, "cli")
 

@@ -6,7 +6,8 @@ on:
   merge_group:
 
 env:
-  LIBNAME: example
+  BIN_NAME: m8gd
+  LIB_NAME: libm8
 
 jobs:
   build:
@@ -14,150 +15,89 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Debug templates
           - platform: linux
-            float-precision: double
             arch: x86_64
-            target-type: template_debug
-            target: debug
-            os: ubuntu-22.04
-
-          # - platform: windows
-          #   float-precision: double
-          #   arch: x86_32
-          #   target-type: template_debug
-          #   os: windows-latest
+            os: ubuntu-24.04
 
           - platform: windows
-            float-precision: double
             arch: x86_64
-            target-type: template_debug
-            target: debug
-            os: ubuntu-22.04
-            host: x86_64-w64-mingw32
+            os: windows-latest
 
           - platform: macos
-            float-precision: double
             arch: universal
-            target-type: template_debug
-            target: debug
             os: macos-latest
-
-          # - platform: android
-          #   float-precision: double
-          #   arch: arm64
-          #   target-type: template_debug
-          #   os: ubuntu-20.04
-
-          # - platform: ios
-          #   float-precision: double
-          #   arch: arm64
-          #   target-type: template_debug
-          #   os: macos-latest
-
-          # - platform: web
-          #   float-precision: double
-          #   arch: wasm32
-          #   target-type: template_debug
-          #   os: ubuntu-20.04
-
-          # Double precision release templates
-          - platform: linux
-            float-precision: double
-            arch: x86_64
-            target-type: template_release
-            target: release
-            os: ubuntu-22.04
-
-          - platform: windows
-            float-precision: double
-            arch: x86_64
-            target-type: template_release
-            target: release
-            os: ubuntu-22.04
-            host: x86_64-w64-mingw32
-
-          - platform: macos
-            float-precision: double
-            arch: universal
-            target-type: template_release
-            target: release
-            os: macos-latest
-
-          # - platform: android
-          #   float-precision: double
-          #   arch: arm64
-          #   target-type: template_release
-          #   os: ubuntu-20.04
-
-          # - platform: ios
-          #   float-precision: double
-          #   arch: arm64
-          #   target-type: template_release
-          #   os: macos-latest
-
-          # - platform: web
-          #   float-precision: double
-          #   arch: wasm32
-          #   target-type: template_release
-          #   os: ubuntu-20.04
 
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           submodules: true
 
-      - name: Compile extension
-        uses: ./.github/actions/build
-        with:
-          platform: ${{ matrix.platform }}
-          arch: ${{ matrix.arch }}
-          float-precision: ${{ matrix.float-precision }}
-          build-target-type: ${{ matrix.target }}
-          host: ${{ matrix.host }}
-
-      - name: MacOS - Sign
-        # Disable sign if secrets are not set
-        if: ${{ matrix.platform == 'macos' && env.APPLE_CERT_BASE64 }}
-        env:
-          APPLE_CERT_BASE64: ${{ secrets.APPLE_CERT_BASE64 }}
-        uses: ./.github/actions/sign
-        with:
-          FRAMEWORK_PATH: bin/macos/macos.framework
-          APPLE_CERT_BASE64: ${{ secrets.APPLE_CERT_BASE64 }}
-          APPLE_CERT_PASSWORD: ${{ secrets.APPLE_CERT_PASSWORD }}
-          APPLE_DEV_PASSWORD: ${{ secrets.APPLE_DEV_PASSWORD }}
-          APPLE_DEV_ID: ${{ secrets.APPLE_DEV_ID }}
-          APPLE_DEV_TEAM_ID: ${{ secrets.APPLE_DEV_TEAM_ID }}
-          APPLE_DEV_APP_ID: ${{ secrets.APPLE_DEV_APP_ID }}
-
-      - name: Collect Addon Files as Artifact
-        shell: bash
+      - name: Install Linux Dependencies
+        if: ${{ matrix.platform == 'linux' }}
         run: |
-          mkdir -p "${{ github.workspace }}/artifact/addons/libm8gd/"
-          cp -av \
-          "${{ github.workspace }}/LICENSE" \
-          "${{ github.workspace }}/project/addons/libm8gd/." \
-          "${{ github.workspace }}/artifact/addons/libm8gd/"
+          sudo apt-get update -qq
+          sudo apt-get install -qqq build-essential pkg-config
+          sudo apt-get install pkg-config cmake ninja-build libasound2-dev libpulse-dev \
+          libaudio-dev libfribidi-dev libjack-dev libsndio-dev libx11-dev libxext-dev \
+          libxrandr-dev libxcursor-dev libxfixes-dev libxi-dev libxss-dev libxtst-dev \
+          libxkbcommon-dev libdrm-dev libgbm-dev libgl1-mesa-dev libgles2-mesa-dev \
+          libegl1-mesa-dev libdbus-1-dev libibus-1.0-dev libudev-dev libthai-dev \
+          libpipewire-0.3-dev libspa-0.2-dev
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+      - uses: actions/setup-python@v7
         with:
-          name: libm8gd-${{ matrix.platform }}-${{ matrix.arch }}-${{ matrix.float-precision }}-${{ matrix.target-type }}
-          path: |
-            ${{ github.workspace }}/artifact
+          python-version: '3.14'
 
-  # Merges all the build artifacts together into a single godot-cpp-template artifact.
-  # If you comment out this step, all the builds will be uploaded individually.
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+
+      - name: Cache Rust
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: "rust -> rust/target"
+
+      - name: Cache Build Artifacts
+        uses: actions/cache@v4
+        with:
+          path: build/
+          key: ${{ matrix.platform }}-build
+
+      - name: Compile Debug
+        shell: bash
+        run: python build.py gdext
+        env:
+          RUSTFLAGS: "-Awarnings"
+
+      - name: Compile Release and Export Godot Project
+        shell: bash
+        run: python build.py gui --release
+        env:
+          RUSTFLAGS: "-Awarnings"
+
+      - name: Upload Artifact (Export)
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ env.BIN_NAME }}-${{ matrix.platform }}-${{ matrix.arch }}
+          path: |
+            ${{ github.workspace }}/build/gui/*
+
+      - name: Copy License File
+        shell: bash
+        run: cp LICENSE godot/addons/libm8/LICENSE
+
+      - name: Upload Artifact (Addon)
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ env.LIB_NAME }}-${{ matrix.platform }}-${{ matrix.arch }}
+          path: |
+            ${{ github.workspace }}/godot/addons/libm8/*
+
   merge:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: build
     steps:
-      - name: Merge Artifacts
+      - name: Merge Addon Files
         uses: actions/upload-artifact/merge@v4
         with:
-          name: libm8gd
-          pattern: libm8gd-*
-          delete-merged: true
+          name: ${{ env.LIB_NAME }}
+          pattern: ${{ env.LIB_NAME }}*

@@ -8,15 +8,23 @@ name = "m8"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-cpal = { version = "0.18.1", features = ["pipewire", "asio"] }
-sdl3 = { version = "0.17.0", features = ["build-from-source-static"] }
-enum-map = "2.7.3"
-ringbuf = "0.4.8"
-serialport = "4.8.1"
-spectrum-analyzer = "1.7.0"
-thiserror = "2.0.17"
+cpal = { version = "=0.18.1", features = ["pipewire"] }
+sdl3 = { version = "=0.17.0", features = ["build-from-source-static"] }
+enum-map = "=2.7.3"
+ringbuf = "=0.4.8"
+serialport = "=4.9.0"
+spectrum-analyzer = "=1.7.0"
+thiserror = "=2.0.17"
 
-godot = { version = "0.5.4", features = ["register-docs"], optional = true }
+godot = { version = "=0.5.4", features = ["register-docs"], optional = true }
+
+[dependencies.sdl3-sys]
+version = "0.6.0"
+features = [
+	"no-default-subsystems",
+	"sdl-unix-console-build",
+	"sdl-audio"
+]
 
 [features]
 gdext = ["dep:godot"]
