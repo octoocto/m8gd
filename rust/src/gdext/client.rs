@@ -155,7 +155,7 @@ impl GodotM8Client {
     fn system_info_received(hardware_type: String, firmware_version: String);
 
     #[signal]
-    fn theme_colors_updated(colors: PackedColorArray);
+    fn theme_changed(colors: PackedColorArray);
 
     #[signal]
     fn background_color_changed(color: GodotColor);
@@ -803,8 +803,9 @@ impl GodotM8Client {
                 if self.theme_colors.len() == crate::NUM_THEME_COLORS {
                     let colors = Self::color_vec_to_array(&self.theme_colors);
                     self.signals()
-                        .theme_colors_updated()
-                        .emit(colors.to_godot());
+                        .background_color_changed()
+                        .emit(colors[0].to_godot());
+                    self.signals().theme_changed().emit(colors.to_godot());
                 }
             }
         }

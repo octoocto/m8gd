@@ -25,7 +25,7 @@ func init(p_m8c: GodotM8Client, p_track_index: int) -> void:
 	self.m8c = p_m8c
 	self.track_index = p_track_index
 
-	self.m8c.theme_colors_updated.connect(
+	self.m8c.theme_changed.connect(
 		func(colors: PackedColorArray) -> void:
 			self.color = colors[9]
 			queue_redraw(),

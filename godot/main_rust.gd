@@ -66,7 +66,7 @@ func _initialize_m8c() -> void:
 
 	m8c.audio_start("", "")
 	m8c.system_info_received.connect(_on_receive_system_info)
-	m8c.theme_colors_updated.connect(
+	m8c.theme_changed.connect(
 		func(colors: PackedColorArray) -> void:
 			print("received theme colors:")
 			for color in colors:

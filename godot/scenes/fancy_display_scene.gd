@@ -96,9 +96,13 @@ func init(p_main: Main) -> void:
 
 	Events.window_modified.connect(_update)
 
-	main.m8_system_info_received.connect(func(_hw: String, _fw: String) -> void: _update())
-	main.m8_theme_changed.connect(
-		func(_colors: PackedColorArray, _complete: bool) -> void: _update_background_color()
+	main.m8_system_info_received.connect(
+		func(_hw: String, _fw: String) -> void:
+			_update(),
+	)
+	main.m8c.background_color_changed.connect(
+		func(_color: Color) -> void:
+			_update_background_color(),
 	)
 
 	_update()
@@ -141,7 +145,7 @@ func init_menu(menu: SceneConfigMenu) -> void:
 		"",
 		func(path: String) -> void:
 			if get_value("background_mode") == 2:
-				bg_texture_rect.texture = load_media_to_texture_rect(path, bg_video_stream_player)
+				bg_texture_rect.texture = load_media_to_texture_rect(path, bg_video_stream_player),
 	)
 
 	menu.add_auto("background_brightness")

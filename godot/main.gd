@@ -123,7 +123,7 @@ func _ready() -> void:
 			device_manager.init(self)
 			m8c.system_info_received.connect(on_m8_system_info)
 			m8c.disconnected.connect(on_m8_device_disconnect)
-			m8c.theme_colors_updated.connect(on_m8_theme_changed)
+			m8c.theme_changed.connect(on_m8_theme_changed)
 			m8c.key_pressed.connect(Events.device_key_pressed.emit),
 		"init devices",
 	)

@@ -8,7 +8,7 @@
 [ext_resource type="Theme" uid="uid://c8lf57q2f23tp" path="res://ui/theme/menu_theme.tres" id="13_e5i6c"]
 [ext_resource type="Texture2D" uid="uid://bnktl64c363mh" path="res://assets/icon/TripleBar.png" id="13_gepng"]
 [ext_resource type="Script" uid="uid://dboaq4avw66tx" path="res://console.gd" id="14_getpj"]
-[ext_resource type="Texture2D" uid="uid://buojwr01y50u7" path="res://assets/icon/Close.png" id="14_p46wh"]
+[ext_resource type="Texture2D" uid="uid://c3ro1oqypyfid" path="res://assets/icon/close.png" id="14_p46wh"]
 [ext_resource type="PackedScene" uid="uid://bebvc2datqp85" path="res://ui/menus/menu_overlay_config.tscn" id="16_4bi6d"]
 [ext_resource type="PackedScene" uid="uid://cm2dn40rnose6" path="res://ui/menus/menu_scene_camera.tscn" id="16_getpj"]
 [ext_resource type="Script" uid="uid://crbrf1okvuwkx" path="res://ui/scalable.gd" id="18_d13ii"]
