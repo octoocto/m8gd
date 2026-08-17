@@ -89,11 +89,19 @@ impl super::AudioBackend for CpalAudioBackend {
         }
 
         for (device, config) in input_devices {
+            let buffer_size = match &config.buffer_size {
+                cpal::BufferSize::Fixed(size) => *size as usize,
+                cpal::BufferSize::Default => panic!("buffer size is not fixed"),
+            };
             if AudioStream::can_open_input(&device, &config) {
                 self.input_device = Some(AudioStream::open_input(
                     device,
                     config,
-                    self.on_input_data_received(data_prod, Arc::clone(&self.track_buffers)),
+                    self.on_input_data_received(
+                        buffer_size,
+                        data_prod,
+                        Arc::clone(&self.track_buffers),
+                    ),
                 )?);
                 break;
             }
@@ -238,6 +246,7 @@ impl super::AudioBackend for CpalAudioBackend {
 impl CpalAudioBackend {
     fn on_input_data_received(
         &self,
+        buffer_size: usize,
         mut data_prod: ringbuf::HeapProd<f32>,
         track_buffers: Arc<Mutex<EnumMap<m8::Track, RingVec>>>,
     ) -> impl FnMut(&[f32], &cpal::InputCallbackInfo) + Send + 'static {
@@ -245,14 +254,14 @@ impl CpalAudioBackend {
         let num_channels = usb_audio_mode.num_channels();
 
         move |data, _| {
-            let expected = BUFFER_SIZE * num_channels as usize;
-            if data.len() != expected {
-                println!(
-                    "CPAL: Input callback - expected {expected} samples, got {}",
-                    data.len()
-                );
-                return;
-            }
+            // let expected = buffer_size * num_channels as usize;
+            // if data.len() != expected {
+            //     println!(
+            //         "CPAL: Input callback - expected {expected} samples, got {}",
+            //         data.len()
+            //     );
+            //     // return;
+            // }
 
             // println!("CPAL: Input callback with {} samples", data.len());
 
