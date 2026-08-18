@@ -96,6 +96,11 @@ static func create_setting_from_property(prop: Dictionary, accept_no_hints := tr
 
 			setting = s
 
+		PropertyHint.PROPERTY_HINT_FILE:
+			var s: SettingFile = SETTING_FILE.instantiate()
+
+			setting = s
+
 		var _x:
 			return null
 			# assert(

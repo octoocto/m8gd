@@ -4,6 +4,8 @@ extends MenuFrameBase
 
 @onready var params_container: VBoxContainer = %SceneParamsContainer
 
+var settings_map: Dictionary[StringName, SettingBase] = { }
+
 
 func _on_menu_init() -> void:
 	super()
@@ -12,12 +14,17 @@ func _on_menu_init() -> void:
 		func(scene_path: String, _scene: M8Scene) -> void:
 			assert(main.current_scene, "There is no M8 scene loaded!")
 			_clear_params()
+			main.current_scene.reload()
 			main.current_scene.init_menu(self)
 			Log.ln("initialized %d param(s) from scene: %s" % [_num_params(), scene_path]),
 	)
 
 
+##
+## Clear all params from this menu.
+##
 func _clear_params() -> void:
+	self.settings_map.clear()
 	for c in params_container.get_children():
 		c.queue_free()
 	Log.ln("cleared params")
@@ -25,6 +32,10 @@ func _clear_params() -> void:
 
 func _num_params() -> int:
 	return params_container.get_children().size()
+
+
+func get_setting(property: String) -> SettingBase:
+	return self.settings_map.get(property)
 
 
 ##
@@ -50,12 +61,15 @@ func add_auto(property: String, setting_name: String = "") -> SettingBase:
 			continue
 
 		var setting := MenuUtils.create_setting_from_property(prop)
+		assert(setting, "Could not create setting from property: %s" % prop)
 
 		setting.setting_name = prop_name.capitalize() if setting_name == "" else setting_name
 		setting.set_value(scene.get(property))
 
 		params_container.add_child(setting)
 		setting.setting_connect_scene(property)
+
+		self.settings_map[prop_name] = setting
 
 		return setting
 

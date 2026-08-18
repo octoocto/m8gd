@@ -2,6 +2,19 @@ extends M8Scene
 
 const GRID_OVERLAY_MATERIAL := preload("res://assets/grid_overlay.tres")
 
+@export_group("Surface Material", "surface_")
+
+@export var surface_mode := SurfaceMode.WOOD:
+	set(value):
+		surface_mode = value
+		self._set_surface_mode(value)
+
+@export_subgroup("surface_mode", "SurfaceMode.IMAGE")
+@export_file var surface_texture := "":
+	set(value):
+		surface_texture = value
+		self._set_surface_texture(value)
+
 @export var surface_color := Color(1.0, 1.0, 1.0):
 	set(value):
 		surface_color = value
@@ -25,14 +38,18 @@ var surface_material_custom: StandardMaterial3D = null
 		if surface_mesh.material_overlay:
 			(surface_mesh.material_overlay as StandardMaterial3D).albedo_color = value
 
+@export_group("Misc")
+
 @export var enable_grass := false:
 	set(value):
 		enable_grass = value
 		grass_area.visible = value
 
-@export var enable_plant := true:
+@export_group("Desk Plant", "plant_")
+
+@export var plant_enabled := true:
 	set(value):
-		enable_plant = value
+		plant_enabled = value
 		plant_model.visible = value
 
 @export var plant_type: PlantModel.Type = PlantModel.Type.TYPE_C:
@@ -40,17 +57,21 @@ var surface_material_custom: StandardMaterial3D = null
 		plant_type = value
 		plant_model.type = plant_type
 
+@export_group("Lighting")
+
 @export var enable_directional_light := true:
 	set(value):
 		enable_directional_light = value
 		directional_light.visible = value
 
+@export_subgroup("enable_directional_light", "true")
 @export var directional_light_color := Color(0.9, 0.9, 1.0, 0.25):
 	set(value):
 		directional_light_color = value
 		directional_light.light_color = value
 		directional_light.light_energy = value.a * 8
 
+@export_subgroup("enable_directional_light", "true")
 @export_range(0.0, 360.0) var directional_light_angle := 240.0:
 	set(value):
 		directional_light_angle = value
@@ -61,6 +82,7 @@ var surface_material_custom: StandardMaterial3D = null
 		enable_lamp_light = value
 		lamp_light.visible = value
 
+@export_subgroup("enable_lamp_light", "true")
 @export var lamp_light_color := Color(1, 0.9, 0.6):
 	set(value):
 		lamp_light_color = value
@@ -72,6 +94,7 @@ var surface_material_custom: StandardMaterial3D = null
 		enable_left_light = value
 		left_light.visible = value
 
+@export_subgroup("enable_left_light", "true")
 @export var left_light_color := Color(1, 0, 0):
 	set(value):
 		left_light_color = value
@@ -83,6 +106,7 @@ var surface_material_custom: StandardMaterial3D = null
 		enable_right_light = value
 		right_light.visible = value
 
+@export_subgroup("enable_right_light", "true")
 @export var right_light_color := Color(0, 0, 1):
 	set(value):
 		right_light_color = value
@@ -101,91 +125,51 @@ var surface_material_custom: StandardMaterial3D = null
 @onready var video_player: VideoStreamPlayer = %VideoStreamPlayer
 
 
-func init(p_main: Main) -> void:
-	super(p_main)
-
-	get_device_model().init(main)
-	camera.init(main)
-
-
-func init_menu(menu: SceneConfigMenu) -> void:
-	menu.add_section("Surface")
-	var setting_surface_mode := menu.add_option_custom(
-		"surface_mode",
-		0,
-		["Wood", "Stone", "M8 Display", "Custom"],
-		set_surface_mode,
-	)
-
-	var setting_surface_tex := menu.add_file_custom(
-		"surface_texture",
-		"",
-		func(path: String) -> void:
-			var texture := load_media_to_texture_rect(path, video_player)
-			if texture is Texture2D:
-				var material := StandardMaterial3D.new()
-				material.albedo_texture = texture
-				surface_material_custom = material
-				load_custom_texture(),
-	)
-
-	setting_surface_tex.show_if(
-		setting_surface_mode,
-		func(value: int) -> bool:
-			return value == 3,
-	)
-
-	menu.add_auto("surface_color")
-
-	var setting_grid := menu.add_auto("surface_enable_grid")
-	menu.add_auto("surface_grid_color").show_if(setting_grid)
-
-	menu.add_section("Decorations")
-
-	var setting_plant := menu.add_auto("enable_plant")
-	menu.add_auto("plant_type").show_if(setting_plant)
-
-	menu.add_auto("enable_grass")
-
-	menu.add_section("Lighting")
-
-	var setting_light_dir := menu.add_auto("enable_directional_light")
-	menu.add_auto("directional_light_color", "*Light Color").show_if(setting_light_dir)
-	menu.add_auto("directional_light_angle", "*Light Angle").show_if(setting_light_dir)
-
-	var setting_light_lamp := menu.add_auto("enable_lamp_light")
-	menu.add_auto("lamp_light_color", "*Light Color").show_if(setting_light_lamp)
-
-	var setting_light_left := menu.add_auto("enable_left_light")
-	menu.add_auto("left_light_color", "*Light Color").show_if(setting_light_left)
-
-	var setting_light_right := menu.add_auto("enable_right_light")
-	menu.add_auto("right_light_color", "*Light Color").show_if(setting_light_right)
+func init() -> void:
+	get_device_model().init(self.main)
+	self.camera.init(self.main)
 
 
 func _physics_process(delta: float) -> void:
-	if main.is_menu_open():
+	if self.main.is_menu_open():
 		return
 
-	camera.update(delta)
+	self.camera.update(delta)
 
 
-func set_surface_mode(index: int) -> void:
-	print("Setting surface mode to ", index)
+enum SurfaceMode {
+	WOOD,
+	STONE,
+	M8_DISPLAY,
+	IMAGE,
+}
+
+
+func _set_surface_texture(path: String) -> void:
+	var texture := load_media_to_texture_rect(path, video_player)
+	if texture is Texture2D:
+		var material := StandardMaterial3D.new()
+		material.albedo_texture = texture
+		surface_material_custom = material
+		load_custom_texture()
+
+
+func _set_surface_mode(mode: SurfaceMode) -> void:
+	print("Setting surface mode to ", mode)
 	var material := StandardMaterial3D.new()
-	match index:
-		0: # wood
+	match mode:
+		SurfaceMode.WOOD:
 			material = load("res://assets/ambientcg/wood051.tres")
 			material.albedo_color = surface_color
-		1: # stone
+		SurfaceMode.STONE:
 			material = load("res://assets/ambientcg/asphalt010.tres")
 			material.albedo_color = surface_color
-		2: # display
+		SurfaceMode.M8_DISPLAY:
 			material.albedo_texture = main.m8c.get_display_texture()
 			material.albedo_color = surface_color
 			material.uv1_triplanar = true
 			material.uv1_scale = Vector3(0.125, 0.125, 0.125)
-		3: # custom
+		SurfaceMode.IMAGE:
 			material = load_custom_texture()
 	surface_mesh.material_override = material
 

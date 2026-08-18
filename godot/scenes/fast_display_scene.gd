@@ -7,9 +7,7 @@ extends M8Scene
 @onready var texture_rect: TextureRect = %DisplayTextureRect
 
 
-func init(p_main: Main) -> void:
-	super(p_main)
-
+func init() -> void:
 	texture_rect.texture = main.m8c.get_display_texture()
 
 	RenderingServer.set_default_clear_color(main.m8c.get_background_color())
@@ -24,10 +22,6 @@ func init(p_main: Main) -> void:
 		func(... _args: Array) -> void:
 			_update_integer_scale(),
 	)
-
-
-func init_menu(menu: SceneConfigMenu) -> void:
-	menu.add_auto("integer_scale")
 
 
 func _update_integer_scale() -> void:

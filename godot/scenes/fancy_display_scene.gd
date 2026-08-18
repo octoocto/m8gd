@@ -11,10 +11,14 @@ extends M8Scene
 @onready var bg_color_rect: ColorRect = %BackgroundColorRect
 @onready var panel_container: PanelContainer = %PanelContainer
 
+@export_group("Scale")
+
 @export_range(0, 6) var integer_scale: int = 0:
 	set(value):
 		integer_scale = value
 		_update()
+
+@export_group("Panel", "panel_")
 
 @export_range(1, 6) var panel_integer_scale: int = 1:
 	set(value):
@@ -66,6 +70,18 @@ extends M8Scene
 		if is_inside_tree():
 			(panel.material as ShaderMaterial).set_shader_parameter("blur_amount", value)
 
+@export_group("Background", "background_")
+
+@export var background_mode := BackgroundMode.M8_BACKGROUND_COLOR:
+	set(value):
+		background_mode = value
+		self._set_background_mode(value)
+
+@export_file var background_file := "":
+	set(value):
+		background_file = value
+		self._set_background_file(value)
+
 @export_range(0.0, 2.0, 0.01) var background_brightness: float = 1.0:
 	set(value):
 		background_brightness = value
@@ -89,9 +105,7 @@ func _physics_process(_delta: float) -> void:
 	_update_integer_scale()
 
 
-func init(p_main: Main) -> void:
-	super(p_main)
-
+func init() -> void:
 	self.display_texture_rect.texture = main.m8c.get_display_texture()
 
 	Events.window_modified.connect(_update)
@@ -109,48 +123,31 @@ func init(p_main: Main) -> void:
 	_update_background_color()
 
 
-func init_menu(menu: SceneConfigMenu) -> void:
-	menu.add_auto("integer_scale")
+enum BackgroundMode {
+	M8_BACKGROUND_COLOR,
+	M8_DISPLAY,
+	IMAGE,
+}
 
-	menu.add_section("Panel")
-	menu.add_auto("panel_integer_scale")
-	menu.add_auto("panel_corner_radius")
-	menu.add_auto("panel_padding")
-	menu.add_auto("panel_offset")
-	menu.add_auto("panel_opacity")
-	menu.add_auto("panel_blur_amount")
 
-	menu.add_section("Background")
-	menu.add_option_custom(
-		"background_mode",
-		0,
-		["M8 Background Color", "M8 Display", "Custom File"],
-		func(index: int) -> void:
-			match index:
-				0:
-					bg_texture_rect.visible = false
-				1:
-					bg_texture_rect.visible = true
-					bg_texture_rect.texture = main.m8c.get_display_texture()
-				2:
-					bg_texture_rect.visible = true
-					bg_texture_rect.texture = load_media_to_texture_rect(
-						get_value("background_file") as String,
-						bg_video_stream_player,
-					)
-	)
+func _set_background_mode(mode: BackgroundMode) -> void:
+	match mode:
+		BackgroundMode.M8_BACKGROUND_COLOR:
+			bg_texture_rect.visible = false
+		BackgroundMode.M8_DISPLAY:
+			bg_texture_rect.visible = true
+			bg_texture_rect.texture = main.m8c.get_display_texture()
+		BackgroundMode.IMAGE:
+			bg_texture_rect.visible = true
+			bg_texture_rect.texture = load_media_to_texture_rect(
+				get_value("background_file") as String,
+				bg_video_stream_player,
+			)
 
-	menu.add_file_custom(
-		"background_file",
-		"",
-		func(path: String) -> void:
-			if get_value("background_mode") == 2:
-				bg_texture_rect.texture = load_media_to_texture_rect(path, bg_video_stream_player),
-	)
 
-	menu.add_auto("background_brightness")
-	menu.add_auto("background_theme_tint")
-	menu.add_auto("background_blur_amount")
+func _set_background_file(path: String) -> void:
+	if self.background_mode == BackgroundMode.IMAGE:
+		bg_texture_rect.texture = load_media_to_texture_rect(path, bg_video_stream_player)
 
 
 func _update() -> void:

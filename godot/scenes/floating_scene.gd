@@ -11,14 +11,10 @@ extends M8Scene
 @onready var bg_texture_rect: TextureRect = %BGTextureRect
 @onready var bg_video_stream_player: VideoStreamPlayer = %BGVideoStreamPlayer
 
-@export var enable_display_background := true:
+@export_group("Audio Spectrum", "audio_spectrum_")
+@export var audio_spectrum_enabled := false:
 	set(value):
-		display_mesh.visible = value
-		enable_display_background = value
-
-@export var enable_audio_spectrum := false:
-	set(value):
-		enable_audio_spectrum = value
+		audio_spectrum_enabled = value
 		audio_spectrum.visible = value
 		sprite_audio_spectrum.visible = value
 
@@ -38,11 +34,18 @@ extends M8Scene
 		audio_spectrum.style_bar_interlace = value
 		audio_spectrum.style_line_interlace = value
 
+@export_group("Jumbotron", "jumbotron_")
+@export var jumbotron_enabled := true:
+	set(value):
+		jumbotron_enabled = value
+		self.display_mesh.visible = value
+
 @export_range(0, 10) var jumbotron_distortion_amount := 3:
 	set(value):
 		jumbotron_distortion_amount = value
 		(display_mesh.material_override as ShaderMaterial).set_shader_parameter(
-			"distort_amount", value
+			"distort_amount",
+			value,
 		)
 
 @export_range(0.75, 2.0, 0.05) var jumbotron_size := 0.75:
@@ -60,11 +63,23 @@ extends M8Scene
 		jumbotron_contrast = value
 		(display_mesh.material_override as ShaderMaterial).set_shader_parameter("contrast", value)
 
+@export_group("Background", "background_")
+@export var background_mode := BackgroundMode.SOLID_COLOR:
+	set(value):
+		background_mode = value
+		self._set_background_mode(value)
+
+@export_file var background_file: String = "":
+	set(value):
+		background_file = value
+		self._set_background_file(value)
+
 @export var solid_background_color := Color.BLACK:
 	set(value):
 		world_environment.environment.background_color = value
 		solid_background_color = value
 
+@export_group("Lights")
 @export var enable_lamp_light := true:
 	set(value):
 		enable_lamp_light = value
@@ -99,89 +114,48 @@ extends M8Scene
 		light_right.light_energy = value.a * 16
 
 
-func init(p_main: Main) -> void:
-	super(p_main)
+func init() -> void:
+	get_device_model().init(self.main)
+	self.camera.init(self.main)
 
-	get_device_model().init(main)
 	(display_mesh.material_override as ShaderMaterial).set_shader_parameter(
-		"tex", main.m8c.get_display_texture()
+		"tex",
+		main.m8c.get_display_texture(),
 	)
-	camera.init(main)
-
-
-func init_menu(menu: SceneConfigMenu) -> void:
-	# menu.add_exports_from(self)
-	# menu._preset_init(self)
-
-	menu.add_section("Audio Spectrum")
-	var setting_spectrum := menu.add_auto("enable_audio_spectrum")
-	menu.add_auto("audio_spectrum_color").show_if(setting_spectrum)
-	menu.add_auto("audio_spectrum_width").show_if(setting_spectrum)
-	menu.add_auto("audio_spectrum_interlace").show_if(setting_spectrum)
-
-	menu.add_section("Jumbotron")
-	menu.add_option_custom(
-		"jumbotron_mode",
-		1,
-		["Disabled", "M8 Display"],
-		func(index: int) -> void: display_mesh.visible = index == 1
-	)
-	menu.add_auto("jumbotron_size", "*Size")
-	menu.add_auto("jumbotron_brightness", "*Brightness")
-	menu.add_auto("jumbotron_contrast", "*Contrast")
-	menu.add_auto("jumbotron_distortion_amount", "*Distortion")
-
-	menu.add_section("Background")
-
-	var setting_bg_mode := menu.add_option_custom(
-		"background_mode",
-		0,
-		[
-			"Solid Color",
-			"Custom File",
-			"Custom File (Panorama)",
-		],
-		func(index: int) -> void:
-			bg_texture_rect.visible = false
-			bg_video_stream_player.visible = false
-			world_environment.environment.background_mode = Environment.BG_CLEAR_COLOR
-			world_environment.environment.ambient_light_source = Environment.AMBIENT_SOURCE_DISABLED
-			match index:
-				0:
-					world_environment.environment.background_mode = Environment.BG_COLOR
-				1:
-					world_environment.environment.background_mode = Environment.BG_CANVAS
-					bg_texture_rect.visible = true
-					if bg_video_stream_player.is_playing():
-						bg_video_stream_player.visible = true
-				2:
-					world_environment.environment.background_mode = Environment.BG_SKY
-	)
-
-	menu.add_auto("solid_background_color").show_if(
-		setting_bg_mode, func(value: int) -> bool: return value == 0
-	)
-
-	var on_load_bg_file := func(path: String) -> void:
-		var texture := load_media_to_texture_rect(path, bg_video_stream_player)
-		bg_texture_rect.texture = texture
-		(world_environment.environment.sky.sky_material as PanoramaSkyMaterial).panorama = texture
-
-	menu.add_file_custom("background_file", "", on_load_bg_file).show_if(
-		setting_bg_mode, func(value: int) -> bool: return value != 0
-	)
-
-	menu.add_section("Lighting")
-
-	var setting_light_lamp := menu.add_auto("enable_lamp_light")
-	menu.add_auto("lamp_light_color", "*Light Color").show_if(setting_light_lamp)
-	var setting_light_left := menu.add_auto("enable_left_light")
-	menu.add_auto("left_light_color", "*Light Color").show_if(setting_light_left)
-	var setting_light_right := menu.add_auto("enable_right_light")
-	menu.add_auto("right_light_color", "*Light Color").show_if(setting_light_right)
 
 
 func _physics_process(delta: float) -> void:
-	if main.is_menu_open():
+	if self.main.is_menu_open():
 		return
-	camera.update(delta)
+	self.camera.update(delta)
+
+
+enum BackgroundMode {
+	SOLID_COLOR,
+	IMAGE,
+	IMAGE_PANORAMA,
+}
+
+
+func _set_background_file(path: String) -> void:
+	var texture := load_media_to_texture_rect(path, self.bg_video_stream_player)
+	self.bg_texture_rect.texture = texture
+	(self.world_environment.environment.sky.sky_material as PanoramaSkyMaterial).panorama = texture
+
+
+func _set_background_mode(mode: BackgroundMode) -> void:
+	self.bg_texture_rect.visible = false
+	self.bg_video_stream_player.visible = false
+	self.world_environment.environment.background_mode = Environment.BG_CLEAR_COLOR
+	self.world_environment.environment.ambient_light_source = Environment.AMBIENT_SOURCE_DISABLED
+
+	match mode:
+		BackgroundMode.SOLID_COLOR:
+			self.world_environment.environment.background_mode = Environment.BG_COLOR
+		BackgroundMode.IMAGE:
+			self.world_environment.environment.background_mode = Environment.BG_CANVAS
+			self.bg_texture_rect.visible = true
+			if self.bg_video_stream_player.is_playing():
+				self.bg_video_stream_player.visible = true
+		BackgroundMode.IMAGE_PANORAMA:
+			self.world_environment.environment.background_mode = Environment.BG_SKY

@@ -327,7 +327,7 @@ func load_scene(scene_path: String) -> bool:
 			print("load_scene(): initializing scene...")
 
 			# initialize scene and config
-			scene.init(self)
+			# scene.init(self)
 			config.set_scene(scene)
 			current_scene = scene
 
