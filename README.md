@@ -9,7 +9,7 @@ m8gd: M8 Headless Display and Visualizer
 
 **m8gd** is a M8 display client for the M8 Tracker that provides a variety of 3D and 2D scenes.
 
-This repository consists of the Rust library and GDExtension `libm8gd` that allows Godot to connect to M8 devices, and the Godot project `m8gd`.
+This repository consists of the Rust library and GDExtension `libm8` that allows Godot to connect to M8 devices, and the Godot project `m8gd`.
 
 Table of contents
 =================
@@ -59,6 +59,7 @@ Various overlays can be toggled on/off and configured in the main menu.
 - **Display Panel**: a secondary 2D M8 display panel. Useful for overlaying over 3D scenes.
 - **Keycast**: displays live keystrokes and key combos (either from the physical device or the app).
 - **Input Display**: displays the M8 key layout with live key presses (either from the physical device or the app).
+- **Oscillator**: an emulation of the M8 oscillator screen.
 
 ### M8 Theme Integration
 

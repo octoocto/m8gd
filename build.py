@@ -47,6 +47,7 @@ parser = argparse.ArgumentParser()
 _ = parser.add_argument(
     "target",
     type=str,
+    nargs="?",
     choices=list(TARGET_FLAGS.keys()),
     default=next(iter(TARGET_FLAGS.keys())),
     help=f"set the target build type ({', '.join(TARGET_FLAGS.keys())})",
@@ -189,7 +190,6 @@ def main() -> None:
     # export the Godot project
 
     println(f"Exporting Godot project for {build_platform} platform...")
-    exec("ls -l ./build/")
     Path(f"{BUILD_DIR}/gui").mkdir(parents=True, exist_ok=True)
     exec(
         f"{godot_path} --headless --path godot {godot_target} {build_platform} ../{BUILD_DIR}/gui/{PROJ_NAME}{app_extension}"
