@@ -22,7 +22,7 @@ func _overlay_init() -> void:
 func _overlay_update() -> void:
 	if is_inside_tree():
 		# update position
-		display_panel.position = position_offset
+		# display_panel.position = self.offset_transform_position
 
 		# update padding
 		var stylebox: StyleBoxFlat = display_panel.get_theme_stylebox("panel")

@@ -116,7 +116,7 @@ func _draw() -> void:
 				floorf(i / float(size.x)) * -int(size.x),
 				floorf(i / float(size.x)) * row_spacing + row_spacing,
 			)
-			+ Vector2(position_offset)
+			+ Vector2(self.offset_transform_position)
 		)
 
 		if type == Type.PIXEL:

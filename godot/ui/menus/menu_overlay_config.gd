@@ -78,7 +78,7 @@ func _init_params_for(overlay: OverlayBase) -> void:
 		func(_value: int) -> void:
 			s_position.value = Vector2i.ZERO,
 	)
-	s_position.setting_connect_overlay(overlay, "_position_offset")
+	s_position.setting_connect_overlay(overlay, "offset_transform_position")
 
 	# load any additional params
 	for child in param_container.get_children():

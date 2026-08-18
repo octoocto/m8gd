@@ -9,6 +9,7 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 320.0
 offset_bottom = 320.0
+offset_transform_enabled = true
 script = ExtResource("1_tnj14")
 
 [node name="ControlOffset" type="Control" parent="." unique_id=113579641]

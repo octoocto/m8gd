@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://dq6heks88e2ip" path="res://overlays/overlay_audio_waveform.tscn" id="4_cat8f"]
 [ext_resource type="PackedScene" uid="uid://ca2jqh2tc7jix" path="res://overlays/overlay_keys.tscn" id="5_kpk2b"]
 [ext_resource type="PackedScene" uid="uid://bx26oqvasqfha" path="res://overlays/overlay_input_display.tscn" id="7_cat8f"]
-[ext_resource type="Script" uid="uid://cav12o5kuhwh1" path="res://overlays/overlay_osc.gd" id="8_kpk2b"]
+[ext_resource type="Script" uid="uid://0taddcs7bw1v" path="res://overlays/overlay_osc.gd" id="8_kpk2b"]
 
 [node name="OverlayContainer" type="Container" unique_id=2008556517]
 anchors_preset = 15
@@ -62,7 +62,9 @@ visible = false
 layout_mode = 1
 
 [node name="OverlayOsc" type="Control" parent="Control" unique_id=1219755237]
+layout_mode = 1
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+offset_transform_enabled = true
 script = ExtResource("8_kpk2b")

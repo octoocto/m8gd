@@ -19,8 +19,6 @@ var vp: SubViewport
 var vp_container: SubViewportContainer
 var vbox: VBoxContainer
 
-# FIXME: oscillators not scaling properly when overlays are integer scaled
-
 
 func _overlay_init() -> void:
 	self.custom_minimum_size = Vector2(320, 240)
@@ -78,5 +76,5 @@ func _overlay_update() -> void:
 
 func _add_osc(track_index: int) -> void:
 	var osc := TrackOscilloscope.create(main.m8c, track_index)
-	osc.position_offset = self._position_offset
+	# osc.position_offset = self.offset_transform_position
 	self.vbox.add_child(osc)

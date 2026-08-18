@@ -33,8 +33,8 @@ func _overlay_init() -> void:
 
 
 func _overlay_update() -> void:
-	control.position = position_offset
-	anchors_preset = anchors_preset
+	control.position = self.offset_transform_position
+	anchors_preset = self.anchors_preset
 
 	for key: int in main.M8_KEYS:
 		_animate_pressed(key, main.m8_is_key_pressed(key))

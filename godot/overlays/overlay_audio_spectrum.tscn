@@ -21,4 +21,5 @@ offset_right = -320.0
 offset_bottom = -240.0
 grow_horizontal = 2
 grow_vertical = 2
+offset_transform_enabled = true
 script = ExtResource("1_1v02u")

@@ -28,6 +28,7 @@ region = Rect2(0, 0, 320, 240)
 [node name="Display" type="Control" unique_id=935975863]
 layout_mode = 3
 anchors_preset = 0
+offset_transform_enabled = true
 script = ExtResource("2_yhulq")
 
 [node name="DisplayPanel" type="PanelContainer" parent="." unique_id=1419469488]

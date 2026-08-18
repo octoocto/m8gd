@@ -191,7 +191,7 @@ func _overlay_update() -> void:
 		return
 
 	control_offset.size = size
-	control_offset.position = position_offset
+	control_offset.position = self.offset_transform_position
 	control.size = Vector2(0, size.y)
 	control.position = Vector2.ZERO
 	vbox.size = size
