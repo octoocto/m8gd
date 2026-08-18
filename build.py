@@ -17,7 +17,7 @@ from typing import Literal
 PROJ_NAME = "m8gd"
 LIB_NAME = "m8"
 BUILD_DIR = "build"
-GODOT_VERSION = "4.7"
+GODOT_VERSION = "4.7.1"
 GODOT_BRANCH = "stable"
 TARGET_FLAGS = {
     "gui": "--features gdext --lib",
