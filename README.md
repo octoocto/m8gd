@@ -191,6 +191,15 @@ See more details [here](https://docs.godotengine.org/en/4.2/classes/class_projec
 
 m8gd will also detect if the audio device is connected but not playing (this may happen when repeatedly disconnecting/connecting the M8) and automatically attempt to reconnect the audio device. This can happen around 10 seconds of the audio device not playing.
 
+## Resetting the config / config loading issues
+
+The config may no longer load correctly or probably even stop the app from opening as things change between versions.
+
+If this happens, you'll probably have to reset the config by deleting the `config.res` file in one of these directories depending on OS, then restarting the app to allow it to create a default one:
+- Windows: `%APPDATA%\Godot\app_userdata\m8gd\`
+- macOS: `~/Library/Application Support/Godot/app_userdata/m8gd/`
+- Linux: `~/.local/share/godot/app_userdata/m8gd/`
+
 ## Running on macOS
 
 At this time, the MacOS build included in the releases does not have an official Apple Developer code signature and will likely not start as-is.
