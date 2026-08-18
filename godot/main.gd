@@ -129,6 +129,10 @@ func _ready() -> void:
 	)
 
 	get_window().size_changed.connect(Events.window_modified.emit)
+	get_window().focus_entered.connect(
+		func() -> void:
+			m8c.debug_reset_display(),
+	)
 
 	Events.preset_loaded.connect(_on_preset_loaded)
 
