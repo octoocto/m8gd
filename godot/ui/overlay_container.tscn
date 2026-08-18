@@ -69,3 +69,5 @@ offset_right = 40.0
 offset_bottom = 40.0
 offset_transform_enabled = true
 script = ExtResource("8_kpk2b")
+osc_height = null
+osc_multiplier = null

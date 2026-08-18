@@ -2,6 +2,18 @@
 class_name OverlayOscillator
 extends OverlayBase
 
+@export_group("Oscillator")
+@export_range(24, 64) var osc_height := 24:
+	set(value):
+		osc_height = value
+		self._overlay_update()
+
+@export_range(1.0, 8.0) var osc_multiplier := 2.0:
+	set(value):
+		osc_multiplier = value
+		self._overlay_update()
+
+@export_group("Tracks")
 @export var mix_enabled := false
 @export var track_1_enabled := true
 @export var track_2_enabled := true
@@ -21,7 +33,6 @@ var vbox: VBoxContainer
 
 
 func _overlay_init() -> void:
-	self.custom_minimum_size = Vector2(320, 240)
 	super()
 
 
@@ -73,8 +84,12 @@ func _overlay_update() -> void:
 	if self.reverb_fx_enabled:
 		_add_osc(11)
 
+	self.custom_minimum_size = Vector2(320, self.vbox.get_child_count() * self.osc_height)
+
 
 func _add_osc(track_index: int) -> void:
 	var osc := TrackOscilloscope.create(main.m8c, track_index)
+	osc.height = self.osc_height
+	osc.height_multiplier = self.osc_multiplier
 	# osc.position_offset = self.offset_transform_position
 	self.vbox.add_child(osc)
