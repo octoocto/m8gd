@@ -110,7 +110,7 @@ func init() -> void:
 
 	Events.window_modified.connect(_update)
 
-	main.m8_system_info_received.connect(
+	Events.m8_system_info_received.connect(
 		func(_hw: String, _fw: String) -> void:
 			_update(),
 	)

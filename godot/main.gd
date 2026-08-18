@@ -1,6 +1,5 @@
 class_name Main extends Node
 
-signal m8_system_info_received(hardware: String, firmware: String)
 signal m8_theme_changed(colors: PackedColorArray, complete: bool)
 
 @warning_ignore("UNUSED_SIGNAL")
@@ -454,7 +453,7 @@ func _update_labels() -> void:
 
 func on_m8_system_info(hardware: String, firmware: String) -> void:
 	_update_labels()
-	m8_system_info_received.emit(hardware, firmware)
+	Events.m8_system_info_received.emit(hardware, firmware)
 
 
 ## Called when the M8 has been disconnected.

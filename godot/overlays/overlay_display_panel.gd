@@ -12,7 +12,11 @@ extends OverlayBase
 
 
 func _overlay_init() -> void:
-	display_texture_rect.texture = main.m8c.get_display_texture()
+	Events.m8_system_info_received.connect(
+		func(_hw: String, _fw: String) -> void:
+			self.display_texture_rect.texture = main.m8c.get_display_texture()
+			self._overlay_update(),
+	)
 	main.m8_theme_changed.connect(
 		func(_colors: PackedColorArray, _complete: bool) -> void:
 			self._overlay_update(),

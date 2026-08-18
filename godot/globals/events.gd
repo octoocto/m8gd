@@ -30,6 +30,9 @@ signal serial_device_connected
 signal audio_device_connected
 
 @warning_ignore("UNUSED_SIGNAL")
+signal m8_system_info_received(hw: String, fw: String)
+
+@warning_ignore("UNUSED_SIGNAL")
 signal gui_mouse_entered(ui_element: UIBase)
 
 @warning_ignore("UNUSED_SIGNAL")

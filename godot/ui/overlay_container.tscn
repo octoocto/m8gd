@@ -62,6 +62,7 @@ visible = false
 layout_mode = 1
 
 [node name="OverlayOsc" type="Control" parent="Control" unique_id=1219755237]
+visible = false
 layout_mode = 1
 anchors_preset = 0
 offset_right = 40.0
