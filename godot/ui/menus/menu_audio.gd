@@ -10,8 +10,6 @@ extends MenuBase
 @onready var l_audio_buffer: UILabel2 = %LabelAudioBuffer
 @onready var l_audio_latency: UILabel2 = %LabelAudioLatency
 @onready var s_sa_enable: SettingBase = %Setting_SAEnable
-@onready var s_sa_min: SettingBase = %Setting_SAMin
-@onready var s_sa_max: SettingBase = %Setting_SAMax
 
 
 func _on_menu_init() -> void:
@@ -25,7 +23,7 @@ func _on_menu_init() -> void:
 		"volume",
 		func(value: float) -> void:
 			var volume: float = pow(value, 2)
-			main.audio_set_volume(volume),
+			main.m8c.set_volume(volume),
 	)
 
 	var audio_latency_update_timer := Timer.new()
@@ -46,14 +44,4 @@ func _on_menu_init() -> void:
 		"audio_analyzer_enabled",
 		func(value: bool) -> void:
 			main.audio_set_spectrum_analyzer_enabled(value),
-	)
-	s_sa_min.setting_connect_global(
-		"audio_analyzer_min_freq",
-		func(value: int) -> void:
-			main.visualizer_frequency_min = value,
-	)
-	s_sa_max.setting_connect_global(
-		"audio_analyzer_max_freq",
-		func(value: int) -> void:
-			main.visualizer_frequency_max = value,
 	)

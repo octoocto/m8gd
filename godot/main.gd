@@ -85,14 +85,6 @@ var m8_virtual_keyboard_velocity := 127
 
 var device_manager := DeviceManager.new()
 
-var audio_peak := 0.0 # audio peak (in dB)
-var audio_peak_max := 0.0
-var audio_level_raw := 0.0 # audio peak (in linear from 0.0 to 1.0)
-var audio_level := 0.0 # audio peak (in linear from 0.0 to 1.0)
-var last_peak := 0.0
-var last_peak_max := 0.0
-var last_audio_level := 0.0
-
 # ALT+mouse dragging variables
 var _window_drag_enabled := false
 var _window_drag_initial_pos := Vector2.ZERO
@@ -154,23 +146,8 @@ func _process(delta: float) -> void:
 	device_manager._process(delta)
 	label_fps.text = "%d" % Engine.get_frames_per_second()
 
-	# var palette := m8_get_theme_colors()
-	# if palette.size() < 16:
-	# 	for i in range(16):
-	# 		get_node("%%Color_Palette%d" % (i + 1)).color = Color(0, 0, 0, 0)
-	# 	for i in range(palette.size()):
-	# 		get_node("%%Color_Palette%d" % (i + 1)).color = palette[i]
-
 
 func _physics_process(delta: float) -> void:
-	update_audio_analyzer()
-
-	# var modulate_color := m8c.get_theme_colors()[0]
-	# modulate_color.v = 1.0
-	# %BGShader.material.set_shader_parameter("tint_color", modulate_color)
-
-	# %BGShader.material.set_shader_parameter("brightness", 1.0 + (audio_level * visualizer_brightness_amount))
-
 	# fade out status message
 	if label_status.modulate.a > 0:
 		label_status.modulate.a = lerp(
@@ -522,13 +499,6 @@ func audio_set_handler(handler: DeviceManager.AudioHandler) -> void:
 	device_manager.audio_set_handler(handler)
 
 
-##
-## Get the peak volume of the "Analyzer" bus.
-##
-func audio_get_peak_volume() -> PackedFloat32Array:
-	return device_manager.audio_get_peak_volume()
-
-
 func audio_get_spectrum_analyzer() -> AudioEffectSpectrumAnalyzerInstance:
 	return AudioServer.get_bus_effect_instance(0, 0)
 
@@ -548,56 +518,6 @@ func audio_set_volume(volume: float) -> void:
 
 func audio_get_magnitude_at_freq(frequency: float) -> float:
 	return device_manager.audio_get_magnitude_at_freq(frequency)
-
-
-func update_audio_analyzer() -> void:
-	if !audio_is_spectrum_analyzer_enabled():
-		audio_level = 0.0
-		return
-
-	# calculate peaks for visualizations
-
-	# var audio_peak_raw = linear_to_db(audio_fft(1000, 2000) * 100.0)
-	# var audio_peak_raw := audio_fft(visualizer_frequency_min, visualizer_frequency_max)
-	# if is_nan(audio_peak_raw) or is_inf(audio_peak_raw):
-	# 	audio_peak_raw = 0.0
-
-	# # calculate ranges for audio level
-	# audio_peak = max(audio_peak_raw, lerp(audio_peak_raw, last_peak, 0.70))
-
-	# # if audio_peak_max_timer.time_left == 0.0:
-	# audio_peak_max = lerp(audio_peak_raw, last_peak_max, 0.90)
-
-	# if audio_peak_max < audio_peak_raw:
-	# 	audio_peak_max = audio_peak_raw
-
-	# last_peak = audio_peak
-	# last_peak_max = audio_peak_max
-
-	# # convert range from (audio_peak_raw, audio_peak_max) to (0, 1) and apply smoothing
-	# audio_level_raw = clamp((audio_peak - audio_peak_raw) / (audio_peak_max - audio_peak_raw), 0.0, 1.0)
-	# if is_nan(audio_level_raw):
-	# 	audio_level_raw = 0.0
-	# audio_level = max(audio_level_raw, lerp(audio_level_raw, last_audio_level, 0.95))
-	# last_audio_level = audio_level
-	var peak := (audio_get_peak_volume()[0] + audio_get_peak_volume()[1]) / 2.0
-	audio_level = lerp(audio_level, peak, 0.2)
-	audio_level = max(audio_level, peak)
-	last_audio_level = audio_level
-
-	var label_audio_peak_avg: Label = %LabelAudioPeakAvg
-	var label_audio_peak_max: Label = %LabelAudioPeakMax
-	var label_audio_level: Label = %LabelAudioLevel
-	var rect_audio_level: ColorRect = %RectAudioLevel
-	var rect_audio_level_avg: ColorRect = %RectAudioLevelAvg
-
-	# label_audio_peak_avg.text = "%06f" % audio_peak
-	label_audio_peak_avg.text = "%06f" % audio_peak
-	label_audio_peak_max.text = "%06f" % audio_peak_max
-	label_audio_level.text = "%06f" % audio_level
-
-	rect_audio_level.size.x = (audio_level_raw) * 200
-	rect_audio_level_avg.position.x = (audio_level) * 200.0 + 88.0
 
 
 func display_get_scale() -> float:
