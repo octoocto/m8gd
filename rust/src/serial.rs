@@ -427,43 +427,38 @@ impl ClientBackend for SerialBackend {
         for i in 0..bytes_read {
             let byte = bytes[i];
 
-            if !self.slip_escaped {
-                match SlipByte::from(byte) {
-                    SlipByte::End => {
-                        // reached end of command, parse it
-                        let buf = self.command_buffer.as_slice();
-                        if buf.is_empty() {
-                            continue;
-                        }
-                        match CommandIn::from_bytes(buf) {
-                            Some(command) => commands.push(command),
-                            None => eprintln!("Error parsing command from bytes {:02X?}", buf),
-                        };
-                        self.command_buffer.clear();
+            match SlipByte::from(byte) {
+                SlipByte::End if !self.slip_escaped => {
+                    // reached end of command, parse it
+                    let buf = self.command_buffer.as_slice();
+                    if buf.is_empty() {
+                        continue;
                     }
-                    SlipByte::Esc => {
-                        // escape
-                        self.slip_escaped = true;
-                    }
-                    _ => {
-                        // add byte to command buffer
-                        self.command_buffer.push(byte)?;
-                    }
+                    match CommandIn::from_bytes(buf) {
+                        Some(command) => commands.push(command),
+                        None => eprintln!("Error parsing command from bytes {:02X?}", buf),
+                    };
+                    self.command_buffer.clear();
                 }
-            } else {
-                match SlipByte::from(byte) {
-                    SlipByte::EscEnd => {
-                        self.command_buffer.push((&SlipByte::End).into())?;
-                        self.slip_escaped = false;
-                    }
-                    SlipByte::EscEsc => {
-                        self.command_buffer.push((&SlipByte::Esc).into())?;
-                        self.slip_escaped = false;
-                    }
-                    _ => {
-                        eprintln!("{}", format!("Invalid SLIP escaped character: {}", byte));
-                        self.command_buffer.clear();
-                    }
+                SlipByte::Esc if !self.slip_escaped => {
+                    // escape
+                    self.slip_escaped = true;
+                }
+                _ if !self.slip_escaped => {
+                    // add byte to command buffer
+                    self.command_buffer.push(byte)?;
+                }
+                SlipByte::EscEnd if self.slip_escaped => {
+                    self.command_buffer.push((&SlipByte::End).into())?;
+                    self.slip_escaped = false;
+                }
+                SlipByte::EscEsc if self.slip_escaped => {
+                    self.command_buffer.push((&SlipByte::Esc).into())?;
+                    self.slip_escaped = false;
+                }
+                _ => {
+                    eprintln!("{}", format!("Invalid SLIP escaped character: {}", byte));
+                    self.command_buffer.clear();
                 }
             }
         }
