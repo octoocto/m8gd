@@ -78,7 +78,7 @@ func _init_menu_camera() -> void:
 		func(value: bool) -> void:
 			main.current_scene.get_3d_camera().mouse_controlled_pan_zoom = value
 			if !value:
-				main.current_scene.get_3d_camera().reset_transform(),
+				main.current_scene.get_3d_camera().reset(),
 	)
 
 	s_human_camera.setting_connect_camera(

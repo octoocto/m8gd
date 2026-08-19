@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bckroenwlecqv"]
 
-[ext_resource type="Script" uid="uid://cki43uor5p6oe" path="res://scene_camera_3d.gd" id="1_idfgn"]
+[ext_resource type="Script" uid="uid://cki43uor5p6oe" path="res://camera_rig_3d.gd" id="1_fartb"]
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_wopxj"]
 auto_exposure_scale = 0.02
@@ -12,8 +12,8 @@ dof_blur_near_distance = 12.5
 dof_blur_near_transition = 2.25
 dof_blur_amount = 0.18
 
-[node name="Camera3D" type="Node3D" unique_id=965130005]
-script = ExtResource("1_idfgn")
+[node name="CameraRig3D" type="Node3D" unique_id=965130005]
+script = ExtResource("1_fartb")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=828345110]
 unique_name_in_owner = true

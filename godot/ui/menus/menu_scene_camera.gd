@@ -89,7 +89,7 @@ func on_camera_reposition_stopped() -> void:
 ##
 func menu_show() -> void:
 	if not visible:
-		main.get_scene_camera().reset_transform()
+		main.get_scene_camera().reset()
 	super()
 
 

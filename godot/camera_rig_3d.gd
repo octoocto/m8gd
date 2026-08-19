@@ -1,5 +1,6 @@
 @tool
-class_name M8SceneCamera3D extends Node3D
+@icon("res://assets/icon/Camera3D.svg")
+class_name CameraRig3D extends Node3D
 
 # Emitted when any of the camera properties change.
 signal camera_updated
@@ -10,25 +11,41 @@ signal reposition_started
 # Emitted when the camera has stopped repositioning (right-click unpressed).
 signal reposition_stopped
 
+@export_category("Camera Arm")
+
+@export var arm_length := 0.0:
+	set(value):
+		arm_length = value
+		if is_inside_tree():
+			cam.position.z = arm_length
+
 @export var mouse_controlled_pan_zoom := true
+
+@export_category("Handheld Emulation")
 
 @export var humanized_movement := true
 @export var humanize_freq := 1.0
 @export var humanize_amount := 0.05
 
+@export_category("Panning")
+
 @export var pan_smoothing_focused := 0.05
 @export var pan_smoothing_unfocused := 0.01
-
-@export var fov_smoothing := 0.05
 
 @export var pan_range_zoomout := Vector2(5, 2)
 @export var pan_range_zoomin := Vector2(15, 10)
 
+@export_category("Zooming")
+
 @export var cam_pan_range_zoomout := Vector2(0, 0)
 @export var cam_pan_range_zoomin := Vector2(0, 0)
 
+@export var fov_smoothing := 0.05
+
 @export var fov_zoomout := 30.0
 @export var fov_zoomin := 15.0
+
+@export_category("Depth of Field")
 
 @export var dof_zoomout := 1.5
 @export var dof_zoomin := 0.5
@@ -53,12 +70,6 @@ signal reposition_stopped
 		if is_inside_tree():
 			attributes.dof_blur_amount = value
 
-@export var arm_length := 0.0:
-	set(value):
-		arm_length = value
-		if is_inside_tree():
-			cam.position.z = arm_length
-
 @onready var main: Main
 @onready var cam: Camera3D = %Camera3D
 @onready var attributes: CameraAttributesPractical = cam.attributes
@@ -76,35 +87,70 @@ var rclick_pressed := false
 var ticks_repositioning := 0
 
 
-func is_between(x: float, a: float, b: float) -> bool:
-	return a < x and x < b
-
-
-func is_mouse_position_in_window(mouse_position: Vector2) -> bool:
-	return is_between(mouse_position.x, -1.0, 1.0) and is_between(mouse_position.y, -1.0, 1.0)
-
-
-func vdeg_to_rad(v: Vector2) -> Vector2:
-	return Vector2(deg_to_rad(v.x), deg_to_rad(v.y))
-
-
 func _ready() -> void:
-	noise.noise_type = FastNoiseLite.TYPE_PERLIN
+	self.main = await Main.get_instance()
+	assert(self.main, "Main was not ready")
+
+	self.noise.noise_type = FastNoiseLite.TYPE_PERLIN
+
+
+func _physics_process(delta: float) -> void:
+	if Engine.is_editor_hint():
+		return
+
+	self.cam.position.z = self.arm_length
+
+	if self.main.menu_camera.visible or self.main.menu_scene.visible:
+		_update_reposition(delta)
+	elif !main.is_any_menu_open():
+		_update_humanized_movement(delta)
+		_update_mouse_movement(delta)
+
+
+func _input(e: InputEvent) -> void:
+	if main.menu_camera.visible or main.menu_scene.visible:
+		if (
+			e is InputEventMouseButton
+			and (e as InputEventMouseButton).button_index == MOUSE_BUTTON_RIGHT
+		):
+			if (e as InputEventMouseButton).pressed:
+				_start_live_editing()
+			else:
+				_stop_live_editing()
+
+		if rclick_pressed:
+			if e is InputEventMouseMotion:
+				var event := e as InputEventMouseMotion
+				rotation.y -= event.relative.x * 0.001
+				rotation.x -= event.relative.y * 0.001
+
+			const FOCUS_W_ADJUST_AMOUNT := 0.1
+			const FOCUS_L_ADJUST_AMOUNT := 0.25
+
+			if e is InputEventMouseButton and (e as InputEventMouseButton).pressed:
+				var event := e as InputEventMouseButton
+				if Input.is_key_pressed(KEY_SHIFT):
+					if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+						dof_focus_width += FOCUS_W_ADJUST_AMOUNT
+					if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+						dof_focus_width -= FOCUS_W_ADJUST_AMOUNT
+				else:
+					if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+						dof_focus_distance += FOCUS_L_ADJUST_AMOUNT
+					if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+						dof_focus_distance -= FOCUS_L_ADJUST_AMOUNT
+
+			camera_updated.emit()
+
+	elif rclick_pressed:
+		_stop_live_editing()
 
 
 func init(p_main: Main) -> void:
 	main = p_main
 
 
-func update(delta: float) -> void:
-	if main.menu_camera.visible or main.menu_scene.visible:
-		update_reposition(delta)
-	elif !main.is_any_menu_open():
-		update_humanized_movement(delta)
-		update_mouse_movement(delta)
-
-
-func update_humanized_movement(delta: float) -> void:
+func _update_humanized_movement(delta: float) -> void:
 	if !humanized_movement:
 		return
 
@@ -123,7 +169,7 @@ func update_humanized_movement(delta: float) -> void:
 	noise_u += delta
 
 
-func update_mouse_movement(_delta: float) -> void:
+func _update_mouse_movement(_delta: float) -> void:
 	if !mouse_controlled_pan_zoom:
 		return
 
@@ -152,7 +198,7 @@ func _mouse_position() -> Vector2:
 	mouse_position = (mouse_position * 2.0) - Vector2(1.0, 1.0)
 
 	# ignore mouse positions outside this range (outside the window)
-	if !is_mouse_position_in_window(mouse_position):
+	if !_is_mouse_position_in_window(mouse_position):
 		return Vector2.ZERO
 	else:
 		return mouse_position
@@ -160,7 +206,7 @@ func _mouse_position() -> Vector2:
 
 func _new_cam_rotation(mouse_position: Vector2, mouse_clicked: bool) -> Vector3:
 	var pan_range := (
-		vdeg_to_rad(cam_pan_range_zoomin) if mouse_clicked else vdeg_to_rad(cam_pan_range_zoomout)
+		_vdeg_to_rad(cam_pan_range_zoomin) if mouse_clicked else _vdeg_to_rad(cam_pan_range_zoomout)
 	)
 
 	var target_rotation := Vector3(
@@ -174,12 +220,12 @@ func _new_cam_rotation(mouse_position: Vector2, mouse_clicked: bool) -> Vector3:
 
 func _new_rotation(mouse_position: Vector2, mouse_clicked: bool) -> Vector3:
 	var pan_range := (
-		vdeg_to_rad(pan_range_zoomin) if mouse_clicked else vdeg_to_rad(pan_range_zoomout)
+		_vdeg_to_rad(pan_range_zoomin) if mouse_clicked else _vdeg_to_rad(pan_range_zoomout)
 	)
 
 	var pan_smoothing := (
 		pan_smoothing_focused
-		if is_mouse_position_in_window(mouse_position)
+		if _is_mouse_position_in_window(mouse_position)
 		else pan_smoothing_unfocused
 	)
 
@@ -190,7 +236,7 @@ func _new_rotation(mouse_position: Vector2, mouse_clicked: bool) -> Vector3:
 	return lerp(rotation, target_rotation, pan_smoothing)
 
 
-func update_reposition(delta: float) -> void:
+func _update_reposition(delta: float) -> void:
 	if (main.menu_camera.visible or main.menu_scene.visible) and rclick_pressed:
 		var input_dir := Vector3.ZERO
 
@@ -219,7 +265,9 @@ func update_reposition(delta: float) -> void:
 		camera_updated.emit()
 
 
-func reposition_start() -> void:
+## Start "live editing" the camera.
+## This usually runs when the user presses the right mouse button.
+func _start_live_editing() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	rclick_pressed = true
 	main.cam_help.visible = true
@@ -228,7 +276,9 @@ func reposition_start() -> void:
 	reposition_started.emit()
 
 
-func reposition_stop() -> void:
+## Stop "live editing" the camera.
+## This usually runs when the user releases the right mouse button.
+func _stop_live_editing() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	rclick_pressed = false
 	main.cam_help.visible = false
@@ -238,53 +288,33 @@ func reposition_stop() -> void:
 	reposition_stopped.emit()
 
 
-func _input(e: InputEvent) -> void:
-	if main.menu_camera.visible or main.menu_scene.visible:
-		if (
-			e is InputEventMouseButton
-			and (e as InputEventMouseButton).button_index == MOUSE_BUTTON_RIGHT
-		):
-			if (e as InputEventMouseButton).pressed:
-				reposition_start()
-			else:
-				reposition_stop()
-
-		if rclick_pressed:
-			if e is InputEventMouseMotion:
-				var event := e as InputEventMouseMotion
-				rotation.y -= event.relative.x * 0.001
-				rotation.x -= event.relative.y * 0.001
-
-			const FOCUS_W_ADJUST_AMOUNT := 0.1
-			const FOCUS_L_ADJUST_AMOUNT := 0.25
-
-			if e is InputEventMouseButton and (e as InputEventMouseButton).pressed:
-				var event := e as InputEventMouseButton
-				if Input.is_key_pressed(KEY_SHIFT):
-					if event.button_index == MOUSE_BUTTON_WHEEL_UP:
-						dof_focus_width += FOCUS_W_ADJUST_AMOUNT
-					if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-						dof_focus_width -= FOCUS_W_ADJUST_AMOUNT
-				else:
-					if event.button_index == MOUSE_BUTTON_WHEEL_UP:
-						dof_focus_distance += FOCUS_L_ADJUST_AMOUNT
-					if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-						dof_focus_distance -= FOCUS_L_ADJUST_AMOUNT
-
-			camera_updated.emit()
-
-	elif rclick_pressed:
-		reposition_stop()
-
-
-func reset_transform() -> void:
+##
+## Reset the camera to its initial state.
+##
+func reset() -> void:
 	position = base_position
 	rotation = base_rotation
 	cam.rotation = Vector3.ZERO
 	cam.fov = fov_zoomout
 
 
+##
+## Set the current state of the camera as its new "initial" state.
+## [reset()] will then reset the camera to that state.
+##
 func set_current_transform_as_base() -> void:
 	base_position = position
 	base_rotation = rotation
 	dof_zoomout = dof_focus_width
+
+
+func _is_between(x: float, a: float, b: float) -> bool:
+	return a < x and x < b
+
+
+func _is_mouse_position_in_window(mouse_position: Vector2) -> bool:
+	return _is_between(mouse_position.x, -1.0, 1.0) and _is_between(mouse_position.y, -1.0, 1.0)
+
+
+func _vdeg_to_rad(v: Vector2) -> Vector2:
+	return Vector2(deg_to_rad(v.x), deg_to_rad(v.y))

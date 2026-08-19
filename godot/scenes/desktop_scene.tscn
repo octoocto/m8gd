@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://f2tvhcv8kiuu"]
 
 [ext_resource type="Script" uid="uid://80xwqejuqfqu" path="res://scenes/desktop_scene.gd" id="1_0y3bn"]
-[ext_resource type="PackedScene" uid="uid://bckroenwlecqv" path="res://scene_camera_3d.tscn" id="5_d472a"]
+[ext_resource type="PackedScene" uid="uid://bckroenwlecqv" path="res://camera_rig_3d.tscn" id="5_d472a"]
 [ext_resource type="Material" uid="uid://dv1jtj3wvh678" path="res://assets/grid_overlay.tres" id="7_7cg8p"]
 [ext_resource type="PackedScene" uid="uid://dk52g4jj43v12" path="res://models/m8_model.tscn" id="7_y135g"]
 [ext_resource type="PackedScene" uid="uid://ceqlf8kgdxjeb" path="res://grass_area.tscn" id="8_ophi6"]
@@ -123,7 +123,7 @@ volume_db = -80.0
 expand = true
 loop = true
 
-[node name="Camera3D" parent="." unique_id=1276526683 instance=ExtResource("5_d472a")]
+[node name="CameraRig3D" parent="." unique_id=1276526683 instance=ExtResource("5_d472a")]
 unique_name_in_owner = true
 transform = Transform3D(0.906308, -0.365998, 0.211309, 0, 0.5, 0.866025, -0.422618, -0.784885, 0.453154, 4.7, 13.5, 7)
 dof_zoomout = 3.0
@@ -198,5 +198,3 @@ num_meshes = 32000
 
 [node name="M8Model" parent="." unique_id=1138004512 instance=ExtResource("7_y135g")]
 unique_name_in_owner = true
-
-[editable path="Camera3D"]

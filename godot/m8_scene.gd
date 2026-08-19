@@ -95,14 +95,14 @@ func get_device_model() -> DeviceModel:
 ## Returns true if this scene contains a Camera3D.
 ##
 func has_3d_camera() -> bool:
-	return has_node("%Camera3D") and %Camera3D is M8SceneCamera3D
+	return has_node("%CameraRig3D") and %CameraRig3D is CameraRig3D
 
 
 ##
 ## Returns the Camera3D in this scene is there is one. Returns null if not.
 ##
-func get_3d_camera() -> M8SceneCamera3D:
-	return %Camera3D if has_node("%Camera3D") else null
+func get_3d_camera() -> CameraRig3D:
+	return %CameraRig3D if has_node("%CameraRig3D") else null
 
 
 ##

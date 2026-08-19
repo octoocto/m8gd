@@ -1,6 +1,6 @@
 extends M8Scene
 
-@onready var camera: M8SceneCamera3D = %Camera3D
+@onready var camera: CameraRig3D = %CameraRig3D
 @onready var display_mesh: MeshInstance3D = %DisplayMesh
 @onready var audio_spectrum: OverlayAudioSpectrum = %AudioSpectrum
 @onready var sprite_audio_spectrum: Sprite3D = %SpriteAudioSpectrum
@@ -113,28 +113,20 @@ extends M8Scene
 		light_right.light_color = value
 		light_right.light_energy = value.a * 16
 
-
-func init() -> void:
-	get_device_model().init(self.main)
-	self.camera.init(self.main)
-
-	(display_mesh.material_override as ShaderMaterial).set_shader_parameter(
-		"tex",
-		main.m8c.get_display_texture(),
-	)
-
-
-func _physics_process(delta: float) -> void:
-	if self.main.is_menu_open():
-		return
-	self.camera.update(delta)
-
-
 enum BackgroundMode {
 	SOLID_COLOR,
 	IMAGE,
 	IMAGE_PANORAMA,
 }
+
+
+func init() -> void:
+	get_device_model().init(self.main)
+
+	(display_mesh.material_override as ShaderMaterial).set_shader_parameter(
+		"tex",
+		main.m8c.get_display_texture(),
+	)
 
 
 func _set_background_file(path: String) -> void:

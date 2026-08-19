@@ -113,7 +113,7 @@ var surface_material_custom: StandardMaterial3D = null
 		right_light.light_color = value
 		right_light.light_energy = value.a * 16
 
-@onready var camera: M8SceneCamera3D = %Camera3D
+@onready var camera: CameraRig3D = %CameraRig3D
 
 @onready var surface_mesh: MeshInstance3D = %SurfaceMesh
 @onready var grass_area: MultiMeshInstance3D = %GrassArea
@@ -124,25 +124,16 @@ var surface_material_custom: StandardMaterial3D = null
 @onready var right_light: SpotLight3D = %LightRight
 @onready var video_player: VideoStreamPlayer = %VideoStreamPlayer
 
-
-func init() -> void:
-	get_device_model().init(self.main)
-	self.camera.init(self.main)
-
-
-func _physics_process(delta: float) -> void:
-	if self.main.is_menu_open():
-		return
-
-	self.camera.update(delta)
-
-
 enum SurfaceMode {
 	WOOD,
 	STONE,
 	M8_DISPLAY,
 	IMAGE,
 }
+
+
+func init() -> void:
+	get_device_model().init(self.main)
 
 
 func _set_surface_texture(path: String) -> void:
