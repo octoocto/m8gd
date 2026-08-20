@@ -2,18 +2,15 @@
 
 [ext_resource type="Shader" uid="uid://df8ql2iwe7kys" path="res://overlays/overlay_display_panel.tres" id="1_hikxj"]
 [ext_resource type="Texture2D" uid="uid://ras5y3yqijkx" path="res://assets/m8_screen_placeholder.png" id="2_dqr0t"]
-[ext_resource type="Script" uid="uid://d1xt7ep7sa3oc" path="res://overlays/overlay_display_panel.gd" id="2_yhulq"]
+[ext_resource type="Script" uid="uid://bqj04evoa63k7" path="res://overlays/overlay_display_panel.gd" id="2_yhulq"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lw18t"]
 shader = ExtResource("1_hikxj")
+shader_parameter/blur_amount = 0.0
 shader_parameter/panel_color = Color(1, 1, 1, 1)
 shader_parameter/panel_opacity = 1.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hl16s"]
-content_margin_left = 16.0
-content_margin_top = 16.0
-content_margin_right = 16.0
-content_margin_bottom = 16.0
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8

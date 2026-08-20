@@ -24,34 +24,31 @@ func _overlay_init() -> void:
 
 
 func _overlay_update() -> void:
-	if is_inside_tree():
-		# update position
-		# display_panel.position = self.offset_transform_position
+	if not is_inside_tree():
+		return
 
-		# update padding
-		var stylebox: StyleBoxFlat = display_panel.get_theme_stylebox("panel")
-		stylebox.content_margin_left = padding.x
-		stylebox.content_margin_right = padding.x
-		stylebox.content_margin_top = padding.y
-		stylebox.content_margin_bottom = padding.y
-		stylebox.corner_radius_top_left = corner_radius
-		stylebox.corner_radius_top_right = corner_radius
-		stylebox.corner_radius_bottom_left = corner_radius
-		stylebox.corner_radius_bottom_right = corner_radius
+	# update position
+	# display_panel.position = self.offset_transform_position
 
-		# update shader
-		(display_panel.material as ShaderMaterial).set_shader_parameter("panel_opacity", opacity)
-		(display_panel.material as ShaderMaterial).set_shader_parameter("blur_amount", blur_amount)
-		(display_panel.material as ShaderMaterial).set_shader_parameter(
-			"panel_color",
-			main.m8_get_theme_colors()[0],
-		)
+	# update padding
+	var stylebox: StyleBoxFlat = self.display_panel.get_theme_stylebox("panel")
+	stylebox.expand_margin_left = self.padding.x
+	stylebox.expand_margin_right = self.padding.x
+	stylebox.expand_margin_top = self.padding.y
+	stylebox.expand_margin_bottom = self.padding.y
+	stylebox.set_corner_radius_all(self.corner_radius)
 
-		# update size
-		var display_size := main.m8c.get_display_texture().get_size() * integer_scale
-		display_texture_rect.custom_minimum_size = display_size
-		display_panel.custom_minimum_size = Vector2.ZERO
-		display_panel.size = Vector2.ZERO
-		size = display_panel.size
+	# update shader
+	var panel_mat: ShaderMaterial = self.display_panel.material as ShaderMaterial
+	panel_mat.set_shader_parameter("panel_opacity", self.opacity)
+	panel_mat.set_shader_parameter("blur_amount", self.blur_amount)
+	panel_mat.set_shader_parameter("panel_color", self.main.m8_get_theme_colors()[0])
 
-		anchors_preset = anchors_preset # needed for correct anchor to be used
+	# update size
+	var display_size := self.main.m8c.get_display_texture().get_size() * self.integer_scale
+	self.display_texture_rect.custom_minimum_size = display_size
+	self.display_panel.custom_minimum_size = Vector2.ZERO
+	self.display_panel.size = Vector2.ZERO
+	self.size = self.display_panel.size
+
+	self.anchors_preset = self.anchors_preset # needed for correct anchor to be used
