@@ -778,17 +778,19 @@ impl GodotM8Client {
 
         // use color as background color if rect covers entire display
         if x <= 0 && y <= 0 && w >= disp_w as i32 && h >= disp_h as i32 {
-            self.bg_color = color.clone();
-            self.theme_colors.clear();
-            // self.theme_colors.push(self.bg_color.clone());
-            godot_print!(
-                "Set background color to rgb({}, {}, {})",
-                self.bg_color.r,
-                self.bg_color.g,
-                self.bg_color.b
-            );
-            let bg_color = self.bg_color.to_godot();
-            self.signals().background_color_changed().emit(bg_color);
+            if self.bg_color != color {
+                self.bg_color = color.clone();
+                self.theme_colors.clear();
+                // self.theme_colors.push(self.bg_color.clone());
+                godot_print!(
+                    "Set background color to rgb({}, {}, {})",
+                    self.bg_color.r,
+                    self.bg_color.g,
+                    self.bg_color.b
+                );
+                let bg_color = self.bg_color.to_godot();
+                self.signals().background_color_changed().emit(bg_color);
+            }
         }
 
         // sizes of rects used on the theme screen
