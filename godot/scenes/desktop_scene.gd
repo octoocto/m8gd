@@ -7,7 +7,7 @@ const GRID_OVERLAY_MATERIAL := preload("res://assets/grid_overlay.tres")
 @export var surface_mode := SurfaceMode.WOOD:
 	set(value):
 		surface_mode = value
-		self._set_surface_mode(value)
+		self._update_surface()
 
 @export_subgroup("surface_mode", "SurfaceMode.IMAGE")
 @export_file var surface_texture := "":
@@ -18,25 +18,32 @@ const GRID_OVERLAY_MATERIAL := preload("res://assets/grid_overlay.tres")
 @export var surface_color := Color(1.0, 1.0, 1.0):
 	set(value):
 		surface_color = value
-		if surface_mesh.material_override:
-			(surface_mesh.material_override as StandardMaterial3D).albedo_color = value
+		self._update_surface()
 
-var surface_material_custom: StandardMaterial3D = null
+@export_range(0, 360) var surface_rotation := 0:
+	set(value):
+		surface_rotation = value
+		self._update_surface()
+
+@export_range(0.0, 1.0) var surface_metallic := 0.0:
+	set(value):
+		surface_metallic = value
+		self._update_surface()
+
+@export_range(0.0, 1.0) var surface_roughness := 1.0:
+	set(value):
+		surface_roughness = value
+		self._update_surface()
 
 @export var surface_enable_grid := false:
 	set(value):
 		surface_enable_grid = value
-		if value:
-			surface_mesh.material_overlay = GRID_OVERLAY_MATERIAL
-			(surface_mesh.material_overlay as StandardMaterial3D).albedo_color = surface_grid_color
-		else:
-			surface_mesh.material_overlay = null
+		self._update_surface()
 
 @export var surface_grid_color := Color.WHITE:
 	set(value):
 		surface_grid_color = value
-		if surface_mesh.material_overlay:
-			(surface_mesh.material_overlay as StandardMaterial3D).albedo_color = value
+		self._update_surface()
 
 @export_group("Misc")
 
@@ -113,6 +120,8 @@ var surface_material_custom: StandardMaterial3D = null
 		right_light.light_color = value
 		right_light.light_energy = value.a * 16
 
+var surface_material_custom: StandardMaterial3D = null
+
 @onready var camera: CameraRig3D = %CameraRig3D
 
 @onready var surface_mesh: MeshInstance3D = %SurfaceMesh
@@ -128,6 +137,7 @@ enum SurfaceMode {
 	WOOD,
 	STONE,
 	M8_DISPLAY,
+	SOLID_COLOR,
 	IMAGE,
 }
 
@@ -141,37 +151,49 @@ func _set_surface_texture(path: String) -> void:
 	if texture is Texture2D:
 		var material := StandardMaterial3D.new()
 		material.albedo_texture = texture
-		surface_material_custom = material
-		load_custom_texture()
+		self.surface_material_custom = material
+		_update_surface()
 
 
-func _set_surface_mode(mode: SurfaceMode) -> void:
-	print("Setting surface mode to ", mode)
+func _update_surface() -> void:
+	if not self.is_inside_tree():
+		return
+
+	print("Setting surface mode to ", self.surface_mode)
 	var material := StandardMaterial3D.new()
-	match mode:
+	match self.surface_mode:
 		SurfaceMode.WOOD:
 			material = load("res://assets/ambientcg/wood051.tres")
-			material.albedo_color = surface_color
 		SurfaceMode.STONE:
 			material = load("res://assets/ambientcg/asphalt010.tres")
-			material.albedo_color = surface_color
 		SurfaceMode.M8_DISPLAY:
-			material.albedo_texture = main.m8c.get_display_texture()
-			material.albedo_color = surface_color
+			material.albedo_texture = self.main.m8c.get_display_texture()
 			material.uv1_triplanar = true
 			material.uv1_scale = Vector3(0.125, 0.125, 0.125)
 		SurfaceMode.IMAGE:
-			material = load_custom_texture()
-	surface_mesh.material_override = material
+			material = _get_custom_texture()
+			material.uv1_triplanar = true
+			material.uv1_scale = Vector3(0.125, 0.125, 0.125)
+		SurfaceMode.SOLID_COLOR:
+			material = StandardMaterial3D.new()
 
+	material.albedo_color = self.surface_color
+	material.metallic = self.surface_metallic
+	material.roughness = self.surface_roughness
 
-func load_custom_texture() -> StandardMaterial3D:
-	var material: StandardMaterial3D = surface_material_custom
-	if material:
-		material.albedo_color = surface_color
-		material.uv1_triplanar = true
-		material.uv1_scale = Vector3(0.125, 0.125, 0.125)
+	self.surface_mesh.rotation_degrees.y = self.surface_rotation
+
+	self.surface_mesh.material_override = material
+
+	if self.surface_enable_grid:
+		self.surface_mesh.material_overlay = GRID_OVERLAY_MATERIAL
+		(self.surface_mesh.material_overlay as StandardMaterial3D).albedo_color = self.surface_grid_color
 	else:
+		self.surface_mesh.material_overlay = null
+
+
+func _get_custom_texture() -> StandardMaterial3D:
+	var material: StandardMaterial3D = self.surface_material_custom
+	if not material:
 		material = StandardMaterial3D.new()
-		material.albedo_color = surface_color
 	return material

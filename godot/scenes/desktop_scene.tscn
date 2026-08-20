@@ -10,14 +10,8 @@
 
 [sub_resource type="Environment" id="Environment_ayqpk"]
 ambient_light_source = 2
-ambient_light_color = Color(1, 1, 1, 1)
-ambient_light_energy = 0.05
-tonemap_mode = 2
-tonemap_white = 10.0
-fog_light_color = Color(0, 0, 0, 1)
-fog_density = 0.001
-volumetric_fog_albedo = Color(0.114897, 0.114897, 0.114897, 1)
-volumetric_fog_ambient_inject = 0.53
+tonemap_mode = 4
+ssr_enabled = true
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_4c1u1"]
 size = Vector2(200, 200)
@@ -108,6 +102,7 @@ curve = SubResource("Curve_y7obg")
 
 [node name="M8Scene" type="Node3D" unique_id=1541261612]
 script = ExtResource("1_0y3bn")
+surface_enable_grid = true
 metadata/_edit_vertical_guides_ = [640.0]
 metadata/_edit_horizontal_guides_ = [480.0]
 
@@ -146,7 +141,6 @@ shadow_opacity = 0.9
 [node name="LightLamp" type="SpotLight3D" parent="." unique_id=504463218]
 unique_name_in_owner = true
 transform = Transform3D(0.0908976, 0.974832, -0.20357, -0.491037, 0.221712, 0.842452, 0.866383, 0.0233833, 0.498832, -0.311, 13.482, 5.885)
-visible = false
 light_color = Color(0.8, 0.866667, 1, 1)
 light_size = 2.5
 shadow_enabled = true
