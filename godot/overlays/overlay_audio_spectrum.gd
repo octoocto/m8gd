@@ -48,19 +48,19 @@ func _overlay_init() -> void:
 
 
 func _colors_meter() -> PackedColorArray:
-	var colors := main.m8_get_theme_colors()
+	var colors := main.m8c.get_theme_colors()
 	return [colors[10], colors[11], colors[12]]
 
 
 func _colors_scope() -> Color:
-	var colors := main.m8_get_theme_colors()
+	var colors := main.m8c.get_theme_colors()
 	return colors[9]
 
 
 func _draw() -> void:
 	super()
 
-	if not is_instance_valid(main) or not main.audio_is_spectrum_analyzer_enabled():
+	if not is_instance_valid(main) or not main.m8c.is_spectrum_analyzer_enabled():
 		return
 
 	# var logspace := logrange(analyzer_freq_min, analyzer_freq_max, analyzer_res + 1)
@@ -86,7 +86,7 @@ func _draw() -> void:
 		# var magnitude_raw: float = clamp((analyzer_db_min + linear_to_db(main.audio_fft(logspace[i], logspace[i + 1]))) / analyzer_db_min * 2, 0.0, 1.0)
 		# var magnitude_raw: float = main.audio_fft(db_from, db_to)
 		var magnitude_raw: float = (
-			linear_to_db(main.audio_get_magnitude_at_freq(freq)) + analyzer_db_min
+			linear_to_db(main.m8c.get_audio_magnitude_at_freq(freq)) + analyzer_db_min
 		)
 
 		if magnitude_raw > highest_peak:

@@ -45,7 +45,7 @@ func _overlay_init() -> void:
 
 
 func _colors() -> PackedColorArray:
-	var colors := main.m8_get_theme_colors()
+	var colors := main.m8c.get_theme_colors()
 	return [colors[10], colors[11], colors[12]]
 
 
@@ -73,7 +73,7 @@ func _process(delta: float) -> void:
 
 func _draw() -> void:
 	super()
-	if !main.audio_is_spectrum_analyzer_enabled():
+	if !main.m8c.is_spectrum_analyzer_enabled():
 		return
 
 	var magnitudes: Array[float] = peaks.duplicate()

@@ -63,7 +63,7 @@ func _update() -> void:
 	if not is_inside_tree():
 		return
 
-	var m8_theme := self.main.m8_get_theme_colors()
+	var m8_theme := self.main.m8c.get_theme_colors()
 
 	match self.mode:
 		BackgroundMode.M8_BACKGROUND_COLOR:

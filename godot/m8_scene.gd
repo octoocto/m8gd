@@ -5,7 +5,6 @@ var main: Main
 
 func _ready() -> void:
 	self.main = await Main.get_instance()
-	assert(self.main, "Main was not ready")
 
 	Log.call_task(self.init, "init scene '%s'" % self.name)
 	reload()

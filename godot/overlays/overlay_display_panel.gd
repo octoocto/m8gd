@@ -17,8 +17,8 @@ func _overlay_init() -> void:
 			self.display_texture_rect.texture = main.m8c.get_display_texture()
 			self._overlay_update(),
 	)
-	main.m8_theme_changed.connect(
-		func(_colors: PackedColorArray, _complete: bool) -> void:
+	main.m8c.background_color_changed.connect(
+		func(_color: Color) -> void:
 			self._overlay_update(),
 	)
 
@@ -42,7 +42,7 @@ func _overlay_update() -> void:
 	var panel_mat: ShaderMaterial = self.display_panel.material as ShaderMaterial
 	panel_mat.set_shader_parameter("panel_opacity", self.opacity)
 	panel_mat.set_shader_parameter("blur_amount", self.blur_amount)
-	panel_mat.set_shader_parameter("panel_color", self.main.m8_get_theme_colors()[0])
+	panel_mat.set_shader_parameter("panel_color", self.main.m8c.get_background_color())
 
 	# update size
 	var display_size := self.main.m8c.get_display_texture().get_size() * self.integer_scale

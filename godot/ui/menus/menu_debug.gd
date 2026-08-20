@@ -27,19 +27,19 @@ func _on_menu_init() -> void:
 			func(value: int) -> void:
 				match value:
 					0:
-						main.m8_set_font(font, main.FONT_01_SMALL)
+						main.m8c.set_font_bitmap(font, main.FONT_01_SMALL)
 						setting_file.value = ""
 					1:
-						main.m8_set_font(font, main.FONT_01_BIG)
+						main.m8c.set_font_bitmap(font, main.FONT_01_BIG)
 						setting_file.value = ""
 					2:
-						main.m8_set_font(font, main.FONT_02_SMALL)
+						main.m8c.set_font_bitmap(font, main.FONT_02_SMALL)
 						setting_file.value = ""
 					3:
-						main.m8_set_font(font, main.FONT_02_BOLD)
+						main.m8c.set_font_bitmap(font, main.FONT_02_BOLD)
 						setting_file.value = ""
 					4:
-						main.m8_set_font(font, main.FONT_02_HUGE)
+						main.m8c.set_font_bitmap(font, main.FONT_02_HUGE)
 						setting_file.value = ""
 		)
 		setting_file.setting_connect(
@@ -57,9 +57,9 @@ func _on_menu_init() -> void:
 	)
 	%CheckButtonDebug.button_pressed = config.debug_info
 
-	%ButtonM8Enable.pressed.connect(main.m8_send_enable_display)
-	%ButtonM8Disable.pressed.connect(main.m8_send_disable_display)
-	%ButtonM8Reset.pressed.connect(main.m8_send_reset_display)
+	%ButtonM8Enable.pressed.connect(main.m8c.debug_enable_display)
+	%ButtonM8Disable.pressed.connect(main.m8c.debug_disable_display)
+	%ButtonM8Reset.pressed.connect(main.m8c.debug_reset_display)
 
 	%SpinBoxM8Keys.value_changed.connect(
 		func(value: float) -> void:
@@ -69,7 +69,7 @@ func _on_menu_init() -> void:
 	%ButtonM8Control.pressed.connect(
 		func() -> void:
 			var keys: int = %SpinBoxM8Keys.get_line_edit().text.to_int()
-			main.m8_send_control(keys)
+			main.m8c.debug_set_keys(keys)
 	)
 
 	%ButtonM8KeyJazz.pressed.connect(
@@ -77,7 +77,7 @@ func _on_menu_init() -> void:
 			var n: int = %SpinBoxM8Note.get_line_edit().text.to_int()
 			var v: int = %SpinBoxM8Vel.get_line_edit().text.to_int()
 			print("debug: sending keyjazz (n=%d, v=%d)" % [n, v])
-			main.m8_send_keyjazz(n, v)
+			main.m8c.play_note(n, v)
 	)
 
 	%SpinBoxM8ThemeDelay.value_changed.connect(
@@ -105,7 +105,7 @@ func _on_menu_init() -> void:
 			print("debug: sending theme colors")
 			var delay_frames: int = %SpinBoxM8ThemeDelay.get_line_edit().text.to_int()
 			for i: int in range(m8t_colors.size()):
-				main.m8_send_theme_color(i, m8t_colors[i].color)
+				main.m8c.set_theme_color(i, m8t_colors[i].color)
 				for j in range(delay_frames):
 					await get_tree().physics_frame
 	)

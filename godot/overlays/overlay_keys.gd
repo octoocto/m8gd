@@ -70,7 +70,7 @@ func _on_key_pressed(key: int) -> void:
 			return
 		elif key in [LibM8.KEY_UP, LibM8.KEY_DOWN, LibM8.KEY_LEFT, LibM8.KEY_RIGHT]:
 			if (
-				main.m8_is_key_pressed(LibM8.KEY_SHIFT) and self.current_item.pressed_times == 1
+				main.m8c.is_key_pressed(LibM8.KEY_SHIFT) and self.current_item.pressed_times == 1
 				and self.current_item.keys_pressed == 1
 			):
 				update_current_item()
@@ -145,14 +145,14 @@ func update_current_item() -> void:
 	# print("keycast: updating current item")
 	current_keystate = main.m8c.get_key_state()
 	update_item(current_item)
-	current_item.pressed_u = main.m8_is_key_pressed(LibM8.KEY_UP)
-	current_item.pressed_d = main.m8_is_key_pressed(LibM8.KEY_DOWN)
-	current_item.pressed_l = main.m8_is_key_pressed(LibM8.KEY_LEFT)
-	current_item.pressed_r = main.m8_is_key_pressed(LibM8.KEY_RIGHT)
-	current_item.pressed_o = main.m8_is_key_pressed(LibM8.KEY_OPTION)
-	current_item.pressed_e = main.m8_is_key_pressed(LibM8.KEY_EDIT)
-	current_item.pressed_s = main.m8_is_key_pressed(LibM8.KEY_SHIFT)
-	current_item.pressed_p = main.m8_is_key_pressed(LibM8.KEY_PLAY)
+	current_item.pressed_u = main.m8c.is_key_pressed(LibM8.KEY_UP)
+	current_item.pressed_d = main.m8c.is_key_pressed(LibM8.KEY_DOWN)
+	current_item.pressed_l = main.m8c.is_key_pressed(LibM8.KEY_LEFT)
+	current_item.pressed_r = main.m8c.is_key_pressed(LibM8.KEY_RIGHT)
+	current_item.pressed_o = main.m8c.is_key_pressed(LibM8.KEY_OPTION)
+	current_item.pressed_e = main.m8c.is_key_pressed(LibM8.KEY_EDIT)
+	current_item.pressed_s = main.m8c.is_key_pressed(LibM8.KEY_SHIFT)
+	current_item.pressed_p = main.m8c.is_key_pressed(LibM8.KEY_PLAY)
 	_restart_fade_tween()
 
 

@@ -1,7 +1,5 @@
 class_name Main extends Node
 
-signal m8_theme_changed(colors: PackedColorArray, complete: bool)
-
 @warning_ignore("UNUSED_SIGNAL")
 signal m8_connected
 
@@ -94,14 +92,23 @@ static func is_ready() -> bool:
 	return instance != null
 
 
+##
+## Either returns a valid instance of [Main],
+## [await] until [Main] is ready then returns the instance,
+## or throw an error.
+##
+## In the editor with [@tool] scripts, always returns null.
+##
 static func get_instance(high_priority := false) -> Main:
-	if not Engine.is_editor_hint():
-		if not Main.is_ready():
-			if high_priority:
-				await Events.preinitialized
-			else:
-				await Events.initialized
+	if Engine.is_editor_hint():
 		return instance
+
+	if not Main.is_ready():
+		if high_priority:
+			await Events.preinitialized
+		else:
+			await Events.initialized
+	assert(instance, "Main was not ready")
 	return instance
 
 
@@ -114,7 +121,6 @@ func _ready() -> void:
 			device_manager.init(self)
 			m8c.system_info_received.connect(on_m8_system_info)
 			m8c.disconnected.connect(on_m8_device_disconnect)
-			m8c.theme_changed.connect(on_m8_theme_changed)
 			m8c.key_pressed.connect(Events.device_key_pressed.emit),
 		"init devices",
 	)
@@ -439,46 +445,6 @@ func on_m8_device_disconnect() -> void:
 	device_manager.disconnect_serial_device()
 
 
-func on_m8_theme_changed(colors: PackedColorArray) -> void:
-	m8_theme_changed.emit(colors, true)
-
-
-func m8_send_theme_color(index: int, color: Color) -> void:
-	m8c.set_theme_color(index, color)
-
-
-func m8_send_enable_display() -> void:
-	m8c.debug_enable_display()
-
-
-func m8_send_disable_display() -> void:
-	m8c.debug_enable_display()
-
-
-func m8_send_reset_display() -> void:
-	m8c.debug_reset_display()
-
-
-func m8_send_keyjazz(note: int, velocity: int) -> void:
-	m8c.play_note(note, velocity)
-
-
-func m8_send_control(keys: int) -> void:
-	m8c.debug_set_keys(keys)
-
-
-func m8_is_key_pressed(keycode: int) -> bool:
-	return m8c.is_key_pressed(keycode)
-
-
-func m8_get_theme_colors() -> PackedColorArray:
-	return m8c.get_theme_colors()
-
-
-func m8_set_font(font: int, bitmap: BitMap) -> void:
-	m8c.set_font_bitmap(font, bitmap)
-
-
 func m8_set_font_from_file(font: int, path: String) -> void:
 	if not path:
 		return
@@ -492,32 +458,12 @@ func m8_set_font_from_file(font: int, path: String) -> void:
 			for j in image.get_height():
 				bitmap.set_bit(i, j, image.get_pixel(i, j).r)
 
-		m8_set_font(font, bitmap)
+		m8c.set_font_bitmap(font, bitmap)
 
 
-func audio_set_handler(handler: DeviceManager.AudioHandler) -> void:
-	device_manager.audio_set_handler(handler)
-
-
-func audio_get_spectrum_analyzer() -> AudioEffectSpectrumAnalyzerInstance:
-	return AudioServer.get_bus_effect_instance(0, 0)
-
-
-func audio_set_spectrum_analyzer_enabled(enabled: bool) -> void:
-	device_manager.audio_set_spectrum_analyzer_enabled(enabled)
-
-
-func audio_is_spectrum_analyzer_enabled() -> bool:
-	return device_manager.audio_is_spectrum_analyzer_enabled()
-
-
-## Set audio volume, where [volume] is a float between 0.0 and 1.0.
-func audio_set_volume(volume: float) -> void:
-	device_manager.audio_set_volume(volume)
-
-
-func audio_get_magnitude_at_freq(frequency: float) -> float:
-	return device_manager.audio_get_magnitude_at_freq(frequency)
+func get_audio_peak_mono() -> float:
+	var peaks := self.m8c.get_audio_peaks_linear()
+	return (peaks[0] + peaks[1]) / 2.0
 
 
 func display_get_scale() -> float:
@@ -653,14 +599,14 @@ func _handle_input_keyjazz(e: InputEvent) -> bool:
 				m8_virtual_keyboard_octave -= 1
 				m8_virtual_keyboard_notes.clear()
 				print_to_screen("octave = %d" % m8_virtual_keyboard_octave)
-				m8_send_keyjazz(255, 0)
+				m8c.play_note(255, 0)
 			return true
 		KEY_EQUAL:
 			if event.pressed and m8_virtual_keyboard_octave < 10:
 				m8_virtual_keyboard_octave += 1
 				m8_virtual_keyboard_notes.clear()
 				print_to_screen("octave = %d" % m8_virtual_keyboard_octave)
-				m8_send_keyjazz(255, 0)
+				m8c.play_note(255, 0)
 			return true
 		KEY_BRACKETLEFT:
 			if event.pressed and m8_virtual_keyboard_velocity > 1:
@@ -722,17 +668,17 @@ func _handle_input_keyjazz(e: InputEvent) -> bool:
 			return false
 
 	if event.pressed and !event.is_echo():
-		m8_send_keyjazz(note, m8_virtual_keyboard_velocity)
+		m8c.play_note(note, m8_virtual_keyboard_velocity)
 		m8_virtual_keyboard_notes.append(note)
 		print("virtual keyboard: playing note = %d" % note)
 	elif !event.pressed and m8_virtual_keyboard_notes.size() > 0:
 		var last_note: int = m8_virtual_keyboard_notes[-1]
 		m8_virtual_keyboard_notes.erase(note)
 		if m8_virtual_keyboard_notes.size() == 0:
-			m8_send_keyjazz(255, 0)
+			m8c.play_note(255, 0)
 			print("virtual keyboard: note off")
 		elif last_note != m8_virtual_keyboard_notes[-1]:
-			m8_send_keyjazz(m8_virtual_keyboard_notes[-1], m8_virtual_keyboard_velocity)
+			m8c.play_note(m8_virtual_keyboard_notes[-1], m8_virtual_keyboard_velocity)
 
 	return true
 

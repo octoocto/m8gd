@@ -104,11 +104,13 @@ func _update_integer_scale() -> void:
 
 
 func _update_panel() -> void:
+	# update offsets
 	self.panel.offset_left = self.panel_offset.x
 	self.panel.offset_right = self.panel_offset.x
 	self.panel.offset_top = self.panel_offset.y
 	self.panel.offset_bottom = self.panel_offset.y
 
+	# update padding
 	var stylebox: StyleBoxFlat = self.panel.get_theme_stylebox("panel")
 	stylebox.expand_margin_left = self.panel_padding.x
 	stylebox.expand_margin_right = self.panel_padding.x
@@ -116,11 +118,13 @@ func _update_panel() -> void:
 	stylebox.expand_margin_bottom = self.panel_padding.y
 	stylebox.set_corner_radius_all(self.panel_corner_radius)
 
+	# update shader
 	var panel_mat: ShaderMaterial = self.panel.material as ShaderMaterial
 	panel_mat.set_shader_parameter("panel_opacity", self.panel_opacity)
 	panel_mat.set_shader_parameter("blur_amount", self.panel_blur_amount)
-	panel_mat.set_shader_parameter("panel_color", self.main.m8_get_theme_colors()[0])
+	panel_mat.set_shader_parameter("panel_color", self.main.m8c.get_theme_colors()[0])
 
+	# re-center panel
 	self.panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
 
 

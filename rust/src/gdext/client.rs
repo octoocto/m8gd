@@ -561,10 +561,10 @@ impl GodotM8Client {
         let mut dict = VarDictionary::new();
         dict.set("driver_name", "n/a");
         dict.set("format", "n/a");
-        dict.set("sample_rate", "n/a");
-        dict.set("buffer_size", "n/a");
-        dict.set("latency_ms", "n/a");
-        dict.set("num_channels", "n/a");
+        dict.set("sample_rate", 0_i32);
+        dict.set("buffer_size", 0_i32);
+        dict.set("latency_ms", 0.0_f32);
+        dict.set("num_channels", 0_i32);
 
         let Some(audio_backend) = self.audio_backend.as_mut() else {
             return dict;

@@ -16,7 +16,7 @@ func _on_menu_init() -> void:
 	s_audio_handler.setting_connect_global(
 		"audio_handler",
 		func(value: int) -> void:
-			main.audio_set_handler(value),
+			main.device_manager.audio_set_handler(value),
 	)
 
 	s_volume.setting_connect_global(
@@ -32,16 +32,17 @@ func _on_menu_init() -> void:
 	audio_latency_update_timer.timeout.connect(
 		func() -> void:
 			if visible:
-				l_audio_driver.text = main.device_manager.audio_get_driver_name()
-				l_audio_format.text = main.device_manager.audio_get_format()
-				l_audio_channels.text = "%d" % main.device_manager.audio_get_num_channels()
-				l_audio_rate.text = "%d Hz" % main.device_manager.audio_get_mix_rate()
-				l_audio_buffer.text = "%d" % main.device_manager.audio_get_buffer_size()
-				l_audio_latency.text = "%.2f ms" % main.device_manager.audio_get_latency(),
+				var spec := self.main.m8c.get_audio_spec()
+				l_audio_driver.text = spec["driver_name"]
+				l_audio_format.text = spec["format"]
+				l_audio_channels.text = "%d" % spec["num_channels"]
+				l_audio_rate.text = "%d Hz" % spec["sample_rate"]
+				l_audio_buffer.text = "%d" % spec["buffer_size"]
+				l_audio_latency.text = "%.2f ms" % spec["latency_ms"],
 	)
 
 	s_sa_enable.setting_connect_global(
 		"audio_analyzer_enabled",
 		func(value: bool) -> void:
-			main.audio_set_spectrum_analyzer_enabled(value),
+			main.m8c.set_spectrum_analyzer_enabled(value),
 	)

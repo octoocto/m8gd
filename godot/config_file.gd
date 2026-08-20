@@ -350,6 +350,7 @@ func get_value_scene(scene: M8Scene, key: String, default: Variant) -> Variant:
 ##
 func set_value_scene(scene: M8Scene, key: String, value: Variant) -> void:
 	var section := "%s/%s" % [SECTION_SCENE, _validate_preset_key(scene.scene_file_path)]
+	# TODO: implement set_property for M8Scene
 	return set_value(section, key, value)
 
 

@@ -89,8 +89,6 @@ var ticks_repositioning := 0
 
 func _ready() -> void:
 	self.main = await Main.get_instance()
-	assert(self.main, "Main was not ready")
-
 	self.noise.noise_type = FastNoiseLite.TYPE_PERLIN
 
 
