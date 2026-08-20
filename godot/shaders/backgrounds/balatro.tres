@@ -1,0 +1,17 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://di64oda8v2jnb"]
+
+[ext_resource type="Shader" uid="uid://beq7koy4jfjkx" path="res://shaders/backgrounds/balatro.gdshader" id="1_lolmc"]
+
+[resource]
+shader = ExtResource("1_lolmc")
+shader_parameter/spin_rotation_speed = 2.0
+shader_parameter/move_speed = 7.0
+shader_parameter/offset = Vector2(0, 0)
+shader_parameter/colour_1 = Color(0.871, 0.267, 0.231, 1)
+shader_parameter/colour_2 = Color(0, 0.42, 0.706, 1)
+shader_parameter/colour_3 = Color(0.086, 0.137, 0.145, 1)
+shader_parameter/contrast = 3.5
+shader_parameter/lighting = 0.4
+shader_parameter/spin_amount = 0.25
+shader_parameter/pixel_filter = 2000.0
+shader_parameter/is_rotating = false

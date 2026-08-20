@@ -1,72 +1,11 @@
 [gd_scene format=3 uid="uid://cj6bvkuhu7ipb"]
 
 [ext_resource type="Script" uid="uid://dskuwxeukrhur" path="res://scenes/background_scene.gd" id="1_es8sg"]
-[ext_resource type="Script" uid="uid://crbrf1okvuwkx" path="res://ui/scalable.gd" id="2_jqwrb"]
-[ext_resource type="Shader" uid="uid://okxo3d88kn1h" path="res://shaders/screen_blur.gdshader" id="3_msgpe"]
-
-[sub_resource type="Gradient" id="Gradient_ig0mm"]
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_xmuwn"]
-frequency = 1.0
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_uag16"]
-width = 2048
-height = 2048
-noise = SubResource("FastNoiseLite_xmuwn")
-color_ramp = SubResource("Gradient_ig0mm")
-invert = true
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_3sm74"]
-shader = ExtResource("3_msgpe")
-shader_parameter/blur_amount = 3.5
-shader_parameter/tint_color = Color(1, 1, 1, 1)
-shader_parameter/tint_amount = 1.0
-shader_parameter/brightness = 0.9
-shader_parameter/noise_texture = SubResource("NoiseTexture2D_uag16")
-shader_parameter/noise_strength = 0.015
-shader_parameter/noise_speed = 0.0
+[ext_resource type="PackedScene" uid="uid://b157adhs4i8ke" path="res://background.tscn" id="2_ch17o"]
 
 [node name="BackgroundScene" type="Node3D" unique_id=551051361]
 script = ExtResource("1_es8sg")
 metadata/_custom_type_script = "uid://dskuwxeukrhur"
 
-[node name="BGVideoStreamPlayer" type="VideoStreamPlayer" parent="." unique_id=721235596]
+[node name="BackgroundContainer" parent="." unique_id=106260017 instance=ExtResource("2_ch17o")]
 unique_name_in_owner = true
-visible = false
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-volume_db = -80.0
-expand = true
-loop = true
-
-[node name="ScalableContainer" type="Container" parent="." unique_id=1669644296]
-unique_name_in_owner = true
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("2_jqwrb")
-metadata/_custom_type_script = "uid://crbrf1okvuwkx"
-
-[node name="BackgroundColorRect" type="ColorRect" parent="ScalableContainer" unique_id=1561324636]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="BackgroundTextureRect" type="TextureRect" parent="ScalableContainer" unique_id=381053038]
-unique_name_in_owner = true
-texture_filter = 2
-clip_contents = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-expand_mode = 1
-stretch_mode = 6
-
-[node name="BackgroundShader" type="ColorRect" parent="ScalableContainer" unique_id=1946354366]
-unique_name_in_owner = true
-material = SubResource("ShaderMaterial_3sm74")
-layout_mode = 2

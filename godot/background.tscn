@@ -1,0 +1,62 @@
+[gd_scene format=3 uid="uid://b157adhs4i8ke"]
+
+[ext_resource type="Script" uid="uid://brbpsglpjdboq" path="res://background.gd" id="1_i7s6n"]
+[ext_resource type="Shader" uid="uid://okxo3d88kn1h" path="res://shaders/screen_blur.gdshader" id="2_xehqc"]
+
+[sub_resource type="Gradient" id="Gradient_ig0mm"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_xmuwn"]
+frequency = 1.0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_uag16"]
+width = 2048
+height = 2048
+noise = SubResource("FastNoiseLite_xmuwn")
+color_ramp = SubResource("Gradient_ig0mm")
+invert = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3sm74"]
+shader = ExtResource("2_xehqc")
+shader_parameter/blur_amount = 3.5
+shader_parameter/tint_color = Color(1, 1, 1, 1)
+shader_parameter/tint_amount = 1.0
+shader_parameter/brightness = 0.9
+shader_parameter/noise_texture = SubResource("NoiseTexture2D_uag16")
+shader_parameter/noise_strength = 0.015
+shader_parameter/noise_speed = 0.0
+
+[node name="BackgroundContainer" type="Container" unique_id=1610977447]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_i7s6n")
+metadata/_custom_type_script = "uid://brbpsglpjdboq"
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=2057538714]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=2083431290]
+unique_name_in_owner = true
+texture_filter = 2
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+expand_mode = 1
+stretch_mode = 6
+
+[node name="PostProcessRect" type="ColorRect" parent="." unique_id=4973781]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_3sm74")
+layout_mode = 2
+
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="." unique_id=1437240422]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+volume_db = -80.0
+expand = true
+loop = true
