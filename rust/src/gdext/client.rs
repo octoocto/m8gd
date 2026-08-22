@@ -430,18 +430,16 @@ impl GodotM8Client {
             return;
         };
         godot_print!("audio: initializing with backend {backend_name}...");
-        if self.audio_backend.is_none() {
-            self.audio_backend = match create_audio_backend(backend_name) {
-                Ok(audio_backend) => {
-                    godot_print!("audio: initialized");
-                    Some(audio_backend)
-                }
-                Err(e) => {
-                    godot_error!("audio: failed to initialize: {}", e);
-                    None
-                }
-            };
-        }
+        self.audio_backend = match create_audio_backend(backend_name) {
+            Ok(audio_backend) => {
+                godot_print!("audio: initialized");
+                Some(audio_backend)
+            }
+            Err(e) => {
+                godot_error!("audio: failed to initialize: {}", e);
+                None
+            }
+        };
     }
 
     #[func]
