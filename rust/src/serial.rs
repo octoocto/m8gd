@@ -276,7 +276,7 @@ impl ClientBackend for SerialBackend {
 
         match result {
             Ok(port) => {
-                let (read_sender, read_receiver) = mpsc::sync_channel(0);
+                let (read_sender, read_receiver) = mpsc::channel();
                 let (error_sender, error_receiver) = mpsc::channel();
 
                 // create a clone of the port for read thread

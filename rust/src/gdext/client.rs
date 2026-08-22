@@ -425,11 +425,11 @@ impl GodotM8Client {
     ///
     /// If initialization fails, [struct@audio_backend] will still be [None].
     fn audio_try_init(&mut self) {
-        godot_print!("audio: initializing...");
         let Some(backend_name) = &self.audio_backend_name else {
             godot_warn!("audio: failed to initialize - backend has not been set");
             return;
         };
+        godot_print!("audio: initializing with backend {backend_name}...");
         if self.audio_backend.is_none() {
             self.audio_backend = match create_audio_backend(backend_name) {
                 Ok(audio_backend) => {

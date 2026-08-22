@@ -402,8 +402,13 @@ fn find_input_devices(
         })
         // find a suitable config for each device
         .filter_map(|device| {
-            let config = find_input_stream_config(&device, channels).ok()?;
-            Some((device, config))
+            if let Some(config) = find_input_stream_config(&device, 44100, channels).ok() {
+                Some((device, config))
+            } else if let Some(config) = find_input_stream_config(&device, 48000, channels).ok() {
+                Some((device, config))
+            } else {
+                None
+            }
         })
         .collect::<Vec<(cpal::Device, cpal::StreamConfig)>>();
 
@@ -432,9 +437,12 @@ fn find_output_device(host: &Host, name: &Option<String>) -> Result<Device, Erro
     }
 }
 
-fn find_input_stream_config(device: &Device, channels: u16) -> Result<StreamConfig, Error> {
+fn find_input_stream_config(
+    device: &Device,
+    sample_rate: u32,
+    channels: u16,
+) -> Result<StreamConfig, Error> {
     let sample_format = cpal::SampleFormat::F32;
-    let sample_rate = SAMPLE_RATE as u32;
     let buffer_size = BUFFER_SIZE as u32;
     // let buffer_size = 1024u32;
 
