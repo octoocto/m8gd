@@ -119,6 +119,12 @@ func list_audio_devices(_show_all: bool = false) -> Array[String]:
 ## Connect to and monitor an audio input device with name [device].
 ## If [device] is empty, automatically connect to a valid M8 audio input device.
 func connect_audio_device(device: String = "", force: bool = false) -> void:
+	match audio_handler:
+		AudioHandler.SDL:
+			main.m8c.audio_set_backend("sdl")
+		AudioHandler.CPAL:
+			main.m8c.audio_set_backend("cpal")
+
 	if device == "":
 		if len(list_audio_devices()) > 0:
 			device = list_audio_devices()[0]
@@ -141,29 +147,15 @@ func connect_audio_device(device: String = "", force: bool = false) -> void:
 
 	disconnect_audio_device()
 
-	print("audio: initializing audio using handler: %s" % AudioHandler.keys()[audio_handler])
+	print("audio: starting audio using handler: %s" % AudioHandler.keys()[audio_handler])
 
-	match audio_handler:
-		AudioHandler.SDL:
-			print("audio: initializing SDL audio")
-			main.m8c.audio_set_backend("sdl")
-			if not main.m8c.audio_start(device, ""):
-				print("audio: failed to connect to device %s" % device)
-				main.menu.menu_devices.set_status_audiodevice(
-					"Not connected: failed to connect to: %s" % device,
-				)
-				is_audio_connecting = false
-				return
-		AudioHandler.CPAL:
-			print("audio: initializing CPAL audio")
-			main.m8c.audio_set_backend("cpal")
-			if not main.m8c.audio_start(device, ""):
-				print("audio: failed to connect to device %s" % device)
-				main.menu.menu_devices.set_status_audiodevice(
-					"Not connected: failed to connect to: %s" % device,
-				)
-				is_audio_connecting = false
-				return
+	if not main.m8c.audio_start(device, ""):
+		print("audio: failed to connect to device %s" % device)
+		main.menu.menu_devices.set_status_audiodevice(
+			"Not connected: failed to connect to: %s" % device,
+		)
+		is_audio_connecting = false
+		return
 
 	current_audio_device = device
 	last_audio_device = device
@@ -217,16 +209,9 @@ func is_audio_device_connected() -> bool:
 
 
 func audio_set_handler(handler: AudioHandler) -> void:
-	if handler == audio_handler:
+	if handler == self.audio_handler:
 		return
-
-	audio_handler = handler
-	match audio_handler:
-		AudioHandler.SDL:
-			main.m8c.audio_set_backend("sdl")
-		AudioHandler.CPAL:
-			main.m8c.audio_set_backend("cpal")
-
+	self.audio_handler = handler
 	print("audio: set audio handler to %s" % AudioHandler.keys()[audio_handler])
 
 	reset_audio_device()

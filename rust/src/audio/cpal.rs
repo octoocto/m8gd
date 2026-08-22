@@ -6,6 +6,8 @@ use enum_map::EnumMap;
 use m8::audio;
 use m8::{Error, SpectrumAnalyzer};
 use ringbuf::traits::{Consumer, Producer, Split};
+use rubato::audioadapter_buffers::direct::InterleavedSlice;
+use rubato::{self, Resampler};
 use std::collections::{HashSet, VecDeque};
 use std::sync::{Arc, Mutex};
 
@@ -25,7 +27,7 @@ pub struct CpalAudioBackend {
     volume: Arc<Mutex<f32>>,
     volume_peaks: Arc<Mutex<[f32; 2]>>,
 
-    spectrum_analyzer_enabled: bool,
+    spectrum_analyzer_enabled: Arc<Mutex<bool>>,
     spectrum: Arc<Mutex<SpectrumAnalyzer>>,
 }
 
@@ -43,7 +45,7 @@ impl CpalAudioBackend {
             volume: Arc::new(Mutex::new(1.0)),
             volume_peaks: Arc::new(Mutex::new([0.0; 2])),
 
-            spectrum_analyzer_enabled: true,
+            spectrum_analyzer_enabled: Arc::new(Mutex::new(true)),
             spectrum: Arc::new(Mutex::new(SpectrumAnalyzer::new(SAMPLE_RATE as u32))),
         })
     }
@@ -84,7 +86,7 @@ impl super::AudioBackend for CpalAudioBackend {
 
         if input_devices.is_empty() {
             return Err(Error::AudioError(
-                "CPAL: No valid input devices found".to_string(),
+                "cpal-audio: No valid input devices found".to_string(),
             ));
         }
 
@@ -107,10 +109,44 @@ impl super::AudioBackend for CpalAudioBackend {
             }
         }
 
+        if self.input_device.is_none() {
+            return Err(Error::AudioError(
+                "cpal-audio: Unable to open any input devices".to_string(),
+            ));
+        }
+
+        let input_buffer_size = self.input_device.as_ref().unwrap().stream.buffer_size()?;
+        let input_sample_rate = self.input_device.as_ref().unwrap().config.sample_rate;
+
+        let output_buffer_size = match config_out.buffer_size {
+            cpal::BufferSize::Fixed(size) => size,
+            cpal::BufferSize::Default => panic!("buffer size is not fixed"),
+        };
+        let output_sample_rate = config_out.sample_rate;
+
+        println!("cpal-audio: input buffer size = {input_buffer_size}");
+        println!("cpal-audio: input sample rate = {input_sample_rate}");
+        println!("cpal-audio: output buffer size = {output_buffer_size}");
+        println!("cpal-audio: output sample rate = {output_sample_rate}");
+
+        let resampler = rubato::Fft::<f32>::new(
+            input_sample_rate as usize,
+            output_sample_rate as usize,
+            input_buffer_size as usize,
+            2,
+            rubato::FixedSync::Both,
+        )
+        .expect("failed to create resampler");
+
         self.output_device = Some(AudioStream::open_output(
             output_device,
             config_out,
-            self.on_output_data_requested(data_cons),
+            self.on_output_data_requested(
+                data_cons,
+                resampler,
+                input_buffer_size as usize,
+                output_buffer_size as usize,
+            ),
         )?);
 
         Ok(())
@@ -206,12 +242,15 @@ impl super::AudioBackend for CpalAudioBackend {
     }
 
     fn set_spectrum_analyzer_enabled(&mut self, enabled: bool) -> Result<(), Error> {
-        self.spectrum_analyzer_enabled = enabled;
+        if let Ok(spectrum_analyzer_enabled) = self.spectrum_analyzer_enabled.lock().as_deref_mut()
+        {
+            *spectrum_analyzer_enabled = enabled;
+        }
         Ok(())
     }
 
     fn is_spectrum_analyzer_enabled(&mut self) -> Result<bool, Error> {
-        Ok(self.spectrum_analyzer_enabled)
+        Ok(*self.spectrum_analyzer_enabled.lock().as_deref().unwrap())
     }
 
     fn input_spec(&self) -> Result<audio::AudioSpec, Error> {
@@ -303,10 +342,17 @@ impl CpalAudioBackend {
     fn on_output_data_requested(
         &self,
         mut data_cons: ringbuf::HeapCons<f32>,
+        mut resampler: rubato::Fft<f32>,
+        buffer_size_in: usize,
+        buffer_size_out: usize,
     ) -> impl FnMut(&mut [f32], &OutputCallbackInfo) + Send + 'static {
         let volume = self.volume.clone();
         let volume_peaks = self.volume_peaks.clone();
         let spectrum = self.spectrum.clone();
+        let spectrum_enabled = self.spectrum_analyzer_enabled.clone();
+
+        let mut buffer_in = vec![0.0; buffer_size_in * 2];
+        let mut buffer_out = vec![0.0; buffer_size_out * 2];
 
         move |data, _| {
             let Ok(volume) = volume.lock() else {
@@ -315,25 +361,49 @@ impl CpalAudioBackend {
             let Ok(peaks) = &mut volume_peaks.lock() else {
                 return;
             };
+            let Ok(spectrum_enabled) = spectrum_enabled.lock() else {
+                return;
+            };
+
             peaks[0] = 0.0;
             peaks[1] = 0.0;
+
+            data_cons.pop_slice(&mut buffer_in);
+
+            let adapter_in = match InterleavedSlice::new(&buffer_in, 2, buffer_size_in) {
+                Ok(adapter_in) => adapter_in,
+                Err(e) => {
+                    println!("size error when creating adapter_in:\n{e}");
+                    return;
+                }
+            };
+            let mut adapter_out =
+                match InterleavedSlice::new_mut(&mut buffer_out, 2, buffer_size_out) {
+                    Ok(adapter_out) => adapter_out,
+                    Err(e) => {
+                        println!("size error when creating adapter_out:\n{e}");
+                        return;
+                    }
+                };
+
+            if let Err(e) = resampler.process_into_buffer(&adapter_in, &mut adapter_out, None) {
+                println!("error when resampling:\n{e}");
+                return;
+            }
 
             // println!("CPAL: Output callback with {} samples", data.len());
 
             for (i, sample) in data.iter_mut().enumerate() {
-                *sample = match data_cons.try_pop() {
-                    Some(s) => {
-                        if s.abs() > peaks[i % 2] {
-                            peaks[i % 2] = s.abs();
-                        }
-                        s * *volume
-                    }
-                    None => 0.0,
-                };
+                let value = buffer_out[i];
+                if value.abs() > peaks[i % 2] {
+                    peaks[i % 2] = value.abs();
+                }
+                *sample = value * *volume;
             }
 
-            if let Ok(mut spectrum) = spectrum.lock() {
-                spectrum.update_fft(data);
+            if *spectrum_enabled && let Ok(mut spectrum) = spectrum.lock() {
+                let len_pow2 = data.len().checked_ilog2().map(|exp| 1 << exp).unwrap_or(0);
+                spectrum.update_fft(&data[..len_pow2]);
             }
         }
     }
@@ -381,7 +451,7 @@ fn find_input_devices(
     name: &Option<String>,
     channels: u16,
 ) -> Result<Vec<(cpal::Device, cpal::StreamConfig)>, Error> {
-    println!("CPAL: Finding input devices with name: {name:?}");
+    println!("cpal-audio: Finding input devices with name: {name:?}");
     let devices = host
         .input_devices()?
         // filter to only devices with a valid name and description
@@ -402,17 +472,22 @@ fn find_input_devices(
         })
         // find a suitable config for each device
         .filter_map(|device| {
-            let config = find_input_stream_config(&device, channels).ok()?;
-            Some((device, config))
+            if let Some(config) = find_input_stream_config(&device, 44100, channels).ok() {
+                Some((device, config))
+            } else if let Some(config) = find_input_stream_config(&device, 48000, channels).ok() {
+                Some((device, config))
+            } else {
+                None
+            }
         })
         .collect::<Vec<(cpal::Device, cpal::StreamConfig)>>();
 
-    println!("CPAL: Found {} valid input devices", devices.len());
+    println!("cpal-audio: Found {} valid input devices", devices.len());
     Ok(devices)
 }
 
 fn find_output_device(host: &Host, name: &Option<String>) -> Result<Device, Error> {
-    println!("CPAL: Finding output device with name: {name:?}");
+    println!("cpal-audio: Finding output device with name: {name:?}");
     let device = match name {
         None => host.default_output_device(),
         Some(name) => host
@@ -421,25 +496,28 @@ fn find_output_device(host: &Host, name: &Option<String>) -> Result<Device, Erro
     };
     if let Some(device) = device {
         println!(
-            "CPAL: Found output device: {}",
+            "cpal-audio: Found output device: {}",
             device.description()?.name()
         );
         Ok(device)
     } else {
         Err(Error::AudioError(
-            "CPAL: No output device found".to_string(),
+            "cpal-audio: No output device found".to_string(),
         ))
     }
 }
 
-fn find_input_stream_config(device: &Device, channels: u16) -> Result<StreamConfig, Error> {
+fn find_input_stream_config(
+    device: &Device,
+    sample_rate: u32,
+    channels: u16,
+) -> Result<StreamConfig, Error> {
     let sample_format = cpal::SampleFormat::F32;
-    let sample_rate = SAMPLE_RATE as u32;
     let buffer_size = BUFFER_SIZE as u32;
     // let buffer_size = 1024u32;
 
     println!(
-        "Finding input stream config for device: {}, driver: {:?}, channels: {}",
+        "cpal-audio: Finding input stream config for device: {}, driver: {:?}, channels: {}",
         device.to_string(),
         device.description()?.driver(),
         channels
@@ -452,25 +530,34 @@ fn find_input_stream_config(device: &Device, channels: u16) -> Result<StreamConf
             config_range.try_with_sample_rate(sample_rate)
         })
         .find(|config| {
-            // println!(
-            //     "- config: {{ channels: {}, sample_format: {:?}, buffer_size: {:?} }}",
-            //     config.channels(),
-            //     config.sample_format(),
-            //     config.buffer_size()
-            // );
+            println!(
+                "- config: {{ channels: {}, sample_format: {:?}, buffer_size: {:?} }}",
+                config.channels(),
+                config.sample_format(),
+                config.buffer_size()
+            );
             config.channels() == channels
                 && config.sample_format() == sample_format
                 && match config.buffer_size() {
                     cpal::SupportedBufferSize::Unknown => false,
-                    cpal::SupportedBufferSize::Range { min, max } => {
-                        &buffer_size >= min && &buffer_size <= max
-                    }
+                    cpal::SupportedBufferSize::Range { .. } => true,
                 }
         })
         .ok_or(Error::AudioError(
             "Unable to find a valid input config".to_string(),
         ))?;
 
+    let buffer_size = match supported_config.buffer_size() {
+        cpal::SupportedBufferSize::Range { min, max } => {
+            if &buffer_size >= min && &buffer_size <= max {
+                buffer_size
+            } else {
+                println!("cpal-audio: using buffer size {min} instead of {buffer_size}");
+                *min
+            }
+        }
+        cpal::SupportedBufferSize::Unknown => buffer_size,
+    };
     let mut config = supported_config.config();
     config.buffer_size = cpal::BufferSize::Fixed(buffer_size);
     Ok(config)
@@ -483,7 +570,14 @@ fn find_output_stream_config(device: &Device) -> Result<StreamConfig, Error> {
     // let buffer_size = 1024u32;
     let channels = 2u16;
 
-    device
+    println!(
+        "cpal-audio: Finding output stream config for device: {}, driver: {:?}, channels: {}",
+        device.to_string(),
+        device.description()?.driver(),
+        channels
+    );
+
+    let supported_config = device
         .supported_output_configs()?
         .find(|config| {
             config.channels() == channels
@@ -491,14 +585,24 @@ fn find_output_stream_config(device: &Device) -> Result<StreamConfig, Error> {
                 && config.sample_format() == sample_format
                 && match config.buffer_size() {
                     cpal::SupportedBufferSize::Unknown => false,
-                    cpal::SupportedBufferSize::Range { min, max } => {
-                        &buffer_size >= min && &buffer_size <= max
-                    }
+                    cpal::SupportedBufferSize::Range { .. } => true,
                 }
         })
         .ok_or(Error::AudioError(
             "Unable to find a valid output config".to_string(),
         ))?;
+
+    let buffer_size = match supported_config.buffer_size() {
+        cpal::SupportedBufferSize::Range { min, max } => {
+            if &buffer_size >= min && &buffer_size <= max {
+                buffer_size
+            } else {
+                println!("cpal-audio: using buffer size {min} instead of {buffer_size}");
+                *min
+            }
+        }
+        cpal::SupportedBufferSize::Unknown => buffer_size,
+    };
 
     Ok(StreamConfig {
         sample_rate,
@@ -524,7 +628,7 @@ impl AudioStream {
         let id = device.id()?;
         let driver = desc.driver();
         println!(
-            "CPAL: Opening input stream for device: {name} \n\
+            "cpal-audio: Opening input stream for device: {name} \n\
              -     id: {id:?} \n\
              - driver: {driver:?} \n\
              - config: {config:?}",
@@ -553,7 +657,7 @@ impl AudioStream {
         let id = device.id()?;
         let driver = desc.driver();
         println!(
-            "CPAL: Opening output stream for device: {name} \n\
+            "cpal-audio: Opening output stream for device: {name} \n\
              -     id: {id:?} \n\
              - driver: {driver:?} \n\
              - config: {config:?}",
