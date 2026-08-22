@@ -217,7 +217,7 @@ impl SerialBackend {
     fn start_read_thread(
         &mut self,
         mut port: Box<dyn serialport::SerialPort>,
-        read_sender: mpsc::SyncSender<([u8; SERIAL_BUFFER_SIZE], usize)>,
+        read_sender: mpsc::Sender<([u8; SERIAL_BUFFER_SIZE], usize)>,
         error_sender: mpsc::Sender<Error>,
         read_thread_running: Arc<AtomicBool>,
     ) -> Result<(), Error> {
