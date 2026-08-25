@@ -159,145 +159,6 @@ pub struct SdlAudioBackend {
     // output_stream: Option<Arc<Mutex<AudioStreamOwner>>>,
 }
 
-impl super::AudioBackend for SdlAudioBackend {
-    fn start(
-        &mut self,
-        input_device: Option<String>,
-        output_device: Option<String>,
-    ) -> Result<(), Error> {
-        let input_device = self.input_device(input_device)?;
-        let output_device = self.output_device(output_device)?;
-
-        println!(
-            "Using input device: {}",
-            input_device.id().name().unwrap_or("Unknown".to_string())
-        );
-        println!(
-            "Using output device: {}",
-            output_device.id().name().unwrap_or("Unknown".to_string())
-        );
-
-        let output_stream = output_device.open_device_stream(Some(&Self::DESIRED_SPEC_OUT))?;
-        output_stream.resume()?;
-
-        let input_stream = input_device.open_recording_stream_with_callback(
-            &Self::DESIRED_SPEC_IN,
-            AudioInCallback::new(output_stream, self.volume),
-        )?;
-
-        input_stream.resume()?;
-
-        self.input_stream = Some(input_stream);
-        self.input_stream_spec = Some(Self::get_audio_spec(input_device.id())?);
-
-        // self.output_stream = Some(output_stream);
-
-        Ok(())
-    }
-
-    fn stop(&mut self) -> Result<(), Error> {
-        self.input_stream = None;
-        self.input_stream_spec = None;
-        Ok(())
-    }
-
-    fn is_running(&self) -> bool {
-        // Note that the input stream also owns the output stream
-        self.input_stream.is_some()
-    }
-
-    fn list_input_devices(&self) -> Result<Vec<String>, Error> {
-        let input_devices = self
-            .input_devices()?
-            .iter()
-            .filter_map(|device| device.name().ok())
-            .collect();
-        Ok(input_devices)
-    }
-
-    fn list_output_devices(&self) -> Result<Vec<String>, Error> {
-        let output_devices = self
-            .output_devices()?
-            .iter()
-            .filter_map(|device| device.name().ok())
-            .collect();
-        Ok(output_devices)
-    }
-
-    fn volume(&mut self) -> Result<f32, Error> {
-        Ok(self.callback_lock()?.volume)
-    }
-
-    fn set_volume(&mut self, volume: f32) -> Result<(), Error> {
-        self.volume = volume.clamp(0.0, 1.0);
-        println!("libm8: Setting volume to {}", self.volume);
-        Ok(self.callback_lock()?.volume = self.volume)
-    }
-
-    fn peaks_linear(&mut self) -> Result<[f32; 2], Error> {
-        Ok(self.callback_lock()?.peaks)
-    }
-
-    fn value_at_frequency(&mut self, frequency: f32) -> Result<f32, Error> {
-        if let Ok(callback) = self.callback_lock() {
-            if callback.spectrum_analyzer_enabled {
-                return Ok(callback.spectrum.value_at_frequency(frequency));
-            }
-        }
-        Ok(0.0)
-    }
-
-    fn is_spectrum_analyzer_enabled(&mut self) -> Result<bool, Error> {
-        Ok(self.callback_lock()?.spectrum_analyzer_enabled)
-    }
-
-    fn set_spectrum_analyzer_enabled(&mut self, enabled: bool) -> Result<(), Error> {
-        self.callback_lock()?.spectrum_analyzer_enabled = enabled;
-        Ok(())
-    }
-
-    fn input_spec(&self) -> Result<audio::AudioSpec, Error> {
-        let (spec, samples) = self
-            .input_stream_spec
-            .as_ref()
-            .ok_or(AudioError("No input stream".to_string()))?;
-        Ok(audio::AudioSpec {
-            host: self.driver_name(),
-            format: format_name(spec.format),
-            num_channels: spec.channels.unwrap_or(0) as usize,
-            sample_rate: spec.freq.unwrap_or(0) as usize,
-            buffer_size: samples.clone(),
-        })
-    }
-
-    fn track_buffer(&self, _track: m8::Track) -> Result<Vec<f32>, Error> {
-        Ok(vec![0.0; BUFFER_SIZE * 2])
-    }
-
-    fn set_multichannel_mode(&mut self, _enabled: bool) -> Result<(), Error> {
-        Err(AudioError(
-            "Multichannel mode is not supported in SDL3 backend.".to_string(),
-        ))
-    }
-}
-
-fn format_name(format: Option<sdl3::audio::AudioFormat>) -> String {
-    let Some(format) = format else {
-        return "UNKNOWN".to_string();
-    };
-    match format {
-        sdl3::audio::AudioFormat::U8 => "U8".to_string(),
-        sdl3::audio::AudioFormat::S8 => "S8".to_string(),
-        sdl3::audio::AudioFormat::S16LE => "S16LE".to_string(),
-        sdl3::audio::AudioFormat::S16BE => "S16BE".to_string(),
-        sdl3::audio::AudioFormat::S32LE => "S32LE".to_string(),
-        sdl3::audio::AudioFormat::S32BE => "S32BE".to_string(),
-        sdl3::audio::AudioFormat::F32LE => "F32LE".to_string(),
-        sdl3::audio::AudioFormat::F32BE => "F32BE".to_string(),
-        sdl3::audio::AudioFormat::UNKNOWN => "UNKNOWN".to_string(),
-    }
-}
-
 impl SdlAudioBackend {
     const DESIRED_SPEC_IN: SdlAudioSpec = SdlAudioSpec {
         freq: Some(SAMPLE_RATE as i32),
@@ -436,5 +297,146 @@ impl SdlAudioBackend {
                 )))
             }
         }
+    }
+}
+
+impl super::AudioBackend for SdlAudioBackend {
+    fn start(
+        &mut self,
+        input_device: Option<String>,
+        output_device: Option<String>,
+    ) -> Result<(), Error> {
+        let input_device = self.input_device(input_device)?;
+        let output_device = self.output_device(output_device)?;
+
+        println!(
+            "sdl-audio: using input device: {}",
+            input_device.id().name().unwrap_or("Unknown".to_string())
+        );
+        println!(
+            "sdl-audio: using output device: {}",
+            output_device.id().name().unwrap_or("Unknown".to_string())
+        );
+
+        println!("sdl-audio: opening output stream...");
+        let output_stream = output_device
+            .clone()
+            .open_device_stream(Some(&Self::DESIRED_SPEC_OUT))?;
+        output_stream.resume()?;
+        println!("sdl-audio: opening output stream done");
+
+        println!("sdl-audio: opening input stream...");
+        let cb = AudioInCallback::new(output_stream, self.volume);
+        let input_stream =
+            input_device.open_recording_stream_with_callback(&Self::DESIRED_SPEC_IN, cb)?;
+        input_stream.resume()?;
+        println!("sdl-audio: opening input stream done");
+
+        self.input_stream = Some(input_stream);
+        self.input_stream_spec = Some(Self::get_audio_spec(input_device.id())?);
+
+        // self.output_stream = Some(output_stream);
+
+        Ok(())
+    }
+
+    fn stop(&mut self) -> Result<(), Error> {
+        self.input_stream = None;
+        self.input_stream_spec = None;
+        Ok(())
+    }
+
+    fn is_running(&self) -> bool {
+        // Note that the input stream also owns the output stream
+        self.input_stream.is_some()
+    }
+
+    fn list_input_devices(&self) -> Result<Vec<String>, Error> {
+        let input_devices = self
+            .input_devices()?
+            .iter()
+            .filter_map(|device| device.name().ok())
+            .collect();
+        Ok(input_devices)
+    }
+
+    fn list_output_devices(&self) -> Result<Vec<String>, Error> {
+        let output_devices = self
+            .output_devices()?
+            .iter()
+            .filter_map(|device| device.name().ok())
+            .collect();
+        Ok(output_devices)
+    }
+
+    fn volume(&mut self) -> Result<f32, Error> {
+        Ok(self.callback_lock()?.volume)
+    }
+
+    fn set_volume(&mut self, volume: f32) -> Result<(), Error> {
+        self.volume = volume.clamp(0.0, 1.0);
+        println!("libm8: Setting volume to {}", self.volume);
+        Ok(self.callback_lock()?.volume = self.volume)
+    }
+
+    fn peaks_linear(&mut self) -> Result<[f32; 2], Error> {
+        Ok(self.callback_lock()?.peaks)
+    }
+
+    fn value_at_frequency(&mut self, frequency: f32) -> Result<f32, Error> {
+        if let Ok(callback) = self.callback_lock() {
+            if callback.spectrum_analyzer_enabled {
+                return Ok(callback.spectrum.value_at_frequency(frequency));
+            }
+        }
+        Ok(0.0)
+    }
+
+    fn is_spectrum_analyzer_enabled(&mut self) -> Result<bool, Error> {
+        Ok(self.callback_lock()?.spectrum_analyzer_enabled)
+    }
+
+    fn set_spectrum_analyzer_enabled(&mut self, enabled: bool) -> Result<(), Error> {
+        self.callback_lock()?.spectrum_analyzer_enabled = enabled;
+        Ok(())
+    }
+
+    fn input_spec(&self) -> Result<audio::AudioSpec, Error> {
+        let (spec, samples) = self
+            .input_stream_spec
+            .as_ref()
+            .ok_or(AudioError("No input stream".to_string()))?;
+        Ok(audio::AudioSpec {
+            host: self.driver_name(),
+            format: format_name(spec.format),
+            num_channels: spec.channels.unwrap_or(0) as usize,
+            sample_rate: spec.freq.unwrap_or(0) as usize,
+            buffer_size: samples.clone(),
+        })
+    }
+
+    fn track_buffer(&self, _track: m8::Track) -> Result<Vec<f32>, Error> {
+        Ok(vec![0.0; BUFFER_SIZE * 2])
+    }
+
+    fn set_multichannel_mode(&mut self, _enabled: bool) -> Result<(), Error> {
+        Ok(())
+    }
+}
+
+fn format_name(format: Option<sdl3::audio::AudioFormat>) -> String {
+    let Some(format) = format else {
+        return "UNKNOWN".to_string();
+    };
+    match format {
+        sdl3::audio::AudioFormat::U8 => "U8".to_string(),
+        sdl3::audio::AudioFormat::S8 => "S8".to_string(),
+        sdl3::audio::AudioFormat::S16LE => "S16LE".to_string(),
+        sdl3::audio::AudioFormat::S16BE => "S16BE".to_string(),
+        sdl3::audio::AudioFormat::S32LE => "S32LE".to_string(),
+        sdl3::audio::AudioFormat::S32BE => "S32BE".to_string(),
+        sdl3::audio::AudioFormat::F32LE => "F32LE".to_string(),
+        sdl3::audio::AudioFormat::F32BE => "F32BE".to_string(),
+        sdl3::audio::AudioFormat::UNKNOWN => "UNKNOWN".to_string(),
     }
 }

@@ -425,19 +425,19 @@ impl GodotM8Client {
     ///
     /// If initialization fails, [struct@audio_backend] will still be [None].
     fn audio_try_init(&mut self) {
-        godot_print!("audio: initializing...");
         let Some(backend_name) = &self.audio_backend_name else {
-            godot_warn!("audio: failed to initialize - backend has not been set");
+            godot_warn!("libm8: failed to initialize audio - backend has not been set");
             return;
         };
+        godot_print!("libm8: initializing audio with backend {backend_name}...");
         if self.audio_backend.is_none() {
             self.audio_backend = match create_audio_backend(backend_name) {
                 Ok(audio_backend) => {
-                    godot_print!("audio: initialized");
+                    godot_print!("libm8: initialized");
                     Some(audio_backend)
                 }
                 Err(e) => {
-                    godot_error!("audio: failed to initialize: {}", e);
+                    godot_error!("libm8: failed to initialize: {}", e);
                     None
                 }
             };
@@ -446,12 +446,19 @@ impl GodotM8Client {
 
     #[func]
     fn audio_set_backend(&mut self, backend_name: GString) {
+        if self
+            .audio_backend_name
+            .as_ref()
+            .is_some_and(|name| name == &backend_name.to_string())
+        {
+            return;
+        }
         self.audio_stop();
         self.audio_backend_name = if backend_name.is_empty() {
-            godot_print!("audio: backend set to none");
+            godot_print!("libm8: backend set to none");
             None
         } else {
-            godot_print!("audio: backend set to '{}'", backend_name);
+            godot_print!("libm8: backend set to '{}'", backend_name);
             Some(backend_name.to_string())
         };
     }
@@ -486,8 +493,8 @@ impl GodotM8Client {
     fn audio_stop(&mut self) {
         if self.is_audio_enabled() {
             godot_print!("audio: stopping...");
-            self.audio_backend = None;
         }
+        self.audio_backend = None;
     }
 
     #[func]
@@ -509,7 +516,10 @@ impl GodotM8Client {
 
     #[func]
     fn is_audio_enabled(&mut self) -> bool {
-        self.audio_backend.is_some() && self.audio_backend.as_ref().unwrap().is_running()
+        match self.audio_backend.as_ref() {
+            Some(backend) => backend.is_running(),
+            None => false,
+        }
     }
 
     #[func]

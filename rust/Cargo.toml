@@ -17,6 +17,7 @@ spectrum-analyzer = "=1.7.0"
 thiserror = "=2.0.17"
 
 godot = { version = "=0.5.4", features = ["register-docs"], optional = true }
+rubato = "5.0.0"
 
 [dependencies.sdl3-sys]
 version = "0.6.0"
