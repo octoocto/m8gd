@@ -7,7 +7,7 @@ pub trait Client {
     fn backend(&mut self) -> Option<&mut dyn ClientBackend>;
 
     /// Process an incoming command from the M8 device.
-    fn handle_command(&mut self, command: CommandIn) -> Result<(), Error>;
+    fn handle_command(&mut self, command: &CommandIn) -> Result<(), Error>;
 
     // Provided methods
     fn is_connected(&mut self) -> bool {
@@ -22,7 +22,7 @@ pub trait Client {
     fn poll(&mut self) -> Result<(), Error> {
         let commands = self.backend().ok_or(Error::NoBackend)?.poll()?;
         for command in commands {
-            self.handle_command(command)?;
+            self.handle_command(&command)?;
         }
         Ok(())
     }

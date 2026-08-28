@@ -141,10 +141,8 @@ pub struct SerialBackend {
     read_thread_handle: Option<thread::JoinHandle<()>>,
     read_thread_running: Arc<AtomicBool>,
 
-    /// Receiver for read bytes.
-    read_receiver: Option<mpsc::Receiver<([u8; SERIAL_BUFFER_SIZE], usize)>>,
-    /// Receiver for incoming errors.
-    error_receiver: Option<mpsc::Receiver<Error>>,
+    /// Receiver for read commands.
+    read_receiver: Option<mpsc::Receiver<Result<CommandIn, Error>>>,
 
     /// If the port is connected.
     ///
@@ -170,7 +168,6 @@ impl SerialBackend {
             read_thread_running: Arc::new(AtomicBool::new(false)),
 
             read_receiver: None,
-            error_receiver: None,
 
             is_connected: false,
             command_buffer: ByteBuffer::new(),
@@ -217,12 +214,12 @@ impl SerialBackend {
     fn start_read_thread(
         &mut self,
         mut port: Box<dyn serialport::SerialPort>,
-        read_sender: mpsc::SyncSender<([u8; SERIAL_BUFFER_SIZE], usize)>,
-        error_sender: mpsc::Sender<Error>,
+        read_sender: mpsc::Sender<Result<CommandIn, Error>>,
         read_thread_running: Arc<AtomicBool>,
     ) -> Result<(), Error> {
         let handle = thread::spawn(move || {
             let mut read_bytes = [0; SERIAL_BUFFER_SIZE];
+            let mut command_buf = ByteBuffer::<COMMAND_BUFFER_SIZE>::new();
             loop {
                 if read_thread_running.load(std::sync::atomic::Ordering::Relaxed) == false {
                     println!("Read thread stopping...");
@@ -230,7 +227,13 @@ impl SerialBackend {
                 }
                 match port.read(read_bytes.as_mut_slice()) {
                     Ok(bytes_read) => {
-                        let _ = read_sender.send((read_bytes, bytes_read));
+                        if let Ok(commands) =
+                            parse_commands(&mut command_buf, &read_bytes[..bytes_read])
+                        {
+                            for command in commands {
+                                let _ = read_sender.send(Ok(command));
+                            }
+                        }
                     }
                     Err(e) if e.kind() == std::io::ErrorKind::TimedOut => {
                         continue;
@@ -240,7 +243,7 @@ impl SerialBackend {
                     }
                     Err(e) => {
                         println!("Error reading from device: {}", e);
-                        error_sender.send(e.into()).unwrap();
+                        let _ = read_sender.send(Err(e.into()));
                         break;
                     }
                 }
@@ -276,8 +279,7 @@ impl ClientBackend for SerialBackend {
 
         match result {
             Ok(port) => {
-                let (read_sender, read_receiver) = mpsc::sync_channel(0);
-                let (error_sender, error_receiver) = mpsc::channel();
+                let (read_sender, read_receiver) = mpsc::channel();
 
                 // create a clone of the port for read thread
                 let port_clone = port.try_clone().map_err(|e| {
@@ -288,7 +290,6 @@ impl ClientBackend for SerialBackend {
                 })?;
 
                 self.read_receiver = Some(read_receiver);
-                self.error_receiver = Some(error_receiver);
                 self.path = Some(path.clone());
                 self.port = Some(port);
                 self.port_type = Some(port_info.port_type);
@@ -301,12 +302,7 @@ impl ClientBackend for SerialBackend {
                 self.send_command(CommandOut::EnableDisplay)?;
                 self.send_command(CommandOut::ResetDisplay)?;
 
-                self.start_read_thread(
-                    port_clone,
-                    read_sender,
-                    error_sender,
-                    self.read_thread_running.clone(),
-                )?;
+                self.start_read_thread(port_clone, read_sender, self.read_thread_running.clone())?;
 
                 Ok(())
             }
@@ -335,7 +331,6 @@ impl ClientBackend for SerialBackend {
         self.port = None;
         self.path = None;
         self.read_receiver = None;
-        self.error_receiver = None;
         self.command_buffer.clear();
         self.slip_escaped = false;
 
@@ -398,68 +393,23 @@ impl ClientBackend for SerialBackend {
         }
 
         let read_receiver = self.read_receiver.as_mut().unwrap();
-        let error_receiver = self.error_receiver.as_mut().unwrap();
 
-        // check for any errors in the read thread
-
-        if let Ok(error) = error_receiver.try_recv() {
-            // read thread panicked
-            return Err(Error::DeviceReadError(error.to_string()));
-        }
+        // try receiving commands
 
         let mut commands = vec![];
-
-        // try receiving bytes
-
-        let (bytes, bytes_read) = match read_receiver.try_recv() {
-            Ok((bytes, bytes_read)) => (bytes, bytes_read),
-            Err(mpsc::TryRecvError::Disconnected) => {
-                return Err(Error::DeviceNotConnected(format!(
-                    "Device disconnected on port {:?}",
-                    self.path
-                )));
-            }
-            Err(mpsc::TryRecvError::Empty) => return Ok(commands),
-        };
-
-        // parse commands (received as SLIP packets)
-
-        for i in 0..bytes_read {
-            let byte = bytes[i];
-
-            match SlipByte::from(byte) {
-                SlipByte::End if !self.slip_escaped => {
-                    // reached end of command, parse it
-                    let buf = self.command_buffer.as_slice();
-                    if buf.is_empty() {
-                        continue;
-                    }
-                    match CommandIn::from_bytes(buf) {
-                        Some(command) => commands.push(command),
-                        None => eprintln!("Error parsing command from bytes {:02X?}", buf),
-                    };
-                    self.command_buffer.clear();
+        loop {
+            match read_receiver.try_recv() {
+                Ok(result) => match result {
+                    Ok(command) => commands.push(command),
+                    Err(e) => return Err(e),
+                },
+                Err(mpsc::TryRecvError::Disconnected) => {
+                    return Err(Error::DeviceNotConnected(format!(
+                        "Device disconnected on port {:?}",
+                        self.path
+                    )));
                 }
-                SlipByte::Esc if !self.slip_escaped => {
-                    // escape
-                    self.slip_escaped = true;
-                }
-                _ if !self.slip_escaped => {
-                    // add byte to command buffer
-                    self.command_buffer.push(byte)?;
-                }
-                SlipByte::EscEnd if self.slip_escaped => {
-                    self.command_buffer.push((&SlipByte::End).into())?;
-                    self.slip_escaped = false;
-                }
-                SlipByte::EscEsc if self.slip_escaped => {
-                    self.command_buffer.push((&SlipByte::Esc).into())?;
-                    self.slip_escaped = false;
-                }
-                _ => {
-                    eprintln!("{}", format!("Invalid SLIP escaped character: {}", byte));
-                    self.command_buffer.clear();
-                }
+                Err(mpsc::TryRecvError::Empty) => break,
             }
         }
 
@@ -471,4 +421,51 @@ impl Drop for SerialBackend {
     fn drop(&mut self) {
         let _ = self.disconnect();
     }
+}
+
+fn parse_commands(
+    buffer: &mut ByteBuffer<COMMAND_BUFFER_SIZE>,
+    bytes: &[u8],
+) -> Result<Vec<CommandIn>, Error> {
+    let mut commands = vec![];
+    let mut slip_escaped = false;
+
+    // parse commands (received as SLIP packets)
+    for byte in bytes {
+        match SlipByte::from(*byte) {
+            SlipByte::End if !slip_escaped => {
+                // reached end of command, parse it
+                let buf = buffer.as_slice();
+                if buf.is_empty() {
+                    continue;
+                }
+                match CommandIn::from_bytes(buf) {
+                    Some(command) => commands.push(command),
+                    None => eprintln!("Error parsing command from bytes {:02X?}", buf),
+                };
+                buffer.clear();
+            }
+            SlipByte::Esc if !slip_escaped => {
+                // escape
+                slip_escaped = true;
+            }
+            _ if !slip_escaped => {
+                // add byte to command buffer
+                buffer.push(*byte)?;
+            }
+            SlipByte::EscEnd if slip_escaped => {
+                buffer.push((&SlipByte::End).into())?;
+                slip_escaped = false;
+            }
+            SlipByte::EscEsc if slip_escaped => {
+                buffer.push((&SlipByte::Esc).into())?;
+                slip_escaped = false;
+            }
+            _ => {
+                eprintln!("{}", format!("Invalid SLIP escaped character: {}", byte));
+                buffer.clear();
+            }
+        }
+    }
+    Ok(commands)
 }

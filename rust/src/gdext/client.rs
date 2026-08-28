@@ -97,23 +97,260 @@ pub struct GodotM8Client {
     last_draw_color: crate::Color,
 }
 
-impl Client for GodotM8Client {
-    fn backend(&mut self) -> Option<&mut dyn ClientBackend> {
-        match &mut self.client_backend {
-            Some(client_backend) => Some(client_backend.as_mut()),
-            None => None,
+// display texture methods
+impl GodotM8Client {
+    fn display_ready(&self) -> bool {
+        self.display_buffer.width() > 0 && self.display_buffer.height() > 0
+        // self.display_image.get_size() != Vector2i::ZERO
+    }
+
+    fn display_update(&mut self) {
+        self.display_buffer.update_texture();
+        // if self.display_ready() {
+        //     self.display_texture.update(&self.display_buffer.image());
+        //     // self.display_texture.update(&self.display_image);
+        // }
+    }
+
+    fn draw_rect(
+        // image: &mut Gd<Image>,
+        buffer: &mut BufferedTexture,
+        x: i32,
+        y: i32,
+        width: i32,
+        height: i32,
+        color: &crate::Color,
+        alpha: &u8,
+    ) -> () {
+        if x < 0 || y < 0 || width <= 0 || height <= 0 {
+            return;
+        }
+        buffer.set_rect(
+            x as usize,
+            y as usize,
+            width as usize,
+            height as usize,
+            color,
+            alpha,
+        );
+    }
+
+    fn draw_pixel(
+        buffer: &mut BufferedTexture,
+        x: i32,
+        y: i32,
+        color: &crate::Color,
+        alpha: &u8,
+    ) -> () {
+        if x < 0 || y < 0 || x >= buffer.width() as i32 || y >= buffer.height() as i32 {
+            return;
+        }
+        buffer.set_pixel(x as usize, y as usize, color, alpha);
+    }
+}
+
+// incoming command handlers
+impl GodotM8Client {
+    fn on_draw_rect(&mut self, params: &crate::DrawRectParams) {
+        let font_data = self.font_type.get_data();
+
+        let (disp_w, disp_h) = self.display_buffer.size();
+
+        let x = params.x as i32;
+        let y = (params.y as i32 + font_data.draw_y_offset as i32).max(0);
+        let w = params.width as i32;
+        let h = params.height as i32;
+
+        if let Some(color) = &params.color {
+            self.last_draw_color = color.clone();
+        };
+
+        let color = self.last_draw_color.clone();
+
+        // use color as background color if rect covers entire display
+        if x <= 0 && y <= 0 && w >= disp_w as i32 && h >= disp_h as i32 {
+            if self.bg_color != color {
+                self.bg_color = color.clone();
+                self.theme_colors.clear();
+                godot_print!(
+                    "Set background color to rgb({}, {}, {})",
+                    self.bg_color.r,
+                    self.bg_color.g,
+                    self.bg_color.b
+                );
+                let bg_color = self.bg_color.to_godot();
+                self.signals().background_color_changed().emit(bg_color);
+            }
+        }
+
+        // sizes of rects used on the theme screen
+        // when one of these conditions pass, the user is most likely on the theme screen
+        if (w == 24 && h == 7)
+            || (w == 30 && h == 9)
+            || (w == 36 && h == 11)
+            || (w == 45 && h == 13)
+        {
+            if self.theme_colors.len() < crate::NUM_THEME_COLORS {
+                self.theme_colors.push(color.clone());
+                if self.theme_colors.len() == crate::NUM_THEME_COLORS {
+                    let colors = Self::color_vec_to_array(&self.theme_colors);
+                    self.signals()
+                        .background_color_changed()
+                        .emit(colors[0].to_godot());
+                    self.signals().theme_changed().emit(colors.to_godot());
+                }
+            }
+        }
+
+        let alpha = if color == self.bg_color {
+            &self.bg_alpha
+        } else {
+            &u8::MAX
+        };
+
+        Self::draw_rect(&mut self.display_buffer, x, y, w, h, &color, alpha);
+    }
+
+    fn on_draw_char(&mut self, params: &crate::DrawCharParams) {
+        // bitmap only covers ASCII characters
+        if params.c as u8 > 127 {
+            return;
+        }
+
+        let c = params.c;
+        let x = params.x as u32;
+        let y = params.y as u32;
+        let color_fg = &params.color_fg;
+        let color_bg = &params.color_bg;
+
+        let font_data = self.font_type.get_data();
+        let mut font_bitmap = self.font_bitmap();
+        let (char_width, char_height) = font_bitmap.get_size().to_tuple();
+        let char_width = char_width as u8 / super::FONT_BITMAP_SIZE.0;
+        let char_height = char_height as u8 / super::FONT_BITMAP_SIZE.1;
+
+        // starting position of glyph in font bitmap
+        let x0 = (c as u8 % super::FONT_BITMAP_SIZE.0) * char_width;
+        let y0 = (c as u8 / super::FONT_BITMAP_SIZE.0) * char_height;
+
+        let rect_x = x as i32;
+        let rect_y =
+            (y as i32) + (font_data.draw_y_offset as i32) + (font_data.char_y_offset as i32);
+
+        let draw_bg: bool = color_bg != color_fg;
+
+        // godot_print!("Drawing char '{}' at ({}, {})", c, rect_x, rect_y,);
+
+        // let font_bitmap = self.font_bitmap().clone();
+
+        for i in 0..char_width {
+            let i = i as i32;
+            for j in 0..char_height {
+                let j = j as i32;
+                if font_bitmap.get_bit(x0 as i32 + i, y0 as i32 + j) {
+                    Self::draw_pixel(
+                        &mut self.display_buffer,
+                        rect_x + i,
+                        rect_y + j,
+                        &color_fg,
+                        &u8::MAX,
+                    );
+                } else {
+                    if !draw_bg {
+                        continue;
+                    }
+                    Self::draw_pixel(
+                        &mut self.display_buffer,
+                        rect_x + i,
+                        rect_y + j,
+                        &color_bg,
+                        &self.bg_alpha,
+                    );
+                }
+                font_bitmap = self.font_bitmap();
+            }
         }
     }
 
-    fn handle_command(&mut self, command: crate::CommandIn) -> Result<(), crate::Error> {
-        match command {
-            crate::CommandIn::DrawRect { params } => self.on_draw_rect(params),
-            crate::CommandIn::DrawChar { params } => self.on_draw_char(params),
-            crate::CommandIn::DrawOsc { params } => self.on_draw_osc(params),
-            crate::CommandIn::GetKeyState { keystate } => self.on_key_pressed(keystate),
-            crate::CommandIn::GetSystemInfo { info } => self.on_get_system_info(info),
+    fn on_draw_osc(&mut self, params: &crate::DrawOscParams) {
+        let color = &params.color;
+        let points = &params.waveform;
+        let size = points.len();
+
+        let display_image = &mut self.display_buffer;
+        // let display_image = &mut self.display_image;
+        let font_data = self.font_type.get_data();
+
+        let osc_size = if size == 0 {
+            self.last_osc_size
+        } else {
+            self.last_osc_size = size;
+            size
+        };
+
+        let x = display_image.width() as i32 - osc_size as i32;
+        // let x = display_image.get_width() - osc_size as i32;
+
+        // clear previous osc waveform area
+        Self::draw_rect(
+            display_image,
+            x,
+            0,
+            osc_size as i32,
+            font_data.waveform_max as i32 + 1,
+            &self.bg_color,
+            &self.bg_alpha,
+        );
+
+        // draw points
+        for i in 0..size as i32 {
+            let mut ampl = points[i as usize] as i32;
+            if ampl > font_data.waveform_max as i32 {
+                ampl = font_data.waveform_max as i32;
+            }
+            Self::draw_pixel(display_image, x + i, ampl, &color, &u8::MAX);
         }
-        Ok(())
+    }
+
+    fn on_key_pressed(&mut self, keystate: &crate::KeyState) {
+        if keystate != &self.keystate {
+            // println!("on_key_pressed: {keystate}");
+            let old_keystate = self.keystate.clone();
+            self.keystate = keystate.clone();
+            for key in crate::Key::ALL_KEYS {
+                let pressed = self.keystate.is_pressed(key);
+                // println!("is_key_pressed({key:?}) = {pressed}");
+                if pressed != old_keystate.is_pressed(key) {
+                    // println!(
+                    //     "on_key_pressed: emitting signal {{ key={key:?}, pressed={pressed} }}"
+                    // );
+                    self.signals().key_pressed().emit(key.to_byte(), pressed);
+                }
+            }
+        }
+    }
+
+    fn on_get_system_info(&mut self, params: &crate::SystemInfo) {
+        let hardware_type = &params.model;
+        let firmware = &params.firmware;
+        let font_type = &params.font;
+
+        if self.hardware_type != Some(hardware_type.clone()) {
+            self.set_display_size(&hardware_type);
+            self.hardware_type = Some(hardware_type.clone());
+            self.firmware_version = firmware.clone();
+
+            let hardware_name = self.get_hardware_name();
+            let firmware_version = self.get_firmware_version();
+
+            self.signals()
+                .system_info_received()
+                .emit(hardware_name, firmware_version);
+        }
+
+        if &self.font_type != font_type {
+            self.use_font(font_type);
+        }
     }
 }
 
@@ -128,9 +365,9 @@ impl INode for GodotM8Client {
     }
 
     fn process(&mut self, _delta: f64) {
-        if self.client_backend.is_none() || !self.is_connected() || !self.display_enabled {
+        if self.backend().is_none() {
             return;
-        }
+        };
 
         if let Err(e) = self.poll() {
             godot_error!("{:?}", e);
@@ -138,8 +375,12 @@ impl INode for GodotM8Client {
             return;
         }
 
+        if !self.is_connected() || !self.is_display_enabled() {
+            return;
+        }
+
         self.display_update();
-        OscDisplay::update_texture(self);
+        // OscDisplay::update_texture(self);
     }
 
     fn physics_process(&mut self, _delta: f64) {}
@@ -649,9 +890,9 @@ impl GodotM8Client {
             .expect("Font bitmap should not be None")
     }
 
-    fn use_font(&mut self, font_type: crate::FontType) {
-        if self.font_type != font_type {
-            self.font_type = font_type;
+    fn use_font(&mut self, font_type: &crate::FontType) {
+        if &self.font_type != font_type {
+            self.font_type = font_type.clone();
             godot_print!("Using font: {:?}", self.font_type);
         }
     }
@@ -698,279 +939,22 @@ impl GodotM8Client {
         true
     }
 }
-
-// display texture methods
-impl GodotM8Client {
-    fn display_ready(&self) -> bool {
-        self.display_buffer.width() > 0 && self.display_buffer.height() > 0
-        // self.display_image.get_size() != Vector2i::ZERO
-    }
-
-    fn display_update(&mut self) {
-        self.display_buffer.update_texture();
-        // if self.display_ready() {
-        //     self.display_texture.update(&self.display_buffer.image());
-        //     // self.display_texture.update(&self.display_image);
-        // }
-    }
-
-    fn draw_rect(
-        // image: &mut Gd<Image>,
-        buffer: &mut BufferedTexture,
-        x: i32,
-        y: i32,
-        width: i32,
-        height: i32,
-        color: &crate::Color,
-        alpha: &u8,
-    ) -> () {
-        if x < 0 || y < 0 || width <= 0 || height <= 0 {
-            // godot_warn!(
-            //     "Ignoring invalid draw_rect: {}, {}, {}, {}",
-            //     x,
-            //     y,
-            //     width,
-            //     height
-            // );
-            return;
-        }
-        // let color = GodotColor::from_rgba8(color.r, color.g, color.b, alpha);
-        // image.fill_rect(Rect2i::from_components(x, y, width, height), color);
-        buffer.set_rect(
-            x as usize,
-            y as usize,
-            width as usize,
-            height as usize,
-            color,
-            alpha,
-        );
-    }
-
-    fn draw_pixel(
-        // image: &mut Gd<Image>,
-        buffer: &mut BufferedTexture,
-        x: i32,
-        y: i32,
-        color: &crate::Color,
-        alpha: &u8,
-    ) -> () {
-        // if x < 0 || y < 0 || x >= image.get_width() || y >= image.get_height() {
-        if x < 0 || y < 0 || x >= buffer.width() as i32 || y >= buffer.height() as i32 {
-            // godot_warn!("Ignoring invalid draw_pixel: {}, {}", x, y);
-            return;
-        }
-        // let color = GodotColor::from_rgba8(color.r, color.g, color.b, 255);
-        // image.set_pixel(x, y, color);
-        buffer.set_pixel(x as usize, y as usize, color, alpha);
-    }
-}
-
-// incoming command handlers
-impl GodotM8Client {
-    fn on_draw_rect(&mut self, params: crate::DrawRectParams) {
-        let font_data = self.font_type.get_data();
-
-        // let (disp_w, disp_h) = self.display_image.get_size().to_tuple();
-        let (disp_w, disp_h) = self.display_buffer.size();
-
-        let x = params.x as i32;
-        let y = (params.y as i32 + font_data.draw_y_offset as i32).max(0);
-        let w = params.width as i32;
-        let h = params.height as i32;
-
-        let color = match params.color {
-            Some(c) => {
-                self.last_draw_color = c.clone();
-                c
-            }
-            None => self.last_draw_color.clone(),
-        };
-
-        // use color as background color if rect covers entire display
-        if x <= 0 && y <= 0 && w >= disp_w as i32 && h >= disp_h as i32 {
-            if self.bg_color != color {
-                self.bg_color = color.clone();
-                self.theme_colors.clear();
-                // self.theme_colors.push(self.bg_color.clone());
-                godot_print!(
-                    "Set background color to rgb({}, {}, {})",
-                    self.bg_color.r,
-                    self.bg_color.g,
-                    self.bg_color.b
-                );
-                let bg_color = self.bg_color.to_godot();
-                self.signals().background_color_changed().emit(bg_color);
-            }
-        }
-
-        // sizes of rects used on the theme screen
-        // when one of these conditions pass, the user is most likely on the theme screen
-        if (w == 24 && h == 7)
-            || (w == 30 && h == 9)
-            || (w == 36 && h == 11)
-            || (w == 45 && h == 13)
-        {
-            if self.theme_colors.len() < crate::NUM_THEME_COLORS {
-                self.theme_colors.push(color.clone());
-                if self.theme_colors.len() == crate::NUM_THEME_COLORS {
-                    let colors = Self::color_vec_to_array(&self.theme_colors);
-                    self.signals()
-                        .background_color_changed()
-                        .emit(colors[0].to_godot());
-                    self.signals().theme_changed().emit(colors.to_godot());
-                }
-            }
-        }
-
-        let alpha = if color == self.bg_color {
-            &self.bg_alpha
-        } else {
-            &u8::MAX
-        };
-
-        Self::draw_rect(&mut self.display_buffer, x, y, w, h, &color, alpha);
-        // Self::draw_rect(&mut self.display_image, x, y, w, h, &color, alpha);
-    }
-
-    fn on_draw_char(&mut self, params: crate::DrawCharParams) {
-        // bitmap only covers ASCII characters
-        if params.c as u8 > 127 {
-            return;
-        }
-
-        let c = params.c;
-        let x = params.x as u32;
-        let y = params.y as u32;
-        let color_fg = params.color_fg;
-        let color_bg = params.color_bg;
-
-        let font_data = self.font_type.get_data();
-        let mut font_bitmap = self.font_bitmap();
-        let (char_width, char_height) = font_bitmap.get_size().to_tuple();
-        let char_width = char_width as u8 / super::FONT_BITMAP_SIZE.0;
-        let char_height = char_height as u8 / super::FONT_BITMAP_SIZE.1;
-
-        // starting position of glyph in font bitmap
-        let x0 = (c as u8 % super::FONT_BITMAP_SIZE.0) * char_width;
-        let y0 = (c as u8 / super::FONT_BITMAP_SIZE.0) * char_height;
-
-        let rect_x = x as i32;
-        let rect_y =
-            (y as i32) + (font_data.draw_y_offset as i32) + (font_data.char_y_offset as i32);
-
-        let draw_bg: bool = color_bg != color_fg;
-
-        // godot_print!("Drawing char '{}' at ({}, {})", c, rect_x, rect_y,);
-
-        // let font_bitmap = self.font_bitmap().clone();
-
-        for i in 0..char_width {
-            let i = i as i32;
-            for j in 0..char_height {
-                let j = j as i32;
-                if font_bitmap.get_bit(x0 as i32 + i, y0 as i32 + j) {
-                    Self::draw_pixel(
-                        &mut self.display_buffer,
-                        rect_x + i,
-                        rect_y + j,
-                        &color_fg,
-                        &u8::MAX,
-                    );
-                } else {
-                    if !draw_bg {
-                        continue;
-                    }
-                    Self::draw_pixel(
-                        &mut self.display_buffer,
-                        rect_x + i,
-                        rect_y + j,
-                        &color_bg,
-                        &self.bg_alpha,
-                    );
-                }
-                font_bitmap = self.font_bitmap();
-            }
+impl Client for GodotM8Client {
+    fn backend(&mut self) -> Option<&mut dyn ClientBackend> {
+        match &mut self.client_backend {
+            Some(client_backend) => Some(client_backend.as_mut()),
+            None => None,
         }
     }
 
-    fn on_draw_osc(&mut self, params: crate::DrawOscParams) {
-        let color = params.color;
-        let points = params.waveform;
-        let size = points.len();
-
-        let display_image = &mut self.display_buffer;
-        // let display_image = &mut self.display_image;
-        let font_data = self.font_type.get_data();
-
-        let osc_size = if size == 0 {
-            self.last_osc_size
-        } else {
-            self.last_osc_size = size;
-            size
-        };
-
-        let x = display_image.width() as i32 - osc_size as i32;
-        // let x = display_image.get_width() - osc_size as i32;
-
-        // clear previous osc waveform area
-        Self::draw_rect(
-            display_image,
-            x,
-            0,
-            osc_size as i32,
-            font_data.waveform_max as i32 + 1,
-            &self.bg_color,
-            &self.bg_alpha,
-        );
-
-        // draw points
-        for i in 0..size as i32 {
-            let mut ampl = points[i as usize] as i32;
-            if ampl > font_data.waveform_max as i32 {
-                ampl = font_data.waveform_max as i32;
-            }
-            Self::draw_pixel(display_image, x + i, ampl, &color, &u8::MAX);
+    fn handle_command(&mut self, command: &crate::CommandIn) -> Result<(), crate::Error> {
+        match command {
+            crate::CommandIn::DrawRect { params } => self.on_draw_rect(params),
+            crate::CommandIn::DrawChar { params } => self.on_draw_char(params),
+            crate::CommandIn::DrawOsc { params } => self.on_draw_osc(params),
+            crate::CommandIn::GetKeyState { keystate } => self.on_key_pressed(keystate),
+            crate::CommandIn::GetSystemInfo { info } => self.on_get_system_info(info),
         }
-    }
-
-    fn on_key_pressed(&mut self, keystate: crate::KeyState) {
-        if keystate != self.keystate {
-            // println!("on_key_pressed: {keystate}");
-            let old_keystate = self.keystate.clone();
-            self.keystate = keystate;
-            for key in crate::Key::ALL_KEYS {
-                let pressed = self.keystate.is_pressed(key);
-                // println!("is_key_pressed({key:?}) = {pressed}");
-                if pressed != old_keystate.is_pressed(key) {
-                    // println!(
-                    //     "on_key_pressed: emitting signal {{ key={key:?}, pressed={pressed} }}"
-                    // );
-                    self.signals().key_pressed().emit(key.to_byte(), pressed);
-                }
-            }
-        }
-    }
-
-    fn on_get_system_info(&mut self, params: crate::SystemInfo) {
-        let hardware_type = params.model;
-        let firmware = params.firmware;
-        let font_type = params.font;
-
-        if self.hardware_type != Some(hardware_type.clone()) {
-            self.set_display_size(&hardware_type);
-            self.hardware_type = Some(hardware_type);
-            self.firmware_version = firmware;
-
-            let hardware_name = self.get_hardware_name();
-            let firmware_version = self.get_firmware_version();
-
-            self.signals()
-                .system_info_received()
-                .emit(hardware_name, firmware_version);
-        }
-
-        if self.font_type != font_type {
-            self.use_font(font_type);
-        }
+        Ok(())
     }
 }
