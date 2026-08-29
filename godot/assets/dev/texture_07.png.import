@@ -2,9 +2,9 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dx1tsgvprh32b"
-path.s3tc="res://.godot/imported/Wood026_2K-PNG_Color.png-4ff8db3f29f8453fe854a6710afed103.s3tc.ctex"
-path.etc2="res://.godot/imported/Wood026_2K-PNG_Color.png-4ff8db3f29f8453fe854a6710afed103.etc2.ctex"
+uid="uid://d01h4xbn66tpi"
+path.s3tc="res://.godot/imported/texture_07.png-145938aa1ca47df906ee8029dfb6f820.s3tc.ctex"
+path.etc2="res://.godot/imported/texture_07.png-145938aa1ca47df906ee8029dfb6f820.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/ambientcg/wood026/Wood026_2K-PNG_Color.png"
-dest_files=["res://.godot/imported/Wood026_2K-PNG_Color.png-4ff8db3f29f8453fe854a6710afed103.s3tc.ctex", "res://.godot/imported/Wood026_2K-PNG_Color.png-4ff8db3f29f8453fe854a6710afed103.etc2.ctex"]
+source_file="res://assets/dev/texture_07.png"
+dest_files=["res://.godot/imported/texture_07.png-145938aa1ca47df906ee8029dfb6f820.s3tc.ctex", "res://.godot/imported/texture_07.png-145938aa1ca47df906ee8029dfb6f820.etc2.ctex"]
 
 [params]
 

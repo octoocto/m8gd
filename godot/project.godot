@@ -8,6 +8,10 @@
 
 config_version=5
 
+[ResCleaner]
+
+data/keep_list=Array[String](["res://assets/m8_fonts/10_10.bmp", "res://assets/m8_fonts/12_12.bmp", "res://assets/m8_fonts/5_7.bmp", "res://assets/m8_fonts/8_9.bmp", "res://assets/m8_fonts/9_9.bmp", "res://LICENSE", "res://README.md", "res://main.tscn"])
+
 [application]
 
 config/name="m8gd"

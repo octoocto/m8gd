@@ -2,9 +2,9 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cxt64ybuxcu34"
-path.s3tc="res://.godot/imported/Wood026_2K-PNG_Roughness.png-ced86a8a41d362436a2956dea05bec19.s3tc.ctex"
-path.etc2="res://.godot/imported/Wood026_2K-PNG_Roughness.png-ced86a8a41d362436a2956dea05bec19.etc2.ctex"
+uid="uid://bbeh1e40ob3nd"
+path.s3tc="res://.godot/imported/texture_06.png-fcc4be6a7e59a90dbdc9d856fd124888.s3tc.ctex"
+path.etc2="res://.godot/imported/texture_06.png-fcc4be6a7e59a90dbdc9d856fd124888.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/ambientcg/wood026/Wood026_2K-PNG_Roughness.png"
-dest_files=["res://.godot/imported/Wood026_2K-PNG_Roughness.png-ced86a8a41d362436a2956dea05bec19.s3tc.ctex", "res://.godot/imported/Wood026_2K-PNG_Roughness.png-ced86a8a41d362436a2956dea05bec19.etc2.ctex"]
+source_file="res://assets/dev/texture_06.png"
+dest_files=["res://.godot/imported/texture_06.png-fcc4be6a7e59a90dbdc9d856fd124888.s3tc.ctex", "res://.godot/imported/texture_06.png-fcc4be6a7e59a90dbdc9d856fd124888.etc2.ctex"]
 
 [params]
 
