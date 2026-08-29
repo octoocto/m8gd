@@ -173,7 +173,7 @@ impl GodotM8Client {
                 self.bg_color = color.clone();
                 self.theme_colors.clear();
                 godot_print!(
-                    "Set background color to rgb({}, {}, {})",
+                    "Got new background color = rgb({}, {}, {})",
                     self.bg_color.r,
                     self.bg_color.g,
                     self.bg_color.b
@@ -194,6 +194,7 @@ impl GodotM8Client {
                 self.theme_colors.push(color.clone());
                 if self.theme_colors.len() == crate::NUM_THEME_COLORS {
                     let colors = Self::color_vec_to_array(&self.theme_colors);
+                    godot_print!("Got theme colors");
                     self.signals()
                         .background_color_changed()
                         .emit(colors[0].to_godot());

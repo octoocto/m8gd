@@ -81,6 +81,8 @@ func _update() -> void:
 		BackgroundMode.M8_DISPLAY:
 			self.texture_rect.visible = true
 			self.texture_rect.texture = self.main.m8c.get_display_texture()
+			self.color_rect.material = null
+			self.color_rect.color = m8_theme[0]
 		BackgroundMode.IMAGE:
 			self.texture_rect.visible = true
 			self.texture_rect.texture = _load_texture(self.texture_file)
