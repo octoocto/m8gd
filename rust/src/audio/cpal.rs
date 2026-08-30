@@ -394,7 +394,7 @@ impl CpalAudioBackend {
             // println!("CPAL: Output callback with {} samples", data.len());
 
             for (i, sample) in data.iter_mut().enumerate() {
-                let value = buffer_out[i];
+                let value = buffer_out.get(i).unwrap_or(&0.0);
                 if value.abs() > peaks[i % 2] {
                     peaks[i % 2] = value.abs();
                 }
