@@ -41,6 +41,11 @@ const M8_KEYS: Array[int] = [
 
 static var instance: Main = null
 
+var config := M8Config.load()
+var m8c: GodotM8Client = GodotM8Client.new()
+var device_manager := DeviceManager.new()
+var ui_manager := UIManager.new(self)
+
 @export var visualizer_aberration_amount := 1.0
 @export var visualizer_brightness_amount := 0.1
 @export var visualizer_frequency_min := 0
@@ -48,8 +53,6 @@ static var instance: Main = null
 
 @onready var label_fps: Label = %LabelFPS
 @onready var label_status: Label = %LabelStatus
-
-@onready var config := M8Config.load()
 
 @onready var console: Console = %LabelConsole
 @onready var audio_monitor: AudioStreamPlayer = %AudioStreamPlayer
@@ -74,14 +77,10 @@ static var instance: Main = null
 @onready var cam_help: RichTextLabel = %CameraControls
 @onready var cam_status_template: String = cam_status.text
 
-var m8c: GodotM8Client = GodotM8Client.new()
-
 var m8_virtual_keyboard_enabled := false
 var m8_virtual_keyboard_notes: Array[int] = []
 var m8_virtual_keyboard_octave := 3
 var m8_virtual_keyboard_velocity := 127
-
-var device_manager := DeviceManager.new()
 
 # ALT+mouse dragging variables
 var _window_drag_enabled := false

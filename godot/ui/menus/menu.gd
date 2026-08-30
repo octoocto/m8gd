@@ -11,14 +11,7 @@ const ICON_WARNING := preload("res://assets/icon/StatusWarning.png")
 		_generate_styleboxes()
 		emit_ui_changed()
 
-var main: Main
-
 var _menu_stylebox: StyleBox
-
-
-func _ready() -> void:
-	self.main = await Main.get_instance()
-	super()
 
 
 ## Setup any menu control nodes.

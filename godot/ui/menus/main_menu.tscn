@@ -39,16 +39,9 @@ expand_margin_right = 1.0
 expand_margin_bottom = 1.0
 anti_aliasing = false
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cn7hl"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j3y0t"]
 content_margin_left = 6.0
 content_margin_right = 6.0
-bg_color = Color(0.12549, 0.156863, 0.188235, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j3y0t"]
-content_margin_left = 2.0
-content_margin_top = 2.0
-content_margin_right = 2.0
-content_margin_bottom = 2.0
 bg_color = Color(0.12549, 0.156863, 0.188235, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4p04u"]
@@ -56,33 +49,18 @@ content_margin_left = 2.0
 content_margin_top = 2.0
 content_margin_right = 2.0
 content_margin_bottom = 2.0
-bg_color = Color(1, 0.12549, 0.25098, 1)
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xv1rc"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_f72sp"]
+bg_color = Color(0.282353, 0.313726, 0.376471, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f72sp"]
-content_margin_left = 0.0
-content_margin_top = 0.0
-content_margin_right = 0.0
-content_margin_bottom = 0.0
-bg_color = Color(1, 1, 1, 0)
-expand_margin_left = 2.0
-expand_margin_top = 2.0
-expand_margin_right = 2.0
-expand_margin_bottom = 2.0
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(1, 0.12549, 0.25098, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cxjfc"]
-content_margin_left = 0.0
-content_margin_top = 0.0
-content_margin_right = 0.0
-content_margin_bottom = 0.0
-bg_color = Color(1, 1, 1, 0)
-expand_margin_left = 2.0
-expand_margin_top = 2.0
-expand_margin_right = 2.0
-expand_margin_bottom = 2.0
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cxjfc"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_f72sp"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_13y34"]
 content_margin_left = 0.0
@@ -172,9 +150,27 @@ expand_margin_top = 2.0
 expand_margin_right = 2.0
 expand_margin_bottom = 2.0
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xmuii"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xmuii"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(1, 1, 1, 0)
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0lxgr"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0lxgr"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(1, 1, 1, 0)
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xok0b"]
 
@@ -192,6 +188,10 @@ expand_margin_bottom = 2.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ovmky"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mfjjd"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7erau"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xv1rc"]
 content_margin_left = 6.0
 content_margin_top = 2.0
@@ -199,7 +199,7 @@ content_margin_right = 6.0
 content_margin_bottom = 0.0
 draw_center = false
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mfjjd"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sykqc"]
 content_margin_left = 2.0
 content_margin_top = 2.0
 content_margin_right = 2.0
@@ -238,40 +238,42 @@ script = ExtResource("1_7xjs6")
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer" unique_id=1048329476]
+[node name="HeaderBar" type="PanelContainer" parent="VBoxContainer" unique_id=1048329476]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_cn7hl")
+theme_override_styles/panel = SubResource("StyleBoxFlat_j3y0t")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/PanelContainer" unique_id=950230948]
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HeaderBar" unique_id=950230948]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer/VBoxContainer" unique_id=714162988]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/HeaderBar/VBoxContainer" unique_id=714162988]
 layout_mode = 2
 
-[node name="Header" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" unique_id=608821787 instance=ExtResource("3_o1ovh")]
+[node name="Header" parent="VBoxContainer/HeaderBar/VBoxContainer/HBoxContainer" unique_id=608821787 instance=ExtResource("3_o1ovh")]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Main Menu"
-color_override = 4
+metadata/_edit_lock_ = true
 
-[node name="ButtonClose" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" unique_id=1650116508 instance=ExtResource("12_10bvg")]
+[node name="ButtonClose" parent="VBoxContainer/HeaderBar/VBoxContainer/HBoxContainer" unique_id=1650116508 instance=ExtResource("12_10bvg")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBoxFlat_j3y0t")
+theme_override_styles/panel = SubResource("StyleBoxFlat_4p04u")
+color_bg = 2
 color_bg_hover = 3
-color_fg = 2
+color_fg = 4
 text = "Close"
 hint_text = "Close the menu"
 
-[node name="ButtonExit" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" unique_id=1880772901 instance=ExtResource("12_10bvg")]
+[node name="ButtonExit" parent="VBoxContainer/HeaderBar/VBoxContainer/HBoxContainer" unique_id=1880772901 instance=ExtResource("12_10bvg")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBoxFlat_4p04u")
+theme_override_styles/panel = SubResource("StyleBoxFlat_f72sp")
 color_bg = 5
 color_fg = 4
 text = "Quit"
@@ -279,9 +281,10 @@ horizontal_alignment = 0
 hint_text = "Quit to desktop"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer" unique_id=1499970379]
-custom_minimum_size = Vector2(320, 208)
+custom_minimum_size = Vector2(320, 200)
 layout_mode = 2
 size_flags_vertical = 3
+horizontal_scroll_mode = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/ScrollContainer" unique_id=1597176699]
 layout_mode = 2
@@ -308,7 +311,8 @@ theme_override_constants/separation = 3
 [node name="LabelCurrentScene" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" unique_id=972119414 instance=ExtResource("5_cn7hl")]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_xv1rc")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_cxjfc")
+min_width_left = 160
 no_padding = true
 text_left = "Current Scene"
 align_right_text_to_right = true
@@ -325,7 +329,7 @@ layout_mode = 2
 [node name="ButtonGotoScene" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" unique_id=977260883 instance=ExtResource("12_10bvg")]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_f72sp")
+theme_override_styles/panel = SubResource("StyleBoxFlat_13y34")
 color_bg = 0
 color_bg_hover = 1
 color_bg_pressed = 0
@@ -339,7 +343,7 @@ hint_text = "Configure elements in the current scene"
 [node name="ButtonGotoOverlays" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" unique_id=951253476 instance=ExtResource("12_10bvg")]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_cxjfc")
+theme_override_styles/panel = SubResource("StyleBoxFlat_3j1g4")
 color_bg = 0
 color_bg_hover = 1
 color_bg_pressed = 0
@@ -353,7 +357,7 @@ hint_text = "Toggle and configure various overlays"
 [node name="ButtonGotoShaders" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" unique_id=788482506 instance=ExtResource("12_10bvg")]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_13y34")
+theme_override_styles/panel = SubResource("StyleBoxFlat_4gg0h")
 color_bg = 0
 color_bg_hover = 1
 color_bg_pressed = 0
@@ -367,7 +371,7 @@ hint_text = "Toggle and configure various screen shaders"
 [node name="ButtonGotoColors" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" unique_id=1417377907 instance=ExtResource("12_10bvg")]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_3j1g4")
+theme_override_styles/panel = SubResource("StyleBoxFlat_8xhr7")
 color_bg = 0
 color_bg_hover = 1
 color_bg_pressed = 0
@@ -384,7 +388,7 @@ layout_mode = 2
 [node name="ButtonGotoDevices" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" unique_id=1712827067 instance=ExtResource("12_10bvg")]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_4gg0h")
+theme_override_styles/panel = SubResource("StyleBoxFlat_skcmf")
 color_bg = 0
 color_bg_hover = 1
 color_bg_pressed = 0
@@ -398,7 +402,7 @@ hint_text = "Manage connections to M8 devices"
 [node name="ButtonGotoInput" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" unique_id=1221969710 instance=ExtResource("12_10bvg")]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_8xhr7")
+theme_override_styles/panel = SubResource("StyleBoxFlat_xo4y4")
 color_bg = 0
 color_bg_hover = 1
 color_bg_pressed = 0
@@ -412,7 +416,7 @@ hint_text = "Configure M8 keymaps and hotkeys"
 [node name="ButtonGotoVideo" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" unique_id=245314110 instance=ExtResource("12_10bvg")]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_skcmf")
+theme_override_styles/panel = SubResource("StyleBoxFlat_bkt3i")
 color_bg = 0
 color_bg_hover = 1
 color_bg_pressed = 0
@@ -426,7 +430,7 @@ hint_text = "Configure UI, display, and graphics settings"
 [node name="ButtonGotoAudio" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" unique_id=1230689 instance=ExtResource("12_10bvg")]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_xo4y4")
+theme_override_styles/panel = SubResource("StyleBoxFlat_k50mi")
 color_bg = 0
 color_bg_hover = 1
 color_bg_pressed = 0
@@ -443,7 +447,7 @@ layout_mode = 2
 [node name="ButtonGotoDebug" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" unique_id=1611222419 instance=ExtResource("12_10bvg")]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_bkt3i")
+theme_override_styles/panel = SubResource("StyleBoxFlat_xmuii")
 color_bg = 0
 color_bg_hover = 1
 color_bg_pressed = 0
@@ -456,7 +460,7 @@ inline = true
 [node name="ButtonGotoPresets" parent="VBoxContainer/ScrollContainer/MarginContainer/TabContainer/MenuRoot/VBoxContainer" unique_id=1940363464 instance=ExtResource("12_10bvg")]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_k50mi")
+theme_override_styles/panel = SubResource("StyleBoxFlat_0lxgr")
 color_bg = 0
 color_bg_hover = 1
 color_bg_pressed = 0
@@ -475,7 +479,7 @@ layout_mode = 2
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_xmuii")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_xok0b")
 is_inner_menu = true
 metadata/_tab_index = 1
 
@@ -483,7 +487,7 @@ metadata/_tab_index = 1
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_0lxgr")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_8dpw5")
 is_inner_menu = true
 metadata/_tab_index = 2
 
@@ -491,7 +495,7 @@ metadata/_tab_index = 2
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_xok0b")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_fpotr")
 is_inner_menu = true
 metadata/_tab_index = 3
 
@@ -499,7 +503,7 @@ metadata/_tab_index = 3
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_8dpw5")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_63puf")
 is_inner_menu = true
 metadata/_tab_index = 4
 
@@ -507,7 +511,7 @@ metadata/_tab_index = 4
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_fpotr")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_k7pwe")
 is_inner_menu = true
 metadata/_tab_index = 5
 
@@ -515,7 +519,7 @@ metadata/_tab_index = 5
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_63puf")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_pn4ol")
 is_inner_menu = true
 metadata/_tab_index = 6
 
@@ -523,7 +527,7 @@ metadata/_tab_index = 6
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_k7pwe")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_820nw")
 is_inner_menu = true
 metadata/_tab_index = 7
 
@@ -531,7 +535,7 @@ metadata/_tab_index = 7
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_pn4ol")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_ovmky")
 is_inner_menu = true
 metadata/_tab_index = 8
 
@@ -539,7 +543,7 @@ metadata/_tab_index = 8
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_820nw")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_mfjjd")
 is_inner_menu = true
 metadata/_tab_index = 9
 
@@ -547,7 +551,7 @@ metadata/_tab_index = 9
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_ovmky")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_7erau")
 is_inner_menu = true
 metadata/_tab_index = 10
 
@@ -568,7 +572,7 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_horizontal = 0
-theme_override_styles/panel = SubResource("StyleBoxFlat_mfjjd")
+theme_override_styles/panel = SubResource("StyleBoxFlat_sykqc")
 color_bg_hover = 2
 color_bg_pressed = 0
 text = "< Back"

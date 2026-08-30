@@ -1,7 +1,20 @@
-extends Theme
+@tool
+class_name UITheme extends Theme
+
+const FONT_COLUMNS := 16
+const FONT_ROWS := 8
+
+@export var letter_spacing := 2:
+	set(value):
+		letter_spacing = value
+		self._update_font()
 
 
 func _init() -> void:
+	self._update_font()
+
+
+func _update_font() -> void:
 	self.default_font = _create_font_from_bitmap(Main.FONT_01_SMALL)
 
 
@@ -15,8 +28,8 @@ func _create_font_from_bitmap(bm: BitMap) -> FontVariation:
 				image.set_pixel(i, j, Color.TRANSPARENT)
 
 	var font := FontFile.new()
-	var columns := 16
-	var rows := 8
+	var columns := FONT_COLUMNS
+	var rows := FONT_ROWS
 
 	var chr_width := image.get_width() / columns
 	var chr_height := image.get_height() / rows
@@ -51,6 +64,6 @@ func _create_font_from_bitmap(bm: BitMap) -> FontVariation:
 
 	var fontvar := FontVariation.new()
 	fontvar.base_font = font
-	fontvar.spacing_glyph = 2
+	fontvar.spacing_glyph = self.letter_spacing
 
 	return fontvar

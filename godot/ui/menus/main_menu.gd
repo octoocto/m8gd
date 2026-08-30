@@ -39,6 +39,9 @@ extends MenuBase
 @onready var button_exit: UIButton = %ButtonExit
 @onready var button_close: UIButton = %ButtonClose
 
+var main_panel: StyleBoxFlat
+var header_panel: StyleBoxFlat
+@onready var header_bar: PanelContainer = %HeaderBar
 @onready var header: UIHeader = %Header
 
 @onready var label_tooltip: UILabel = %LabelTooltip
@@ -63,7 +66,7 @@ func _on_menu_init() -> void:
 	# 		tab_container.set_tab_title(i, tab.get_tab_title())
 	display_rect.texture = main.m8c.get_display_texture()
 
-	_init_scene_loader()
+	self._init_scene_loader()
 
 	_connect_goto(button_goto_scene, menu_scene)
 	_connect_goto(button_goto_overlays, menu_overlays)
@@ -97,6 +100,26 @@ func _on_menu_init() -> void:
 	)
 
 
+func _update_style() -> void:
+	self.header_panel = StyleBoxFlat.new()
+	self.header_panel.content_margin_left = 6
+	self.header_panel.content_margin_right = 6
+	self.header_panel.bg_color = _pal("header_bg")
+
+	self.header_bar.add_theme_stylebox_override("panel", self.header_panel)
+
+	self.main_panel = StyleBoxFlat.new()
+	self.main_panel.set_border_width_all(1)
+	self.main_panel.set_corner_radius_all(1)
+	self.main_panel.set_expand_margin_all(1)
+	self.main_panel.set_content_margin_all(0)
+	self.main_panel.bg_color = Color(_pal("bg"), 0.8)
+	self.main_panel.border_color = _pal("header_bg")
+	self.main_panel.anti_aliasing = false
+
+	self.add_theme_stylebox_override("panel", self.main_panel)
+
+
 func menu_show() -> void:
 	super()
 	if menu_stack.size() == 0:
@@ -128,6 +151,8 @@ func _back() -> void:
 
 
 func _on_changed() -> void:
+	self._update_style()
+
 	var menu_stack_names: Array = menu_stack.map(
 		func(m: MenuBase) -> String:
 			return m.name.trim_prefix("Menu"),

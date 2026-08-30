@@ -1,10 +1,7 @@
 @abstract class_name UIBase
 extends PanelContainer
 
-const THEME := preload("res://ui/theme/menu_theme.tres")
-const PALETTE := preload("res://ui/theme/palette.tres")
-
-const LEFT_WIDTH := 160
+const LEFT_WIDTH := 140
 
 @export var enabled := true:
 	set(value):
@@ -17,9 +14,13 @@ var _watch_notifications := true
 
 var _is_mouse_inside := false
 
+var main: Main
+
 
 func _ready() -> void:
-	theme = THEME
+	self.main = await Main.get_instance()
+
+	theme = UIManager.THEME
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	theme_type_variation = ""
 
@@ -28,6 +29,7 @@ func _ready() -> void:
 	if not Engine.is_editor_hint():
 		mouse_entered.connect(Events.gui_mouse_entered.emit.bind(self))
 		mouse_exited.connect(Events.gui_mouse_exited.emit.bind(self))
+		self.main.ui_manager.palette_changed.connect(self.emit_ui_changed)
 
 	_watch_notifications = false
 	_on_ready()
@@ -120,9 +122,15 @@ func is_mouse_inside(control: Control = self) -> bool:
 
 
 func _pal_index(index: int) -> Color:
-	if index >= PALETTE.colors.size():
+	var palette: PackedColorArray
+	if self.main:
+		palette = self.main.ui_manager.palette
+	else:
+		palette = UIManager.DEFAULT_PALETTE.colors
+
+	if index >= palette.size():
 		return Color.TRANSPARENT
-	return PALETTE.colors[index]
+	return palette[index]
 
 
 func _pal(constant_name: String, theme_type: StringName = "ThemePalette") -> Color:
@@ -130,6 +138,11 @@ func _pal(constant_name: String, theme_type: StringName = "ThemePalette") -> Col
 	return _pal_index(index)
 
 
+##
+## Returns the palette color with the index given by [constant_name].
+## If [color_override] is an integer, returns the palette color with that index instead.
+## If [color_override] is a [Color], returns that color instead.
+##
 func _pal_or(constant_name: String, color_override: Variant) -> Color:
 	if color_override is int and color_override >= 0:
 		return _pal_index(color_override as int)

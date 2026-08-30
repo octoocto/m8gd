@@ -42,8 +42,6 @@ enum DisableMethod {
 
 var _default_value: Variant
 
-var main: Main
-
 var config: M8Config
 
 var is_initialized: bool:
@@ -62,14 +60,13 @@ var _value_read_fn: Callable
 
 
 func _ready() -> void:
-	assert(get("value") != null, "SettingBase subclass %s must have a 'value' property" % name)
-	_default_value = get("value")
-
-	self.main = await Main.get_instance()
-	if is_instance_valid(self.main):
-		self.config = main.config
-
 	super()
+
+	if is_instance_valid(self.main):
+		self.config = self.main.config
+
+	assert(get("value") != null, "SettingBase subclass %s must have a 'value' property" % name)
+	self._default_value = get("value")
 
 
 func get_value() -> Variant:
@@ -135,7 +132,7 @@ func setting_connect(value_read_fn: Variant, value_changed_fn: Callable) -> void
 		is_instance_valid(self.main),
 		"Tried to initialize setting, but main has not finished initializing",
 	)
-	assert(is_instance_valid(self.config), "Tried to initialize setting, but config is not loaded")
+	assert(self.main.config != null, "Tried to initialize setting, but config is not loaded")
 	assert(
 		value_changed_fn is Callable and value_changed_fn.is_valid(),
 		"value_changed_fn must be a valid Callable",

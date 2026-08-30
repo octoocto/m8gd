@@ -41,7 +41,8 @@ func _on_menu_init() -> void:
 	)
 
 	s_text_casing.setting_connect_global(
-		"ui_text_case", func(value: int) -> void: THEME.set_constant("text_case", "UIBase", value)
+		"ui_text_case", func(value: int) -> void: 
+			self.theme.set_constant("text_case", "UIBase", value)
 	)
 
 	# Display

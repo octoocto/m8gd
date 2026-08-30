@@ -1,4 +1,4 @@
-[gd_resource type="Theme" format=4 uid="uid://c8lf57q2f23tp"]
+[gd_resource type="Theme" script_class="UITheme" format=4 uid="uid://c8lf57q2f23tp"]
 
 [ext_resource type="StyleBox" uid="uid://c21o4cguy3ohp" path="res://ui/theme/stylebox_focus.tres" id="1_vtev8"]
 [ext_resource type="Texture2D" uid="uid://dal45vxoiqb7m" path="res://assets/icon/check_on.png" id="1_wuk8g"]
@@ -2233,13 +2233,15 @@ SubmenuPanelContainer/styles/panel = SubResource("StyleBoxFlat_cu6ld")
 TabContainer/fonts/font = SubResource("FontVariation_5wdbc")
 TabContainer/styles/panel = SubResource("StyleBoxFlat_vd3cv")
 TabContainer/styles/tab_focus = ExtResource("1_vtev8")
+ThemePalette/constants/bg = 0
 ThemePalette/constants/button_bg_disabled = 0
 ThemePalette/constants/button_bg_hover = 3
 ThemePalette/constants/button_bg_normal = 1
 ThemePalette/constants/button_bg_pressed = 2
 ThemePalette/constants/button_fg_disabled = 1
 ThemePalette/constants/button_fg_normal = 4
-ThemePalette/constants/header = 5
+ThemePalette/constants/header = 4
+ThemePalette/constants/header_bg = 1
 ThemePalette/constants/input_bg_hover = 0
 ThemePalette/constants/input_bg_normal = 13
 ThemePalette/constants/input_caret = 4

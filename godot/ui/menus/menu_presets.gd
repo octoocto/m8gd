@@ -106,9 +106,9 @@ func _on_changed() -> void:
 	button_save.text = "Save"
 	button_delete.text = "Delete"
 	button_save.enabled = s_name.value != ""
-	button_delete.enabled = config.current_preset_exists()
-
-	main.menu.menu_input.refresh_hotkeys_presets()
+	if self.main:
+		self.button_delete.enabled = self.config.current_preset_exists()
+		self.main.menu.menu_input.refresh_hotkeys_presets()
 
 
 func _show_config() -> void:
