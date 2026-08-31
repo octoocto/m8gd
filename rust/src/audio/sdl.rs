@@ -38,51 +38,57 @@ const BUFFER_SIZE: usize = 1024;
 unsafe impl Send for AudioStreamHandle {}
 
 fn sdl3_init_audio() -> Result<AudioSubsystem, Error> {
-    sdl3::hint::set(
-        sdl3::hint::names::AUDIO_DEVICE_SAMPLE_FRAMES,
-        &BUFFER_SIZE.to_string(),
-    );
-    sdl3::hint::set(sdl3::hint::names::AUDIO_DEVICE_STREAM_ROLE, "Game");
     Ok(sdl3::init()
         .map_err(|s| AudioError(format!("Failed to initialize SDL3: {}", s)))?
         .audio()
         .map_err(|s| AudioError(format!("Failed to initialize SDL3 audio: {}", s)))?)
 }
 
-fn get_input_devices(audio_subsystem: Option<AudioSubsystem>) -> Result<Vec<AudioDeviceID>, Error> {
-    let audio_subsystem = match audio_subsystem {
-        Some(subsystem) => subsystem,
-        None => sdl3_init_audio()?,
-    };
-    let mut ids = audio_subsystem.audio_recording_device_ids()?;
-    ids.retain(|id| id.name().is_ok_and(|name| name.contains("M8")));
+fn get_input_device_ids() -> Result<Vec<AudioDeviceID>, Error> {
+    let host = sdl3_init_audio()?;
+    println!("sdl-audio: enumerating input device ids");
+    let ids = host.audio_recording_device_ids()?;
+    println!("sdl-audio: found {} input device ids:", ids.len());
+    for id in &ids {
+        println!("- {:?}", id.name());
+    }
     Ok(ids)
 }
 
-fn get_output_devices(
-    audio_subsystem: Option<AudioSubsystem>,
-) -> Result<Vec<AudioDeviceID>, Error> {
-    let audio_subsystem = match audio_subsystem {
-        Some(subsystem) => subsystem,
-        None => sdl3_init_audio()?,
-    };
-    Ok(audio_subsystem.audio_playback_device_ids()?)
+fn get_output_device_ids() -> Result<Vec<AudioDeviceID>, Error> {
+    let host = sdl3_init_audio()?;
+    println!("sdl-audio: enumerating output device ids");
+    let ids = host.audio_playback_device_ids()?;
+    println!("sdl-audio: found {} output device ids", ids.len());
+    Ok(ids)
 }
 
 pub fn input_device_names() -> Result<Vec<String>, Error> {
-    let input_devices = get_input_devices(None)?
+    let host = sdl3_init_audio()?;
+    println!("sdl-audio: enumerating input device ids");
+    let ids = host.audio_recording_device_ids()?;
+    println!("sdl-audio: found {} input device ids:", ids.len());
+    for id in &ids {
+        println!("- {:?}", id.name());
+    }
+
+    let names: Vec<String> = ids
         .iter()
-        .filter_map(|device| device.name().ok())
+        .filter_map(|id| id.name().ok())
+        .filter(|name| name.contains("M8"))
         .collect();
-    Ok(input_devices)
+
+    println!("sdl-audio: found {} input device names", names.len());
+    Ok(names)
 }
 
 pub fn output_device_names() -> Result<Vec<String>, Error> {
-    let output_devices = get_output_devices(None)?
-        .iter()
-        .filter_map(|device| device.name().ok())
-        .collect();
-    Ok(output_devices)
+    let host = sdl3_init_audio()?;
+    println!("sdl-audio: enumerating output device ids");
+    let ids = host.audio_playback_device_ids()?;
+    let names: Vec<String> = ids.iter().filter_map(|device| device.name().ok()).collect();
+    println!("sdl-audio: found {} output device names", names.len());
+    Ok(names)
 }
 
 struct AudioStreamHandle(AudioStreamOwner);
@@ -160,8 +166,8 @@ pub struct SdlAudioHandler {
     // sdl_context: sdl2::Sdl,
     audio_subsystem: sdl3::AudioSubsystem,
 
-    input_stream: Option<AudioStreamWithCallback<AudioInCallback>>,
-    input_stream_spec: Option<(SdlAudioSpec, usize)>,
+    input_stream: AudioStreamWithCallback<AudioInCallback>,
+    input_stream_spec: (SdlAudioSpec, usize),
 
     volume: f32,
     // output_stream: Option<Arc<Mutex<AudioStreamOwner>>>,
@@ -179,46 +185,21 @@ impl SdlAudioHandler {
         format: Some(AUDIO_FORMAT),
     };
 
-    pub fn new() -> Result<Self, Error> {
-        println!(
-            "Audio drivers: {:?}",
-            sdl3::audio::drivers().collect::<Vec<_>>()
-        );
-
-        let audio_subsystem = sdl3_init_audio()?;
-
-        Ok(SdlAudioHandler {
-            audio_subsystem,
-            input_stream: None,
-            input_stream_spec: None,
-            volume: 1.0,
-            // output_stream: None,
-        })
-    }
-
     fn callback_lock(&mut self) -> Result<AudioStreamLockGuard<'_, AudioInCallback>, Error> {
-        let input_stream = self
+        let callback = self
             .input_stream
-            .as_mut()
-            .ok_or(AudioError("No input stream available".to_string()))?;
-        let callback = input_stream
             .lock()
             .ok_or(AudioError("Failed to lock audio stream".to_string()))?;
         Ok(callback)
     }
 
-    fn input_devices(&self) -> Result<Vec<AudioDeviceID>, Error> {
-        get_input_devices(Some(self.audio_subsystem.clone()))
-    }
-
-    fn output_devices(&self) -> Result<Vec<AudioDeviceID>, Error> {
-        get_output_devices(Some(self.audio_subsystem.clone()))
-    }
-
     /// Get an [AudioDevice] where the name matches [preferred_input_device], or the first valid device
     /// if [None] is given.
-    fn input_device(&self, preferred_input_device: Option<String>) -> Result<AudioDevice, Error> {
-        let input_device_ids = self.input_devices()?;
+    fn input_device(
+        audio_subsystem: &AudioSubsystem,
+        preferred_input_device: Option<String>,
+    ) -> Result<AudioDevice, Error> {
+        let input_device_ids = get_input_device_ids()?;
 
         println!("Input devices: {:?}", input_device_ids);
 
@@ -240,13 +221,16 @@ impl SdlAudioHandler {
             }
         };
 
-        Ok(AudioDevice::new(id, self.audio_subsystem.to_owned()))
+        Ok(AudioDevice::new(id, audio_subsystem.to_owned()))
     }
 
     /// Get an [AudioDevice] where the name matches [preferred_output_device], or the default device
     /// if [None] is given.
-    fn output_device(&self, preferred_output_device: Option<String>) -> Result<AudioDevice, Error> {
-        let output_device_ids = self.output_devices()?;
+    fn output_device(
+        audio_subsystem: &AudioSubsystem,
+        preferred_output_device: Option<String>,
+    ) -> Result<AudioDevice, Error> {
+        let output_device_ids = get_output_device_ids()?;
 
         println!("Output devices: {:?}", output_device_ids);
 
@@ -255,7 +239,7 @@ impl SdlAudioHandler {
         }
 
         let Some(preferred_output_device) = preferred_output_device else {
-            return Ok(self.audio_subsystem.default_playback_device());
+            return Ok(audio_subsystem.default_playback_device());
         };
 
         let output_device = output_device_ids
@@ -268,7 +252,7 @@ impl SdlAudioHandler {
 
         Ok(AudioDevice::new(
             output_device.to_owned(),
-            self.audio_subsystem.to_owned(),
+            audio_subsystem.to_owned(),
         ))
     }
 
@@ -303,13 +287,36 @@ impl SdlAudioHandler {
 }
 
 impl super::AudioHandler for SdlAudioHandler {
-    fn start(
-        &mut self,
+    fn list_input_devices() -> Result<Vec<String>, Error> {
+        Ok(input_device_names()?)
+    }
+
+    fn list_output_devices() -> Result<Vec<String>, Error> {
+        Ok(output_device_names()?)
+    }
+
+    fn new(
         input_device: Option<String>,
         output_device: Option<String>,
-    ) -> Result<(), Error> {
-        let input_device = self.input_device(input_device)?;
-        let output_device = self.output_device(output_device)?;
+        _multichannel_enabled: bool,
+    ) -> Result<Self, Error> {
+        println!(
+            "Audio drivers: {:?}",
+            sdl3::audio::drivers().collect::<Vec<_>>()
+        );
+
+        let volume = 1.0;
+
+        let audio_subsystem = sdl3_init_audio()?;
+
+        sdl3::hint::set(
+            sdl3::hint::names::AUDIO_DEVICE_SAMPLE_FRAMES,
+            &BUFFER_SIZE.to_string(),
+        );
+        sdl3::hint::set(sdl3::hint::names::AUDIO_DEVICE_STREAM_ROLE, "Media");
+
+        let input_device = Self::input_device(&audio_subsystem, input_device)?;
+        let output_device = Self::output_device(&audio_subsystem, output_device)?;
 
         println!(
             "sdl-audio: using input device: {}",
@@ -328,47 +335,23 @@ impl super::AudioHandler for SdlAudioHandler {
         println!("sdl-audio: opening output stream done");
 
         println!("sdl-audio: opening input stream...");
-        let cb = AudioInCallback::new(output_stream, self.volume);
+        let cb = AudioInCallback::new(output_stream, volume);
         let input_stream =
             input_device.open_recording_stream_with_callback(&Self::DESIRED_SPEC_IN, cb)?;
         input_stream.resume()?;
         println!("sdl-audio: opening input stream done");
 
-        self.input_stream = Some(input_stream);
-        self.input_stream_spec = Some(Self::get_audio_spec(input_device.id())?);
+        let input_stream_spec = Self::get_audio_spec(input_device.id())?;
 
         // self.output_stream = Some(output_stream);
 
-        Ok(())
-    }
-
-    fn stop(&mut self) -> Result<(), Error> {
-        self.input_stream = None;
-        self.input_stream_spec = None;
-        Ok(())
-    }
-
-    fn is_running(&self) -> bool {
-        // Note that the input stream also owns the output stream
-        self.input_stream.is_some()
-    }
-
-    fn list_input_devices(&self) -> Result<Vec<String>, Error> {
-        let input_devices = self
-            .input_devices()?
-            .iter()
-            .filter_map(|device| device.name().ok())
-            .collect();
-        Ok(input_devices)
-    }
-
-    fn list_output_devices(&self) -> Result<Vec<String>, Error> {
-        let output_devices = self
-            .output_devices()?
-            .iter()
-            .filter_map(|device| device.name().ok())
-            .collect();
-        Ok(output_devices)
+        Ok(SdlAudioHandler {
+            audio_subsystem,
+            input_stream,
+            input_stream_spec,
+            volume,
+            // output_stream: None,
+        })
     }
 
     fn volume(&mut self) -> Result<f32, Error> {
@@ -404,10 +387,7 @@ impl super::AudioHandler for SdlAudioHandler {
     }
 
     fn input_spec(&self) -> Result<audio::AudioSpec, Error> {
-        let (spec, samples) = self
-            .input_stream_spec
-            .as_ref()
-            .ok_or(AudioError("No input stream".to_string()))?;
+        let (spec, samples) = &self.input_stream_spec;
         Ok(audio::AudioSpec {
             host: self.driver_name(),
             format: format_name(spec.format),

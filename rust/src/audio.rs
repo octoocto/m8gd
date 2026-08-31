@@ -17,6 +17,13 @@ pub const SAMPLE_RATE: usize = 44100;
 pub const OSC_BUFFER_SIZE: usize = 441;
 
 pub trait AudioHandler {
+    fn list_input_devices() -> Result<Vec<String>, Error>
+    where
+        Self: Sized;
+    fn list_output_devices() -> Result<Vec<String>, Error>
+    where
+        Self: Sized;
+
     /// Starts audio processing with the specified input and output devices.
     ///
     /// Devices are identified with [String]s that are returned with [list_input_devices()]
@@ -28,25 +35,18 @@ pub trait AudioHandler {
     /// May return an error if:
     /// - An invalid input or output device has been given.
     /// - Audio processing with the backend has failed for any reason.
-    fn start(
-        &mut self,
+    fn new(
         input_device: Option<String>,
         output_device: Option<String>,
-    ) -> Result<(), Error>;
-
-    /// Stops audio processing.
-    fn stop(&mut self) -> Result<(), Error>;
-
-    /// Returns whether audio is currently processing.
-    fn is_running(&self) -> bool;
+        multichannel_enabled: bool,
+    ) -> Result<Self, Error>
+    where
+        Self: Sized;
 
     /// Sets whether to start audio in multichannel mode.
     ///
     /// If multichannel mode is not supported, returns [Error::AudioError].
     fn set_multichannel_mode(&mut self, enabled: bool) -> Result<(), Error>;
-
-    fn list_input_devices(&self) -> Result<Vec<String>, Error>;
-    fn list_output_devices(&self) -> Result<Vec<String>, Error>;
 
     fn volume(&mut self) -> Result<f32, Error>;
     fn set_volume(&mut self, volume: f32) -> Result<(), Error>;

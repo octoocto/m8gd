@@ -21,9 +21,11 @@ const SAMPLE_RATE: usize = 48000;
 pub struct CpalAudioHandler {
     host: Host,
     multichannel_enabled: bool,
-    input_device: Option<AudioStream>,
-    output_device: Option<AudioStream>,
+    input_device: AudioStream,
+    output_device: AudioStream,
+
     track_buffers: Arc<Mutex<EnumMap<m8::Track, RingVec>>>,
+
     volume: Arc<Mutex<f32>>,
     volume_peaks: Arc<Mutex<[f32; 2]>>,
 
@@ -31,46 +33,31 @@ pub struct CpalAudioHandler {
     spectrum: Arc<Mutex<SpectrumAnalyzer>>,
 }
 
-impl CpalAudioHandler {
-    pub fn new() -> Result<Self, Error> {
-        Ok(Self {
-            host: cpal::default_host(),
-            multichannel_enabled: false,
-            input_device: None,
-            output_device: None,
-            track_buffers: Arc::new(Mutex::new(EnumMap::from_fn(|_| {
-                RingVec::new(OSC_BUFFER_SIZE)
-            }))),
-
-            volume: Arc::new(Mutex::new(1.0)),
-            volume_peaks: Arc::new(Mutex::new([0.0; 2])),
-
-            spectrum_analyzer_enabled: Arc::new(Mutex::new(true)),
-            spectrum: Arc::new(Mutex::new(SpectrumAnalyzer::new(SAMPLE_RATE as u32))),
-        })
-    }
-}
-
 impl super::AudioHandler for CpalAudioHandler {
-    fn start(
-        &mut self,
+    fn new(
         input_device_name: Option<String>,
         output_device_name: Option<String>,
-    ) -> Result<(), Error> {
-        let usb_audio_mode = m8::UsbAudioMode::from(self.multichannel_enabled);
-        let input_devices = find_input_devices(
-            &self.host,
-            &input_device_name,
-            usb_audio_mode.num_channels(),
-        )?;
-        let output_device = find_output_device(&self.host, &output_device_name)?;
+        multichannel_enabled: bool,
+    ) -> Result<Self, Error> {
+        let volume = Arc::new(Mutex::new(1.0));
+        let volume_peaks = Arc::new(Mutex::new([0.0; 2]));
+
+        let spectrum_analyzer_enabled = Arc::new(Mutex::new(true));
+        let spectrum = Arc::new(Mutex::new(SpectrumAnalyzer::new(SAMPLE_RATE as u32)));
+
+        let host = cpal::default_host();
+
+        let usb_audio_mode = m8::UsbAudioMode::from(multichannel_enabled);
+        let input_devices =
+            find_input_devices(&host, &input_device_name, usb_audio_mode.num_channels())?;
+        let output_device = find_output_device(&host, &output_device_name)?;
 
         let config_out = find_output_stream_config(&output_device)?;
 
         // println!("  Buffer size: {:?}", config_in.buffer_size);
         // let latency_ms = 20.0;
         // let latency_frames = (latency_ms / 1000.0) * config_in.sample_rate as f32;
-        // let latency_samples = latency_frames as usize * 2 as usize;
+        // let latency_samples = backendlatency_frames as usize * 2 as usize;
         // let ring = HeapRb::<f32>::new(latency_samples * 2);
 
         let audio_buffer_size = BUFFER_SIZE * 4;
@@ -79,6 +66,10 @@ impl super::AudioHandler for CpalAudioHandler {
         for _ in 0..audio_buffer_size {
             data_prod.try_push(0.0).unwrap();
         }
+
+        let track_buffers = Arc::new(Mutex::new(EnumMap::from_fn(|_| {
+            RingVec::new(OSC_BUFFER_SIZE)
+        })));
 
         // println!("Using latency buffer of {} samples", latency_samples);
         println!("Using data buffer size: {}", audio_buffer_size);
@@ -90,33 +81,35 @@ impl super::AudioHandler for CpalAudioHandler {
             ));
         }
 
+        let mut input_device = None;
         for (device, config) in input_devices {
             let buffer_size = match &config.buffer_size {
                 cpal::BufferSize::Fixed(size) => *size as usize,
                 cpal::BufferSize::Default => panic!("buffer size is not fixed"),
             };
             if AudioStream::can_open_input(&device, &config) {
-                self.input_device = Some(AudioStream::open_input(
+                input_device = Some(AudioStream::open_input(
                     device,
                     config,
-                    self.on_input_data_received(
+                    Self::on_input_data_received(
+                        multichannel_enabled,
                         buffer_size,
                         data_prod,
-                        Arc::clone(&self.track_buffers),
+                        Arc::clone(&track_buffers),
                     ),
                 )?);
                 break;
             }
         }
 
-        if self.input_device.is_none() {
+        let Some(input_device) = input_device else {
             return Err(Error::AudioError(
                 "cpal-audio: Unable to open any input devices".to_string(),
             ));
-        }
+        };
 
-        let input_buffer_size = self.input_device.as_ref().unwrap().stream.buffer_size()?;
-        let input_sample_rate = self.input_device.as_ref().unwrap().config.sample_rate;
+        let input_buffer_size = input_device.stream.buffer_size()?;
+        let input_sample_rate = input_device.config.sample_rate;
 
         let output_buffer_size = match config_out.buffer_size {
             cpal::BufferSize::Fixed(size) => size,
@@ -138,28 +131,34 @@ impl super::AudioHandler for CpalAudioHandler {
         )
         .expect("failed to create resampler");
 
-        self.output_device = Some(AudioStream::open_output(
+        let output_device = AudioStream::open_output(
             output_device,
             config_out,
-            self.on_output_data_requested(
+            Self::on_output_data_requested(
+                &volume,
+                &volume_peaks,
+                &spectrum_analyzer_enabled,
+                &spectrum,
                 data_cons,
                 resampler,
                 input_buffer_size as usize,
                 output_buffer_size as usize,
             ),
-        )?);
+        )?;
 
-        Ok(())
-    }
+        Ok(Self {
+            host,
+            multichannel_enabled,
+            input_device,
+            output_device,
+            track_buffers,
 
-    fn stop(&mut self) -> Result<(), Error> {
-        self.input_device = None;
-        self.output_device = None;
-        Ok(())
-    }
+            volume,
+            volume_peaks,
 
-    fn is_running(&self) -> bool {
-        self.input_device.is_some() && self.output_device.is_some()
+            spectrum_analyzer_enabled,
+            spectrum,
+        })
     }
 
     fn set_multichannel_mode(&mut self, enabled: bool) -> Result<(), Error> {
@@ -167,9 +166,8 @@ impl super::AudioHandler for CpalAudioHandler {
         Ok(())
     }
 
-    fn list_input_devices(&self) -> Result<Vec<String>, Error> {
-        let names: Vec<String> = self
-            .host
+    fn list_input_devices() -> Result<Vec<String>, Error> {
+        let names: Vec<String> = cpal::default_host()
             .input_devices()
             .map_err(|e| Error::AudioError(e.to_string()))?
             .filter_map(|device| {
@@ -205,9 +203,8 @@ impl super::AudioHandler for CpalAudioHandler {
         Ok(names)
     }
 
-    fn list_output_devices(&self) -> Result<Vec<String>, Error> {
-        let names: Vec<String> = self
-            .host
+    fn list_output_devices() -> Result<Vec<String>, Error> {
+        let names: Vec<String> = cpal::default_host()
             .output_devices()
             .map_err(|e| Error::AudioError(e.to_string()))?
             .filter_map(|dev| dev.description().ok())
@@ -254,23 +251,14 @@ impl super::AudioHandler for CpalAudioHandler {
     }
 
     fn input_spec(&self) -> Result<audio::AudioSpec, Error> {
-        if let Some(device) = self.input_device.as_ref() {
-            Ok(audio::AudioSpec {
-                host: self.host.id().to_string(),
-                format: "F32".to_string(),
-                num_channels: device.config.channels as usize,
-                sample_rate: device.config.sample_rate as usize,
-                buffer_size: device.stream.buffer_size()? as usize,
-            })
-        } else {
-            Ok(audio::AudioSpec {
-                host: "n/a".to_string(),
-                format: "n/a".to_string(),
-                num_channels: 2,
-                sample_rate: 44100,
-                buffer_size: BUFFER_SIZE,
-            })
-        }
+        let device = &self.input_device;
+        Ok(audio::AudioSpec {
+            host: self.host.id().to_string(),
+            format: "F32".to_string(),
+            num_channels: device.config.channels as usize,
+            sample_rate: device.config.sample_rate as usize,
+            buffer_size: device.stream.buffer_size()? as usize,
+        })
     }
 
     fn track_buffer(&self, track: m8::Track) -> Result<Vec<f32>, Error> {
@@ -284,12 +272,12 @@ impl super::AudioHandler for CpalAudioHandler {
 
 impl CpalAudioHandler {
     fn on_input_data_received(
-        &self,
+        multichannel_enabled: bool,
         buffer_size: usize,
         mut data_prod: ringbuf::HeapProd<f32>,
         track_buffers: Arc<Mutex<EnumMap<m8::Track, RingVec>>>,
     ) -> impl FnMut(&[f32], &cpal::InputCallbackInfo) + Send + 'static {
-        let usb_audio_mode = m8::UsbAudioMode::from(self.multichannel_enabled);
+        let usb_audio_mode = m8::UsbAudioMode::from(multichannel_enabled);
         let num_channels = usb_audio_mode.num_channels();
 
         move |data, _| {
@@ -340,16 +328,19 @@ impl CpalAudioHandler {
     }
 
     fn on_output_data_requested(
-        &self,
+        volume: &Arc<Mutex<f32>>,
+        volume_peaks: &Arc<Mutex<[f32; 2]>>,
+        spectrum_analyzer_enabled: &Arc<Mutex<bool>>,
+        spectrum: &Arc<Mutex<SpectrumAnalyzer>>,
         mut data_cons: ringbuf::HeapCons<f32>,
         mut resampler: rubato::Fft<f32>,
         buffer_size_in: usize,
         buffer_size_out: usize,
     ) -> impl FnMut(&mut [f32], &OutputCallbackInfo) + Send + 'static {
-        let volume = self.volume.clone();
-        let volume_peaks = self.volume_peaks.clone();
-        let spectrum = self.spectrum.clone();
-        let spectrum_enabled = self.spectrum_analyzer_enabled.clone();
+        let volume = volume.clone();
+        let volume_peaks = volume_peaks.clone();
+        let spectrum = spectrum.clone();
+        let spectrum_enabled = spectrum_analyzer_enabled.clone();
 
         let mut buffer_in = vec![0.0; buffer_size_in * 2];
         let mut buffer_out = vec![0.0; buffer_size_out * 2];

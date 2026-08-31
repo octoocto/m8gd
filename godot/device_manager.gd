@@ -119,11 +119,7 @@ func list_audio_devices(_show_all: bool = false) -> Array[String]:
 ## Connect to and monitor an audio input device with name [device].
 ## If [device] is empty, automatically connect to a valid M8 audio input device.
 func connect_audio_device(device: String = "", force: bool = false) -> void:
-	match audio_handler:
-		AudioHandler.SDL:
-			main.m8c.audio_set_backend("sdl")
-		AudioHandler.CPAL:
-			main.m8c.audio_set_backend("cpal")
+	self.audio_set_handler(self.audio_handler)
 
 	if device == "":
 		if len(list_audio_devices()) > 0:
@@ -209,8 +205,12 @@ func is_audio_device_connected() -> bool:
 
 
 func audio_set_handler(handler: AudioHandler) -> void:
-	if handler == self.audio_handler:
-		return
+	match handler:
+		AudioHandler.SDL:
+			self.main.m8c.audio_set_backend("sdl")
+		AudioHandler.CPAL:
+			self.main.m8c.audio_set_backend("cpal")
+
 	self.audio_handler = handler
 	print("audio: set audio handler to %s" % AudioHandler.keys()[audio_handler])
 

@@ -1,6 +1,8 @@
 pub mod osc;
 
 use crate as m8;
+use crate::audio::CpalAudioHandler;
+use crate::audio::SdlAudioHandler;
 
 use osc::OscBufferedTexture;
 use osc::OscDisplay;
@@ -28,15 +30,22 @@ fn gstring_to_option(s: GString) -> Option<String> {
     }
 }
 
-fn create_audio_handler(handler_name: &str) -> Result<Box<dyn AudioHandler>, Error> {
+fn start_audio_handler(
+    handler_name: &str,
+    input_device: Option<String>,
+    output_device: Option<String>,
+    multichannel_enabled: bool,
+) -> Result<Box<dyn AudioHandler>, Error> {
     match handler_name.to_lowercase().as_str() {
         "sdl" => {
-            println!("initializing SDL3 audio backend");
-            audio::SdlAudioHandler::new().and_then(|b| Ok(Box::new(b) as Box<dyn AudioHandler>))
+            println!("initializing SDL3 audio handler");
+            audio::SdlAudioHandler::new(input_device, output_device, multichannel_enabled)
+                .and_then(|b| Ok(Box::new(b) as Box<dyn AudioHandler>))
         }
         "cpal" => {
-            println!("initializing CPAL audio backend");
-            audio::CpalAudioHandler::new().and_then(|b| Ok(Box::new(b) as Box<dyn AudioHandler>))
+            println!("initializing CPAL audio handler");
+            audio::CpalAudioHandler::new(input_device, output_device, multichannel_enabled)
+                .and_then(|b| Ok(Box::new(b) as Box<dyn AudioHandler>))
         }
         _ => Err(Error::NoBackend),
     }
@@ -663,39 +672,8 @@ impl GodotM8Client {
 // audio methods
 #[godot_api(secondary)]
 impl GodotM8Client {
-    /// Attempt to initialize the audio backend (without starting it) if
-    /// it hasn't been initialized yet.
-    ///
-    /// If initialization fails, [struct@audio_backend] will still be [None].
-    fn audio_try_init(&mut self) {
-        let Some(backend_name) = &self.audio_handler_name else {
-            godot_warn!("libm8: failed to initialize audio - backend has not been set");
-            return;
-        };
-        godot_print!("libm8: initializing audio with backend {backend_name}...");
-        if self.audio_handler.is_none() {
-            self.audio_handler = match create_audio_handler(backend_name) {
-                Ok(audio_backend) => {
-                    godot_print!("libm8: initialized");
-                    Some(audio_backend)
-                }
-                Err(e) => {
-                    godot_error!("libm8: failed to initialize: {}", e);
-                    None
-                }
-            };
-        }
-    }
-
     #[func]
     fn audio_set_backend(&mut self, backend_name: GString) {
-        if self
-            .audio_handler_name
-            .as_ref()
-            .is_some_and(|name| name == &backend_name.to_string())
-        {
-            return;
-        }
         self.audio_stop();
         self.audio_handler_name = if backend_name.is_empty() {
             godot_print!("libm8: backend set to none");
@@ -708,28 +686,34 @@ impl GodotM8Client {
 
     #[func]
     fn audio_start(&mut self, input_device: GString, output_device: GString) -> bool {
-        if !self.is_audio_enabled() {
-            self.audio_try_init();
-            let is_multichannel = self.is_multichannel_audio();
-            let Some(audio_backend) = self.audio_handler.as_mut() else {
-                return false;
-            };
-            godot_print!("Starting audio...");
-            let _ = audio_backend.set_volume(self.audio_volume);
-            let _ = audio_backend.set_multichannel_mode(is_multichannel);
-            let input_device = gstring_to_option(input_device);
-            let output_device = gstring_to_option(output_device);
-            match audio_backend.start(input_device, output_device) {
-                Ok(_) => {
-                    godot_print!("Audio backend started successfully.");
-                    return true;
-                }
-                Err(e) => {
-                    godot_error!("Failed to start audio backend: {}", e);
-                }
-            };
+        let input_device = gstring_to_option(input_device);
+        let output_device = gstring_to_option(output_device);
+        let multichannel_enabled = self.is_multichannel_audio();
+        let Some(handler_name) = self.audio_handler_name.clone() else {
+            godot_warn!("libm8: failed to start audio - handler has not been set");
+            return false;
+        };
+
+        self.audio_stop();
+        godot_print!("libm8: starting audio with handler {handler_name}...");
+
+        match start_audio_handler(
+            handler_name.as_str(),
+            input_device,
+            output_device,
+            multichannel_enabled,
+        ) {
+            Ok(mut audio_handler) => {
+                audio_handler.set_volume(self.audio_volume);
+                self.audio_handler = Some(audio_handler);
+                godot_print!("libm8: audio handler started successfully.");
+                true
+            }
+            Err(e) => {
+                godot_error!("libm8: failed to start audio handler: {}", e);
+                false
+            }
         }
-        false
     }
 
     #[func]
@@ -742,27 +726,34 @@ impl GodotM8Client {
 
     #[func]
     fn audio_list_input_devices(&mut self) -> Vec<GString> {
-        self.audio_try_init();
+        let Some(handler_name) = &self.audio_handler_name else {
+            godot_warn!("audio: no handler selected, returning empty list");
+            return vec![];
+        };
         godot_print!(
-            "audio: listing input devices for backend: {:?}",
-            &self.audio_handler_name
+            "audio: listing input devices for handler: {:?}",
+            handler_name
         );
-        let device_names = match &self.audio_handler {
-            Some(audio_backend) => audio_backend.list_input_devices().unwrap_or_default(),
-            None => {
-                godot_print!("audio: backend not running, returning empty list");
+        let device_names = match handler_name.as_str() {
+            "sdl" => SdlAudioHandler::list_input_devices(),
+            "cpal" => CpalAudioHandler::list_input_devices(),
+            n => panic!("audio: invalid handler name: {n}"),
+        };
+        match device_names {
+            Ok(device_names) => {
+                godot_print!("audio: found {} input device(s)", device_names.len());
+                device_names.iter().map(|s| GString::from(s)).collect()
+            }
+            Err(e) => {
+                godot_warn!("audio: error while listing input devices: {e}");
                 vec![]
             }
-        };
-        device_names.iter().map(|s| GString::from(s)).collect()
+        }
     }
 
     #[func]
     fn is_audio_enabled(&mut self) -> bool {
-        match self.audio_handler.as_ref() {
-            Some(backend) => backend.is_running(),
-            None => false,
-        }
+        self.audio_handler.is_some()
     }
 
     #[func]
