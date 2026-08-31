@@ -100,7 +100,7 @@ func _on_menu_init() -> void:
 	)
 
 
-func _update_style() -> void:
+func _update_theme() -> void:
 	self.header_panel = StyleBoxFlat.new()
 	self.header_panel.content_margin_left = 6
 	self.header_panel.content_margin_right = 6
@@ -151,7 +151,7 @@ func _back() -> void:
 
 
 func _on_changed() -> void:
-	self._update_style()
+	self._update_theme()
 
 	var menu_stack_names: Array = menu_stack.map(
 		func(m: MenuBase) -> String:

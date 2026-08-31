@@ -18,11 +18,6 @@ var selected: int:
 
 @onready var option_button: OptionButton = $OptionButton
 
-@onready var stylebox_normal: StyleBoxFlat
-@onready var stylebox_hover: StyleBoxFlat
-@onready var stylebox_pressed: StyleBoxFlat
-@onready var stylebox_disabled: StyleBoxFlat
-
 
 func _on_ready() -> void:
 	option_button.get_popup().canvas_item_default_texture_filter = (
@@ -36,26 +31,40 @@ func _on_ready() -> void:
 	reset_size()
 
 
-func _generate_styleboxes() -> void:
-	option_button.remove_theme_stylebox_override("normal")
-	stylebox_normal = get_theme_stylebox("normal", "OptionButton").duplicate()
-	stylebox_hover = stylebox_normal.duplicate()
-	stylebox_pressed = stylebox_normal.duplicate()
-	stylebox_disabled = stylebox_normal.duplicate()
-	option_button.add_theme_stylebox_override("normal", stylebox_normal)
-	option_button.add_theme_stylebox_override("hover", stylebox_hover)
-	option_button.add_theme_stylebox_override("pressed", stylebox_pressed)
-	option_button.add_theme_stylebox_override("disabled", stylebox_disabled)
+func _update_theme() -> void:
+	var stylebox_normal: StyleBoxFlat = get_theme_stylebox("normal", "OptionButton").duplicate()
+	var stylebox_hover: StyleBoxFlat = stylebox_normal.duplicate()
+	var stylebox_pressed: StyleBoxFlat = stylebox_normal.duplicate()
+	var stylebox_disabled: StyleBoxFlat = stylebox_normal.duplicate()
+
+	stylebox_normal.bg_color = _pal("button_bg_normal")
+	stylebox_hover.bg_color = _pal("button_bg_hover")
+	stylebox_pressed.bg_color = _pal("button_bg_pressed")
+	stylebox_disabled.bg_color = _pal("button_bg_disabled")
+
+	self.option_button.add_theme_stylebox_override("normal", stylebox_normal)
+	self.option_button.add_theme_stylebox_override("hover", stylebox_hover)
+	self.option_button.add_theme_stylebox_override("pressed", stylebox_pressed)
+	self.option_button.add_theme_stylebox_override("disabled", stylebox_disabled)
+
+	var stylebox_popup := StyleBoxFlat.new()
+	var stylebox_popup_hover := StyleBoxFlat.new()
+
+	stylebox_popup.bg_color = _pal("bg_popup_option")
+	stylebox_popup.border_color = _pal("border_popup_option")
+	stylebox_popup.set_border_width_all(1)
+	stylebox_popup.set_expand_margin_all(1)
+	stylebox_popup.set_content_margin_all(0)
+	stylebox_popup.expand_margin_top = 0
+	stylebox_popup.content_margin_top = 1
+	stylebox_popup_hover.bg_color = _pal("bg_popup_option_hover")
+
+	self.option_button.get_popup().add_theme_stylebox_override("panel", stylebox_popup)
+	self.option_button.get_popup().add_theme_stylebox_override("hover", stylebox_popup_hover)
 
 
 func _on_changed() -> void:
-	_generate_styleboxes()
-
-	if stylebox_normal:
-		stylebox_normal.bg_color = _pal("button_bg_normal")
-		stylebox_hover.bg_color = _pal("button_bg_hover")
-		stylebox_pressed.bg_color = _pal("button_bg_pressed")
-		stylebox_disabled.bg_color = _pal("button_bg_disabled")
+	_update_theme()
 
 	option_button.disabled = not enabled
 

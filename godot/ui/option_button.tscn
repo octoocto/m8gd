@@ -54,3 +54,5 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_kvux1")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_mbram")
 theme_override_styles/hover = SubResource("StyleBoxFlat_qhw4d")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_63yas")
+item_count = 1
+popup/item_0/id = 0

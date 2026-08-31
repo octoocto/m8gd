@@ -1,6 +1,10 @@
 @abstract class_name UIBase
 extends PanelContainer
 
+## Theme type for [name => palette index] mappings.
+## Constants are defined in this theme type that map a name to a palette index.
+const THEME_TYPE_PALETTE := "ThemePalette"
+
 const LEFT_WIDTH := 140
 
 @export var enabled := true:
@@ -121,6 +125,9 @@ func is_mouse_inside(control: Control = self) -> bool:
 		return Rect2i(Vector2i.ZERO, control.size).has_point(control.get_local_mouse_position())
 
 
+##
+## Returns a palette color from a palette index (0 - 12).
+##
 func _pal_index(index: int) -> Color:
 	var palette: PackedColorArray
 	if self.main:
@@ -133,13 +140,22 @@ func _pal_index(index: int) -> Color:
 	return palette[index]
 
 
-func _pal(constant_name: String, theme_type: StringName = "ThemePalette") -> Color:
-	var index := get_theme_constant(constant_name, theme_type)
+##
+## Returns a palette color from a theme constant name.
+##
+## First tries to retrieve a theme constant (the palette index) with the name [constant_name],
+## then returns the palette color from the index.
+##
+## If the constant name doesn't exist, returns the color at palette index [0].
+##
+func _pal(constant_name: String) -> Color:
+	var index := get_theme_constant(constant_name, THEME_TYPE_PALETTE)
 	return _pal_index(index)
 
 
 ##
-## Returns the palette color with the index given by [constant_name].
+## Returns a palette color from a theme constant name (see [UIBase._pal()])
+##
 ## If [color_override] is an integer, returns the palette color with that index instead.
 ## If [color_override] is a [Color], returns that color instead.
 ##

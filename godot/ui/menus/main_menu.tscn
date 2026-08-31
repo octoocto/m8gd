@@ -229,7 +229,7 @@ expand_margin_bottom = 16.0
 [node name="MainMenuPanel" type="PanelContainer" unique_id=1736094983]
 texture_filter = 1
 offset_right = 320.0
-offset_bottom = 240.0
+offset_bottom = 232.0
 theme = ExtResource("1_qr6r4")
 theme_override_styles/panel = SubResource("StyleBoxFlat_rsjqv")
 script = ExtResource("1_7xjs6")
