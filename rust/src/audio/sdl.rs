@@ -37,32 +37,40 @@ const BUFFER_SIZE: usize = 1024;
 
 unsafe impl Send for AudioStreamHandle {}
 
-fn input_devices(audio_subsystem: Option<AudioSubsystem>) -> Result<Vec<AudioDeviceID>, Error> {
+fn sdl3_init_audio() -> Result<AudioSubsystem, Error> {
+    sdl3::hint::set(
+        sdl3::hint::names::AUDIO_DEVICE_SAMPLE_FRAMES,
+        &BUFFER_SIZE.to_string(),
+    );
+    sdl3::hint::set(sdl3::hint::names::AUDIO_DEVICE_STREAM_ROLE, "Game");
+    Ok(sdl3::init()
+        .map_err(|s| AudioError(format!("Failed to initialize SDL3: {}", s)))?
+        .audio()
+        .map_err(|s| AudioError(format!("Failed to initialize SDL3 audio: {}", s)))?)
+}
+
+fn get_input_devices(audio_subsystem: Option<AudioSubsystem>) -> Result<Vec<AudioDeviceID>, Error> {
     let audio_subsystem = match audio_subsystem {
         Some(subsystem) => subsystem,
-        None => sdl3::init()
-            .map_err(|s| AudioError(format!("Failed to initialize SDL3: {}", s)))?
-            .audio()
-            .map_err(|s| AudioError(format!("Failed to initialize SDL3 audio: {}", s)))?,
+        None => sdl3_init_audio()?,
     };
     let mut ids = audio_subsystem.audio_recording_device_ids()?;
     ids.retain(|id| id.name().is_ok_and(|name| name.contains("M8")));
     Ok(ids)
 }
 
-fn output_devices(audio_subsystem: Option<AudioSubsystem>) -> Result<Vec<AudioDeviceID>, Error> {
+fn get_output_devices(
+    audio_subsystem: Option<AudioSubsystem>,
+) -> Result<Vec<AudioDeviceID>, Error> {
     let audio_subsystem = match audio_subsystem {
         Some(subsystem) => subsystem,
-        None => sdl3::init()
-            .map_err(|s| AudioError(format!("Failed to initialize SDL3: {}", s)))?
-            .audio()
-            .map_err(|s| AudioError(format!("Failed to initialize SDL3 audio: {}", s)))?,
+        None => sdl3_init_audio()?,
     };
     Ok(audio_subsystem.audio_playback_device_ids()?)
 }
 
 pub fn input_device_names() -> Result<Vec<String>, Error> {
-    let input_devices = input_devices(None)?
+    let input_devices = get_input_devices(None)?
         .iter()
         .filter_map(|device| device.name().ok())
         .collect();
@@ -70,7 +78,7 @@ pub fn input_device_names() -> Result<Vec<String>, Error> {
 }
 
 pub fn output_device_names() -> Result<Vec<String>, Error> {
-    let output_devices = output_devices(None)?
+    let output_devices = get_output_devices(None)?
         .iter()
         .filter_map(|device| device.name().ok())
         .collect();
@@ -148,7 +156,7 @@ impl AudioRecordingCallback<f32> for AudioInCallback {
     }
 }
 
-pub struct SdlAudioBackend {
+pub struct SdlAudioHandler {
     // sdl_context: sdl2::Sdl,
     audio_subsystem: sdl3::AudioSubsystem,
 
@@ -159,7 +167,7 @@ pub struct SdlAudioBackend {
     // output_stream: Option<Arc<Mutex<AudioStreamOwner>>>,
 }
 
-impl SdlAudioBackend {
+impl SdlAudioHandler {
     const DESIRED_SPEC_IN: SdlAudioSpec = SdlAudioSpec {
         freq: Some(SAMPLE_RATE as i32),
         channels: Some(2),
@@ -172,20 +180,14 @@ impl SdlAudioBackend {
     };
 
     pub fn new() -> Result<Self, Error> {
-        sdl3::hint::set(
-            sdl3::hint::names::AUDIO_DEVICE_SAMPLE_FRAMES,
-            &BUFFER_SIZE.to_string(),
-        );
-        sdl3::hint::set(sdl3::hint::names::AUDIO_DEVICE_STREAM_ROLE, "Game");
-
-        let audio_subsystem = sdl3::init()?.audio()?;
-
         println!(
             "Audio drivers: {:?}",
             sdl3::audio::drivers().collect::<Vec<_>>()
         );
 
-        Ok(SdlAudioBackend {
+        let audio_subsystem = sdl3_init_audio()?;
+
+        Ok(SdlAudioHandler {
             audio_subsystem,
             input_stream: None,
             input_stream_spec: None,
@@ -206,11 +208,11 @@ impl SdlAudioBackend {
     }
 
     fn input_devices(&self) -> Result<Vec<AudioDeviceID>, Error> {
-        input_devices(Some(self.audio_subsystem.clone()))
+        get_input_devices(Some(self.audio_subsystem.clone()))
     }
 
     fn output_devices(&self) -> Result<Vec<AudioDeviceID>, Error> {
-        output_devices(Some(self.audio_subsystem.clone()))
+        get_output_devices(Some(self.audio_subsystem.clone()))
     }
 
     /// Get an [AudioDevice] where the name matches [preferred_input_device], or the first valid device
@@ -300,7 +302,7 @@ impl SdlAudioBackend {
     }
 }
 
-impl super::AudioBackend for SdlAudioBackend {
+impl super::AudioHandler for SdlAudioHandler {
     fn start(
         &mut self,
         input_device: Option<String>,

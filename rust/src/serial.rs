@@ -25,8 +25,8 @@ impl From<std::io::Error> for Error {
 pub fn connect_serial(
     preferred_path: Option<&str>,
     check_if_valid: bool,
-) -> Result<Box<SerialBackend>, Error> {
-    let mut backend = SerialBackend::new();
+) -> Result<Box<SerialDisplayHandler>, Error> {
+    let mut backend = SerialDisplayHandler::new();
     backend.set_preferred_path(preferred_path, check_if_valid)?;
     backend.connect()?;
     Ok(backend)
@@ -124,7 +124,7 @@ impl<const N: usize> ByteBuffer<N> {
     }
 }
 
-pub struct SerialBackend {
+pub struct SerialDisplayHandler {
     /// The preferred path to the serial port.
     preferred_path: Option<String>,
 
@@ -155,9 +155,9 @@ pub struct SerialBackend {
     // zero_reads: i32,
 }
 
-impl SerialBackend {
-    pub fn new() -> Box<SerialBackend> {
-        Box::new(SerialBackend {
+impl SerialDisplayHandler {
+    pub fn new() -> Box<SerialDisplayHandler> {
+        Box::new(SerialDisplayHandler {
             preferred_path: None,
 
             path: None,
@@ -254,7 +254,7 @@ impl SerialBackend {
     }
 }
 
-impl ClientBackend for SerialBackend {
+impl DisplayHandler for SerialDisplayHandler {
     fn connect(&mut self) -> Result<(), Error> {
         if self.is_connected() {
             return Err(Error::DeviceConnectionError(
@@ -417,7 +417,7 @@ impl ClientBackend for SerialBackend {
     }
 }
 
-impl Drop for SerialBackend {
+impl Drop for SerialDisplayHandler {
     fn drop(&mut self) {
         let _ = self.disconnect();
     }

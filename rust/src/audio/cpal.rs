@@ -18,7 +18,7 @@ use m8::audio::OSC_BUFFER_SIZE;
 // use super::SAMPLE_RATE;
 const SAMPLE_RATE: usize = 48000;
 
-pub struct CpalAudioBackend {
+pub struct CpalAudioHandler {
     host: Host,
     multichannel_enabled: bool,
     input_device: Option<AudioStream>,
@@ -31,7 +31,7 @@ pub struct CpalAudioBackend {
     spectrum: Arc<Mutex<SpectrumAnalyzer>>,
 }
 
-impl CpalAudioBackend {
+impl CpalAudioHandler {
     pub fn new() -> Result<Self, Error> {
         Ok(Self {
             host: cpal::default_host(),
@@ -51,7 +51,7 @@ impl CpalAudioBackend {
     }
 }
 
-impl super::AudioBackend for CpalAudioBackend {
+impl super::AudioHandler for CpalAudioHandler {
     fn start(
         &mut self,
         input_device_name: Option<String>,
@@ -282,7 +282,7 @@ impl super::AudioBackend for CpalAudioBackend {
     }
 }
 
-impl CpalAudioBackend {
+impl CpalAudioHandler {
     fn on_input_data_received(
         &self,
         buffer_size: usize,

@@ -7,6 +7,7 @@ pub mod serial;
 
 mod spectrum;
 
+pub use crate::audio::AudioHandler;
 pub use crate::client::*;
 pub use crate::constants::commands::*;
 pub use crate::constants::*;

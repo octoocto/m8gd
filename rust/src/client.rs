@@ -4,15 +4,15 @@ pub trait Client {
     // Required methods
 
     /// Get the backend used to communicate with the M8 device.
-    fn backend(&mut self) -> Option<&mut dyn ClientBackend>;
+    fn display(&mut self) -> Option<&mut dyn DisplayHandler>;
 
     /// Process an incoming command from the M8 device.
     fn handle_command(&mut self, command: &CommandIn) -> Result<(), Error>;
 
     // Provided methods
     fn is_connected(&mut self) -> bool {
-        match self.backend() {
-            Some(backend) => backend.is_connected(),
+        match self.display() {
+            Some(display) => display.is_connected(),
             None => false,
         }
     }
@@ -20,7 +20,7 @@ pub trait Client {
     /// Poll incoming commands from the connected device and handles them using
     /// [`Client::handle_command`].
     fn poll(&mut self) -> Result<(), Error> {
-        let commands = self.backend().ok_or(Error::NoBackend)?.poll()?;
+        let commands = self.display().ok_or(Error::NoBackend)?.poll()?;
         for command in commands {
             self.handle_command(&command)?;
         }
@@ -29,7 +29,7 @@ pub trait Client {
 
     /// Send a command to the M8 device.
     fn send_command(&mut self, command: CommandOut) -> Result<(), Error> {
-        self.backend()
+        self.display()
             .ok_or(Error::NoBackend)?
             .send_command(command)
     }
@@ -61,8 +61,9 @@ pub trait Client {
     }
 }
 
-// Represents a method for a Client to connect to an M8 device.
-pub trait ClientBackend {
+// Represents a method of connecting to the display of an M8 device.
+//
+pub trait DisplayHandler {
     fn connect(&mut self) -> Result<(), Error>;
     fn disconnect(&mut self) -> Result<(), Error>;
     fn is_connected(&self) -> bool;

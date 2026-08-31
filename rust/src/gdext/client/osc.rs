@@ -95,7 +95,7 @@ impl OscDisplay for super::GodotM8Client {
         let width = self.get_display_size().x as usize;
         let height = self.font_type.get_data().waveform_max as f32;
         self.buffer().fill(&bg_color, &bg_alpha);
-        if self.audio_backend.is_none() {
+        if self.audio_handler.is_none() {
             return;
         }
         for (i, track) in [
@@ -111,7 +111,7 @@ impl OscDisplay for super::GodotM8Client {
         .into_iter()
         .enumerate()
         {
-            let Ok(track_data) = self.audio_backend.as_ref().unwrap().track_buffer(track) else {
+            let Ok(track_data) = self.audio_handler.as_ref().unwrap().track_buffer(track) else {
                 continue;
             };
             let osc_buffer = self.buffer();

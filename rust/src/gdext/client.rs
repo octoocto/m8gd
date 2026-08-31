@@ -11,22 +11,32 @@ use godot::classes::ImageTexture;
 use godot::prelude::Color as GodotColor;
 use godot::prelude::*;
 
+use m8::AudioHandler;
 use m8::Client;
-use m8::ClientBackend;
+use m8::CommandIn;
+use m8::DisplayHandler;
 use m8::Error;
 use m8::audio;
-use m8::audio::AudioBackend;
 use m8::gdext::display::BufferedTexture;
 
-fn create_audio_backend(backend_name: &str) -> Result<Box<dyn AudioBackend>, Error> {
-    match backend_name.to_lowercase().as_str() {
+/// Returns [None] if the GString is `""`, otherwise returns [Some].
+fn gstring_to_option(s: GString) -> Option<String> {
+    if s.is_empty() {
+        None
+    } else {
+        Some(s.to_string())
+    }
+}
+
+fn create_audio_handler(handler_name: &str) -> Result<Box<dyn AudioHandler>, Error> {
+    match handler_name.to_lowercase().as_str() {
         "sdl" => {
             println!("initializing SDL3 audio backend");
-            audio::SdlAudioBackend::new().and_then(|b| Ok(Box::new(b) as Box<dyn AudioBackend>))
+            audio::SdlAudioHandler::new().and_then(|b| Ok(Box::new(b) as Box<dyn AudioHandler>))
         }
         "cpal" => {
             println!("initializing CPAL audio backend");
-            audio::CpalAudioBackend::new().and_then(|b| Ok(Box::new(b) as Box<dyn AudioBackend>))
+            audio::CpalAudioHandler::new().and_then(|b| Ok(Box::new(b) as Box<dyn AudioHandler>))
         }
         _ => Err(Error::NoBackend),
     }
@@ -68,9 +78,9 @@ fn bytes_to_bitmap(bytes: &[u8]) -> Option<Gd<BitMap>> {
 pub struct GodotM8Client {
     base: Base<Node>,
 
-    client_backend: Option<Box<dyn ClientBackend>>,
-    audio_backend: Option<Box<dyn AudioBackend>>,
-    audio_backend_name: Option<String>,
+    display_handler: Option<Box<dyn DisplayHandler>>,
+    audio_handler: Option<Box<dyn AudioHandler>>,
+    audio_handler_name: Option<String>,
 
     #[init(val = 1.0)]
     audio_volume: f32,
@@ -104,7 +114,7 @@ impl GodotM8Client {
         // self.display_image.get_size() != Vector2i::ZERO
     }
 
-    fn display_update(&mut self) {
+    fn update_display_texture(&mut self) {
         self.display_buffer.update_texture();
         // if self.display_ready() {
         //     self.display_texture.update(&self.display_buffer.image());
@@ -366,7 +376,7 @@ impl INode for GodotM8Client {
     }
 
     fn process(&mut self, _delta: f64) {
-        if self.backend().is_none() {
+        if self.display().is_none() {
             return;
         };
 
@@ -380,7 +390,7 @@ impl INode for GodotM8Client {
             return;
         }
 
-        self.display_update();
+        self.update_display_texture();
         // OscDisplay::update_texture(self);
     }
 
@@ -474,7 +484,7 @@ impl GodotM8Client {
 
     #[func]
     fn is_multichannel_audio(&mut self) -> bool {
-        if let Some(backend) = self.client_backend.as_mut() {
+        if let Some(backend) = self.display_handler.as_mut() {
             return backend.is_multichannel_audio().unwrap_or(false);
         }
         false
@@ -535,15 +545,6 @@ impl GodotM8Client {
     }
 }
 
-/// Returns [None] if the GString is `""`, otherwise returns [Some].
-fn gstring_to_option(s: GString) -> Option<String> {
-    if s.is_empty() {
-        None
-    } else {
-        Some(s.to_string())
-    }
-}
-
 // connection methods
 #[godot_api(secondary)]
 impl GodotM8Client {
@@ -557,7 +558,7 @@ impl GodotM8Client {
         #[opt(default = "")] preferred_path: GString,
         #[opt(default = true)] check_if_valid: bool,
     ) -> bool {
-        let mut client_backend = crate::SerialBackend::new();
+        let mut client_backend = crate::SerialDisplayHandler::new();
         let preferred_path = gstring_to_option(preferred_path);
 
         let result: Result<(), Error> = (|| {
@@ -568,7 +569,7 @@ impl GodotM8Client {
 
         match result {
             Ok(()) => {
-                self.client_backend = Some(client_backend);
+                self.display_handler = Some(client_backend);
                 true
             }
             Err(e) => {
@@ -580,7 +581,7 @@ impl GodotM8Client {
 
     #[func]
     fn is_connected(&mut self) -> bool {
-        self.backend().is_some_and(|backend| backend.is_connected())
+        self.display().is_some_and(|backend| backend.is_connected())
     }
 
     #[func]
@@ -588,12 +589,12 @@ impl GodotM8Client {
         if !self.is_connected() {
             return false;
         }
-        self.client_backend = None;
-        self.audio_backend = None;
+        self.display_handler = None;
+        self.audio_handler = None;
         self.display_buffer
             .fill(&crate::Color::new(0, 0, 0), &u8::MAX);
         // self.display_image.fill(GodotColor::BLACK);
-        self.display_update();
+        self.update_display_texture();
         self.signals().disconnected().emit();
         godot_print!("Sucessfully disconnected from M8 device.");
         true
@@ -667,13 +668,13 @@ impl GodotM8Client {
     ///
     /// If initialization fails, [struct@audio_backend] will still be [None].
     fn audio_try_init(&mut self) {
-        let Some(backend_name) = &self.audio_backend_name else {
+        let Some(backend_name) = &self.audio_handler_name else {
             godot_warn!("libm8: failed to initialize audio - backend has not been set");
             return;
         };
         godot_print!("libm8: initializing audio with backend {backend_name}...");
-        if self.audio_backend.is_none() {
-            self.audio_backend = match create_audio_backend(backend_name) {
+        if self.audio_handler.is_none() {
+            self.audio_handler = match create_audio_handler(backend_name) {
                 Ok(audio_backend) => {
                     godot_print!("libm8: initialized");
                     Some(audio_backend)
@@ -689,14 +690,14 @@ impl GodotM8Client {
     #[func]
     fn audio_set_backend(&mut self, backend_name: GString) {
         if self
-            .audio_backend_name
+            .audio_handler_name
             .as_ref()
             .is_some_and(|name| name == &backend_name.to_string())
         {
             return;
         }
         self.audio_stop();
-        self.audio_backend_name = if backend_name.is_empty() {
+        self.audio_handler_name = if backend_name.is_empty() {
             godot_print!("libm8: backend set to none");
             None
         } else {
@@ -710,7 +711,7 @@ impl GodotM8Client {
         if !self.is_audio_enabled() {
             self.audio_try_init();
             let is_multichannel = self.is_multichannel_audio();
-            let Some(audio_backend) = self.audio_backend.as_mut() else {
+            let Some(audio_backend) = self.audio_handler.as_mut() else {
                 return false;
             };
             godot_print!("Starting audio...");
@@ -736,7 +737,7 @@ impl GodotM8Client {
         if self.is_audio_enabled() {
             godot_print!("audio: stopping...");
         }
-        self.audio_backend = None;
+        self.audio_handler = None;
     }
 
     #[func]
@@ -744,9 +745,9 @@ impl GodotM8Client {
         self.audio_try_init();
         godot_print!(
             "audio: listing input devices for backend: {:?}",
-            &self.audio_backend_name
+            &self.audio_handler_name
         );
-        let device_names = match &self.audio_backend {
+        let device_names = match &self.audio_handler {
             Some(audio_backend) => audio_backend.list_input_devices().unwrap_or_default(),
             None => {
                 godot_print!("audio: backend not running, returning empty list");
@@ -758,7 +759,7 @@ impl GodotM8Client {
 
     #[func]
     fn is_audio_enabled(&mut self) -> bool {
-        match self.audio_backend.as_ref() {
+        match self.audio_handler.as_ref() {
             Some(backend) => backend.is_running(),
             None => false,
         }
@@ -767,14 +768,14 @@ impl GodotM8Client {
     #[func]
     fn set_volume(&mut self, volume: f32) {
         self.audio_volume = volume.clamp(0.0, 1.0);
-        if let Some(audio_backend) = self.audio_backend.as_mut() {
+        if let Some(audio_backend) = self.audio_handler.as_mut() {
             let _ = audio_backend.set_volume(self.audio_volume);
         }
     }
 
     #[func]
     fn get_volume(&mut self) -> f32 {
-        if let Some(audio_backend) = self.audio_backend.as_mut() {
+        if let Some(audio_backend) = self.audio_handler.as_mut() {
             return audio_backend.volume().unwrap_or(0.0);
         }
         0.0
@@ -786,7 +787,7 @@ impl GodotM8Client {
     /// If the audio is disabled, returns `[0.0, 0.0]`.
     #[func]
     fn get_audio_peaks_linear(&mut self) -> PackedFloat32Array {
-        if let Some(audio_backend) = self.audio_backend.as_mut() {
+        if let Some(audio_backend) = self.audio_handler.as_mut() {
             if let Ok(peaks) = audio_backend.peaks_linear() {
                 return PackedFloat32Array::from(&peaks);
             }
@@ -800,7 +801,7 @@ impl GodotM8Client {
     /// If the audio is disabled, returns `[0.0, 0.0]`.
     #[func]
     fn get_audio_peaks_db(&mut self) -> PackedFloat32Array {
-        if let Some(audio_backend) = self.audio_backend.as_mut() {
+        if let Some(audio_backend) = self.audio_handler.as_mut() {
             if let Ok(peaks) = audio_backend.peaks_db() {
                 return PackedFloat32Array::from(&peaks);
             }
@@ -818,7 +819,7 @@ impl GodotM8Client {
         dict.set("latency_ms", 0.0_f32);
         dict.set("num_channels", 0_i32);
 
-        let Some(audio_backend) = self.audio_backend.as_mut() else {
+        let Some(audio_backend) = self.audio_handler.as_mut() else {
             return dict;
         };
 
@@ -842,7 +843,7 @@ impl GodotM8Client {
     /// If the audio or spectrum analyzer is disabled, returns `0.0`.
     #[func]
     pub fn get_audio_magnitude_at_freq(&mut self, freq: f32) -> f32 {
-        if let Some(audio_backend) = self.audio_backend.as_mut() {
+        if let Some(audio_backend) = self.audio_handler.as_mut() {
             if let Ok(magnitude) = audio_backend.value_at_frequency(freq) {
                 return magnitude;
             }
@@ -852,7 +853,7 @@ impl GodotM8Client {
 
     #[func]
     pub fn is_spectrum_analyzer_enabled(&mut self) -> bool {
-        if let Some(audio_backend) = self.audio_backend.as_mut() {
+        if let Some(audio_backend) = self.audio_handler.as_mut() {
             return audio_backend
                 .is_spectrum_analyzer_enabled()
                 .unwrap_or(false);
@@ -862,7 +863,7 @@ impl GodotM8Client {
 
     #[func]
     pub fn set_spectrum_analyzer_enabled(&mut self, enabled: bool) {
-        if let Some(audio_backend) = self.audio_backend.as_mut() {
+        if let Some(audio_backend) = self.audio_handler.as_mut() {
             let _ = audio_backend.set_spectrum_analyzer_enabled(enabled);
         }
     }
@@ -870,7 +871,7 @@ impl GodotM8Client {
     #[func]
     pub fn get_audio_track_buffer(&mut self, index: i32) -> Vec<f32> {
         let track = m8::Track::from_index(index as usize);
-        if let Some(audio_backend) = self.audio_backend.as_mut() {
+        if let Some(audio_backend) = self.audio_handler.as_mut() {
             if let Ok(buffer) = audio_backend.track_buffer(track) {
                 return buffer;
             }
@@ -941,20 +942,20 @@ impl GodotM8Client {
     }
 }
 impl Client for GodotM8Client {
-    fn backend(&mut self) -> Option<&mut dyn ClientBackend> {
-        match &mut self.client_backend {
+    fn display(&mut self) -> Option<&mut dyn DisplayHandler> {
+        match &mut self.display_handler {
             Some(client_backend) => Some(client_backend.as_mut()),
             None => None,
         }
     }
 
-    fn handle_command(&mut self, command: &crate::CommandIn) -> Result<(), crate::Error> {
+    fn handle_command(&mut self, command: &CommandIn) -> Result<(), crate::Error> {
         match command {
-            crate::CommandIn::DrawRect { params } => self.on_draw_rect(params),
-            crate::CommandIn::DrawChar { params } => self.on_draw_char(params),
-            crate::CommandIn::DrawOsc { params } => self.on_draw_osc(params),
-            crate::CommandIn::GetKeyState { keystate } => self.on_key_pressed(keystate),
-            crate::CommandIn::GetSystemInfo { info } => self.on_get_system_info(info),
+            CommandIn::DrawRect { params } => self.on_draw_rect(params),
+            CommandIn::DrawChar { params } => self.on_draw_char(params),
+            CommandIn::DrawOsc { params } => self.on_draw_osc(params),
+            CommandIn::GetKeyState { keystate } => self.on_key_pressed(keystate),
+            CommandIn::GetSystemInfo { info } => self.on_get_system_info(info),
         }
         Ok(())
     }

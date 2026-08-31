@@ -16,7 +16,7 @@ pub const SAMPLE_RATE: usize = 44100;
 // length of the buffer that is used for an oscillator
 pub const OSC_BUFFER_SIZE: usize = 441;
 
-pub trait AudioBackend {
+pub trait AudioHandler {
     /// Starts audio processing with the specified input and output devices.
     ///
     /// Devices are identified with [String]s that are returned with [list_input_devices()]
